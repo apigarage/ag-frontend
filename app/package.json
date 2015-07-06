@@ -7,9 +7,9 @@
   "author": "Mr Gumby <gumby@sillywalks.com>",
   "main": "main.js",
   "config": {
-    "target": "development"
+  "target": "development"
   },
   "dependencies": {
-    "fs-jetpack": "^0.6.5"
+  "fs-jetpack": "^0.6.5"
   }
 }
