@@ -1,11 +1,13 @@
 'use strict';
 
 var app = require('app');
+// Make sure utils are initialized quite early to set online-offline status.
+var utils = require('./utils.js');
+
 var BrowserWindow = require('browser-window');
 var env = require('./vendor/electron_boilerplate/env_config');
 var devHelper = require('./vendor/electron_boilerplate/dev_helper');
 var windowStateKeeper = require('./vendor/electron_boilerplate/window_state');
-
 var mainWindow;
 
 // Preserver of the window size and position between app launches.
@@ -42,3 +44,5 @@ app.on('ready', function () {
 app.on('window-all-closed', function () {
   app.quit();
 });
+
+require('./background/start.js')();

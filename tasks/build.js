@@ -16,15 +16,19 @@ var paths = {
     jsCodeToTranspile: [
         'app/**/*.js',
         '!app/main.js',
+        '!app/utils.js',
         '!app/spec.js',
         '!app/node_modules/**',
         '!app/bower_components/**',
+        '!app/background/**',
         '!app/vendor/**'
     ],
     toCopy: [
         'app/main.js',
         'app/spec.js',
+        'app/utils.js',
         'app/node_modules/**',
+        'app/background/**',
         'app/bower_components/**',
         'app/vendor/**',
         'app/**/*.html'

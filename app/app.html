@@ -27,6 +27,16 @@
       You are in <strong id="env-name"></strong> environment.
     </p>
   </div>
+  <script>
+    var ipc = require('ipc');
+    var updateOnlineStatus = function() {
+      ipc.send('online-status-changed', navigator.onLine ? 'online' : 'offline');
+    };
 
+    window.addEventListener('online',  updateOnlineStatus);
+    window.addEventListener('offline',  updateOnlineStatus);
+
+    updateOnlineStatus();
+  </script
 </body>
 </html>
