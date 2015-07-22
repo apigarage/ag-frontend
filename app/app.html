@@ -37,6 +37,11 @@
     window.addEventListener('offline',  updateOnlineStatus);
 
     updateOnlineStatus();
+
+    ipc.on('last-synced-at', function(last_updated_timestamp) {
+      console.log(last_updated_timestamp);
+    });
+
   </script
 </body>
 </html>
