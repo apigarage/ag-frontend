@@ -1,4 +1,8 @@
-'use strict';
+(function(){
 
-require('./tasks/build');
-require('./tasks/release');
+  'use strict';
+
+  require('./tasks/build');
+  require('./tasks/release');
+
+})();

@@ -1,11 +1,16 @@
-var ipc = require('ipc');
+(function(){
 
-// Online - Offline Status.
-var status = 'offline';
-ipc.on('online-status-changed', function(event, incomingStatus) {
-  status = incomingStatus;
-  console.log(status);
-});
-module.exports.areWeOnline = function(){
-  return status == 'online';
-}
+  var ipc = require('ipc');
+
+  // Online - Offline Status.
+  var status = 'offline';
+  ipc.on('online-status-changed', function(event, incomingStatus) {
+    status = incomingStatus;
+    console.log(status);
+  });
+
+  module.exports.areWeOnline = function(){
+    return status == 'online';
+  };
+
+})();

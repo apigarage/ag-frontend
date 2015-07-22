@@ -1,4 +1,5 @@
 (function(){
+
   'use strict';
   /*global require: false */
   var app = require('app');
@@ -18,4 +19,5 @@
   });
 
   require('./background/start.js')();
+
 })();
