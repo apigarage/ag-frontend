@@ -9,28 +9,28 @@ var mainWindow;
 
 // Preserver of the window size and position between app launches.
 var mainWindowState = windowStateKeeper('main', {
-    width: 1000,
-    height: 600
+  width: 1000,
+  height: 600
 });
 
 app.on('ready', function () {
 
-    mainWindow = new BrowserWindow({
-        x: mainWindowState.x,
-        y: mainWindowState.y,
-        width: mainWindowState.width,
-        height: mainWindowState.height
-    });
-    mainWindow.loadUrl('file://' + __dirname + '/spec.html');
+  mainWindow = new BrowserWindow({
+    x: mainWindowState.x,
+    y: mainWindowState.y,
+    width: mainWindowState.width,
+    height: mainWindowState.height
+  });
+  mainWindow.loadUrl('file://' + __dirname + '/spec.html');
 
-    devHelper.setDevMenu();
-    mainWindow.openDevTools();
+  devHelper.setDevMenu();
+  mainWindow.openDevTools();
 
-    mainWindow.on('close', function () {
-        mainWindowState.saveState(mainWindow);
-    });
+  mainWindow.on('close', function () {
+    mainWindowState.saveState(mainWindow);
+  });
 });
 
 app.on('window-all-closed', function () {
-    app.quit();
+  app.quit();
 });
