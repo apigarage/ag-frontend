@@ -1,0 +1,46 @@
+  <div class="layout-column-content header noselect">
+    <button class="header-item active">
+      Endpoints
+    </button>
+    <button class="header-item">
+      Documentation
+    </button>
+    <button class="header-item">
+      Testing
+    </button>
+
+    <button class="header-item pull-right" bs-dropdown data-template="accountMenu" data-placement="bottom-right">
+      <span class="glyphicon glyphicon-user"></span>
+      Account
+      <span class="caret"></span>
+    </button>
+    <script type="text/ng-template" id="accountMenu">
+      <ul class="dropdown-menu dropdown-menu-account">
+        <li>
+          <a href="#">
+            <span class="fa fa-fw fa-cogs"></span>
+            Account Settings
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <span class="fa fa-fw fa-bar-chart"></span>
+            Usage Statistics
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <span class="fa fa-fw fa-spacer"></span>
+            Something else here
+          </a>
+        </li>
+        <li class="divider"></li>
+        <li>
+          <a href="#">
+            <span class="fa fa-fw fa-sign-out"></span>
+            Log out
+          </a>
+        </li>
+      </ul>
+    </script>
+  </div>

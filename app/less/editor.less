@@ -1,0 +1,250 @@
+// ============================================================================
+// Editor Layout
+// ============================================================================
+.editor {
+  padding: 25px;
+  background: #FBFBFB;
+  overflow: auto;
+
+  // Watermark
+  background-image: url('../img/api-garage-watermark.png');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.editor-header {
+  padding: 0 0 10px;
+  border-bottom: 1px solid #CCC;
+  margin-bottom: 20px;
+
+  h2 {
+    margin: 0 0 5px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #AAA;
+  }
+  h1 {
+    display: inline-block;
+    margin: 0;
+    font-size: 24px;
+    line-height: 30px;
+
+    &:hover,
+    &:focus {
+      display: inline-block;
+      font-size: 24px;
+    }
+    &:focus {
+      min-width: 50%;
+    }
+  }
+}
+.editor-actions {
+  float: right;
+  padding-top: 20px;
+}
+.editor-description {
+  margin: 20px 0; 
+}
+
+.editor-panel {
+  background: rgba(255,255,255,0.64);
+}
+@editor-panel-heading-gutter-width: 110px;
+.editor-panel-heading {
+  position: relative;
+  padding-left: @editor-panel-heading-gutter-width;
+  line-height: @padding-base-vertical*2 + (@line-height-base * @font-size-base) + 2px; // Emulate button height
+
+  &:only-child {
+    border-bottom: none;
+    border-radius: @border-radius-base;
+  }
+}
+.editor-panel-heading-title {
+  margin: 0;
+  position: absolute;
+  top: 17px;
+  left: 15px;
+  width: @editor-panel-heading-gutter-width - 25px;
+  font-size: 18px;
+  color: #888;
+}
+.editor-panel-body {
+  position: relative;
+}
+.editor-panel-subsection {
+  margin: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  a {
+    font-family: @font-family-sans-serif;
+    font-weight: bold;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #BBB;
+    text-decoration: none;
+
+    &:focus,
+    &:hover {
+      color: #888;
+      outline: none !important;
+    }
+  }
+}
+
+// ============================================================================
+// Project Environment
+// ============================================================================
+.project-environment {
+  background: @code-bg;
+  color: @code-color !important;
+  line-height: 20px;
+  font-size: 12px;
+  font-family: @font-family-monospace;
+  text-transform: uppercase;
+}
+
+// ============================================================================
+// Request Headers
+// ============================================================================
+.request-headers {
+  position: relative;
+  padding-top: 25px;
+}
+.request-headers-table {
+  th {
+    text-align: right;
+  }
+}
+.request-header {
+  &:hover {
+    .request-header-delete {
+      color: @brand-primary;
+    }
+  }
+}
+.request-header-key,
+.request-header-value {
+  display: inline-block;
+  border: none;
+  padding: 2px 5px;
+  background: none;
+}
+.request-header-key {
+  min-width: 175px;
+  max-width: 500px;
+  text-align: right;
+  font-weight: bold;
+}
+.request-header-value {
+  min-width: 300px;
+  max-width: 500px;
+}
+.request-header-delete {
+  color: transparent;
+  text-decoration: none !important;
+}
+.request-header-new {
+  margin-top: 5px;
+  width: 486px;
+  margin-bottom: 10px;
+}
+
+
+// ============================================================================
+// Request Body - Ace Editor
+// ============================================================================
+.request-body {
+  margin-top: 5px;
+  position: relative;
+  padding-top: 25px;
+  .ace-editor-customization;
+}
+
+// ============================================================================
+// Response
+// ============================================================================
+.response-heading {
+  border-left: 1px solid @input-border;
+  padding-left: 15px;
+  color: #888;
+}
+// Allows the user to choose between Parse, RAW, and HTML Previews
+.response-tab-group {
+  position: absolute;
+  border-bottom: 0;
+  margin: 0;
+  padding: 0;
+  bottom: -1px;
+  right: 20px;
+  overflow: hidden;
+}
+.response-tab-item {
+  float: left;
+  list-style: none;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  padding: 9px 15px 8px;
+  font-family: @font-family-sans-serif;
+  font-weight: bold;
+  font-size: 12px;
+  text-transform: uppercase;
+  line-height: 1;
+
+  > a {
+    color: #AAA;
+    text-decoration: none;
+
+    &:focus,
+    &:hover {
+      color: @brand-primary;
+    }
+  }
+
+  &.active {
+    border-color: @panel-default-border;
+    border-top-left-radius: @border-radius-base;
+    border-top-right-radius: @border-radius-base;
+    background: #FFF;
+  }
+}
+.response-code {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+// ============================================================================
+// Response Headers
+// ============================================================================
+.response-headers {
+  margin-top: 10px;
+  position: relative;
+  padding-top: 25px;
+}
+.response-header-key,
+.response-header-value {
+  display: inline-block;
+  border: none;
+  padding: 2px 5px;
+  background: none;
+}
+.response-header-key {
+  min-width: 175px;
+  text-align: right;
+  font-weight: bold;
+}
+.response-header-value {
+  min-width: 300px;
+}
+
+// ============================================================================
+// Response Body - Ace Editor
+// ============================================================================
+.response-body {
+  margin-top: 5px;
+  position: relative;
+  padding-top: 25px;
+  .ace-editor-customization;
+}

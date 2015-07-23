@@ -1,0 +1,67 @@
+//@btn-font-weight: 500;
+
+@btn-default-color:              #888;
+@btn-default-bg:                 #EEE;
+@btn-default-border:             #CCC;
+
+@btn-primary-color:              @brand-secondary;
+@btn-primary-bg:                 @brand-primary;
+@btn-primary-border:             darken(@brand-primary, 5%);
+
+@btn-success-color:              darken(@btn-success-bg, 30%);
+@btn-success-border:             darken(@btn-success-bg, 30%);
+
+@btn-info-color:                 darken(@btn-info-bg,    30%);
+@btn-info-border:                darken(@btn-info-bg,    30%);
+
+@btn-warning-color:              darken(@btn-warning-bg, 30%);
+@btn-warning-border:             darken(@btn-warning-bg, 30%);
+
+@btn-danger-color:               darken(@btn-danger-bg,  30%);
+@btn-danger-border:              darken(@btn-danger-bg,  30%);
+
+.btn {
+  //box-shadow: inset 0 7px 1px -6px rgba(255,255,255,0.25), 0 2px 6px -3px rgba(0,0,0,0.125);
+  outline: none !important;
+}
+
+.btn-link {
+  box-shadow: none;
+  text-decoration: none !important;
+}
+
+a {
+  outline: none !important;
+}
+.inline-link {
+  padding: 0 10px;
+  text-decoration: none !important;
+}
+
+.btn-dashed {
+  border: 1px dashed #AAA;
+  border-radius: 3px;
+  padding: 2px 15px;
+  background: transparent;
+  font-weight: 300;
+  color: #AAA;
+
+  &,
+  &:active,
+  &.active {
+    &:focus,
+    &.focus {
+      border: 1px solid @brand-primary;
+      color: @brand-primary;
+      .box-shadow(none);
+    }
+  }
+
+  &:hover,
+  &:focus,
+  &.focus {
+    border: 1px solid @brand-primary;
+    color: @brand-primary;
+    text-decoration: none;
+  }
+}

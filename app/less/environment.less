@@ -1,0 +1,55 @@
+.modal {
+  .modal-dialog {
+    &.environment-modal {
+      min-width: 600px;
+    }
+  }
+}
+
+.environment-table {
+  th, td {
+    padding: 3px;
+  }
+
+  code {
+    padding: 4px 8px;
+  }
+
+  thead {
+    th {
+      text-align: center;
+
+      a {
+        text-decoration: none !important;
+      }
+
+      code {
+        text-transform: uppercase;
+      }
+    }
+    td {
+      text-align: left;
+    }
+  }
+  tbody {
+    th {
+      min-width: 150px;
+      text-align: right;
+      font-weight: normal;
+
+      a {
+        text-decoration: none !important;
+      }
+    }
+    td {
+      input {
+        width: 175px;
+      }
+    }
+  }
+  tfoot {
+    th {
+      text-align: right;
+    }
+  }
+}

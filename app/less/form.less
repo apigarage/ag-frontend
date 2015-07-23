@@ -1,0 +1,137 @@
+// Prevent user text selection of non form elements
+.disable-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+.enable-select {
+  -webkit-touch-callout: initial;
+  -webkit-user-select: initial;
+  -khtml-user-select: initial;
+  -moz-user-select: initial;
+  -ms-user-select: initial;
+  user-select: initial;
+  cursor: initial;
+}
+
+// ============================================================================
+// Content Editable
+// ============================================================================
+*[contenteditable='true'] {
+  position: relative;
+  margin: -6px -8px !important; // Push the border outside of the normal box area (extra 1 pixel for border)
+  padding: 5px  7px !important; // !important to override inherited styles
+  border: 1px solid transparent;
+  border-radius: @input-border-radius;
+  transition: border-color .15s, box-shadow .15s, width .25s;
+
+  // Edit button
+  &:after {
+    transition: opacity .15s, background .15s;
+    .opacity(0.0);
+    background: transparent;
+    display: block;
+    position: absolute;
+    border: 1px solid @input-border;
+    border-radius: 0 @input-border-radius @input-border-radius 0;
+    top: -1px;
+    bottom: -1px;
+    right: -1px;
+
+    // Glyphicon Pencil Icon
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\270f"; // Pencil glyphicon
+
+    font-size: 14px;
+    font-weight: normal;
+    padding: 5px 10px;
+    cursor: pointer;
+    color: @gray-light;
+  }
+
+  &:hover {
+    border: 1px solid @input-border;
+    background: #FFF;
+
+    &:not(:focus) {
+      padding-right: 45px !important; // Make room for edit icon
+
+      &:after {
+        .opacity(1.0);
+        background: @gray-lighter;
+      }
+    }
+  }
+
+  &:focus {
+    border: 1px solid @input-border;
+    .box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
+    background: #FFF;
+
+    // Customize the `:focus` state to imitate native WebKit styles.
+    .form-control-focus();
+
+    &:after {
+      transition: none;
+      display: none;
+    }
+  }
+
+  // Add .single-line to hide newlines during edit
+  &.single-line {
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    &:not(:focus) {
+      padding-right: 45px !important; // Make room for edit icon
+    }
+
+    br {
+      display: none;
+    }
+  }
+
+  // Placeholder
+  &:empty:not(:focus):before{
+    content:attr(placeholder);
+    font-style: italic;
+    font-weight: 300;
+    color: @gray-light;
+  }
+}
+
+// ============================================================================
+// Placeholder
+// ============================================================================
+::-webkit-input-placeholder {  
+   font-style: italic;
+   font-weight: 300;
+}
+
+// ============================================================================
+// ACE editor customizations mixin
+// ============================================================================
+.ace-editor-customization {
+  .ace_editor {
+    min-height: 50px;
+    background-color: transparent;
+  }
+  .ace_bracket {
+    margin: 0 !important; // Fix alignment
+    display: none;        // More distracting than anything when in API Garage. Useful for text editors...
+  }
+  .ace_selection {
+    background-color: #DEF !important;
+  }
+  .ace_hidden-cursors { // Hide the cursor when not focused (too distracting)
+    display: none;
+  }
+}

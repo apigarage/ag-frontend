@@ -7,6 +7,9 @@
   var esperanto = require('esperanto');
   var map = require('vinyl-map');
   var jetpack = require('fs-jetpack');
+  var minifycss = require('gulp-minify-css');
+  var rename = require('gulp-rename');
+  var gutil = require('gulp-util');
 
   var utils = require('./utils');
 
@@ -15,17 +18,19 @@
   var destDir = projectDir.cwd('./build');
 
   var paths = {
-    jsCodeToTranspile: [
-      'app/**/*.js',
-      '!app/main.js',
-      '!app/utils.js',
-      '!app/windowsManager.js',
-      '!app/spec.js',
-      '!app/node_modules/**',
-      '!app/bower_components/**',
-      '!app/background/**',
-      '!app/vendor/**'
-    ],
+    // Note: Transpile not required for this project at the moment because
+    // we are using jshint.
+    // jsCodeToTranspile: [
+    //   'app/**/*.js',
+    //   '!app/main.js',
+    //   '!app/utils.js',
+    //   '!app/windowsManager.js',
+    //   '!app/spec.js',
+    //   '!app/node_modules/**',
+    //   '!app/bower_components/**',
+    //   '!app/background/**',
+    //   '!app/vendor/**'
+    // ],
     toCopy: [
       'app/main.js',
       'app/spec.js',
@@ -34,7 +39,11 @@
       'app/node_modules/**',
       'app/background/**',
       'app/bower_components/**',
+      'app/img/**',
+      'app/font/**',
       'app/vendor/**',
+      'app/css/**',
+      'app/js/**',
       'app/**/*.html'
     ],
   };
@@ -58,30 +67,32 @@
   gulp.task('copy-watch', copyTask);
 
 
-  var transpileTask = function () {
-    return gulp.src(paths.jsCodeToTranspile)
-    .pipe(map(function(code, filename) {
-      try {
-        var transpiled = esperanto.toAmd(code.toString(), { strict: true });
-        return transpiled.code;
-      } catch (err) {
-        throw new Error(err.message + ' ' + filename);
-      }
-    }))
-    .pipe(gulp.dest(destDir.path()));
-  };
-  gulp.task('transpile', ['clean'], transpileTask);
-  gulp.task('transpile-watch', transpileTask);
+  // var transpileTask = function () {
+  //   return gulp.src(paths.jsCodeToTranspile)
+  //   .pipe(map(function(code, filename) {
+  //     try {
+  //       var transpiled = esperanto.toAmd(code.toString(), { strict: true });
+  //       return transpiled.code;
+  //     } catch (err) {
+  //       throw new Error(err.message + ' ' + filename);
+  //     }
+  //   }))
+  //   .pipe(gulp.dest(destDir.path()));
+  // };
+  // gulp.task('transpile', ['clean'], transpileTask);
+  // gulp.task('transpile-watch', transpileTask);
 
 
   var lessTask = function () {
-    return gulp.src('app/stylesheets/main.less')
-    .pipe(less())
-    .pipe(gulp.dest(destDir.path('stylesheets')));
+    gulp.src('app/less/app.less')
+      .pipe(less().on('error', function(e){ gutil.log(gutil.colors.red(e.message)); }))
+      .pipe(gulp.dest('app/css'))
+      .pipe(rename({suffix: '.min'}))
+      .pipe(minifycss())
+      .pipe(gulp.dest('app/css'));
   };
   gulp.task('less', ['clean'], lessTask);
   gulp.task('less-watch', lessTask);
-
 
   gulp.task('finalize', ['clean'], function () {
     var manifest = srcDir.read('package.json', 'json');
@@ -109,11 +120,12 @@
 
 
   gulp.task('watch', function () {
-    gulp.watch(paths.jsCodeToTranspile, ['transpile-watch']);
+    // gulp.watch(paths.jsCodeToTranspile, ['transpile-watch']);
     gulp.watch(paths.toCopy, ['copy-watch']);
     gulp.watch('app/**/*.less', ['less-watch']);
   });
 
 
-  gulp.task('build', ['transpile', 'less', 'copy', 'finalize']);
+  // gulp.task('build', ['transpile', 'less', 'copy', 'finalize']);
+  gulp.task('build', ['less', 'copy', 'finalize']);
 })();

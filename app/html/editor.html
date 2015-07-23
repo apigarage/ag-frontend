@@ -1,0 +1,32 @@
+  <div class="layout-column-content editor" ng-controller="EditorCtrl" >
+    <div class="editor-header">
+
+      <div class="editor-actions">
+        <button class="btn btn-primary" bs-tooltip data-title="{{'OSX' ? '&#8984;S' : 'Ctrl+S'}}">
+          <span class="fa fa-fw fa-floppy-o"></span>
+          Save changes
+        </button>
+        <button class="btn btn-default">
+          <span class="fa fa-fw fa-files-o"></span>
+          Make a copy
+        </button>
+        <button class="btn btn-default">
+          <span class="fa fa-fw fa-trash-o"></span>
+          Delete
+        </button>
+      </div>
+
+      <h2>{{endpoint.category}}</h2>
+      <h1 contenteditable="true" class="single-line" ng-model="endpoint.name" placeholder="Untitled"></h1>      
+
+    </div>
+    <!--
+    <div class="editor-description">
+
+      <p contenteditable="true" ng-model="endpoint.description" placeholder="Add a description..." ></p>
+
+    </div>
+    -->
+    <div ng-include="'html/editor-request.html'"></div>
+    <div ng-include="'html/editor-response.html'"></div>
+  </div>

@@ -1,0 +1,152 @@
+@import "../bower_components/bootstrap/less/bootstrap.less";
+@import "../bower_components/angular/angular-csp.css";
+@import "../bower_components/font-awesome/less/font-awesome.less";
+@import "../bower_components/bootstrap-additions/dist/bootstrap-additions.css";
+@import "../bower_components/angular-motion/dist/angular-motion.css";
+@import "../bower_components/ladda/dist/ladda-themeless.min.css";
+@import "font.less";
+@import "button.less";
+@import "form.less";
+@import "dropdown.less";
+@import "modal.less";
+@import "sidebar.less";
+@import "editor.less";
+@import "environment.less";
+
+@brand-primary:         #774400;  // Construction Brown  #774400
+@brand-secondary:       #FFCC33;  // Construction Yellow #FFCC33
+@link-color:            #BB7700;  // Warmer shade
+
+@border-radius-base:    3px;
+
+@tooltip-opacity:       1.0;
+@tooltip-bg:            rgba(0,0,0,0.5);
+
+html,
+body {
+  overflow: hidden;
+  height: 100%;
+}
+
+@panel-heading-padding: 10px;
+
+// ============================================================================
+// Layout Rows
+// ============================================================================
+@layout-header-height: 50px;
+@layout-footer-height: 0px;
+.layout-row-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: @layout-header-height;
+
+  // 3D Look
+  background: @brand-secondary;
+  box-shadow: 0 0 4px rgba(0,0,0,0.25);
+  z-index: 20;
+  color: @brand-primary;
+}
+.layout-row-body {
+  position: absolute;
+  top: @layout-header-height;
+  left: 0;
+  right: 0;
+  bottom: @layout-footer-height;
+  background: #FFF;
+}
+
+// ============================================================================
+// Layout Columns
+// ============================================================================
+@layout-siebar-width: 250px;
+.layout-column-sidebar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: @layout-siebar-width;
+}
+.layout-column-content {
+  position: absolute;
+  top: 0;
+  left: @layout-siebar-width;
+  right: 0;
+  bottom: 0;
+}
+
+// ============================================================================
+// Project Box
+// ============================================================================
+.project-box {
+  display: inline-block;
+  position: relative;
+  outline: none !important;
+  border: 0;
+  border-right: 1px solid darken(@brand-primary, 10%);
+  border-bottom: 1px solid darken(@brand-primary, 12%);
+  padding: 10px 15px !important;  // Override the .header-item padding, make room for the larger font in the h1
+  background: @brand-primary;
+  color: @brand-secondary;
+
+  &:focus,
+  &:hover {
+    background: darken( @brand-primary, 5%);
+  }
+
+  h1 {
+    margin: 0 10px 0 0;
+    line-height: 29px;  // 50px - 2 * 10px = 30px, less 1px for the border! (without that 1px gap, will get overflow on hover!)
+    vertical-align: middle;
+    font-size: 18px;
+    font-weight: 500;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: left;
+  }
+  .caret {
+    position: absolute;
+    right: 15px;
+    top: 22px;
+  }
+}
+
+// ============================================================================
+// Header
+// ============================================================================
+.header {
+  border-bottom: 1px solid darken(@brand-secondary, 15%);
+  padding-left: 25px;
+}
+.header-item {
+  float: left;
+  display: inline-block;
+  position: relative;
+  border: 0;
+  padding: 15px;
+  background: none;
+  line-height: 19px;  // 50px - 2 * 15px = 20px, less 1px for the border! (without that 1px gap, will get overflow on hover!)
+
+  &:focus,
+  &:hover {
+    background: darken( @brand-secondary, 5%);
+    border-bottom: 1px solid darken(@brand-secondary, 15%);
+  }
+  outline: none !important;
+
+  &.active {
+    font-weight: bold;
+    &:after {
+      content: "";
+      display: block;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      border-top: 5px solid @brand-primary;
+    }
+  }
+}

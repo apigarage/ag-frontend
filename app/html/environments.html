@@ -1,0 +1,109 @@
+<div class="modal" ng-controller="EnvironmentsCtrl">
+  <div class="modal-wrapper">
+    <div class="modal-dialog environment-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+
+          <button type="button" class="close" ng-click="cancel()"><span>&times;</span></button>
+
+          <h1>Environment Variables</h1>
+          <p>
+            Each collaborator can store their own unique set of environment variables here.
+            <a href="">Read more.</a>
+          </p>
+
+        </div>
+        <div class="modal-body">
+
+          <table class="environment-table">
+            <thead>
+              <tr>
+                <td><!-- Spacer --></td>
+                <th ng-repeat="environment in environments">
+                  <input type="text" class="form-control" ng-model="environment" placeholder="Environment name" ng-if="!environment" />
+                  <a href="" bs-dropdown data-template="environmentMenu" data-placement="bottom-center" ng-if="environment">
+                    <code>
+                      <span class="fa fa-sliders"></span>
+                      {{environment}}
+                      <span class="caret"></span>
+                    </code>
+                  </a>
+                  <script type="text/ng-template" id="environmentMenu">
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a href="">
+                          <span class="fa fa-fw fa-pencil"></span>
+                          Rename environment
+                        </a>
+                      </li>
+                      <li>
+                        <a href="">
+                          <span class="fa fa-fw fa-trash-o"></span>
+                          Delete environment
+                        </a>
+                      </li>
+                    </ul>
+                  </script>
+                </th>
+                <td>
+                  <button type="button" class="btn btn-dashed" ng-click="addEnvironment()">
+                    <span class="fa fa-plus"></span>
+                    New Environment
+                  </button>
+                </td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="variable in environmentVariables">
+                <th>
+                  <a href="" bs-dropdown data-template="variableMenu" data-placement="bottom-center">
+                    <code>
+                      {{variable}}
+                      <span class="caret"></span>
+                    </code>
+                  </a>
+                  <script type="text/ng-template" id="variableMenu">
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a href="">
+                          <span class="fa fa-fw fa-pencil"></span>
+                          Rename variable
+                        </a>
+                      </li>
+                      <li>
+                        <a href="">
+                          <span class="fa fa-fw fa-trash-o"></span>
+                          Delete variable
+                        </a>
+                      </li>
+                    </ul>
+                  </script>                  
+                </th>
+                <td ng-repeat="environment in environments">
+                  <input type="text" class="form-control" />
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th>
+                  <button type="button" class="btn btn-dashed" ng-click="addVariable()">
+                    <span class="fa fa-plus"></span>
+                    New Variable
+                  </button>
+                </th>
+              </tr>
+            </tfoot>
+          </table>
+
+        </div>
+        <div class="modal-footer">
+
+          <button class="btn btn-primary" ng-click="submit()" type="submit">Save</button>
+          <button class="btn btn-default" ng-click="cancel()" type="submit">Cancel</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
