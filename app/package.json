@@ -5,11 +5,13 @@
   "description": "Best API design, development, and documentation tool.",
   "version": "0.0.1",
   "author": "Chinmay Patel<cpatel@apigarage.com>",
-  "main": "main.js",
+  "main": "bootstrap.js",
   "config": {
     "target": "development"
   },
   "dependencies": {
-    "fs-jetpack": "^0.6.5"
+    "fs-jetpack": "^0.6.5",
+    "nedb": "^1.1.2",
+    "prompt": "^0.2.14"
   }
 }

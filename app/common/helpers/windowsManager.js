@@ -1,9 +1,9 @@
 (function(){
 
   var BrowserWindow = require('browser-window');
-  var env = require('./vendor/electron_boilerplate/env_config');
-  var devHelper = require('./vendor/electron_boilerplate/dev_helper');
-  var windowStateKeeper = require('./vendor/electron_boilerplate/window_state');
+  var env = require('../../vendor/electron_boilerplate/env_config');
+  var devHelper = require('../../vendor/electron_boilerplate/dev_helper');
+  var windowStateKeeper = require('../../vendor/electron_boilerplate/window_state');
   var mainWindows = [];
 
   // Preserver of the window size and position between app launches.
@@ -18,7 +18,8 @@
         x: mainWindowState.x,
         y: mainWindowState.y,
         width: mainWindowState.width,
-        height: mainWindowState.height
+        height: mainWindowState.height,
+        'node-integration': false
       };
     }
     var w = new BrowserWindow(params);

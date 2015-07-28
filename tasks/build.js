@@ -18,33 +18,19 @@
   var destDir = projectDir.cwd('./build');
 
   var paths = {
-    // Note: Transpile not required for this project at the moment because
-    // we are using jshint.
-    // jsCodeToTranspile: [
-    //   'app/**/*.js',
-    //   '!app/main.js',
-    //   '!app/utils.js',
-    //   '!app/windowsManager.js',
-    //   '!app/spec.js',
-    //   '!app/node_modules/**',
-    //   '!app/bower_components/**',
-    //   '!app/background/**',
-    //   '!app/vendor/**'
-    // ],
     toCopy: [
-      'app/main.js',
-      'app/spec.js',
-      'app/utils.js',
-      'app/windowsManager.js',
-      'app/node_modules/**',
-      'app/background/**',
-      'app/bower_components/**',
-      'app/img/**',
-      'app/font/**',
-      'app/vendor/**',
-      'app/css/**',
-      'app/js/**',
-      'app/**/*.html'
+      'app/**/**',
+      // 'app/spec.js',
+      // 'app/windowsManager.js',
+      // 'app/node_modules/**',
+      // 'app/main/**',
+      // 'app/bower_components/**',
+      // 'app/img/**',
+      // 'app/font/**',
+      // 'app/vendor/**',
+      // 'app/css/**',
+      // 'app/js/**',
+      // 'app/**/*.html'
     ],
   };
 
