@@ -70,12 +70,12 @@
 
 
   var lessTask = function () {
-    gulp.src('app/less/app.less')
+    gulp.src('app/browser/less/app.less')
       .pipe(less().on('error', function(e){ gutil.log(gutil.colors.red(e.message)); }))
-      .pipe(gulp.dest('app/css'))
+      .pipe(gulp.dest('app/browser/css'))
       .pipe(rename({suffix: '.min'}))
       .pipe(minifycss())
-      .pipe(gulp.dest('app/css'));
+      .pipe(gulp.dest('app/browser/css'));
   };
   gulp.task('less', ['clean'], lessTask);
   gulp.task('less-watch', lessTask);
