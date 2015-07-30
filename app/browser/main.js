@@ -10,8 +10,7 @@
         'width': 1000,
         'height': 800,
         'min-width': 600,
-        'min-height': 640,
-        'node-integration':false
+        'min-height': 640
       });
       mainWindow.loadUrl("file://" + __dirname + "/index.html");
     });

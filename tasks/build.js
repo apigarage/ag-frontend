@@ -19,19 +19,12 @@
 
   var paths = {
     toCopy: [
-      'app/**/**',
-      // 'app/spec.js',
-      // 'app/windowsManager.js',
-      // 'app/node_modules/**',
-      // 'app/main/**',
-      // 'app/bower_components/**',
-      // 'app/img/**',
-      // 'app/font/**',
-      // 'app/vendor/**',
-      // 'app/css/**',
-      // 'app/js/**',
-      // 'app/**/*.html'
+      'app/**/**'
     ],
+    toWatch: [
+      'app/**/**',
+      '!app/browser/bower_components/**/**'  // Don't watch this, causes errors due to cyclical references https://github.com/gruntjs/grunt-contrib-watch/issues/75
+    ]
   };
 
   // -------------------------------------
@@ -107,7 +100,7 @@
 
   gulp.task('watch', function () {
     // gulp.watch(paths.jsCodeToTranspile, ['transpile-watch']);
-    gulp.watch(paths.toCopy, ['copy-watch']);
+    gulp.watch(paths.toWatch, ['copy-watch']);
     gulp.watch('app/**/*.less', ['less-watch']);
   });
 

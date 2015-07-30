@@ -9,6 +9,9 @@
 <body class="h-full disable-select">
   <div class="app" id="app" ui-view></div>
   <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script>
+    window.$ = window.jQuery = require('./bower_components/jquery/dist/jquery.js');
+  </script>
   <script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-animate/angular-animate.js"></script>
@@ -26,7 +29,6 @@
   <script src="js/controller/SidebarController.js"></script>
   <script src="js/controller/EditorController.js"></script>
   <script src="js/controller/EnvironmentsController.js"></script>
-  <script src="js/directive/NoScroll.js"></script>
   <script src="js/directive/ContentEditable.js"></script>
 </body>
 </html>
