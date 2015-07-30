@@ -1,6 +1,8 @@
 (function(){
   'use strict';
+  var auth = require('../common/models/auth.js');
+
   module.exports.init = function(){
-    console.log('Starting the CLI TOOL');
+    auth.login();
   };
 })();

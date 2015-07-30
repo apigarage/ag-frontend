@@ -1,5 +1,9 @@
 {
   "name": "test",
   "description": "Add here any environment specific stuff you like.",
+  "url": "http://localhost:3000/",
+  "api": "api/",
+  "client_id": "id_z7y3e0902uNtMxO07Z6q",
+  "client_secret": "secret_44207Z6q1Lq5e6me0902",
   "syncTime": 10000
 }
