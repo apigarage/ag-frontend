@@ -1,0 +1,36 @@
+<div class="authentication-wrapper">
+  <div class="authentication" ng-controller="AuthenticationCtrl">
+
+    <img class="authentication-logo" src="img/api-garage-logo-large.png" />
+
+    <form class="authentication-form" ng-submit="submit()">
+      <input type="name"      class="form-control authentication-name"      ng-class="{'input-lg': authentication.type == 'existing'}" placeholder="Name" ng-if="authentication.type == 'register'" />
+      <p class="authentication-validation" ng-if="authentication.error && authentication.type == 'register'">
+        Dummy validation, submit again to enter
+      </p>
+      <input type="email"     class="form-control authentication-email"     ng-class="{'input-lg': authentication.type == 'existing'}" placeholder="Email Address" />
+      <p class="authentication-validation" ng-if="authentication.error">
+        Dummy validation, submit again to enter
+      </p>
+      <input type="password"  class="form-control authentication-password"  ng-class="{'input-lg': authentication.type == 'existing'}" placeholder="Password" />
+      <p class="authentication-validation" ng-if="authentication.error">
+        Dummy validation, submit again to enter
+      </p>
+      <button type="submit" class="btn btn-primary btn-block btn-lg">
+        {{ authentication.type == "existing" ? "Sign in" : "Register" }}
+      </button>
+      <p class="authentication-forgot-link" ng-if="authentication.type == 'existing'">
+        <a>Forgot password?</a>
+      </p>
+    </form>
+
+    <div class="authentication-toggle">
+      {{ authentication.type == "existing" ? "Don't have an account?" : "Already have an account?" }}
+      <a href="#" ng-click="toggleAuthenticationType()">
+        {{ authenticaiton.type == "existing" ? "Sign in" : "Create an account" }}
+      </a>
+      </span>
+    </div>
+
+  </div>
+</div>

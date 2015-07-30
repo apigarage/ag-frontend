@@ -4,6 +4,7 @@
 @import "../bower_components/bootstrap-additions/dist/bootstrap-additions.css";
 @import "../bower_components/angular-motion/dist/angular-motion.css";
 @import "../bower_components/ladda/dist/ladda-themeless.min.css";
+@import "authentication.less";
 @import "font.less";
 @import "button.less";
 @import "form.less";
@@ -18,6 +19,7 @@
 @link-color:            #BB7700;  // Warmer shade
 
 @border-radius-base:    3px;
+@border-radius-large:   3px;
 
 @tooltip-opacity:       1.0;
 @tooltip-bg:            rgba(0,0,0,0.5);
@@ -60,20 +62,23 @@ body {
 // ============================================================================
 // Layout Columns
 // ============================================================================
-@layout-siebar-width: 250px;
+@layout-sidebar-width: 250px;
 .layout-column-sidebar {
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
-  width: @layout-siebar-width;
+  width: @layout-sidebar-width;
+  z-index: 10;
+  transition: margin 0.25s;
 }
 .layout-column-content {
   position: absolute;
   top: 0;
-  left: @layout-siebar-width;
+  left: @layout-sidebar-width;
   right: 0;
   bottom: 0;
+  transition: left 0.25s;
 }
 
 // ============================================================================
@@ -120,6 +125,7 @@ body {
 .header {
   border-bottom: 1px solid darken(@brand-secondary, 15%);
   padding-left: 25px;
+  transition: left 0.25s, padding 0.25s;
 }
 .header-item {
   float: left;
@@ -147,6 +153,55 @@ body {
       right: 0;
       bottom: -1px;
       border-top: 5px solid @brand-primary;
+    }
+  }
+}
+.header-sidebar-toggle {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+// ============================================================================
+// Responsive Sidebar Collapse
+// ============================================================================
+@screen-sm: 800px;
+@media (max-width: @screen-xs-max) {
+  .layout-column-sidebar {
+    margin-left: -@layout-sidebar-width;
+
+    &.expanded {
+      margin-left: 0;
+      z-index: 100;
+    }
+  }
+  .layout-column-content {
+    left: 0;
+  }
+  .header {
+    padding-left: 60px;
+  }
+  .header-sidebar-toggle {
+    opacity: 1;
+  }
+  .sidebar-expand-overlay {
+    position: absolute;
+    top: -1000px;
+    left: -1000px;
+    background: rgba(255,255,255,0.75);
+    z-index: 99;
+
+    opacity: 0;
+    transition: opacity 0.25s;
+    &.active {
+      display: block;
+      opacity: 1;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
     }
   }
 }

@@ -43,7 +43,7 @@
   padding-top: 20px;
 }
 .editor-description {
-  margin: 20px 0; 
+  margin: 20px 0;
 }
 
 .editor-panel {
@@ -151,7 +151,15 @@
   width: 486px;
   margin-bottom: 10px;
 }
-
+@media (max-width: @screen-sm-max) {
+  .request-header-key {
+    min-width: 140px;
+    max-width: 140px;
+  }
+  .request-header-value {
+    max-width: 320px;
+  }
+}
 
 // ============================================================================
 // Request Body - Ace Editor
@@ -219,7 +227,6 @@
 // Response Headers
 // ============================================================================
 .response-headers {
-  margin-top: 10px;
   position: relative;
   padding-top: 25px;
 }

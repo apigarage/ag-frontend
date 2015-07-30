@@ -2,20 +2,19 @@
     <div class="editor-header">
 
       <div class="editor-actions">
-        <button class="btn btn-primary" bs-tooltip data-title="{{'OSX' ? '&#8984;S' : 'Ctrl+S'}}">
+        <button class="btn btn-primary" bs-tooltip data-title="{{'OSX' ? '&#8984;S' : 'Ctrl+S'}}" data-placement="bottom">
           <span class="fa fa-fw fa-floppy-o"></span>
-          Save changes
+          <span class="hidden-xs hidden-sm">Save changes</span>
         </button>
         <button class="btn btn-default">
           <span class="fa fa-fw fa-files-o"></span>
-          Make a copy
+          <span class="hidden-xs hidden-sm">Make a copy</span>
         </button>
         <button class="btn btn-default">
           <span class="fa fa-fw fa-trash-o"></span>
-          Delete
+          <span class="hidden-xs hidden-sm">Delete</span>
         </button>
       </div>
-
       <h2>{{endpoint.category}}</h2>
       <h1 contenteditable="true" class="single-line" ng-model="endpoint.name" placeholder="Untitled"></h1>
 

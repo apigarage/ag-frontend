@@ -26,9 +26,18 @@
       animation: 'none'
     });
 
-    $urlRouterProvider.otherwise('/app');
+    $urlRouterProvider.when('', '/authentication');
+    $urlRouterProvider.otherwise('/authentication');
 
+    // Chinmay/Gamal - you'll obviously have to redo the route logic significantly
+    // for authentication to work correctly. Have fun :)
+    // Possible hints: http://stackoverflow.com/questions/22537311/angular-ui-router-login-authentication
     $stateProvider
+    .state('authentication', {
+      abstract: false,
+      url: '/authentication',
+      templateUrl: 'html/authentication.html'
+    })
     .state('app', {
       abstract: false,
       url: '/app',

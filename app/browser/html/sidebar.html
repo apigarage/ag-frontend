@@ -1,5 +1,5 @@
-  <div class="layout-column-sidebar sidebar noselect" bs-affix-target ng-controller="SidebarCtrl">
-
+  <div class="layout-column-sidebar sidebar noselect" ng-class="{expanded: layout.sidebarExpanded}"
+      bs-affix-target ng-controller="SidebarCtrl">
     <!-- NEW ENDPOINT BUTTON -->
     <button type="button" class="btn btn-default btn-block sidebar-new"
             bs-tooltip data-title="{{'OSX' ? '&#8984;N' : 'Ctrl+N'}}" data-placement="bottom">

@@ -1,4 +1,7 @@
   <div class="layout-column-content header noselect">
+    <button class="header-sidebar-toggle btn btn-primary" ng-click="toggleSidebar()">
+      <span class="fa fa-bars"></span>
+    </button>
     <button class="header-item active">
       Endpoints
     </button>
@@ -8,6 +11,7 @@
     <button class="header-item">
       Testing
     </button>
+
     <button class="header-item pull-right" bs-dropdown data-template="accountMenu" data-placement="bottom-right">
       <span class="glyphicon glyphicon-user"></span>
       Account
@@ -30,18 +34,12 @@
         <li>
           <a href="#">
             <span class="fa fa-fw fa-spacer"></span>
-            Test IPC Call
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <span class="fa fa-fw fa-spacer"></span>
             Something else here
           </a>
         </li>
         <li class="divider"></li>
         <li>
-          <a href="#">
+          <a ui-sref="authentication">
             <span class="fa fa-fw fa-sign-out"></span>
             Log out
           </a>

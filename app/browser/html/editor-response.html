@@ -11,12 +11,21 @@
             Waiting for response...
           </div>
           <div ng-switch-default>
-            <span class="fa" ng-class="getResponseCodeClass(response.code)"></span>
-            {{response.code + ' ' + response.status}}
-            |
-            <strong>{{response.size | number: 1}} kilobytes</strong>
-            received in
-            <strong>{{response.time | number: 3}} seconds</strong>.
+            <strong>
+              <span class="fa" ng-class="getResponseCodeClass(response.code)"></span>
+              {{response.code + ' ' + response.status}}
+            </strong>
+            <span class="hidden-xs hidden-sm">
+              &mdash;
+              <strong>{{response.size | number: 1}} kilobytes</strong>
+              received in
+              <strong>{{response.time | number: 3}} seconds</strong>.
+            </span>
+            <span class="visible-xs-inline visible-sm-inline">
+              &mdash;
+              {{response.size | number: 1}} kB,
+              {{response.time | number: 2}} s
+            </span>
           </div>
         </div>
 

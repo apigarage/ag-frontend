@@ -1,0 +1,91 @@
+.authentication-wrapper {
+  position: absolute;
+  display: table;
+  width: 100%;
+  height: 100%;
+  background-color: @brand-secondary;
+  background-image: radial-gradient(ellipse 900px 1000px at 50% 50%, #FFF 25%, rgba(255,255,255, 0) 100%);
+}
+.authentication {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+.authentication-logo {
+  width: 300px;
+}
+.authentication-form {
+  margin: 35px auto 20px;
+  width: 300px;
+  border: 1px solid #CCC;
+  border-radius: @border-radius-base;
+  box-shadow: 0 2px 9px rgba(0,0,0,0.15);
+  padding: 20px;
+  background: #F4F4F4;
+
+  input {
+    margin-bottom: 10px;
+    transition: all 0.25s;
+  }
+  button {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+}
+.authentication-name {
+  transition: all 0.25s;
+  &.ng-enter,
+  &.ng-leave.ng-leave-active {
+    opacity: 0;
+    height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0 0 0;
+  }
+  &.ng-leave,
+  &.ng-enter.ng-enter-active {
+    opacity: 1;
+    height: 46px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 0 0 10px;
+  }
+}
+.authentication-forgot-link {
+  margin: 10px 0 0;
+  text-align: right;
+
+  transition: all 0.25s;
+  &.ng-enter,
+  &.ng-leave.ng-leave-active {
+    opacity: 0;
+    height: 0;
+    margin: 0 0 0;
+  }
+  &.ng-leave,
+  &.ng-enter.ng-enter-active {
+    opacity: 1;
+    height: 20px;
+    margin: 10px 0 0;
+  }
+}
+.authentication-validation {
+  color: @brand-danger;
+  text-align: left;
+  margin: -8px 0 10px;
+  padding: 0;
+
+  transition: all 0.25s;
+  &.ng-enter,
+  &.ng-leave.ng-leave-active {
+    opacity: 0;
+    height: 0;
+    margin: 0 0 0;
+  }
+  &.ng-leave,
+  &.ng-enter.ng-enter-active {
+    opacity: 1;
+    height: 20px;
+    margin: -8px 0 10px;
+  }
+}

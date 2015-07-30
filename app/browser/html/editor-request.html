@@ -45,11 +45,11 @@
                 </li>
               </ul>
             </script>
-            <button class="btn btn-primary" ng-click="performRequest()"
+            <button class="btn btn-primary" ng-click="performRequest()"``
                     ladda="response == 'loading'" data-style="expand-right"
-                    bs-tooltip data-title="{{'OSX' ? '&#8984;R' : 'Ctrl+R'}}">
+                    bs-tooltip data-title="{{'OSX' ? '&#8984;R' : 'Ctrl+R'}}" data-placement="bottom">
               <span class="fa fa-upload"></span>
-              Make request
+               <span class="hidden-xs hidden-sm">Make request</span>
             </button>
           </div>
         </div>
@@ -71,7 +71,7 @@
               <td>
                 <a href="" class="request-header-delete" ng-click="deleteRequestHeader(requestHeader)">
                   <span class="fa fa-trash-o"></span>
-                  Delete
+                  <span class="hidden-xs hidden-sm">Delete</span>
                 </a>
               </td>
             </tr>
