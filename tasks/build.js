@@ -18,6 +18,7 @@
   var destDir = projectDir.cwd('./build');
 
   var paths = {
+    // TODO - DO NOT COPY TESTS FOR THE APP.
     toCopy: [
       'app/**/**',
       '!app/package.json' // Otherwise, it will be overwritten for tests.
@@ -89,7 +90,8 @@
         manifest.name += '-test';
         manifest.productName += ' Test';
         // Change the main entry to spec runner.
-        manifest.main = 'spec.js';
+        manifest.main = 'tests/spec.js';
+        console.log(manifest);
         break;
     }
     destDir.write('package.json', manifest);

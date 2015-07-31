@@ -4,8 +4,8 @@
 
   var app = require('app');
   var BrowserWindow = require('browser-window');
-  var devHelper = require('./vendor/electron_boilerplate/dev_helper');
-  var windowStateKeeper = require('./vendor/electron_boilerplate/window_state');
+  var devHelper = require('../vendor/electron_boilerplate/dev_helper');
+  var windowStateKeeper = require('../vendor/electron_boilerplate/window_state');
 
   var mainWindow;
 
