@@ -4,18 +4,18 @@
   <meta charset="utf-8">
   <title>Jasmine Spec Runner</title>
 
-  <link rel="stylesheet" type="text/css" href="../vendor/jasmine/jasmine.css">
+  <link rel="stylesheet" type="text/css" href="../app/vendor/jasmine/jasmine.css">
 
-  <script src="../vendor/jasmine/jasmine.js"></script>
-  <script src="../vendor/jasmine/jasmine-html.js"></script>
-  <script src="../vendor/jasmine/boot.js"></script>
+  <script src="../app/vendor/jasmine/jasmine.js"></script>
+  <script src="../app/vendor/jasmine/jasmine-html.js"></script>
+  <script src="../app/vendor/jasmine/boot.js"></script>
   <script>
     // Overwrite defaul behaviour of boot.js
     // We can't start with onload, need to wait until all specs are loaded.
     var startJasmine = window.onload;
     window.onload = null;
   </script>
-  <script src="../vendor/require.js"></script>
+  <script src="../app/vendor/require.js"></script>
 
   <script>
 

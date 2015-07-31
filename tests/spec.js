@@ -4,15 +4,15 @@
 
   var app = require('app');
   var BrowserWindow = require('browser-window');
-  var devHelper = require('../vendor/electron_boilerplate/dev_helper');
-  var windowStateKeeper = require('../vendor/electron_boilerplate/window_state');
+  var devHelper = require('../app/vendor/electron_boilerplate/dev_helper');
+  var windowStateKeeper = require('../app/vendor/electron_boilerplate/window_state');
 
   var mainWindow;
 
   // Preserver of the window size and position between app launches.
   var mainWindowState = windowStateKeeper('main', {
-    width: 1000,
-    height: 600
+    width: 1200,
+    height: 800
   });
 
   app.on('ready', function () {

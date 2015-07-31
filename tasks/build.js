@@ -90,8 +90,7 @@
         manifest.name += '-test';
         manifest.productName += ' Test';
         // Change the main entry to spec runner.
-        manifest.main = 'tests/spec.js';
-        console.log(manifest);
+        manifest.main = '../tests/spec.js';
         break;
     }
     destDir.write('package.json', manifest);
