@@ -19,7 +19,8 @@
 
   var paths = {
     toCopy: [
-      'app/**/**'
+      'app/**/**',
+      '!app/package.json' // Otherwise, it will be overwritten for tests.
     ],
     toWatch: [
       'app/**/**',
