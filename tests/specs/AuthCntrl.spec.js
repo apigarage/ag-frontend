@@ -19,6 +19,9 @@ describe('Controller: Auth', function() {
        });
   }));
 
+  afterEach(function() {
+    $rootScope.$apply();
+  });
   describe('Sign Up', function () {
 
     // email is empty
@@ -103,18 +106,21 @@ describe('Controller: Auth', function() {
       })));
 
       afterEach(function() {
+        $rootScope.$apply();
         $httpBackend.verifyNoOutstandingExpectation();
         $httpBackend.verifyNoOutstandingRequest();
       })
+
       it("Email is invalid", function(){  
         // password is not defined
         $scope.credentials.email = 'test@test.ca';  
         $scope.credentials.name = 'test';  
         $scope.credentials.password = 'test123';  
         $scope.signup();
+        // $scope.$digest();
         // console.log($scope);
         $httpBackend.flush();
-        console.log($scope.emailErrorMessage);
+        //console.log($scope.emailErrorMessage);
         expect($scope.emailError).toEqual(false);
         expect($scope.emailErrorMessage).toEqual(false);
       });
