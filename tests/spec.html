@@ -5,7 +5,10 @@
   <title>Jasmine Spec Runner</title>
 
   <link rel="stylesheet" type="text/css" href="../app/vendor/jasmine/jasmine.css">
-
+  
+   <script>
+    window.$ = window.jQuery = require('../app/browser/bower_components/jquery/dist/jquery.js');
+  </script>
   <script src="../app/vendor/jasmine/jasmine.js"></script>
   <script src="../app/vendor/jasmine/jasmine-html.js"></script>
   <script src="../app/vendor/jasmine/boot.js"></script>
