@@ -6,11 +6,13 @@ describe('Controller: Auth', function() {
 
   beforeEach(module('app'));
 
-  beforeEach(inject(function(_$rootScope_, _$controller_, _$q_){
+  beforeEach(inject(function(_$rootScope_, _$controller_, _$q_, _$window_, _Config_){
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $controller = _$controller_;
     $q = _$q_;
+    $window = _$window_;
+    Config = _Config_;
 
     $controller('AuthCtrl', {
       $scope: $scope,
@@ -98,7 +100,9 @@ describe('Controller: Auth', function() {
         // Set up the mock http service responses
         $httpBackend = _$httpBackend_;
         // backend definition common for all tests
-        $httpBackend.expectPOST('dev.chinman.backend.com/api/users',{name: "test",
+
+        $httpBackend.expectPOST('' + Config.url + 'api/users',
+                                {name: "test",
                                   email: "test@test.ca",
                                   password: "test123"})
                         .respond(200, {"name":"test",
