@@ -9,7 +9,7 @@ angular.module('app')
 .factory('Config', ['$http', function ($http) {
   return {
     env: "chrome",
-    url: "http://dev.chinman.backend.com/",
+    url: "http://localhost:3000/",
     // url: "http://api.apigarage.com/",
     api: "api/",
     client_id: "id_z7y3e0902uNtMxO07Z6q",

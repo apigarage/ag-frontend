@@ -29,7 +29,8 @@
     "angular-ladda": "0.3.1",
     "angular-animate": "1.4.3",
     "angular-motion": "0.4.2",
-    "ng-lodash": "~0.2.3"
+    "ng-lodash": "~0.2.3",
+    "angular-mocks":"1.4.3"
   },
   "resolutions": {
     "jquery": "2.1.4",
