@@ -7,12 +7,12 @@ angular.module('app')
     var send = function(options){
       var headers = options.headers ? options.headers : {};
       var promises = [];
-      promises.push(
-        Auth.get()
-            .then( function(data){ 
-              headers['Authorization'] = data;
-            })
-      );
+      // promises.push(
+      //   Auth.get()
+      //       .then( function(data){
+      //         headers['Authorization'] = data;
+      //       })
+      // );
 
       return $q.all(promises)
         .then(function(){
@@ -23,11 +23,14 @@ angular.module('app')
               return res.data;
             })
             .catch(function(res) {
-              // Log and/or show the error message 
+              // Log and/or show the error message
               console.log( res );
               return res;
             })
         })
+        .catch(function(err){
+          console.log(err);
+        });
     };
 
     return{

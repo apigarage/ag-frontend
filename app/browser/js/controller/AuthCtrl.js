@@ -53,14 +53,19 @@ angular.module('app')
         allowSignup = false;
       }
       if(allowSignup){
-        Users.create($scope.credentials)
+        return Users.create($scope.credentials)
           .then(function(data){
-
-          if(data.id != undefined){
-            var userData = {};
-            userData.email = data.email;
-            userData.password = $scope.credentials.password;
-            Auth.login(userData)
+            $scope.userData = data;
+            console.log('I AM HERE WITH DATA');
+            if(data.data.data.data == undefined){
+              var x = 'x';
+            };
+            console.log(data);
+            if(data.id != undefined){
+              var userData = {};
+              userData.email = data.email;
+              userData.password = $scope.credentials.password;
+              Auth.login(userData)
               .then(function(loggedIn){
                 if(loggedIn){
                   $modalInstance.close(true);
@@ -69,19 +74,19 @@ angular.module('app')
                   $scope.showSignupError = true;
                 }
               });
-          } else {
-            if(typeof data.data.email != 'undefined'){
-              $scope.emailErrorMessage = data.data.email[0];
-              $scope.emailError = true;
-            }
-            if(typeof data.data.name != 'undefined'){
-              $scope.nameErrorMessage = data.data.name[0];
-              $scope.NameError = true;          }
-            if(typeof data.data.password != 'undefined'){
-              $scope.passordErrorMessage = data.data.password[0];
-              $scope.passwordError = true;
-            }
-          }
+            } else {
+              if(typeof data.data.email != 'undefined'){
+                $scope.emailErrorMessage = data.data.email[0];
+                $scope.emailError = true;
+              }
+              if(typeof data.data.name != 'undefined'){
+                $scope.nameErrorMessage = data.data.name[0];
+                $scope.NameError = true;          }
+                if(typeof data.data.password != 'undefined'){
+                  $scope.passordErrorMessage = data.data.password[0];
+                  $scope.passwordError = true;
+                }
+              }
       });
       }
     };

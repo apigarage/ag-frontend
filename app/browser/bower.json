@@ -28,7 +28,8 @@
     "angular-elastic-input": "2.0.2",
     "angular-ladda": "0.3.1",
     "angular-animate": "1.4.3",
-    "angular-motion": "0.4.2"
+    "angular-motion": "0.4.2",
+    "angular-mocks":"1.4.3"
   },
   "resolutions": {
     "jquery": "2.1.4",
