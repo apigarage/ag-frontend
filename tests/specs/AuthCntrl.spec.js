@@ -98,7 +98,7 @@ describe('Controller: Auth', function() {
         // Set up the mock http service responses
         $httpBackend = _$httpBackend_;
         // backend definition common for all tests
-        $httpBackend.expectPOST('http://dev.backend.com/api/users',{name: "test",
+        $httpBackend.expectPOST('dev.chinman.backend.com/api/users',{name: "test",
                                   email: "test@test.ca",
                                   password: "test123"})
                         .respond(200, {"name":"test",
@@ -107,9 +107,9 @@ describe('Controller: Auth', function() {
       }));
 
       afterEach(function() {
-        // $rootScope.$apply();
-        // $httpBackend.verifyNoOutstandingExpectation();
-        // $httpBackend.verifyNoOutstandingRequest();
+        $rootScope.$apply();
+        $httpBackend.verifyNoOutstandingExpectation();
+        $httpBackend.verifyNoOutstandingRequest();
       });
 
       it("Email is invalid", function(){
@@ -118,11 +118,9 @@ describe('Controller: Auth', function() {
         $scope.credentials.name = 'test';
         $scope.credentials.password = 'test123';
         $scope.signup();
-        // done();
-        // $scope.$digest();
-        // console.log($scope);
-        // $httpBackend.flush();
-        //console.log($scope.emailErrorMessage);
+        $scope.$digest();
+        $httpBackend.flush();
+        console.log($scope.userData);
         $rootScope.$apply();
         expect($scope.emailError).toEqual(false);
         expect($scope.emailErrorMessage).toEqual(false);

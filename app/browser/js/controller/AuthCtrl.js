@@ -56,11 +56,6 @@ angular.module('app')
         return Users.create($scope.credentials)
           .then(function(data){
             $scope.userData = data;
-            console.log('I AM HERE WITH DATA');
-            if(data.data.data.data == undefined){
-              var x = 'x';
-            };
-            console.log(data);
             if(data.id != undefined){
               var userData = {};
               userData.email = data.email;
