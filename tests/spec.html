@@ -5,16 +5,19 @@
   <title>Jasmine Spec Runner</title>
 
   <link rel="stylesheet" type="text/css" href="../app/vendor/jasmine/jasmine.css">
-  
+
    <script>
     window.$ = window.jQuery = require('../app/browser/bower_components/jquery/dist/jquery.js');
   </script>
   <script src="../app/vendor/jasmine/jasmine.js"></script>
   <script src="../app/vendor/jasmine/jasmine-html.js"></script>
   <script src="../app/vendor/jasmine/boot.js"></script>
-  <script src="../app/vendor/jasmine/jasmine.js"></script>
-  <script src="../app/vendor/jasmine/jasmine-html.js"></script>
-  <script src="../app/vendor/jasmine/boot.js"></script>
+  <!--  Add blanket.min.js  after jasmine setup -->
+  <script src="../app/vendor/blanketjs/blanket.min.js"></script>
+  <!-- Add blanket_browser.js support -->
+  <script src="../app/vendor/blanketjs/blanket_browser.js"></script>
+  <!-- Add blanketjs jasmine support adapter for blanket -->
+  <script src="../app/vendor/blanketjs/jasmine-2.x-blanket.js"></script>
   <script src="../app/vendor/electron_boilerplate/env_config.js"></script>
   <script src="../app/browser/bower_components/jquery/dist/jquery.js"></script>
   <script src="../app/browser/bower_components/ace-builds/src-min-noconflict/ace.js"></script>
@@ -27,18 +30,18 @@
   <script src="../app/browser/bower_components/ui-router/release/angular-ui-router.js"></script>
   <script src="../app/browser/bower_components/ladda/dist/spin.min.js"></script>
   <script src="../app/browser/bower_components/ladda/dist/ladda.min.js"></script>
-  <script src="../app/browser/bower_components/ng-lodash/build/ng-lodash.min.js"></script>
+  <!-- Commenting out temporariry <script src="../app/browser/bower_components/ng-lodash/build/ng-lodash.min.js"></script> -->
   <script src="../app/browser/bower_components/angular-ladda/dist/angular-ladda.min.js"></script>
   <script src="../app/browser/bower_components/angular-elastic-input/dist/angular-elastic-input.js"></script>
-  <script src="../app/browser/js/app.js"></script>
-  <script src="../app/browser/js/services/Config.js"></script>
-  <script src="../app/browser/js/services/Auth.js"></script>
-  <script src="../app/browser/js/services/Projects.js"></script>
-  <script src="../app/browser/js/services/Users.js"></script>
-  <script src="../app/browser/js/services/ApiRequest.js"></script>
-  <script src="../app/browser/js/controller/SidebarController.js"></script>
-  <script src="../app/browser/js/controller/AuthCtrl.js"></script>
-  <script src="../app/browser/js/directive/ContentEditable.js"></script>
+  <script src="../app/browser/js/app.js" data-cover></script>
+  <script src="../app/browser/js/services/Config.js" data-cover></script>
+  <script src="../app/browser/js/services/Auth.js" data-cover></script>
+  <script src="../app/browser/js/services/Projects.js" data-cover></script>
+  <script src="../app/browser/js/services/Users.js" data-cover></script>
+  <script src="../app/browser/js/services/ApiRequest.js" data-cover></script>
+  <script src="../app/browser/js/controller/SidebarController.js" data-cover></script>
+  <script src="../app/browser/js/controller/AuthCtrl.js" data-cover></script>
+  <script src="../app/browser/js/directive/ContentEditable.js" data-cover></script>
   <script>
     // Overwrite defaul behaviour of boot.js
     // We can't start with onload, need to wait until all specs are loaded.
