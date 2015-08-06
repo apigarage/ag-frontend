@@ -1,6 +1,6 @@
 angular.module('app')
-.factory('HttpBackendBuilder', function(){
-  var build = function($httpBackend, request, result){
+.factory('HttpBackendBuilder', ['$httpBackend', function($httpBackend){
+  var build = function(request, result){
     return $httpBackend.expect(
         request.method,
         request.url,
@@ -15,6 +15,6 @@ angular.module('app')
   };
 
   return {
-    build: build
+    build : build
   };
-});
+}]);
