@@ -1,22 +1,22 @@
 angular.module('app').controller('EditorCtrl', [
   '$scope',
-  '$timeout',
   '$http',
   '$modal',
-  function ($scope, $timeout, $http, $modal){
+  'RequestBuilder',
+  function ($scope, $http, $modal, RequestBuilder){
 
     // ----------------------------
     // Temporary MOCK Endpoint Use Case
     $scope.endpoint = {
-      category: "Albums",
-      name: "Get an Artist's Tracks",
+      category: "Untitled Request",
+      name: "Untitled Catgetory",
       environment: 'production',
       requestMethod: 'GET',
       requestHeaders: [
         { key: "Content-Type", value: "application/json" },
         { key: "language", value: "EN" }
       ],
-      requestBody: '{\n    "amount": "32.32",\n    "status": true\n}'
+      requestBody: ''
     };
     $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
     $scope.environments = ['local', 'staging', 'production'];
@@ -52,24 +52,23 @@ angular.module('app').controller('EditorCtrl', [
       $scope.endpoint.requestHeaders.splice(position, 1);
     };
 
-    // ----------------------------
-    // Temporary MOCK Responses
-    var randomRequestIndex = 1;
-    //$scope.response = sampleResponses[1];
     $scope.performRequest = function(){
-      console.log($scope.endpoint);
+      var options = {
+        method: $scope.endpoint.requestMethod,
+        url: $scope.endpoint.requestUrl,
+        headers: $scope.endpoint.requestHeaders,
+        data: $scope.endpoint.requestBody
+      };
+      options = RequestBuilder.buildRequest(options);
+      options.transformResponse = function(data){return data;};
       $scope.response = "loading";
-
-      $http.get($scope.endpoint.requestUrl).then(function(data){
-        $scope.response = data;
+      return $http(options).then(function(response){
+        $scope.response = response;
       })
-      .catch(function(err){
-        console.log(err);
+      .catch(function(errorResponse){
+        $scope.response = errorResponse;
       });
 
-      // Randomly return one of the sample responses (declared at the bottom of the page)
-      $timeout(function(){  // Emulate async
-      }, 500);
     };
 
     $scope.getResponseCodeClass = function(responseCode){

@@ -6,8 +6,9 @@
   // Example of an input Array -
   // Example of an input object -
 
+  var requestBuilder = {};
   // @outputStyle - 'string', 'object', 'array'
-  module.exports.getHeader = function(input, outputStyle){
+  requestBuilder.getHeader = function(input, outputStyle){
     // First convert all the inputs into an array.
     // It will allow us to keep the index for later.
     if(typeof input == 'string'){
@@ -32,4 +33,17 @@
 
     // Now, input is definitely an array (), convert into outputStyle.
   };
+
+  requestBuilder.buildRequest = function(options, environment){
+    if( environment ){
+      // options will be updated with environment variables.
+    }
+    return options;
+  };
+
+  if(window){
+    window.requestBuilder = requestBuilder;
+  }
+
+  return requestBuilder;
 })();

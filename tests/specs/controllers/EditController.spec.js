@@ -10,15 +10,61 @@ describe('Controller: EditController', function() {
     $httpBackend = _$httpBackend_;
     Config = _Config_;
     RequestStubs = _RequestStubs_;
-    $controller('EditorCtrl', {'$scope': $scope});
+    $controller('EditorCtrl', {
+      $scope: $scope,
+      $rootScope: $rootScope,
+      $modalInstance: {}
+    });
   }));
 
-  describe('Valid URL', function(){
-    it('response body is set');
+  afterEach(function(){
+    $scope.$digest();
+    $rootScope.$apply();
+    $httpBackend.flush();
+  });
+
+  describe('GET Valid URL', function(){
+    it('response body is set', function(){
+      RequestStubs.stubCommonGetRequest($httpBackend);
+      $scope.endpoint.requestUrl = 'http://www.google.com';
+      $scope.performRequest().then(function(){
+        expect($scope.response).toBeDefined();
+        expect($scope.response.data).toBe('The data is here.');
+        expect($scope.response.statusText).toBe('OK');
+        expect($scope.response.status).toBe(200);
+      });
+    });
     it('response headers are set');
-    it('response status is set');
-    it('response statusText is set');
-    it('response errors are set');
+  });
+
+  describe('POST Valid URL', function(){
+    describe('without Data', function(){
+      it('response body is set', function(){
+        RequestStubs.stubCommonGetRequest($httpBackend);
+        $scope.endpoint.requestUrl = 'http://www.google.com';
+        $scope.performRequest().then(function(){
+          expect($scope.response).toBeDefined();
+          expect($scope.response.data).toBe('The data is here.');
+          expect($scope.response.statusText).toBe('OK');
+          expect($scope.response.status).toBe(200);
+        });
+      });
+      it('response headers are set');
+    });
+
+    describe('with Data', function(){
+      it('response body is set', function(){
+        RequestStubs.stubCommonGetRequest($httpBackend);
+        $scope.endpoint.requestUrl = 'http://www.google.com';
+        $scope.performRequest().then(function(){
+          expect($scope.response).toBeDefined();
+          expect($scope.response.data).toBe('The data is here.');
+          expect($scope.response.statusText).toBe('OK');
+          expect($scope.response.status).toBe(200);
+        });
+      });
+      it('response headers are set');
+    });
   });
 
   describe('INVALID URL', function(){

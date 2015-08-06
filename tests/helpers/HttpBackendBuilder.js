@@ -6,7 +6,7 @@ angular.module('app')
         request.url,
         request.data,
         request.headers)
-      .response(
+      .respond(
         result.status,
         result.data,
         result.headers,
