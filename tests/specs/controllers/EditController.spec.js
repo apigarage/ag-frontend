@@ -67,7 +67,7 @@ describe('Controller: EditController', function() {
         // TODO requestBody should be requestData
         $scope.endpoint.requestBody = stub.request.data;
         $scope.endpoint.requestHeaders = stub.request.headers;
-        // headers are stored as an array. Mimicing that behaviour for acurate testing.
+        // headers are stored as an array. Mimicking that behaviour for acurate testing.
         $scope.endpoint.headers = RequestUtility.getHeaders($scope.endpoint.headers, 'Array');
         $scope.performRequest().then(function(){
           // check if the response object is not null
