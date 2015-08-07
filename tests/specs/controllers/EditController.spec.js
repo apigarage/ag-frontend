@@ -3,7 +3,7 @@ describe('Controller: EditController', function() {
   var $rootScope, $scope, $controller;
   beforeEach(module('app'));
 
-  beforeEach(inject(function(_$rootScope_, _$controller_, _$httpBackend_, _HttpBackendBuilder_, _Config_, _RequestStubs_){
+  beforeEach(inject(function(_$rootScope_, _$controller_, _$httpBackend_, _HttpBackendBuilder_, _Config_, _RequestStubs_, _RequestUtility_){
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
     $controller = _$controller_;
@@ -11,6 +11,8 @@ describe('Controller: EditController', function() {
     HttpBackendBuilder = _HttpBackendBuilder_;
     Config = _Config_;
     RequestStubs = _RequestStubs_;
+    RequestUtility = _RequestUtility_;
+
     $controller('EditorCtrl', {
       $scope: $scope,
       $rootScope: $rootScope,
@@ -34,6 +36,8 @@ describe('Controller: EditController', function() {
       // Define the Request to match the request stub see HTTPBadkendBuilder
       $scope.endpoint.method = simpleGetStub.request.method;
       $scope.endpoint.requestUrl = simpleGetStub.request.url;
+      // headers are stored as an array. Mimicing that behaviour for acurate testing.
+      $scope.endpoint.headers = RequestUtility.getHeaders($scope.endpoint.headers, 'Array');
       // Perform the request to the URL
       $scope.performRequest().then(function(){
         // check if the response object is not null
@@ -63,6 +67,8 @@ describe('Controller: EditController', function() {
         // TODO requestBody should be requestData
         $scope.endpoint.requestBody = stub.request.data;
         $scope.endpoint.requestHeaders = stub.request.headers;
+        // headers are stored as an array. Mimicing that behaviour for acurate testing.
+        $scope.endpoint.headers = RequestUtility.getHeaders($scope.endpoint.headers, 'Array');
         $scope.performRequest().then(function(){
           // check if the response object is not null
           expect($scope.response).not.toBeNull();
