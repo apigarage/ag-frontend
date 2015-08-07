@@ -44,8 +44,7 @@ describe('Controller: EditController', function() {
         // data
         expect($scope.response.data).toBe(simpleGetStub.response.data);
         // headers
-        // TODO this will be an object later on so the () is not necessary
-        expect($scope.response.headers().getheaders).toBe(simpleGetStub.response.headers.getheaders);
+        expect($scope.response.headers.getheaders).toBe(simpleGetStub.response.headers.getheaders);
         // statusText
         expect($scope.response.statusText).toBe(simpleGetStub.response.statusText);
       });
@@ -74,7 +73,7 @@ describe('Controller: EditController', function() {
           expect($scope.response.data).toBe(stub.response.data);
           // headers
           // TODO this will be an object later on so the () is not necessary
-          expect($scope.response.headers().postresponse).toBe(stub.response.headers.postresponse);
+          expect($scope.response.headers.postresponse).toBe(stub.response.headers.postresponse);
           // statusText
           expect($scope.response.statusText).toBe(stub.response.statusText);
         });

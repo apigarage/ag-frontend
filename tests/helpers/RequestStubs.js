@@ -10,12 +10,9 @@ angular.module('app')
         url : 'www.google.com',
         // expected google get header
         headers : {
-          "0":{"key":"Content-Type",
-          "value":"application/json"},
-          "1":{"key":"language",
-            "value":"EN"},
-            "Accept":"application/json, text/plain, */*"
-          }
+          "Content-Type":"application/json",
+          "language":"EN",
+          "Accept":"application/json, text/plain, */*"}
       },
       response : {
         status : 200,

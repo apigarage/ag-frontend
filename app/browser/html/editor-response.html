@@ -11,21 +11,29 @@
             Waiting for response...
           </div>
           <div ng-switch-default>
-            <strong>
-              <span class="fa" ng-class="getResponseCodeClass(response.code)"></span>
-              {{response.status + ' ' + response.statusText}}
-            </strong>
-            <span class="hidden-xs hidden-sm">
-              &mdash;
-              <strong>{{ response.data.length / 1024 }} kilobytes</strong>
-              <!-- received in
-              <strong>{{response.time}} seconds</strong>. -->
-            </span>
-            <span class="visible-xs-inline visible-sm-inline">
-              &mdash;
-              {{ response.data.length / 1024 }} kB,
-              <!-- {{ response.time | number: 2 }} s -->
-            </span>
+            <div ng-hide="response.status">
+              <strong>
+                <span class="fa" ng-class="getResponseCodeClass(response.status)"></span>
+                URL Unreachable
+              </strong>
+            </div>
+            <div ng-show="response.status">
+              <strong>
+                <span class="fa" ng-class="getResponseCodeClass(response.status)"></span>
+                {{response.status + ' ' + response.statusText}}
+              </strong>
+              <span class="hidden-xs hidden-sm">
+                &mdash;
+                <strong >{{ response.data.length / 1024 }} kilobytes</strong>
+                <!-- received in
+                <strong>{{response.time}} seconds</strong>. -->
+              </span>
+              <span class="visible-xs-inline visible-sm-inline">
+                &mdash;
+                {{ response.data.length / 1024 }} kB,
+                <!-- {{ response.time | number: 2 }} s -->
+              </span>
+            </div>
           </div>
         </div>
 
@@ -38,8 +46,6 @@
 
       </div>
       <div class="panel-body editor-panel-body" ng-if="response" ng-switch="response">
-
-
         <div class="response-headers" ng-if="response.headers">
           <h4 class="response-headers-title editor-panel-subsection" ng-click="responseHeadersExpanded = !responseHeadersExpanded">
             <a href="#">
@@ -48,10 +54,12 @@
             </a>
           </h4>
           <table class="request-headers-table response-header enable-select" ng-show="responseHeadersExpanded">
-            <tr class="request-header" ng-repeat="(key, value) in response.headers">
-              <th><div class="response-header-key  ">{{key  }}</div></th><td class="request-header-spacer">:</td>
-              <td><div class="response-header-value">{{value}}</div></td>
-            </tr>
+            <div ng-repeat="(key, value) in response.headers">
+              <tr class="request-header" ng-repeat="(key, value) in response.headers">
+                <th><div class="response-header-key  ">{{key  }}</div></th><td class="request-header-spacer">:</td>
+                <td><div class="response-header-value">{{value}}</div></td>
+              </tr>
+            </div>
           </table>
         </div>
 
