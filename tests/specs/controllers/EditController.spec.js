@@ -373,7 +373,7 @@ describe('Controller: EditController', function() {
       $scope.setRequestMethod("GET");
       expect($scope.endpoint.requestMethod).toBe("GET");
       // get hides requestBody div
-      expect($scope.endpoint.requestBody.show).toEqual(false);
+      expect($scope.showRequestBody).toEqual(false);
     });
     it('request method POST', function(){
       $scope.setRequestMethod("POST");

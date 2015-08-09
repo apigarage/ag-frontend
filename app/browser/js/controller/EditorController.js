@@ -18,9 +18,8 @@ angular.module('app').controller('EditorCtrl', [
         { key: "Content-Type", value: "application/json" },
         { key: "language", value: "EN" }
       ],
-      requestBody: {
-        show : false
-      }
+      requestBody: [],
+      showRequestBody: false
     };
     $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
     $scope.environments = ['local', 'staging', 'production'];
@@ -44,11 +43,10 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     $scope.setRequestMethod = function(method){
-      // if method is 'GET'
-      if(method == $scope.requestMethods[0]){
-        $scope.endpoint.requestBody.show = false;
+      if(method == "GET"){
+        $scope.showRequestBody = false;
       }else{
-        $scope.endpoint.requestBody.show = true;
+        $scope.showRequestBody = true;
       }
       $scope.endpoint.requestMethod = method;
     };
