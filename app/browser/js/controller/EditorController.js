@@ -18,7 +18,7 @@ angular.module('app').controller('EditorCtrl', [
         { key: "Content-Type", value: "application/json" },
         { key: "language", value: "EN" }
       ],
-      requestBody: [],
+      requestBody:  '',
     };
     $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
     $scope.environments = ['local', 'staging', 'production'];
