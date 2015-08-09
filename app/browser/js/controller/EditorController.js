@@ -19,13 +19,13 @@ angular.module('app').controller('EditorCtrl', [
         { key: "language", value: "EN" }
       ],
       requestBody: [],
-      showRequestBody: false
     };
     $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
     $scope.environments = ['local', 'staging', 'production'];
     $scope.response = null;
     $scope.responsePreviewTypes = ['Parsed', 'Raw', 'Preview'];
     $scope.responsePreviewType = ['Parsed'];
+    $scope.showRequestBody = false;
 
     $scope.setEnvironment = function(environment){
       $scope.endpoint.environment = environment;
