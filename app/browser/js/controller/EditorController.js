@@ -95,6 +95,7 @@ angular.module('app').controller('EditorCtrl', [
       options.transformResponse = function(data){return data;};
       $scope.response = "loading";
       return $http(options).then(function(response){
+
         $scope.response = response;
         try{
           JSON.parse(response.data); // checks for valid JSON
@@ -104,6 +105,9 @@ angular.module('app').controller('EditorCtrl', [
         }finally{
           $scope.response = response;
         }
+        // Check which tab is Preview tab is selected
+        console.log("response preview type   " + $scope.responsePreviewType);
+        $scope.response = response;
       })
       .catch(function(errorResponse){
         $scope.response = errorResponse;
@@ -144,7 +148,6 @@ angular.module('app').controller('EditorCtrl', [
         $scope.currentResponsePreviewTab = previewType.url;
         // RAW will output data as is
         $scope.responsePreviewTypeContent = $scope.response.data;
-
       }
       else if ( previewType.title == "Parsed" )
       {
