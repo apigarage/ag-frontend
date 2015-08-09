@@ -369,11 +369,27 @@ describe('Controller: EditController', function() {
       $scope.setEnvironment("test");
       expect($scope.endpoint.environment).toBe("test");
     });
+    it('request method GET', function(){
+      $scope.setRequestMethod("GET");
+      expect($scope.endpoint.requestMethod).toBe("GET");
+      // get hides requestBody div
+      expect($scope.showRequestBody).toEqual(false);
+    });
+    it('request method POST', function(){
+      $scope.setRequestMethod("POST");
+      expect($scope.endpoint.requestMethod).toBe("POST");
+    });
+  });
+
+  describe('add endpoint', function(){
+    it('requestHeaders', function(){
+      expect($scope.addRequestHeader).toBeDefined();
+    });
   });
 
   describe('get endpoint', function(){
     it('manageEnvironments', function(){
-      expect($scope.manageEnvironment).toBeUndefined('undefined');
+      expect($scope.manageEnvironment).toBeUndefined();
     });
   });
 

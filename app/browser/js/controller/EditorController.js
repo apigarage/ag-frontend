@@ -18,13 +18,14 @@ angular.module('app').controller('EditorCtrl', [
         { key: "Content-Type", value: "application/json" },
         { key: "language", value: "EN" }
       ],
-      requestBody: ''
+      requestBody:  ''
     };
     $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
     $scope.environments = ['local', 'staging', 'production'];
     $scope.response = null;
     $scope.responsePreviewTypes = ['Parsed', 'Raw', 'Preview'];
     $scope.responsePreviewType = ['Parsed'];
+    $scope.showRequestBody = false;
 
     $scope.setEnvironment = function(environment){
       $scope.endpoint.environment = environment;
@@ -42,6 +43,11 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     $scope.setRequestMethod = function(method){
+      if(method == "GET"){
+        $scope.showRequestBody = false;
+      }else{
+        $scope.showRequestBody = true;
+      }
       $scope.endpoint.requestMethod = method;
     };
 
