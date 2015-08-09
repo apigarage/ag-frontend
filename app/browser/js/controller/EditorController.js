@@ -83,8 +83,14 @@ angular.module('app').controller('EditorCtrl', [
       options.transformResponse = function(data){return data;};
       $scope.response = "loading";
       return $http(options).then(function(response){
-        response.data = $filter('json')(response.data);
-        $scope.response = response;
+        try{
+          JSON.parse(response.data); // checks for valid JSON
+          response.data = $filter('json')(response.data);
+        }catch(error){
+          console.log("Invalid JSON " + error.stack);
+        }finally{
+          $scope.response = response;
+        }
       })
       .catch(function(errorResponse){
         $scope.response = errorResponse;
