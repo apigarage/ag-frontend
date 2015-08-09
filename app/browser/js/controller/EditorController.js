@@ -1,10 +1,11 @@
 angular.module('app').controller('EditorCtrl', [
   'lodash',
   '$scope',
+  '$filter',
   '$http',
   '$modal',
   'RequestUtility',
-  function (_, $scope, $http, $modal, RequestUtility){
+  function (_, $scope, $filter, $http, $modal, RequestUtility){
 
     // ----------------------------
     // Temporary MOCK Endpoint Use Case
@@ -82,6 +83,7 @@ angular.module('app').controller('EditorCtrl', [
       options.transformResponse = function(data){return data;};
       $scope.response = "loading";
       return $http(options).then(function(response){
+        response.data = $filter('json')(response.data);
         $scope.response = response;
       })
       .catch(function(errorResponse){
