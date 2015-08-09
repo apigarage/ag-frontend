@@ -95,8 +95,6 @@ angular.module('app').controller('EditorCtrl', [
       options.transformResponse = function(data){return data;};
       $scope.response = "loading";
       return $http(options).then(function(response){
-        // Check which tab is Preview tab is selected
-        console.log("response preview type   " + $scope.responsePreviewType);
         $scope.response = response;
       })
       .catch(function(errorResponse){

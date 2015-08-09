@@ -47,7 +47,8 @@ describe('Controller: EditController', function() {
           // status
           expect($scope.response.status).toEqual(stub.response.status);
           // data
-          expect($scope.response.data).toBe(stub.response.data);
+          var data = $scope.response.data.replace(/\"/g, "");
+          expect(data).toBe(stub.response.data);
           // headers
           expect($scope.response.headers.getheaders).toBe(stub.response.headers.getheaders);
           // statusText
