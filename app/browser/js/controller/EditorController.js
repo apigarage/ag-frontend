@@ -27,6 +27,7 @@ angular.module('app').controller('EditorCtrl', [
     $scope.responsePreviewTypes = ['Parsed', 'Raw', 'Preview'];
     $scope.responsePreviewType = ['Parsed'];
     $scope.showRequestBody = false;
+    $scope.responsePreviewTypeContent = null;
 
     $scope.setEnvironment = function(environment){
       $scope.endpoint.environment = environment;
@@ -62,7 +63,7 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     function resetResponse() {
-      $scope.resopnse = {
+      $scope.response = {
         status : -1,
         statusText : '',
         data : ''
@@ -83,14 +84,9 @@ angular.module('app').controller('EditorCtrl', [
       options.transformResponse = function(data){return data;};
       $scope.response = "loading";
       return $http(options).then(function(response){
-        try{
-          JSON.parse(response.data); // checks for valid JSON
-          response.data = $filter('json')(response.data);
-        }catch(error){
-          console.log("Invalid JSON " + error.stack);
-        }finally{
-          $scope.response = response;
-        }
+        // Check which tab is Preview tab is selected
+        console.log("response preview type   " + $scope.responsePreviewType);
+        $scope.response = response;
       })
       .catch(function(errorResponse){
         $scope.response = errorResponse;
@@ -105,6 +101,7 @@ angular.module('app').controller('EditorCtrl', [
       })
       .finally(function(){
         $scope.response.headers = $scope.response.headers();
+        $scope.setResponsePreviewType($scope.responsePreviewType);
       });
     };
 
@@ -120,6 +117,31 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     $scope.setResponsePreviewType = function(previewType){
+      console.log("previewType " + previewType);
+      $scope.responsePreviewTypeContent = null;
+      if( previewType == "Parsed" )
+      {
+        // Parsed will validate the JSON and output it.
+        try{
+          JSON.parse($scope.response.data); // checks  valid JSON
+          $scope.responsePreviewTypeContent = $scope.response.data;
+        }catch(error){
+          console.log("Invalid JSON " + error.stack);
+          // Set tab to RAW and prevent user from parsing an invalid JSON
+          // Not sure how to do this
+          // $scope.responsePreviewType = ['Raw'];
+        }
+      }
+      else if ( previewType == "Raw" )
+      {
+        // RAW will output data as is
+        $scope.responsePreviewTypeContent = $scope.response.data;
+      }
+      else if  ( previewType == "Preview")
+      {
+        // What is Preview?
+        // If preview fails it should fall back on RAW Tab
+      }
       $scope.responsePreviewType = previewType;
     };
 
