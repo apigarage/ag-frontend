@@ -21,12 +21,23 @@ angular.module('app').controller('EditorCtrl', [
       ],
       requestBody:  ''
     };
+
     $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
     $scope.environments = ['local', 'staging', 'production'];
     $scope.response = null;
-    $scope.responsePreviewTypes = ['Parsed', 'Raw', 'Preview'];
-    $scope.responsePreviewType = ['Parsed'];
     $scope.showRequestBody = false;
+    $scope.responsePreviewTypes = ['Raw', 'Parsed', 'Preview'];
+    $scope.responsePreviewType = ['Raw'];
+    $scope.responsePreviewTab = [{
+            title: 'Raw',
+            url: 'html/editor-response-raw.html'
+        }, {
+            title: 'Parsed',
+            url: 'html/editor-response-parsed.html'
+        }, {
+            title: 'Preview',
+            url: 'html/editor-response-preview.html'
+    }];
     $scope.responsePreviewTypeContent = null;
 
     $scope.setEnvironment = function(environment){
@@ -117,11 +128,24 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     $scope.setResponsePreviewType = function(previewType){
-      console.log("previewType " + previewType);
+      console.log("previewType " + previewType.title);
       $scope.responsePreviewTypeContent = null;
-      if( previewType == "Parsed" )
+      // reorder RAW, Parsed and Preview
+      // default is RAW
+      //
+      if( previewType.title == "Raw" )
+      {
+        $scope.currentResponsePreviewTab = previewType.url;
+        // RAW will output data as is
+        $scope.responsePreviewTypeContent = $scope.response.data;
+
+      }
+      else if ( previewType.title == "Parsed" )
       {
         // Parsed will validate the JSON and output it.
+        // remove headers
+        // remove response body title
+        $scope.currentResponsePreviewTab = previewType.url;
         try{
           JSON.parse($scope.response.data); // checks  valid JSON
           $scope.responsePreviewTypeContent = $scope.response.data;
@@ -132,17 +156,14 @@ angular.module('app').controller('EditorCtrl', [
           // $scope.responsePreviewType = ['Raw'];
         }
       }
-      else if ( previewType == "Raw" )
+      else if  ( previewType.title == "Preview")
       {
-        // RAW will output data as is
-        $scope.responsePreviewTypeContent = $scope.response.data;
-      }
-      else if  ( previewType == "Preview")
-      {
-        // What is Preview?
+        $scope.currentResponsePreviewTab = previewType.url;
+        // remove header
+        // What is Preview? render website
         // If preview fails it should fall back on RAW Tab
       }
-      $scope.responsePreviewType = previewType;
+      $scope.responsePreviewType = previewType.title;
     };
 
     $scope.requestBodyEditorOptions = {
