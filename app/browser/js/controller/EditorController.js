@@ -26,8 +26,6 @@ angular.module('app').controller('EditorCtrl', [
     $scope.environments = ['local', 'staging', 'production'];
     $scope.response = null;
     $scope.showRequestBody = false;
-    $scope.responsePreviewTypes = ['Raw', 'Parsed', 'Preview'];
-    $scope.responsePreviewType = ['Raw'];
     $scope.responsePreviewTab = [{
             title: 'Raw',
             url: 'html/editor-response-raw.html'
@@ -38,6 +36,10 @@ angular.module('app').controller('EditorCtrl', [
             title: 'Preview',
             url: 'html/editor-response-preview.html'
     }];
+    $scope.currentResponsePreviewTab = {
+          title: 'Raw',
+          url: 'html/editor-response-raw.html'
+      };
     $scope.responsePreviewTypeContent = null;
 
     $scope.setEnvironment = function(environment){
@@ -95,18 +97,6 @@ angular.module('app').controller('EditorCtrl', [
       options.transformResponse = function(data){return data;};
       $scope.response = "loading";
       return $http(options).then(function(response){
-
-        $scope.response = response;
-        try{
-          JSON.parse(response.data); // checks for valid JSON
-          response.data = $filter('json')(response.data);
-        }catch(error){
-          console.log("Invalid JSON " + error.stack);
-        }finally{
-          $scope.response = response;
-        }
-        // Check which tab is Preview tab is selected
-        console.log("response preview type   " + $scope.responsePreviewType);
         $scope.response = response;
       })
       .catch(function(errorResponse){
@@ -122,7 +112,7 @@ angular.module('app').controller('EditorCtrl', [
       })
       .finally(function(){
         $scope.response.headers = $scope.response.headers();
-        $scope.setResponsePreviewType($scope.responsePreviewType);
+        $scope.setResponsePreviewType($scope.currentResponsePreviewTab);
       });
     };
 
@@ -145,7 +135,7 @@ angular.module('app').controller('EditorCtrl', [
       //
       if( previewType.title == "Raw" )
       {
-        $scope.currentResponsePreviewTab = previewType.url;
+        $scope.currentResponsePreviewTab = previewType;
         // RAW will output data as is
         $scope.responsePreviewTypeContent = $scope.response.data;
       }
@@ -154,7 +144,7 @@ angular.module('app').controller('EditorCtrl', [
         // Parsed will validate the JSON and output it.
         // remove headers
         // remove response body title
-        $scope.currentResponsePreviewTab = previewType.url;
+        $scope.currentResponsePreviewTab = previewType;
         try{
           JSON.parse($scope.response.data); // checks  valid JSON
           $scope.responsePreviewTypeContent = $scope.response.data;
@@ -162,17 +152,15 @@ angular.module('app').controller('EditorCtrl', [
           console.log("Invalid JSON " + error.stack);
           // Set tab to RAW and prevent user from parsing an invalid JSON
           // Not sure how to do this
-          // $scope.responsePreviewType = ['Raw'];
         }
       }
       else if  ( previewType.title == "Preview")
       {
-        $scope.currentResponsePreviewTab = previewType.url;
+        $scope.currentResponsePreviewTab = previewType;
         // remove header
         // What is Preview? render website
         // If preview fails it should fall back on RAW Tab
       }
-      $scope.responsePreviewType = previewType.title;
     };
 
     $scope.requestBodyEditorOptions = {
