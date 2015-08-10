@@ -24,6 +24,10 @@
 @tooltip-opacity:       1.0;
 @tooltip-bg:            rgba(0,0,0,0.5);
 
+@screen-sm:             830px;
+@screen-md:             992px;
+@screen-lg:            1120px;
+
 html,
 body {
   overflow: hidden;
@@ -167,12 +171,14 @@ body {
 // ============================================================================
 // Responsive Sidebar Collapse
 // ============================================================================
-@screen-sm: 800px;
 @media (max-width: @screen-xs-max) {
   .layout-column-sidebar {
     margin-left: -@layout-sidebar-width;
 
     &.expanded {
+      &.sidebar {
+        border-right-color: #BBB;
+      }
       margin-left: 0;
       z-index: 100;
     }
@@ -190,13 +196,12 @@ body {
     position: absolute;
     top: -1000px;
     left: -1000px;
-    background: rgba(255,255,255,0.75);
+    background: rgba(0,0,0,0.125);
     z-index: 99;
 
     opacity: 0;
     transition: opacity 0.25s;
     &.active {
-      display: block;
       opacity: 1;
       top: 0;
       left: 0;

@@ -20,18 +20,21 @@
             <div ng-show="response.status">
               <strong>
                 <span class="fa" ng-class="getResponseCodeClass(response.status)"></span>
-                {{response.status + ' ' + response.statusText}}
+                {{response.status}}
+                <span class="hidden-xs hidden-sm">
+                  {{response.statusText}}
+                </span>
               </strong>
-              <span class="hidden-xs hidden-sm">
+              <span class="hidden-xs hidden-sm hidden-md">
                 &mdash;
-                <strong >{{ response.data.length / 1024 }} kilobytes</strong>
+                <strong >{{ response.data.length / 1024 | number: 2 }} kilobytes</strong>
                 <!-- received in
                 <strong>{{response.time}} seconds</strong>. -->
               </span>
-              <span class="visible-xs-inline visible-sm-inline">
+              <span class="visible-xs-inline visible-sm-inline visible-md-inline">
                 &mdash;
-                {{ response.data.length / 1024 }} kB,
-                <!-- {{ response.time | number: 2 }} s -->
+                {{ response.data.length / 1024 | number: 2 }} kB<!--,
+                {{ response.time | number: 2 }} s -->
               </span>
             </div>
           </div>
