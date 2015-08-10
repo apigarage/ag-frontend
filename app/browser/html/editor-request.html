@@ -12,7 +12,7 @@
             <script type="text/ng-template" id="requestMethodMenu">
               <ul class="dropdown-menu">
                 <li ng-repeat="requestMethod in requestMethods">
-                  <a href="" ng-click="setRequestMethod(requestMethod)">
+                  <a ng-click="setRequestMethod(requestMethod)">
                     <span class="fa fa-fw" ng-class="requestMethod == endpoint.requestMethod ? 'fa-check' : 'fa-spacer'"></span>
                     {{requestMethod}}
                   </a>
@@ -30,7 +30,7 @@
             <script type="text/ng-template" id="environmentSelect">
               <ul class="dropdown-menu">
                 <li ng-repeat="environment in environments">
-                  <a href="" ng-click="setEnvironment(environment)">
+                  <a ng-click="setEnvironment(environment)">
                     <span class="fa fa-fw" ng-class="environment == endpoint.environment ? 'fa-check' : 'fa-spacer'"></span>
                     <code class="text-uppercase">{{environment}}</code>
                     <span class="dropdown-menu-hotkey">{{'OSX' ? '&#8984;' + ($index+1) : 'Ctrl+' + ($index+1)}}</span>
@@ -38,7 +38,7 @@
                 </li>
                 <li class="divider"></li>
                 <li>
-                  <a href="" ng-click="manageEnvironments()">
+                  <a ng-click="manageEnvironments()">
                     <span class="fa fa-fw fa-sliders"></span>
                     Manage Environments
                   </a>
@@ -60,7 +60,7 @@
 
         <div class="request-headers">
           <h4 class="request-headers-title editor-panel-subsection" ng-click="requestHeadersExpanded = !requestHeadersExpanded">
-            <a href="#">
+            <a>
               <span class="fa fa-lg" ng-class="requestHeadersExpanded ? 'fa-caret-down' : 'fa-caret-right'"></span>
               Request headers
             </a>
@@ -70,7 +70,7 @@
               <th><input type="text" class="request-header-key"   ng-model="requestHeader.key"   placeholder="Header" pu-elastic-input /></th><td class="request-header-spacer">:</td>
               <td><input type="text" class="request-header-value" ng-model="requestHeader.value" placeholder="Value"  pu-elastic-input /></td>
               <td>
-                <a href="" class="request-header-delete" ng-click="deleteRequestHeader(requestHeader)">
+                <a class="request-header-delete" ng-click="deleteRequestHeader(requestHeader)">
                   <span class="fa fa-trash-o"></span>
                   <span class="hidden-xs hidden-sm">Delete</span>
                 </a>
@@ -89,7 +89,7 @@
 
         <div class="request-body" ng-show="showRequestBody">
           <h4 class="request-body-title editor-panel-subsection" ng-click="requestBodyExpanded = !requestBodyExpanded">
-            <a href="#">
+            <a>
               <span class="fa fa-lg" ng-class="requestBodyExpanded ? 'fa-caret-down' : 'fa-caret-right'"></span>
               Request body
             </a>

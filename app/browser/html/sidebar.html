@@ -18,20 +18,20 @@
     <ul class="sidebar-list-parent">
       <li class="sidebar-list-parent-item" ng-repeat="group in endpointGroups">
         <div class="sidebar-list-parent-item-container">
-          <a href="" class="sidebar-list-item-menu" bs-dropdown data-template="sidebar-list-parent-item-menu" data-placement="auto bottom-right" data-container=".sidebar">
+          <a class="sidebar-list-item-menu" bs-dropdown data-template="sidebar-list-parent-item-menu" data-placement="auto bottom-right" data-container=".sidebar">
             <span class="fa fa-fw fa-lg fa-ellipsis-h"></span>
           </a>
-          <a href="" ng-click="expandGroup = !expandGroup">
+          <a ng-click="expandGroup = !expandGroup">
             <span class="fa fa-lg" ng-class="expandGroup ? 'fa-caret-down' : 'fa-caret-right'"></span>
             {{group.name}}
           </a>
         </div>
         <ul class="sidebar-list-child" ng-show="expandGroup">
           <li class="sidebar-list-child-item" ng-repeat="endpoint in group.endpoints">
-            <a href="" class="sidebar-list-item-menu" bs-dropdown data-template="sidebar-list-child-item-menu" data-placement="auto bottom-right" data-container=".sidebar">
+            <a class="sidebar-list-item-menu" bs-dropdown data-template="sidebar-list-child-item-menu" data-placement="auto bottom-right" data-container=".sidebar">
               <span class="fa fa-fw fa-lg fa-ellipsis-h"></span>
             </a>
-            <a href="">{{endpoint}}</a>
+            <a>{{endpoint}}</a>
           </li>
         </ul>
       </li>
@@ -41,13 +41,13 @@
     <script type="text/ng-template" id="sidebar-list-parent-item-menu">
       <ul class="dropdown-menu">
         <li>
-          <a href="" ng-click="rename">
+          <a ng-click="rename">
             <span class="fa fa-fw fa-pencil"></span>
             Rename
           </a>
         </li>
         <li>
-          <a href="">
+          <a>
             <span class="fa fa-fw fa-trash-o"></span>
             Delete
           </a>
@@ -57,19 +57,19 @@
     <script type="text/ng-template" id="sidebar-list-child-item-menu">
       <ul class="dropdown-menu">
         <li>
-          <a href="" ng-click="rename">
+          <a ng-click="rename">
             <span class="fa fa-fw fa-pencil"></span>
             Rename
           </a>
         </li>
         <li>
-          <a href="" ng-click="rename">
+          <a ng-click="rename">
             <span class="fa fa-fw fa-files-o"></span>
             Make a copy
           </a>
         </li>
         <li>
-          <a href="">
+          <a>
             <span class="fa fa-fw fa-trash-o"></span>
             Delete
           </a>

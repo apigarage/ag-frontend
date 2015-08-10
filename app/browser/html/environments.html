@@ -9,7 +9,7 @@
           <h1>Environment Variables</h1>
           <p>
             Each collaborator can store their own unique set of environment variables here.
-            <a href="">Read more.</a>
+            <a>Read more.</a>
           </p>
 
         </div>
@@ -21,7 +21,7 @@
                 <td><!-- Spacer --></td>
                 <th ng-repeat="environment in environments">
                   <input type="text" class="form-control" ng-model="environment" placeholder="Environment name" ng-if="!environment" />
-                  <a href="" bs-dropdown data-template="environmentMenu" data-placement="bottom-center" ng-if="environment">
+                  <a bs-dropdown data-template="environmentMenu" data-placement="bottom-center" ng-if="environment">
                     <code>
                       <span class="fa fa-sliders"></span>
                       {{environment}}
@@ -31,13 +31,13 @@
                   <script type="text/ng-template" id="environmentMenu">
                     <ul class="dropdown-menu">
                       <li>
-                        <a href="">
+                        <a>
                           <span class="fa fa-fw fa-pencil"></span>
                           Rename environment
                         </a>
                       </li>
                       <li>
-                        <a href="">
+                        <a>
                           <span class="fa fa-fw fa-trash-o"></span>
                           Delete environment
                         </a>
@@ -56,7 +56,7 @@
             <tbody>
               <tr ng-repeat="variable in environmentVariables">
                 <th>
-                  <a href="" bs-dropdown data-template="variableMenu" data-placement="bottom-center">
+                  <a bs-dropdown data-template="variableMenu" data-placement="bottom-center">
                     <code>
                       {{variable}}
                       <span class="caret"></span>
@@ -65,13 +65,13 @@
                   <script type="text/ng-template" id="variableMenu">
                     <ul class="dropdown-menu">
                       <li>
-                        <a href="">
+                        <a>
                           <span class="fa fa-fw fa-pencil"></span>
                           Rename variable
                         </a>
                       </li>
                       <li>
-                        <a href="">
+                        <a>
                           <span class="fa fa-fw fa-trash-o"></span>
                           Delete variable
                         </a>

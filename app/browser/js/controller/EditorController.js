@@ -11,9 +11,9 @@ angular.module('app').controller('EditorCtrl', [
     // ----------------------------
     // Temporary MOCK Endpoint Use Case
     $scope.endpoint = {
-      requestUrl: "http://www.w3schools.com/",
-      category: "Untitled Request",
-      name: "Untitled Catgetory",
+      requestUrl: "https://www.facebook.com",
+      category: "Untitled Category",
+      name: "Untitled Request",
       environment: 'production',
       requestMethod: 'GET',
       requestHeaders: [
@@ -104,10 +104,10 @@ angular.module('app').controller('EditorCtrl', [
         $scope.response = errorResponse;
         if(errorResponse.status === 0){
           $scope.response.statusText = 'Unreachable';
-          $scope.response.data = 'The URL is unreachable. Please verify' +
-          ' 1) Internet Connection. ' +
-          ' 2) HTTP vs HTTPS protocol. ' +
-          ' 3) If HTTPS, verify the certificate.' +
+          $scope.response.data = 'The URL is unreachable. Please verify:\n\n' +
+          ' 1) Internet Connection.\n' +
+          ' 2) HTTP vs HTTPS protocol.\n' +
+          ' 3) If HTTPS, verify the certificate.\n' +
           ' 4) URL Correctness.';
         }
       })
