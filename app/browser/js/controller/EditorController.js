@@ -98,7 +98,8 @@ angular.module('app').controller('EditorCtrl', [
       .finally(function(){
         // Workaround for issue where parsed headers object is returned incorrectly which leads to broken parsing in editorController.
         // Root cause unknown since we do not why one would have to take the parsed headers, stringify it then reparse it again
-        $scope.response.headers = JSON.parse( JSON.stringify ( $scope.response.headers() ) );
+        // $scope.response.headers = JSON.parse( JSON.stringify ( $scope.response.headers() ) );
+        $scope.response.headers = $scope.response.headers();
       });
     };
 

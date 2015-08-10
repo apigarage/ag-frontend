@@ -7,7 +7,7 @@ angular.module('app')
     var endpoint = 'users';
 
      /* @data: object fields and values */
-    var create = function(data){      
+    var create = function(data){
       var options = {
           'method': 'POST',
           'url': Config.url + Config.api + endpoint,
@@ -18,8 +18,8 @@ angular.module('app')
                         return data;
                       });
     };
-    return{     
-      create:create     
+    return{
+      create:create
     };
 
   }]);

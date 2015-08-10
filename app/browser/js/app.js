@@ -17,6 +17,11 @@
   app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$compileProvider', '$filterProvider', '$provide', '$tooltipProvider', '$dropdownProvider',
   function ($stateProvider,   $urlRouterProvider,   $controllerProvider,   $compileProvider,   $filterProvider,   $provide,   $tooltipProvider,   $dropdownProvider) {
 
+    var defaultView = '/authentication';
+    if( localStorage.getItem('accessToken') ){
+      defaultView = '/app';
+    }
+
     angular.extend($tooltipProvider.defaults, {
       delay: {
         show: 300,
@@ -27,8 +32,8 @@
       animation: 'none'
     });
 
-    $urlRouterProvider.when('', '/authentication');
-    $urlRouterProvider.otherwise('/authentication');
+    $urlRouterProvider.when('', defaultView);
+    $urlRouterProvider.otherwise(defaultView);
 
     // Chinmay/Gamal - you'll obviously have to redo the route logic significantly
     // for authentication to work correctly. Have fun :)

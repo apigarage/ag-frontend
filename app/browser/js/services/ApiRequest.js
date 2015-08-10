@@ -7,29 +7,21 @@ angular.module('app')
     var send = function(options){
       var headers = options.headers ? options.headers : {};
       var promises = [];
-      // promises.push(
-      //   Auth.get()
-      //       .then( function(data){
-      //         headers['Authorization'] = data;
-      //       })
-      // );
+      headers.Authorization = Auth.get();
 
       return $q.all(promises)
         .then(function(){
           options.headers = headers;
           return $http(options)
             .then(function(res) {
-              console.log(res);
               return res.data;
             })
             .catch(function(res) {
               // Log and/or show the error message
-              console.log( res );
               return res;
-            })
+            });
         })
         .catch(function(err){
-          console.log(err);
         });
     };
 

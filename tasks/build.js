@@ -102,8 +102,8 @@
 
   gulp.task('watch', function () {
     // gulp.watch(paths.jsCodeToTranspile, ['transpile-watch']);
-    gulp.watch(paths.toWatch, ['copy-watch']);
     gulp.watch('app/**/*.less', ['less-watch']);
+    gulp.watch(paths.toWatch, ['copy-watch']);
   });
 
 

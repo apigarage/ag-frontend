@@ -1,4 +1,4 @@
-  <div class="layout-column-content header noselect">
+  <div class="layout-column-content header noselect" ng-controller="HeaderCtrl">
     <button class="header-sidebar-toggle btn btn-primary" ng-click="toggleSidebar()">
       <span class="fa fa-bars"></span>
     </button>
@@ -19,7 +19,7 @@
     </button>
     <script type="text/ng-template" id="accountMenu">
       <ul class="dropdown-menu dropdown-menu-account">
-        <li>
+        <!-- <li>
           <a href="#">
             <span class="fa fa-fw fa-cogs"></span>
             Account Settings
@@ -37,9 +37,9 @@
             Something else here
           </a>
         </li>
-        <li class="divider"></li>
+        <li class="divider"></li> -->
         <li>
-          <a ui-sref="authentication">
+          <a href="#" ng-click="logout()">
             <span class="fa fa-fw fa-sign-out"></span>
             Log out
           </a>
