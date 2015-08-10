@@ -10,19 +10,19 @@ Code Style
 ----------
 
 ### Testing ###
-* Spec File Names (CamleCase) (Authentication.Ctrl.spec.js)
+* Spec File Names (CamelCase) (Authentication.Ctrl.spec.js)
 ** Spec Describer Level
 ** Controller Name
 ** Function Name
 ** Scenarios
 
 ### Common ###
-* Helper File Names (CamleCase) (AuthC.helper.js)
-* Helper Object Names (CamleCase) (AuthHelper.js)
+* Helper File Names (CamelCase) (AuthC.helper.js)
+* Helper Object Names (CamelCase) (AuthHelper.js)
 
 ### Angular Frontend ###
-* Service File Names (CamleCase) (Auth.Service.js)
-* Service Names (CamleCase) (Auth)
-* Controller File Names (CamleCase) (AuthC.tpl.js)
-* Controller Names (CamleCase) (AuthCtrl)
-* Template/HTML File Names (CamleCase) (Auth.tpl)
+* Service File Names (CamelCase) (Auth.Service.js)
+* Service Names (CamelCase) (Auth)
+* Controller File Names (CamelCase) (AuthC.tpl.js)
+* Controller Names (CamelCase) (AuthCtrl)
+* Template/HTML File Names (CamelCase) (Auth.tpl)

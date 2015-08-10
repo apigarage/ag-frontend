@@ -29,6 +29,8 @@ angular.module('app').controller('AuthenticationCtrl', [
       $scope.emailError = true;
       return false;
     }
+    // Email validation RegEx that allosw Unicodes.
+    // Reference - https://stackoverflow.com/questions/46155/validate-email-address-in-javascript
     var re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
     if(!re.test($scope.credentials.email)){
       $scope.emailErrorMessage = "The email field is invalid.";

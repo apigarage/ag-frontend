@@ -3,7 +3,7 @@
 /* Services */
 
 angular.module('app')
-  .factory('ApiRequest', ['$q', '$http', 'Auth', function($q, $http, Auth){
+  .factory('ApiRequest', ['$q', '$http', 'Auth', '$window', function($q, $http, Auth, $window){
     var send = function(options){
       var headers = options.headers ? options.headers : {};
       var promises = [];
@@ -18,6 +18,7 @@ angular.module('app')
             })
             .catch(function(res) {
               // Log and/or show the error message
+              $window.console.log(res);
               return res;
             });
         })

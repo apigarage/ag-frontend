@@ -6,7 +6,8 @@ describe('Controller: Authentication', function() {
 
   beforeEach(function(){
     module('app');
-    module('ngMockE2E'); //<-- IMPORTANT!
+    module('ngMockE2E'); //<-- IMPORTANT! Without this line of code,
+      // it will not load templates, and will break the test infrastructure.
   });
 
   beforeEach(inject(function($injector){
@@ -57,7 +58,6 @@ describe('Controller: Authentication', function() {
 
   describe('Sign In', function(){
 
-    // email is empty
     describe('If Empty Email String is Provided', function(){
       beforeEach(function(){
         $scope.credentials.password = 'somepassword';
@@ -74,7 +74,6 @@ describe('Controller: Authentication', function() {
       });
     });
 
-    // password is empty
     describe('If Empty Password String is Provided', function(){
       beforeEach(function(){
         $scope.credentials.email = 'some@email.com';
@@ -94,7 +93,6 @@ describe('Controller: Authentication', function() {
 
   describe('Sign Up', function(){
 
-    // name is empty
     describe('If Empty Name String is Provided', function(){
       beforeEach(function(){
         $scope.credentials.email = 'some@email.com';
@@ -112,7 +110,6 @@ describe('Controller: Authentication', function() {
       });
     });
 
-    // email is empty
     describe('If Empty Email String is Provided', function(){
       beforeEach(function(){
         $scope.credentials.password = 'somepassword';
@@ -130,7 +127,6 @@ describe('Controller: Authentication', function() {
       });
     });
 
-    // password is empty
     describe('If Empty Password String is Provided', function(){
       beforeEach(function(){
         $scope.credentials.name = 'Hello Name';
@@ -147,91 +143,42 @@ describe('Controller: Authentication', function() {
         expect($scope.passwordErrorMessage).toEqual('The password field is required.');
       });
     });
-  });
-  // describe('Sign Up', function () {
-  //
 
-  //
-  //   // name is empty
-  //   describe('If Empty Name String is Provided', function(){
-  //
-  //     it("Name Error should be true", function(){
-  //       $scope.credentials.name = '';
-  //       $scope.signup();
-  //       expect($scope.NameError).toEqual(true);
-  //     });
-  //
-  //     it("Name Error message should be 'The email field is required'", function(){
-  //       $scope.credentials.name = '';
-  //       $scope.signup();
-  //       expect($scope.nameErrorMessage).toEqual('The name field is required.');
-  //     });
-  //   });
-  //
-  //   // password is empty
-  //   describe('If Empty Password String is Provided', function(){
-  //
-  //     it("Password Error should be true", function(){
-  //       // password is not defined
-  //       $scope.signup();
-  //       expect($scope.passwordError).toEqual(true);
-  //       //reseting variable
-  //       $scope.passwordError = false;
-  //       $scope.credentials.password = '';
-  //       $scope.signup();
-  //       expect($scope.passwordError).toEqual(true);
-  //     });
-  //
-  //     it("Password Error message should be 'The password field is required'", function(){
-  //       // password is undefined
-  //       $scope.signup();
-  //       expect($scope.passordErrorMessage).toEqual('The password field is required');
-  //       // reseting error message
-  //       $scope.passordErrorMessage = '' ;
-  //       $scope.credentials.password = '';
-  //       $scope.signup();
-  //       expect($scope.passordErrorMessage).toEqual('The password field is required');
-  //     });
-  //   });
-  //
-  // //   // information is all provided
-  // //   //  password is empty
-  // //   describe('All Information is provided', function(){
-  // //     var $httpBackend ;
-  // //     beforeEach(inject(function(_$httpBackend_) {
-  // //       // Set up the mock http service responses
-  // //       $httpBackend = _$httpBackend_;
-  // //       // backend definition common for all tests
-  // //
-  // //       $httpBackend.expectPOST('' + Config.url + 'api/users',
-  // //                               {name: "test",
-  // //                                 email: "test@test.ca",
-  // //                                 password: "test123"})
-  // //                       .respond(200, {"name":"test",
-  // //                         "email":"test@test.ca",
-  // //                         "id":18});
-  // //     }));
-  // //
-  // //     afterEach(function() {
-  // //       $rootScope.$apply();
-  // //       $httpBackend.verifyNoOutstandingExpectation();
-  // //       $httpBackend.verifyNoOutstandingRequest();
-  // //     });
-  // //
-  // //     it("Email is required", function(){
-  // //       // password is not defined
-  // //       $scope.credentials.email = 'test@test.ca';
-  // //       $scope.credentials.name = 'test';
-  // //       $scope.credentials.password = 'test123';
-  // //       $scope.signup();
-  // //       $scope.$digest();
-  // //       $httpBackend.flush();
-  // //       console.log($scope.userData);
-  // //       $rootScope.$apply();
-  // //       expect($scope.emailError).toEqual(false);
-  // //       expect($scope.emailErrorMessage).toEqual(false);
-  // //     });
-  // //
-  // //   });
-  // });
+    // TO BE DONE
+    // describe('All Information is provided', function(){
+    //   var $httpBackend ;
+    //   beforeEach(inject(function(_$httpBackend_) {
+    //     // Set up the mock http service responses
+    //     $httpBackend = _$httpBackend_;
+    //     // backend definition common for all tests
+    //
+    //     $httpBackend.expectPOST('' + Config.url + 'api/users',
+    //                             {name: "test",
+    //                               email: "test@test.ca",
+    //                               password: "test123"})
+    //                     .respond(200, {"name":"test",
+    //                       "email":"test@test.ca",
+    //                       "id":18});
+    //   }));
+    //
+    //   afterEach(function() {
+    //     $rootScope.$apply();
+    //     $httpBackend.verifyNoOutstandingExpectation();
+    //     $httpBackend.verifyNoOutstandingRequest();
+    //   });
+    //
+    //   it("Email is required", function(){
+    //     // password is not defined
+    //     $scope.credentials.email = 'test@test.ca';
+    //     $scope.credentials.name = 'test';
+    //     $scope.credentials.password = 'test123';
+    //     $scope.signup();
+    //     $scope.$digest();
+    //     $httpBackend.flush();
+    //     console.log($scope.userData);
+    //     $rootScope.$apply();
+    //     expect($scope.emailError).toEqual(false);
+    //     expect($scope.emailErrorMessage).toEqual(false);
+    //   });
+  });
 });
