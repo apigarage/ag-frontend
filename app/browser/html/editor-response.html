@@ -63,7 +63,6 @@
             </div>
           </table>
         </div>
-
         <div class="response-body" ng-if="responsePreviewTypeContent" ng-init="responseBodyExpanded = true">
           <h4 class="response-body-title editor-panel-subsection" ng-click="responseBodyExpanded = !responseBodyExpanded">
             <a href="#">
@@ -73,5 +72,6 @@
           </h4>
           <div ui-ace="responseBodyEditorOptions" ng-model="responsePreviewTypeContent" ng-show="responseBodyExpanded"></div>
         </div>
+      <div class="panel-body editor-panel-body" ng-if="response" ng-switch="response" ng-include="currentResponsePreviewTab">
       </div>
     </div>
