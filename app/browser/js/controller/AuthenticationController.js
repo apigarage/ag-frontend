@@ -68,21 +68,24 @@ angular.module('app').controller('AuthenticationCtrl', [
     if(!validEmail() || !validPassword()) return;
 
     return Auth.login($scope.credentials)
-    .then(function(loggedIn){
-      if(loggedIn){
-        $state.go('app');
-      }
-      else{
-        $scope.genericLoginErrorMessage =
-          "Incorrect Credentials. Please try again.";
-      }
+      .then(function(loggedIn){
+        if(loggedIn){
+          $state.go('app');
+        }
+        else{
+          $scope.genericLoginErrorMessage =
+            "Incorrect Credentials. Please try again.";
+        }
     });
   };
 
   $scope.signup = function(){
     $scope.emailError = false;
+    $scope.emailErrorMessage = '';
     $scope.nameError = false;
+    $scope.nameErrorMessage = '';
     $scope.passwordError = false;
+    $scope.passwordErrorMessage = '';
     $scope.genericSignupErrorMessage = false;
     var allowSignup = true;
 

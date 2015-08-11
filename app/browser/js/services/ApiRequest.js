@@ -5,24 +5,20 @@
 angular.module('app')
   .factory('ApiRequest', ['$q', '$http', 'Auth', '$window', function($q, $http, Auth, $window){
     var send = function(options){
+      $http.defaults.headers.common = {};
       var headers = options.headers ? options.headers : {};
-      var promises = [];
-      headers.Authorization = Auth.get();
+      var authorization = Auth.get();
+      if(authorization) headers.Authorization = authorization;
 
-      return $q.all(promises)
-        .then(function(){
-          options.headers = headers;
-          return $http(options)
-            .then(function(res) {
-              return res.data;
-            })
-            .catch(function(res) {
-              // Log and/or show the error message
-              $window.console.log(res);
-              return res;
-            });
+      options.headers = headers;
+      return $http(options)
+        .then(function(res) {
+          return res.data;
         })
-        .catch(function(err){
+        .catch(function(res) {
+          // Log and/or show the error message
+          $window.console.log(res);
+          return res;
         });
     };
 

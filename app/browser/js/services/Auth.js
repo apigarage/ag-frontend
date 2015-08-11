@@ -50,6 +50,7 @@ angular.module('app')
           'data': data
       };
 
+      $http.defaults.headers.common = {};
       return $http(options)
         .then(function(res) {
           return setAccessToken(res.data.access_token);

@@ -17,7 +17,11 @@ describe('Controller: Authentication', function() {
     $window = $injector.get('$window');
     $httpBackend = $injector.get('$httpBackend');
 
+
+    HttpBackendBuilder = $injector.get('HttpBackendBuilder');
     Config = $injector.get('Config');
+    UsersFixtures = $injector.get('UsersFixtures');
+    AuthFixtures = $injector.get('AuthFixtures');
 
     $scope = $rootScope.$new();
     $controller('AuthenticationCtrl', {
@@ -30,10 +34,12 @@ describe('Controller: Authentication', function() {
     // and returning nothing. It should not affect our testing as we
     // are only testing controllers (and not html).
     $httpBackend.when('GET',/.*html.*/).respond(200, '');
+    localStorage.clear();
   }));
 
-  afterEach(function() {
+  afterEach(function(){
     $rootScope.$apply();
+    $scope.$digest();
   });
 
   it('authType is set to SignUp Screen on startup', function(){
@@ -74,6 +80,23 @@ describe('Controller: Authentication', function() {
       });
     });
 
+    describe('If Invalid Email String is Provided', function(){
+      beforeEach(function(){
+        $scope.credentials.password = 'somepassword';
+        $scope.credentials.name = 'Hello Name';
+        $scope.credentials.email = 'invalidEMail';
+        $scope.login();
+      });
+
+      it("Email Error should be true", function(){
+        expect($scope.emailError).toEqual(true);
+      });
+
+      it("Email Error message should be 'The email field is invalid.'", function(){
+        expect($scope.emailErrorMessage).toEqual('The email field is invalid.');
+      });
+    });
+
     describe('If Empty Password String is Provided', function(){
       beforeEach(function(){
         $scope.credentials.email = 'some@email.com';
@@ -88,6 +111,47 @@ describe('Controller: Authentication', function() {
       it("Password Error message should be 'The password field is required'", function(){
         expect($scope.passwordErrorMessage).toEqual('The password field is required.');
       });
+    });
+
+    describe('All information is provided', function(){
+      afterEach(function(){
+        $httpBackend.flush();
+      });
+
+      describe('But incorrect credentials (server side)', function(){
+        it("will show login error message", function(){
+          var user = UsersFixtures.get('userJohnIncorrect');
+          $scope.credentials.email = user.email;
+          $scope.credentials.password = user.password;
+
+          // Stubbing Login
+          var loginStub = AuthFixtures.getStub('loginThatDoesNotWork');
+          HttpBackendBuilder.build(loginStub.request, loginStub.response);
+
+          $scope.login().then(function(){
+            // TODO - Verify the $state of the app
+            expect($scope.genericLoginErrorMessage).toEqual("Incorrect Credentials. Please try again.");
+          });
+        });
+      });
+
+      describe('Correct credentials (server side)', function(){
+        it("will show no error message", function(){
+          var user = UsersFixtures.get('userJohn');
+          $scope.credentials.email = user.email;
+          $scope.credentials.password = user.password;
+
+          // Stubbing Login
+          var loginStub = AuthFixtures.getStub('loginUserJohn');
+          HttpBackendBuilder.build(loginStub.request, loginStub.response);
+
+          $scope.login().then(function(){
+            // TODO - Verify the $state of the app
+            expect($scope.genericLoginErrorMessage).toEqual(false);
+          });
+        });
+      });
+
     });
   });
 
@@ -110,12 +174,29 @@ describe('Controller: Authentication', function() {
       });
     });
 
+    describe('If Invalid Email String is Provided', function(){
+      beforeEach(function(){
+        $scope.credentials.password = 'somepassword';
+        $scope.credentials.name = 'Hello Name';
+        $scope.credentials.email = 'invalidEMail';
+        $scope.signup();
+      });
+
+      it("Email Error should be true", function(){
+        expect($scope.emailError).toEqual(true);
+      });
+
+      it("Email Error message should be 'The email field is invalid.'", function(){
+        expect($scope.emailErrorMessage).toEqual('The email field is invalid.');
+      });
+    });
+
     describe('If Empty Email String is Provided', function(){
       beforeEach(function(){
         $scope.credentials.password = 'somepassword';
         $scope.credentials.name = 'Hello Name';
         $scope.credentials.email = '';
-        $scope.login();
+        $scope.signup();
       });
 
       it("Email Error should be true", function(){
@@ -132,7 +213,7 @@ describe('Controller: Authentication', function() {
         $scope.credentials.name = 'Hello Name';
         $scope.credentials.email = 'some@email.com';
         $scope.credentials.password = '';
-        $scope.login();
+        $scope.signup();
       });
 
       it("Password Error should be true", function(){
@@ -144,41 +225,56 @@ describe('Controller: Authentication', function() {
       });
     });
 
-    // TO BE DONE
-    // describe('All Information is provided', function(){
-    //   var $httpBackend ;
-    //   beforeEach(inject(function(_$httpBackend_) {
-    //     // Set up the mock http service responses
-    //     $httpBackend = _$httpBackend_;
-    //     // backend definition common for all tests
-    //
-    //     $httpBackend.expectPOST('' + Config.url + 'api/users',
-    //                             {name: "test",
-    //                               email: "test@test.ca",
-    //                               password: "test123"})
-    //                     .respond(200, {"name":"test",
-    //                       "email":"test@test.ca",
-    //                       "id":18});
-    //   }));
-    //
-    //   afterEach(function() {
-    //     $rootScope.$apply();
-    //     $httpBackend.verifyNoOutstandingExpectation();
-    //     $httpBackend.verifyNoOutstandingRequest();
-    //   });
-    //
-    //   it("Email is required", function(){
-    //     // password is not defined
-    //     $scope.credentials.email = 'test@test.ca';
-    //     $scope.credentials.name = 'test';
-    //     $scope.credentials.password = 'test123';
-    //     $scope.signup();
-    //     $scope.$digest();
-    //     $httpBackend.flush();
-    //     console.log($scope.userData);
-    //     $rootScope.$apply();
-    //     expect($scope.emailError).toEqual(false);
-    //     expect($scope.emailErrorMessage).toEqual(false);
-    //   });
+    describe('All information is provided', function(){
+      afterEach(function(){
+        $httpBackend.flush();
+      });
+
+      describe('All the information is valid.', function(){
+        it("will show no error message", function(){
+          var user = UsersFixtures.get('userJohn');
+          $scope.credentials.email = user.email;
+          $scope.credentials.password = user.password;
+          $scope.credentials.name = user.name;
+
+          // Stubbing Sign Up
+          var userStub = UsersFixtures.getStub('createUserJohnThatWorks');
+          HttpBackendBuilder.build(userStub.request, userStub.response);
+
+          // Stubbing Login
+          var loginStub = AuthFixtures.getStub('loginUserJohn');
+          HttpBackendBuilder.build(loginStub.request, loginStub.response);
+
+          $scope.signup().then(function(){
+            // TODO - Verify the $state of the app
+            expect($scope.nameError).toEqual(false);
+            expect($scope.emailError).toEqual(false);
+            expect($scope.passwordError).toEqual(false);
+            expect($scope.genericSignupErrorMessage).toEqual(false);
+          });
+        });
+
+      });
+
+      describe('If email is already taken', function(){
+        it('will show the email error message', function(){
+          var user = UsersFixtures.get('userWithExistingEmail');
+          $scope.credentials.email = user.email;
+          $scope.credentials.password = user.password;
+          $scope.credentials.name = user.name;
+
+          // Stubbing Sign Up
+          var userStub = UsersFixtures.getStub('createUserWithExistingEmail');
+          HttpBackendBuilder.build(userStub.request, userStub.response);
+
+          $scope.signup().then(function(){
+            // TODO - Verify the $state of the app
+            expect($scope.emailError).toEqual(true);
+          });
+
+        });
+      });
+
+    });
   });
 });
