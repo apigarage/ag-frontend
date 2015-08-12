@@ -1,7 +1,9 @@
 describe('Controller: EditController', function() {
 
   var $rootScope, $scope, $controller;
-  beforeEach(module('app'));
+  beforeEach(module('app', [
+    'ngSanitize'
+  ]));
 
   beforeEach(inject(function(_$rootScope_, _$controller_, _$httpBackend_, _HttpBackendBuilder_, _Config_, _RequestStubs_, _RequestUtility_){
     $rootScope = _$rootScope_;
@@ -384,6 +386,24 @@ describe('Controller: EditController', function() {
   describe('add endpoint', function(){
     it('requestHeaders', function(){
       expect($scope.addRequestHeader).toBeDefined();
+    });
+  });
+
+  describe('set preview type', function(){
+    it('raw', function(){
+      // $scope.snippet =
+      //                '<p style="color:blue">an html\n' +
+      //                '<em onmouseover="this.textContent=\'PWN3D!\'">click here</em>\n' +
+      //                'snippet</p>';
+      var currentResponsePreviewTab = {
+            title: 'Raw',
+            url: 'html/editor-response-raw.html'
+      };
+      $scope.setResponsePreviewType(currentResponsePreviewTab);
+    });
+    xit('parsed', function(){
+    });
+    xit('preview', function(){
     });
   });
 

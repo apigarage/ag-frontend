@@ -3,14 +3,15 @@ angular.module('app').controller('EditorCtrl', [
   '$scope',
   '$filter',
   '$http',
+  '$sce',
   '$modal',
   'RequestUtility',
-  function (_, $scope, $filter, $http, $modal, RequestUtility){
+  function (_, $scope, $filter, $http, $sce, $modal, RequestUtility){
 
     // ----------------------------
     // Temporary MOCK Endpoint Use Case
     $scope.endpoint = {
-      requestUrl: "https://www.facebook.com",
+      requestUrl: "http://www.w3schools.com/",
       category: "Untitled Request",
       name: "Untitled Catgetory",
       environment: 'production',
@@ -128,38 +129,29 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     $scope.setResponsePreviewType = function(previewType){
-      console.log("previewType " + previewType.title);
       $scope.responsePreviewTypeContent = null;
-      // reorder RAW, Parsed and Preview
-      // default is RAW
-      //
       if( previewType.title == "Raw" )
       {
         $scope.currentResponsePreviewTab = previewType;
-        // RAW will output data as is
         $scope.responsePreviewTypeContent = $scope.response.data;
       }
       else if ( previewType.title == "Parsed" )
       {
-        // Parsed will validate the JSON and output it.
-        // remove headers
-        // remove response body title
         $scope.currentResponsePreviewTab = previewType;
         try{
           JSON.parse($scope.response.data); // checks  valid JSON
           $scope.responsePreviewTypeContent = $scope.response.data;
         }catch(error){
           console.log("Invalid JSON " + error.stack);
-          // Set tab to RAW and prevent user from parsing an invalid JSON
-          // Not sure how to do this
+          // Will send data as is
+          $scope.responsePreviewTypeContent = $scope.response.data;
         }
       }
       else if  ( previewType.title == "Preview")
       {
         $scope.currentResponsePreviewTab = previewType;
-        // remove header
-        // What is Preview? render website
-        // If preview fails it should fall back on RAW Tab
+        // Loading in the iframe it sandboxes the html by default
+        $scope.responsePreviewTypeContent = $sce.trustAsHtml($scope.response.data);
       }
     };
 
@@ -180,6 +172,36 @@ angular.module('app').controller('EditorCtrl', [
       showGutter: false,
       theme: 'kuroir',
       mode: 'json',
+      onLoad: function(editor){
+        editor.setShowPrintMargin(false);
+        editor.setHighlightActiveLine(false);
+        editor.setDisplayIndentGuides(false);
+        editor.setOptions({maxLines: Infinity});  // Auto adjust height!
+        editor.$blockScrolling = Infinity; // Disable warning
+        editor.setReadOnly(true);
+      }
+    };
+
+    $scope.responseBodyEditorOptionsRaw = {
+      useWrapMode : false,
+      showGutter: false,
+      theme: 'kuroir',
+      mode: 'text',
+      onLoad: function(editor){
+        editor.setShowPrintMargin(false);
+        editor.setHighlightActiveLine(false);
+        editor.setDisplayIndentGuides(false);
+        editor.setOptions({maxLines: Infinity});  // Auto adjust height!
+        editor.$blockScrolling = Infinity; // Disable warning
+        editor.setReadOnly(true);
+      }
+    };
+
+    $scope.responseBodyEditorOptionsParsed = {
+      useWrapMode : true,
+      showGutter: false,
+      theme: 'kuroir',
+      mode: 'xml',
       onLoad: function(editor){
         editor.setShowPrintMargin(false);
         editor.setHighlightActiveLine(false);
