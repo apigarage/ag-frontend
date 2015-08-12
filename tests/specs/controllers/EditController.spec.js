@@ -388,21 +388,92 @@ describe('Controller: EditController', function() {
   });
 
   describe('set preview type', function(){
+    afterEach(function(){
+      $httpBackend.flush();
+    });
     it('raw', function(){
-      // $scope.snippet =
-      //                '<p style="color:blue">an html\n' +
-      //                '<em onmouseover="this.textContent=\'PWN3D!\'">click here</em>\n' +
-      //                'snippet</p>';
-      var currentResponsePreviewTab = {
-            title: 'Raw',
-            url: 'html/editor-response-raw.html'
-      };
-      $scope.setResponsePreviewType(currentResponsePreviewTab);
+      // Set user defined data and expected response previewType
+      stub = RequestStubs.setPreviewTypeRawStub;
+      HttpBackendBuilder.build(stub.request, stub.response);
+      // Define the Request to match the request stub see HTTPBadkendBuilder
+      $scope.endpoint.method = stub.request.method;
+      $scope.endpoint.requestUrl = stub.request.url;
+      // headers are stored as an array. Mimicing that behaviour for acurate testing.
+      $scope.endpoint.headers = RequestUtility.getHeaders($scope.endpoint.headers, 'Array');
+      // Perform the request to the URL
+      $scope.currentResponsePreviewTab = stub.previewType;
+      $scope.performRequest().then(function(){
+        // check if the response object is not null
+        expect($scope.response).not.toBeNull();
+        // verify
+        // status
+        expect($scope.response.status).toEqual(stub.response.status);
+        // data
+        expect($scope.response.data).toBe(stub.response.data);
+        // headers
+        expect($scope.response.headers.getheaders).toBe(stub.response.headers.getheaders);
+        // statusText
+        expect($scope.response.statusText).toBe(stub.response.statusText);
+      });
     });
-    xit('parsed', function(){
+
+    it('parsed', function(){
+      // Set user defined data and expected response previewType
+      stub = RequestStubs.setPreviewTypeParsedStub;
+      HttpBackendBuilder.build(stub.request, stub.response);
+      // Define the Request to match the request stub see HTTPBadkendBuilder
+      $scope.endpoint.method = stub.request.method;
+      $scope.endpoint.requestUrl = stub.request.url;
+      // headers are stored as an array. Mimicing that behaviour for acurate testing.
+      $scope.endpoint.headers = RequestUtility.getHeaders($scope.endpoint.headers, 'Array');
+      // Perform the request to the URL
+      $scope.currentResponsePreviewTab = stub.previewType;
+      $scope.performRequest().then(function(){
+        // check if the response object is not null
+        expect($scope.response).not.toBeNull();
+        // verify
+        // status
+        expect($scope.response.status).toEqual(stub.response.status);
+        // data
+        expect($scope.response.data.JSONStub).toBe(stub.response.data.JSONStub);
+        // headers
+        expect($scope.response.headers.getheaders).toBe(stub.response.headers.getheaders);
+        // statusText
+        expect($scope.response.statusText).toBe(stub.response.statusText);
+      });
     });
-    xit('preview', function(){
+
+    it('preview', function(){
+      // Set user defined data and expected response previewType
+      stub = RequestStubs.setPreviewTypePreviewStub;
+      // Replace the data with html
+      stub.response.data = '<p style="color:blue">an html\n' +
+                           '<em onmouseover="this.textContent=\'PWN3D!\'">click here</em>\n' +
+                           'snippet</p>';
+      HttpBackendBuilder.build(stub.request, stub.response);
+      // Define the Request to match the request stub see HTTPBadkendBuilder
+      $scope.endpoint.method = stub.request.method;
+      $scope.endpoint.requestUrl = stub.request.url;
+      // headers are stored as an array. Mimicing that behaviour for acurate testing.
+      $scope.endpoint.headers = RequestUtility.getHeaders($scope.endpoint.headers, 'Array');
+      // Perform the request to the URL
+      $scope.currentResponsePreviewTab = stub.previewType;
+      $scope.performRequest().then(function(){
+        // check if the response object is not null
+        expect($scope.response).not.toBeNull();
+        // verify
+        // status
+        expect($scope.response.status).toEqual(stub.response.status);
+        // data
+        expect($scope.response.data).toBe(stub.response.data);
+        // headers
+        expect($scope.response.headers.getheaders).toBe(stub.response.headers.getheaders);
+        // statusText
+        expect($scope.response.statusText).toBe(stub.response.statusText);
+      });
+      expect($scope.currentResponsePreviewTab.title).toBe(stub.previewType.title);
     });
+
   });
 
   describe('get endpoint', function(){

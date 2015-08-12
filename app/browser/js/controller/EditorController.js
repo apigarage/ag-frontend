@@ -27,20 +27,20 @@ angular.module('app').controller('EditorCtrl', [
     $scope.environments = ['local', 'staging', 'production'];
     $scope.response = null;
     $scope.showRequestBody = false;
-    $scope.responsePreviewTab = [{
-            title: 'Raw',
-            url: 'html/editor-response-raw.html'
-        }, {
-            title: 'Parsed',
-            url: 'html/editor-response-parsed.html'
-        }, {
-            title: 'Preview',
-            url: 'html/editor-response-preview.html'
+    $scope.responsePreviewTab = [
+      { title: 'Raw',
+        url: 'html/editor-response-raw.html'
+      },
+      { title: 'Parsed',
+        url: 'html/editor-response-parsed.html'
+      },
+      { title: 'Preview',
+        url: 'html/editor-response-preview.html'
     }];
     $scope.currentResponsePreviewTab = {
-          title: 'Raw',
-          url: 'html/editor-response-raw.html'
-      };
+      title: 'Raw',
+      url: 'html/editor-response-raw.html'
+    };
     $scope.responsePreviewTypeContent = null;
 
     $scope.setEnvironment = function(environment){
@@ -112,6 +112,7 @@ angular.module('app').controller('EditorCtrl', [
         }
       })
       .finally(function(){
+        // Workaround: newType Error that appears when parsing headers root casue unknown
         $scope.response.headers = JSON.parse(JSON.stringify($scope.response.headers()));
         $scope.setResponsePreviewType($scope.currentResponsePreviewTab);
       });
@@ -128,27 +129,29 @@ angular.module('app').controller('EditorCtrl', [
         return 'fa-circle icon-success';
     };
 
+    // Sets Response Preview Type Tab
+    // Requires an JSON object with title type and url
+    // and assigns response data accoringly.
     $scope.setResponsePreviewType = function(previewType){
       $scope.responsePreviewTypeContent = null;
-      if( previewType.title == "Raw" )
-      {
+      if( previewType.title == "Raw" ){
         $scope.currentResponsePreviewTab = previewType;
         $scope.responsePreviewTypeContent = $scope.response.data;
       }
-      else if ( previewType.title == "Parsed" )
-      {
+      else if ( previewType.title == "Parsed" ){
         $scope.currentResponsePreviewTab = previewType;
         try{
           JSON.parse($scope.response.data); // checks  valid JSON
           $scope.responsePreviewTypeContent = $scope.response.data;
-        }catch(error){
+        }
+        catch(error){
           console.log("Invalid JSON " + error.stack);
           // Will send data as is
           $scope.responsePreviewTypeContent = $scope.response.data;
         }
       }
-      else if  ( previewType.title == "Preview")
-      {
+      else if  ( previewType.title == "Preview" ){
+
         $scope.currentResponsePreviewTab = previewType;
         // Loading in the iframe it sandboxes the html by default
         $scope.responsePreviewTypeContent = $sce.trustAsHtml($scope.response.data);
