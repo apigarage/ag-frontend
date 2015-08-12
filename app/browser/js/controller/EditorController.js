@@ -112,7 +112,7 @@ angular.module('app').controller('EditorCtrl', [
         }
       })
       .finally(function(){
-        $scope.response.headers = $scope.response.headers();
+        $scope.response.headers = JSON.parse(JSON.stringify($scope.response.headers()));
         $scope.setResponsePreviewType($scope.currentResponsePreviewTab);
       });
     };

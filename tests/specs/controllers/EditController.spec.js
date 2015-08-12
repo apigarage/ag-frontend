@@ -1,9 +1,7 @@
 describe('Controller: EditController', function() {
 
   var $rootScope, $scope, $controller;
-  beforeEach(module('app', [
-    'ngSanitize'
-  ]));
+  beforeEach(module('app'));
 
   beforeEach(inject(function(_$rootScope_, _$controller_, _$httpBackend_, _HttpBackendBuilder_, _Config_, _RequestStubs_, _RequestUtility_){
     $rootScope = _$rootScope_;
