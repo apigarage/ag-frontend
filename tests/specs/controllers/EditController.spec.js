@@ -31,26 +31,17 @@ describe('Controller: EditController', function() {
     });
     describe('GET Valid URL', function(){
       it('response headers is set', function(){
-        // Set user defined data and expected response
         stub = RequestStubs.getWithResponseHeadersStub;
         HttpBackendBuilder.build(stub.request, stub.response);
-        // Define the Request to match the request stub see HTTPBadkendBuilder
         $scope.endpoint.method = stub.request.method;
         $scope.endpoint.requestUrl = stub.request.url;
         // headers are stored as an array. Mimicing that behaviour for acurate testing.
         $scope.endpoint.headers = RequestUtility.getHeaders($scope.endpoint.headers, 'Array');
-        // Perform the request to the URL
         $scope.performRequest().then(function(){
-          // check if the response object is not null
           expect($scope.response).not.toBeNull();
-          // verify
-          // status
           expect($scope.response.status).toEqual(stub.response.status);
-          // data
           expect($scope.response.data).toBe(stub.response.data);
-          // headers
           expect($scope.response.headers.getheaders).toBe(stub.response.headers.getheaders);
-          // statusText
           expect($scope.response.statusText).toBe(stub.response.statusText);
         });
       });
@@ -59,7 +50,6 @@ describe('Controller: EditController', function() {
     describe('POST Valid URL', function(){
       describe('with request Data', function(){
         it('response data is set', function(){
-          // Set user defined data and expected response
           stub = RequestStubs.postWithDataWithResponseDataStub;
           HttpBackendBuilder.build(stub.request, stub.response);
           $scope.endpoint.requestMethod = stub.request.method;
@@ -70,16 +60,10 @@ describe('Controller: EditController', function() {
           // headers are stored as an array. Mimicking that behaviour for acurate testing.
           $scope.endpoint.headers = RequestUtility.getHeaders($scope.endpoint.headers, 'Array');
           $scope.performRequest().then(function(){
-            // check if the response object is not null
             expect($scope.response).not.toBeNull();
-            // Verify
-            // status
             expect($scope.response.status).toEqual(stub.response.status);
-            // data
             expect($scope.response.data).toBe(stub.response.data);
-            // headers
             expect($scope.response.headers.postresponse).toBe(stub.response.headers.postresponse);
-            // statusText
             expect($scope.response.statusText).toBe(stub.response.statusText);
           });
         });
@@ -93,17 +77,10 @@ describe('Controller: EditController', function() {
           $scope.endpoint.requestBody = stub.request.data;
           $scope.endpoint.requestHeaders = stub.request.headers;
           $scope.performRequest().then(function(){
-            // check if the response object is not null
             expect($scope.response).not.toBeNull();
-            // Verify
-            // status
             expect($scope.response.status).toEqual(stub.response.status);
-            // data
             expect($scope.response.data).toBeUndefined(stub.response.data);
-            // headers
-            // TODO this will be an object later on so the () is not necessary
             expect($scope.response.headers.postresponse).toBe(stub.response.headers.postresponse);
-            // statusText
             expect($scope.response.statusText).toBe(stub.response.statusText);
           });
         });
@@ -118,23 +95,15 @@ describe('Controller: EditController', function() {
           $scope.endpoint.requestBody = stub.request.data;
           $scope.endpoint.requestHeaders = stub.request.headers;
           $scope.performRequest().then(function(){
-            // check if the response object is not null
             expect($scope.response).not.toBeNull();
-            // Verify
-            // status
             expect($scope.response.status).toEqual(stub.response.status);
-            // data
             expect($scope.response.data).toBe(stub.response.data);
-            // headers
             expect($scope.response.headers.postresponse).toBe(stub.response.headers.postresponse);
-            // statusText
             expect($scope.response.statusText).toBe(stub.response.statusText);
           });
         });
-        // POSTStub without response headers
 
         it('response headers is not set', function(){
-          // Set user defined data and expected response
           stub = RequestStubs.postWithDataWithNoHeadersDataStub;
           HttpBackendBuilder.build(stub.request, stub.response);
           $scope.endpoint.requestMethod = stub.request.method;
@@ -143,27 +112,18 @@ describe('Controller: EditController', function() {
           $scope.endpoint.requestBody = stub.request.data;
           $scope.endpoint.requestHeaders = stub.request.headers;
           $scope.performRequest().then(function(){
-            // check if the response object is not null
             expect($scope.response).not.toBeNull();
-            // Verify
-            // status
             expect($scope.response.status).toEqual(stub.response.status);
-            // data
             expect($scope.response.data).toBe(stub.response.data);
-            // headers - headers().postresponse undefined if headers data is part
-            // of a response it will return an empty Array Object
             expect($scope.response.headers.postresponse).toBe(stub.response.headers);
-            // statusText
             expect($scope.response.statusText).toBe(stub.response.statusText);
           });
         });
 
       });
-      // Also test
 
       describe('without request Data', function(){
         it('response data is set', function(){
-          // Set user defined data and expected response
           stub = RequestStubs.postWithoutDataWithResponseDataStub;
           HttpBackendBuilder.build(stub.request, stub.response);
           $scope.endpoint.requestMethod = stub.request.method;
@@ -172,22 +132,15 @@ describe('Controller: EditController', function() {
           $scope.endpoint.requestBody = stub.request.data;
           $scope.endpoint.requestHeaders = stub.request.headers;
           $scope.performRequest().then(function(){
-            // check if the response object is not null
             expect($scope.response).not.toBeNull();
-            // Verify
-            // status
             expect($scope.response.status).toEqual(stub.response.status);
-            // data
             expect($scope.response.data).toBe(stub.response.data);
-            // headers
             expect($scope.response.headers.postresponse).toBe(stub.response.headers.postresponse);
-            // statusText
             expect($scope.response.statusText).toBe(stub.response.statusText);
           });
         });
 
         it('response data is not set', function(){
-          // Set user defined data and expected response
           stub = RequestStubs.postWithoutDataWithoutResponseDataStub;
           HttpBackendBuilder.build(stub.request, stub.response);
           $scope.endpoint.requestMethod = stub.request.method;
@@ -196,21 +149,14 @@ describe('Controller: EditController', function() {
           $scope.endpoint.requestBody = stub.request.data;
           $scope.endpoint.requestHeaders = stub.request.headers;
           $scope.performRequest().then(function(){
-            // check if the response object is not null
             expect($scope.response).not.toBeNull();
-            // Verify
-            // status
             expect($scope.response.status).toEqual(stub.response.status);
-            // data
             expect($scope.response.data).toBeUndefined(stub.response.data);
-            // headers
             expect($scope.response.headers.postresponse).toBe(stub.response.headers.postresponse);
-            // statusText
             expect($scope.response.statusText).toBe(stub.response.statusText);
           });
         });
         it('response headers is set', function(){
-          // Set user defined data and expected response
           stub = RequestStubs.postWithoutDataWithHeadersStub;
           HttpBackendBuilder.build(stub.request, stub.response);
           $scope.endpoint.requestMethod = stub.request.method;
@@ -219,22 +165,15 @@ describe('Controller: EditController', function() {
           $scope.endpoint.requestBody = stub.request.data;
           $scope.endpoint.requestHeaders = stub.request.headers;
           $scope.performRequest().then(function(){
-            // check if the response object is not null
             expect($scope.response).not.toBeNull();
-            // Verify
-            // status
             expect($scope.response.status).toEqual(stub.response.status);
-            // data
             expect($scope.response.data).toBe(stub.response.data);
-            // headers
             expect($scope.response.headers.postresponse).toBe(stub.response.headers.postresponse);
-            // statusText
             expect($scope.response.statusText).toBe(stub.response.statusText);
           });
         });
 
         it('response headers is not set', function(){
-          // Set user defined data and expected response
           stub = RequestStubs.postWithoutDataWithoutHeadersStub;
           HttpBackendBuilder.build(stub.request, stub.response);
           $scope.endpoint.requestMethod = stub.request.method;
@@ -243,17 +182,12 @@ describe('Controller: EditController', function() {
           $scope.endpoint.requestBody = stub.request.data;
           $scope.endpoint.requestHeaders = stub.request.headers;
           $scope.performRequest().then(function(){
-            // check if the response object is not null
             expect($scope.response).not.toBeNull();
-            // Verify
-            // status
             expect($scope.response.status).toEqual(stub.response.status);
-            // data
             expect($scope.response.data).toBe(stub.response.data);
             // headersheaders().postresponse undefined if headers data is part
             // of a response it will return an empty Array Object
             expect($scope.response.headers.postresponse).toBeUndefined(stub.response.headers);
-            // statusText
             expect($scope.response.statusText).toBe(stub.response.statusText);
           });
         });
@@ -266,7 +200,6 @@ describe('Controller: EditController', function() {
     });
     describe('GET', function(){
       it('response is set', function(){
-        // Set user defined data and expected response
         stub = RequestStubs.getWithInvalidURL;
         HttpBackendBuilder.build(stub.request, stub.response);
         $scope.endpoint.requestMethod = stub.request.method;
@@ -275,22 +208,15 @@ describe('Controller: EditController', function() {
         $scope.endpoint.requestBody = stub.request.data;
         $scope.endpoint.requestHeaders = stub.request.headers;
         $scope.performRequest().then(function(){
-          // check if the response object is not null
           expect($scope.response).not.toBeNull();
-          // Verify
-          // status
           expect($scope.response.status).toEqual(stub.response.status);
-          // data
           expect($scope.response.data).toBe(stub.response.data);
-          // headers
           expect($scope.response.headers.postresponse).toBe(stub.response.headers.postresponse);
-          // statusText
           expect($scope.response.statusText).toBe(stub.response.statusText);
         });
       });
 
       it('response is not set', function(){
-        // Set user defined data and expected response
         stub = RequestStubs.getWithInvalidURLNoResponse;
         HttpBackendBuilder.build(stub.request, stub.response);
         $scope.endpoint.requestMethod = stub.request.method;
@@ -299,23 +225,16 @@ describe('Controller: EditController', function() {
         $scope.endpoint.requestBody = stub.request.data;
         $scope.endpoint.requestHeaders = stub.request.headers;
         $scope.performRequest().then(function(){
-          // check if the response object is not null
           expect($scope.response).not.toBeNull();
-          // Verify
-          // status
           expect($scope.response.status).toEqual(200);
-          // data
           expect($scope.response.data).toBe(stub.response.data);
-          // headers
           expect($scope.response.headers.postresponse).toBeUndefined(stub.response.headers);
-          // statusText
           expect($scope.response.statusText).toBe('');
         });
       });
     });
     describe('POST', function(){
       it('response is set', function(){
-        // Set user defined data and expected response
         stub = RequestStubs.postWithInvalidURLStub;
         HttpBackendBuilder.build(stub.request, stub.response);
         $scope.endpoint.requestMethod = stub.request.method;
@@ -324,22 +243,15 @@ describe('Controller: EditController', function() {
         $scope.endpoint.requestBody = stub.request.data;
         $scope.endpoint.requestHeaders = stub.request.headers;
         $scope.performRequest().then(function(){
-          // check if the response object is not null
           expect($scope.response).not.toBeNull();
-          // Verify
-          // status
           expect($scope.response.status).toEqual(stub.response.status);
-          // data
           expect($scope.response.data).toBe(stub.response.data);
-          // headers
           expect($scope.response.headers.postresponse).toBe(stub.response.headers.postresponse);
-          // statusText
           expect($scope.response.statusText).toBe(stub.response.statusText);
         });
       });
 
       it('response is not set', function(){
-        // Set user defined data and expected response
         stub = RequestStubs.postWithInvalidURLNoResponseStub;
         HttpBackendBuilder.build(stub.request, stub.response);
         $scope.endpoint.requestMethod = stub.request.method;
@@ -348,16 +260,10 @@ describe('Controller: EditController', function() {
         $scope.endpoint.requestBody = stub.request.data;
         $scope.endpoint.requestHeaders = stub.request.headers;
         $scope.performRequest().then(function(){
-          // check if the response object is not null
           expect($scope.response).not.toBeNull();
-          // Verify
-          // status
           expect($scope.response.status).toEqual(200);
-          // data
           expect($scope.response.data).toBe(stub.response.data);
-          // headers
           expect($scope.response.headers.postresponse).toBeUndefined(stub.response.headers);
-          // statusText
           expect($scope.response.statusText).toBe('');
         });
       });
@@ -392,111 +298,71 @@ describe('Controller: EditController', function() {
       $httpBackend.flush();
     });
     it('raw', function(){
-      // Set user defined data and expected response previewType
       stub = RequestStubs.setPreviewTypeRawStub;
       HttpBackendBuilder.build(stub.request, stub.response);
-      // Define the Request to match the request stub see HTTPBadkendBuilder
       $scope.endpoint.method = stub.request.method;
       $scope.endpoint.requestUrl = stub.request.url;
-      // headers are stored as an array. Mimicing that behaviour for acurate testing.
       $scope.endpoint.headers = RequestUtility.getHeaders($scope.endpoint.headers, 'Array');
-      // Perform the request to the URL
       $scope.currentResponsePreviewTab = stub.previewType;
       $scope.performRequest().then(function(){
-        // check if the response object is not null
         expect($scope.response).not.toBeNull();
-        // verify
-        // status
         expect($scope.response.status).toEqual(stub.response.status);
-        // data
         expect($scope.response.data).toBe(stub.response.data);
-        // headers
         expect($scope.response.headers.getheaders).toBe(stub.response.headers.getheaders);
-        // statusText
         expect($scope.response.statusText).toBe(stub.response.statusText);
       });
     });
 
     it('parsed valid JSON', function(){
-      // Set user defined data and expected response previewType
       stub = RequestStubs.setPreviewTypeParsedStub;
-      // data returned is a js object that needs to be stringified
+      // stringify js object as json
       stub.response.data = JSON.stringify(stub.response.data);
       HttpBackendBuilder.build(stub.request, stub.response);
-      // Define the Request to match the request stub see HTTPBadkendBuilder
       $scope.endpoint.method = stub.request.method;
       $scope.endpoint.requestUrl = stub.request.url;
-      // headers are stored as an array. Mimicing that behaviour for acurate testing.
       $scope.endpoint.headers = RequestUtility.getHeaders($scope.endpoint.headers, 'Array');
-      // Perform the request to the URL
       $scope.currentResponsePreviewTab = stub.previewType;
       $scope.performRequest().then(function(){
-        // check if the response object is not null
         expect($scope.response).not.toBeNull();
-        // verify
-        // status
         expect($scope.response.status).toEqual(stub.response.status);
-        // data
         expect($scope.response.data.JSONStub).toBe(stub.response.data.JSONStub);
-        // headers
         expect($scope.response.headers.getheaders).toBe(stub.response.headers.getheaders);
-        // statusText
         expect($scope.response.statusText).toBe(stub.response.statusText);
       });
     });
 
     it('parsed invalid JSON', function(){
-      // Set user defined data and expected response previewType
       stub = RequestStubs.setPreviewTypeParsedStub;
       HttpBackendBuilder.build(stub.request, stub.response);
-      // Define the Request to match the request stub see HTTPBadkendBuilder
       $scope.endpoint.method = stub.request.method;
       $scope.endpoint.requestUrl = stub.request.url;
-      // headers are stored as an array. Mimicing that behaviour for acurate testing.
       $scope.endpoint.headers = RequestUtility.getHeaders($scope.endpoint.headers, 'Array');
-      // Perform the request to the URL
       $scope.currentResponsePreviewTab = stub.previewType;
       $scope.performRequest().then(function(){
-        // check if the response object is not null
         expect($scope.response).not.toBeNull();
-        // verify
-        // status
         expect($scope.response.status).toEqual(stub.response.status);
-        // data
         expect($scope.response.data.JSONStub).toBe(stub.response.data.JSONStub);
-        // headers
         expect($scope.response.headers.getheaders).toBe(stub.response.headers.getheaders);
-        // statusText
         expect($scope.response.statusText).toBe(stub.response.statusText);
       });
     });
 
     it('preview', function(){
-      // Set user defined data and expected response previewType
       stub = RequestStubs.setPreviewTypePreviewStub;
       // Replace the data with html
       stub.response.data = '<p style="color:blue">an html\n' +
                            '<em onmouseover="this.textContent=\'PWN3D!\'">click here</em>\n' +
                            'snippet</p>';
       HttpBackendBuilder.build(stub.request, stub.response);
-      // Define the Request to match the request stub see HTTPBadkendBuilder
       $scope.endpoint.method = stub.request.method;
       $scope.endpoint.requestUrl = stub.request.url;
-      // headers are stored as an array. Mimicing that behaviour for acurate testing.
       $scope.endpoint.headers = RequestUtility.getHeaders($scope.endpoint.headers, 'Array');
-      // Perform the request to the URL
       $scope.currentResponsePreviewTab = stub.previewType;
       $scope.performRequest().then(function(){
-        // check if the response object is not null
         expect($scope.response).not.toBeNull();
-        // verify
-        // status
         expect($scope.response.status).toEqual(stub.response.status);
-        // data
         expect($scope.response.data).toBe(stub.response.data);
-        // headers
         expect($scope.response.headers.getheaders).toBe(stub.response.headers.getheaders);
-        // statusText
         expect($scope.response.statusText).toBe(stub.response.statusText);
       });
       expect($scope.currentResponsePreviewTab.title).toBe(stub.previewType.title);
@@ -531,5 +397,5 @@ describe('Controller: EditController', function() {
       var result = $scope.getResponseCodeClass(200);
       expect('fa-circle icon-success').toBe(result);
     });
-  });  // Function getresponseCodeClass testing Code Status
+  });
 });
