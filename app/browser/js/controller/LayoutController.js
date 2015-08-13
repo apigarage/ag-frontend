@@ -6,12 +6,17 @@ angular.module('app').controller('LayoutCtrl', [
   function ($scope, $timeout, $modal, $state){
 
   $scope.layout = {
-    sidebarExpanded: false
+    sidebarExpanded: false,
+    historyMaximized: false
   };
 
   $scope.toggleSidebar = function()
     {
       $scope.layout.sidebarExpanded = !$scope.layout.sidebarExpanded;
+    };
+  $scope.toggleHistory = function()
+    {
+      $scope.layout.historyMaximized = !$scope.layout.historyMaximized;
     };
 
 }]);

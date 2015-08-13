@@ -1,5 +1,6 @@
   <div class="layout-column-sidebar sidebar noselect" ng-class="{expanded: layout.sidebarExpanded}"
       bs-affix-target ng-controller="SidebarCtrl">
+
     <!-- NEW ENDPOINT BUTTON -->
     <button type="button" class="btn btn-default btn-block sidebar-new"
             bs-tooltip data-title="{{'OSX' ? '&#8984;N' : 'Ctrl+N'}}" data-placement="bottom">
@@ -78,3 +79,21 @@
     </script>
 
   </div>
+  <div class="layout-column-sidebar history noselect" ng-class="{expanded: layout.sidebarExpanded, maximized: layout.historyMaximized}"
+       ng-controller="HistoryCtrl">
+
+    <h1>REQUEST HISTORY</h1>
+
+    <a class="history-expand-icon" ng-click="toggleHistory()">
+      <span class="fa" ng-class="layout.historyMaximized ? 'fa-times-circle' : 'fa-external-link'"></span>
+    </a>
+
+    <ul class="list-unstyled">
+      <li class="request-url" ng-repeat="request in recentRequests">
+        <span class="request-type">{{request.type}}</span>
+        <a>{{request.url}}</a>
+      </li>
+    </ul>
+
+  </div>
+  <div class="history-maximize-overlay" ng-class="{active: layout.historyMaximized}" ng-click="toggleHistory()"></div>
