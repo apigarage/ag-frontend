@@ -24,16 +24,23 @@
           <div class="input-group-btn">
             <button class="btn btn-default project-environment" bs-dropdown data-template="environmentSelect">
               <span class="fa fa-sliders"></span>
-              {{endpoint.environment}}
+              {{endpoint.environment ? endpoint.environment.name : 'ENVIRONMENT'}}
               <span class="caret"></span>
             </button>
             <script type="text/ng-template" id="environmentSelect">
               <ul class="dropdown-menu">
-                <li ng-repeat="environment in environments">
+                <li ng-repeat="environment in environments.global">
                   <a ng-click="setEnvironment(environment)">
                     <span class="fa fa-fw" ng-class="environment == endpoint.environment ? 'fa-check' : 'fa-spacer'"></span>
-                    <code class="text-uppercase">{{environment}}</code>
+                    <code class="text-uppercase">{{environment.name}}</code>
                     <span class="dropdown-menu-hotkey">{{'OSX' ? '&#8984;' + ($index+1) : 'Ctrl+' + ($index+1)}}</span>
+                  </a>
+                </li>
+                <li ng-repeat="environment in environments.personal">
+                  <a ng-click="setEnvironment(environment)">
+                    <span class="fa fa-fw" ng-class="environment == endpoint.environment ? 'fa-check' : 'fa-spacer'"></span>
+                    <code class="text-uppercase">{{environment.name}}</code>
+                    <span class="dropdown-menu-hotkey">{{'OSX' ? '&#8984;' + ($index+1+environments.global.length) : 'Ctrl+' + ($index+1+environments.global.length)}}</span>
                   </a>
                 </li>
                 <li class="divider"></li>

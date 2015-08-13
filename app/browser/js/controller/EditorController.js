@@ -14,7 +14,7 @@ angular.module('app').controller('EditorCtrl', [
       requestUrl: "https://www.facebook.com",
       category: "Untitled Category",
       name: "Untitled Request",
-      environment: 'production',
+      environment: null,
       requestMethod: 'GET',
       requestHeaders: [
         { key: "Content-Type", value: "application/json" },
@@ -24,7 +24,16 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
-    $scope.environments = ['local', 'staging', 'production'];
+    $scope.environments = {
+      public: [],
+      publicVariables: [
+        { name: '' }
+      ],
+      private: [],
+      privateVariables: [
+        { name: '' }
+      ]
+    };
     $scope.response = null;
     $scope.showRequestBody = false;
     $scope.responsePreviewTab = [
