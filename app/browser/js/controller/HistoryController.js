@@ -25,6 +25,14 @@ angular.module('app').controller('HistoryCtrl', [
     },
     {
       type: 'GET',
+      url: 'https://www.facebook.com/another-really-long-url/with-extra-suffixes.php?and=params'
+    },
+    {
+      type: 'DELETE',
+      url: 'http://www.short-domain.com/'
+    },
+    {
+      type: 'GET',
       url: 'http://bit.ly/musichacktoronto'
     }
   ];
