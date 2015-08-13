@@ -3,7 +3,7 @@
 
         <h3 class="editor-panel-heading-title">Response</h3>
 
-        <div class="response-heading enable-select" ng-switch="response">
+        <div class="response-heading enable-select" ng-class="response ? 'active' : null" ng-switch="response">
           <div ng-switch-when="null">
             No requests have been made.
           </div>
@@ -39,6 +39,10 @@
             </div>
           </div>
         </div>
+
+        <input type="text" class="form-control response-search"
+               placeholder="Search..." ng-model="search"
+               ng-show="response" />
 
         <ul class="response-tab-group" ng-show="response">
           <li class="response-tab-item" ng-class="{'active': currentResponsePreviewTab.title == previewType.title}"

@@ -178,6 +178,10 @@
   border-left: 1px solid @input-border;
   padding-left: 15px;
   color: #888;
+
+  &.active {  // Make room for search bar when there is a response
+    padding-bottom: 10px;
+  }
 }
 // Allows the user to choose between Parse, RAW, and HTML Previews
 .response-tab-group {
@@ -186,7 +190,7 @@
   margin: 0;
   padding: 0;
   bottom: -1px;
-  right: 20px;
+  right: 8px;
   overflow: hidden;
 }
 .response-tab-item {
@@ -194,7 +198,7 @@
   list-style: none;
   border: 1px solid transparent;
   border-bottom: 0;
-  padding: 9px 15px 8px;
+  padding: 6px 15px 5px;
   font-family: @font-family-sans-serif;
   font-weight: bold;
   font-size: 12px;
@@ -221,6 +225,29 @@
 .response-code {
   font-size: 14px;
   font-weight: bold;
+}
+.response-loading {
+  &.ng-animate {
+    -webkit-animation: none 0s; // Cancel ngAnimate for instant transitions upon successful response load
+  }
+}
+
+// ============================================================================
+// Response Search
+// ============================================================================
+.response-search {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  height: 26px;
+  margin: 0;
+  border-radius: 20px;
+  padding-left: 26px;
+  width: 228px;
+  background-image: url('../img/search-icon.png');
+  background-repeat: no-repeat;
+  background-size: 12px;
+  background-position: 8px 6px;
 }
 
 // ============================================================================
