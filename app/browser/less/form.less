@@ -21,6 +21,7 @@
 // ============================================================================
 // Content Editable
 // ============================================================================
+// (1/2) The following style is for actual contenteditable html elements.
 *[contenteditable='true'] {
   position: relative;
   margin: -6px -8px !important; // Push the border outside of the normal box area (extra 1 pixel for border)
@@ -105,6 +106,15 @@
     // font-style: italic;
     font-weight: 300;
     color: @gray-light;
+  }
+}
+
+// (2/2) This one is for regular inputs, whose borders fade away when not in focus to appear as text.
+.content-editable {
+  border: none;
+  
+  &:focus {
+    .form-control;
   }
 }
 

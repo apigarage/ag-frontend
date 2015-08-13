@@ -6,14 +6,15 @@ angular.module('app').controller('EditorCtrl', [
   '$sce',
   '$modal',
   'RequestUtility',
-  function (_, $scope, $filter, $http, $sce, $modal, RequestUtility){
+  '$focus',
+  function (_, $scope, $filter, $http, $sce, $modal, RequestUtility, $focus){
 
     // ----------------------------
     // Temporary MOCK Endpoint Use Case
     $scope.endpoint = {
       requestUrl: "https://www.facebook.com",
       category: "Untitled Category",
-      name: "Untitled Request",
+      name: "",
       environment: null,
       requestMethod: 'GET',
       requestHeaders: [
@@ -51,6 +52,20 @@ angular.module('app').controller('EditorCtrl', [
       url: 'html/editor-response-raw.html'
     };
     $scope.responsePreviewTypeContent = null;
+
+    // Only run this line for NEW requests. This tells the user to name the request before doing anything else.
+    $focus('editor-title');
+
+    $scope.openNewCategoryModal = function(){
+      var myModal = $modal({
+        show: false,
+        template: "html/prompt.html",
+        backdrop: true
+      });
+
+      myModal.$scope.title  = "New Category";
+      myModal.$promise.then( myModal.show );
+    };
 
     $scope.setEnvironment = function(environment){
       $scope.endpoint.environment = environment;

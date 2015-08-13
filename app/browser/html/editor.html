@@ -16,8 +16,34 @@
           <span class="hidden-xs hidden-sm">Delete</span>
         </button>
       </div>
-      <h2>{{endpoint.category}}</h2>
-      <h1 contenteditable="true" class="single-line" ng-model="endpoint.name" placeholder="Untitled"></h1>
+      <div class="editor-titles">
+        <h2 bs-dropdown data-template="editor-category">
+          {{endpoint.category}}
+          <span class="caret"></span>
+        </h2>
+        <h1 id="editor-title">
+          <input type="text" class="content-editable"
+                 placeholder="Untitled Request" pu-elastic-input
+                 ng-model="endpoint.name" />
+        </h1>
+      </div>
+      <script type="text/ng-template" id="editor-category">
+        <ul class="dropdown-menu">
+          <li ng-repeat="category in ['Albums', 'Artists', 'Tracks', 'Playlists', 'User Profiles']">
+            <a ng-click="endpoint.category = category">
+              <span class="fa fa-fw" ng-class="category == endpoint.category ? 'fa-check' : 'fa-spacer'"></span>
+              {{category}}
+            </a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a ng-click="openNewCategoryModal()">
+              <span class="fa fa-fw fa-pencil"></span>
+              New Category
+            </a>
+          </li>
+        </ul>
+      </script>
 
     </div>
     <!--
