@@ -1,15 +1,17 @@
 angular.module('app').controller('EditorCtrl', [
   'lodash',
   '$scope',
+  '$filter',
   '$http',
+  '$sce',
   '$modal',
   'RequestUtility',
-  function (_, $scope, $http, $modal, RequestUtility){
+  function (_, $scope, $filter, $http, $sce, $modal, RequestUtility){
 
     // ----------------------------
     // Temporary MOCK Endpoint Use Case
     $scope.endpoint = {
-      requestUrl: "https://www.facebook.com",
+      requestUrl: "http://www.w3schools.com/",
       category: "Untitled Request",
       name: "Untitled Catgetory",
       environment: 'production',
@@ -20,12 +22,26 @@ angular.module('app').controller('EditorCtrl', [
       ],
       requestBody:  ''
     };
+
     $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
     $scope.environments = ['local', 'staging', 'production'];
     $scope.response = null;
-    $scope.responsePreviewTypes = ['Parsed', 'Raw', 'Preview'];
-    $scope.responsePreviewType = ['Parsed'];
     $scope.showRequestBody = false;
+    $scope.responsePreviewTab = [
+      { title: 'Raw',
+        url: 'html/editor-response-raw.html'
+      },
+      { title: 'Parsed',
+        url: 'html/editor-response-parsed.html'
+      },
+      { title: 'Preview',
+        url: 'html/editor-response-preview.html'
+    }];
+    $scope.currentResponsePreviewTab = {
+      title: 'Raw',
+      url: 'html/editor-response-raw.html'
+    };
+    $scope.responsePreviewTypeContent = null;
 
     $scope.setEnvironment = function(environment){
       $scope.endpoint.environment = environment;
@@ -61,7 +77,7 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     function resetResponse() {
-      $scope.resopnse = {
+      $scope.response = {
         status : -1,
         statusText : '',
         data : ''
@@ -96,7 +112,9 @@ angular.module('app').controller('EditorCtrl', [
         }
       })
       .finally(function(){
-        $scope.response.headers = $scope.response.headers();
+        // Workaround: newType Error that appears when parsing headers root casue unknown
+        $scope.response.headers = JSON.parse(JSON.stringify($scope.response.headers()));
+        $scope.setResponsePreviewType($scope.currentResponsePreviewTab);
       });
     };
 
@@ -111,8 +129,33 @@ angular.module('app').controller('EditorCtrl', [
         return 'fa-circle icon-success';
     };
 
+    // Sets Response Preview Type Tab
+    // Requires an JSON object with title type and url
+    // and assigns response data accoringly.
     $scope.setResponsePreviewType = function(previewType){
-      $scope.responsePreviewType = previewType;
+      $scope.responsePreviewTypeContent = null;
+      if( previewType.title == "Raw" ){
+        $scope.currentResponsePreviewTab = previewType;
+        $scope.responsePreviewTypeContent = $scope.response.data;
+      }
+      else if ( previewType.title == "Parsed" ){
+        $scope.currentResponsePreviewTab = previewType;
+        try{
+          JSON.parse($scope.response.data); // checks  valid JSON
+          $scope.responsePreviewTypeContent = $scope.response.data;
+        }
+        catch(error){
+          console.log("Invalid JSON " + error.stack);
+          // Will send data as is
+          $scope.responsePreviewTypeContent = $scope.response.data;
+        }
+      }
+      else if  ( previewType.title == "Preview" ){
+
+        $scope.currentResponsePreviewTab = previewType;
+        // Loading in the iframe it sandboxes the html by default
+        $scope.responsePreviewTypeContent = $sce.trustAsHtml($scope.response.data);
+      }
     };
 
     $scope.requestBodyEditorOptions = {
@@ -132,6 +175,36 @@ angular.module('app').controller('EditorCtrl', [
       showGutter: false,
       theme: 'kuroir',
       mode: 'json',
+      onLoad: function(editor){
+        editor.setShowPrintMargin(false);
+        editor.setHighlightActiveLine(false);
+        editor.setDisplayIndentGuides(false);
+        editor.setOptions({maxLines: Infinity});  // Auto adjust height!
+        editor.$blockScrolling = Infinity; // Disable warning
+        editor.setReadOnly(true);
+      }
+    };
+
+    $scope.responseBodyEditorOptionsRaw = {
+      useWrapMode : false,
+      showGutter: false,
+      theme: 'kuroir',
+      mode: 'text',
+      onLoad: function(editor){
+        editor.setShowPrintMargin(false);
+        editor.setHighlightActiveLine(false);
+        editor.setDisplayIndentGuides(false);
+        editor.setOptions({maxLines: Infinity});  // Auto adjust height!
+        editor.$blockScrolling = Infinity; // Disable warning
+        editor.setReadOnly(true);
+      }
+    };
+
+    $scope.responseBodyEditorOptionsParsed = {
+      useWrapMode : true,
+      showGutter: false,
+      theme: 'kuroir',
+      mode: 'xml',
       onLoad: function(editor){
         editor.setShowPrintMargin(false);
         editor.setHighlightActiveLine(false);
