@@ -13,7 +13,7 @@ angular.module('app').controller('EditorCtrl', [
     // Temporary MOCK Endpoint Use Case
     $scope.endpoint = {
       requestUrl: "https://www.facebook.com",
-      category: "Untitled Category",
+      category: "Uncategorized",
       name: "",
       environment: null,
       requestMethod: 'GET',
