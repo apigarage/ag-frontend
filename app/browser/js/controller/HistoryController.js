@@ -6,7 +6,7 @@ angular.module('app').controller('HistoryCtrl', [
     {
       time: '2015-08-15 12:15PM',
       type: 'GET',
-      url: 'https://www.facebook.com/'
+      url: 'https://www.facebook.com/some-random-fake-endpoint/another-page?v-=123123laskdfj&afa3a23f23f#12312345235987235'
     },
     {
       time: '2015-08-15 12:15PM',
