@@ -15,7 +15,6 @@ angular.module('app')
     // are triggered.
     $timeout(function() {
       var element = document.getElementById(id);
-      console.log( 'Focus:', element );
       if(element)
       {
         if(element.select)
