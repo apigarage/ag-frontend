@@ -12,7 +12,7 @@ body {
 // Layout Rows
 // ============================================================================
 @layout-header-height: 50px;
-@layout-footer-height: 0px;
+@layout-footer-height: 30px;
 .layout-row-header {
   position: absolute;
   top: 0;
@@ -34,7 +34,14 @@ body {
   bottom: @layout-footer-height;
   background: #FFF;
 }
-
+.layout-row-footer {
+  position: absolute;
+  height: @layout-footer-height;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #FFF;
+}
 // ============================================================================
 // Layout Columns
 // ============================================================================
