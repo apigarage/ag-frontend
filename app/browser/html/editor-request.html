@@ -1,5 +1,5 @@
     <div class="panel panel-default editor-panel">
-      <div class="panel-heading editor-panel-heading">
+      <form class="panel-heading editor-panel-heading">
 
         <h3 class="editor-panel-heading-title">Request</h3>
 
@@ -22,7 +22,7 @@
           </div><!-- /btn-group -->
           <input type="text" class="form-control" ng-model="endpoint.requestUrl" placeholder="Add a URL...">
           <div class="input-group-btn">
-            <button class="btn btn-default project-environment"
+            <button class="btn btn-default project-environment" type="button"
                     bs-dropdown data-template="environmentSelect"
                     ng-click="environments.public.length + environments.private.length ? null : manageEnvironments()">
               <span class="fa fa-sliders"></span>
@@ -54,7 +54,7 @@
                 </li>
               </ul>
             </script>
-            <button class="btn btn-primary" ng-click="performRequest()"``
+            <button class="btn btn-primary" type="submit" ng-click="performRequest()"
                     ladda="response == 'loading'" data-style="expand-right"
                     bs-tooltip data-html="1"  data-placement="bottom"
                     data-title="<span class='visible-xs-inline visible-sm-inline'>Make Request (</span>{{'OSX' ? '&#8984;R' : 'Ctrl+R'}}<span class='visible-xs-inline visible-sm-inline'>)</span>">
@@ -66,7 +66,7 @@
           </div>
         </div>
 
-      </div>
+      </form>
       <div class="panel-body editor-panel-body">
 
         <div class="request-headers">
