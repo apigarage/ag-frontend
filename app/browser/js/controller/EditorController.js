@@ -53,6 +53,9 @@ angular.module('app').controller('EditorCtrl', [
     };
     $scope.responsePreviewTypeContent = null;
 
+    // TEMPORARY FLAG TO DISABLE THE SEARCH BOX IN THE RESPONSE PANEL (note there is an extra padding created in the .response-heading div to make room for the search box)
+    $scope.RESPONSE_SEARCH_FLAG = false;
+
     // Only run this line for NEW requests. This tells the user to name the request before doing anything else.
     $focus('editor-title');
 
