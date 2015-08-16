@@ -1,20 +1,20 @@
   <div class="history noselect" ng-class="{expanded: layout.sidebarExpanded, maximized: layout.historyMaximized}"
        ng-controller="HistoryCtrl">
 
-    <h1 ng-click="toggleHistory()">
-      <span class="fa"
-            ng-class="layout.historyMaximized ? 'fa-minus-square-o' : 'fa-plus-square-o'">
-      </span>
+    <h1 ng-click="toggleHistory()" bs-tooltip data-title="{{'OSX' ? '&#8984;H' : 'Ctrl+H'}}">
+      <span class="fa" ng-class="layout.historyMaximized ? 'fa-minus-square-o' : 'fa-plus-square-o'"></span>
       REQUEST HISTORY
     </h1>
     <div class="history-latest-request" ng-hide="layout.historyMaximized">
       Last request:
       <span class="request-time hidden-xs">{{recentRequests[0].time}}</span>
-      <span class="request-type">{{recentRequests[0].type}}</span>
-      <a>{{recentRequests[0].url}}</a>
+      <a>
+        <span class="request-type">{{recentRequests[0].type}}</span>
+        {{recentRequests[0].url}}
+      </a>
     </div>
 
-    <a class="history-expand-icon" ng-click="toggleHistory()">
+    <a class="history-expand-icon" ng-click="toggleHistory()" bs-tooltip data-title="{{'OSX' ? '&#8984;H' : 'Ctrl+H'}}">
       {{ layout.historyMaximized ? 'Collapse' : 'Expand' }}
       <span class="fa" ng-class="layout.historyMaximized ? 'fa-times-circle' : 'fa-external-link'"></span>
     </a>
@@ -22,8 +22,10 @@
     <ul class="list-unstyled">
       <li class="request-url" ng-repeat="request in recentRequests">
         <span class="request-time">{{request.time}}</span>
-        <span class="request-type">{{request.type}}</span>
-        <a>{{request.url}}</a>
+        <a>
+          <span class="request-type">{{request.type}}</span>
+          {{request.url}}
+        </a>
       </li>
     </ul>
 
