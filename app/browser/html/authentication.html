@@ -1,3 +1,4 @@
+Authentication
 <div class="authentication-wrapper">
   <div class="authentication" ng-controller="AuthenticationCtrl">
 
@@ -44,7 +45,7 @@
         {{ authType == LOGIN ? "Sign in" : "Register" }}
       </button>
       <p class="authentication-forgot-link" ng-if="authType == LOGIN">
-        <a>Forgot password?</a>
+        <a ui-sref="forgotpassword">Forgot password?</a>
       </p>
     </form>
 
