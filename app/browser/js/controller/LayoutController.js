@@ -18,5 +18,9 @@ angular.module('app').controller('LayoutCtrl', [
     {
       $scope.layout.historyMaximized = !$scope.layout.historyMaximized;
     };
+  $scope.openExternal = function(link)
+    {
+      require('shell').openExternal(link);
+    };
 
 }]);

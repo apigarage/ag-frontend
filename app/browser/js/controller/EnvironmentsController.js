@@ -19,6 +19,10 @@ angular.module('app').controller('EnvironmentsCtrl', [
         case 'Private': $scope.environments.privateVariables.push( {name:'', values:[]} ); break;
       }
     };
+  $scope.openExternal = function(link)
+    {
+      require('shell').openExternal(link);
+    };
   $scope.submit = function(responseCode)
     {
       $scope.$hide();
