@@ -2,7 +2,7 @@
       bs-affix-target ng-controller="SidebarCtrl">
     <!-- NEW ENDPOINT BUTTON -->
     <button type="button" class="btn btn-default btn-block sidebar-new"
-            bs-tooltip data-title="{{'OSX' ? '&#8984;N' : 'Ctrl+N'}}" data-placement="bottom">
+            bs-tooltip data-title="{{ (navigator.appVersion.indexOf('Mac')!=-1) ? '&#8985;N' : 'Ctrl+N'}}" data-placement="bottom">
       <span class="glyphicon glyphicon-plus"></span>
       New Endpoint
     </button>
@@ -16,22 +16,22 @@
 
     <!-- EXISTING ENDPOINTS -->
     <ul class="sidebar-list-parent">
-      <li class="sidebar-list-parent-item" ng-repeat="group in endpointGroups">
+      <li class="sidebar-list-parent-item" ng-repeat="collection in currentProject.collections">
         <div class="sidebar-list-parent-item-container">
           <a href="" class="sidebar-list-item-menu" bs-dropdown data-template="sidebar-list-parent-item-menu" data-placement="auto bottom-right" data-container=".sidebar">
             <span class="fa fa-fw fa-lg fa-ellipsis-h"></span>
           </a>
           <a href="" ng-click="expandGroup = !expandGroup">
             <span class="fa fa-lg" ng-class="expandGroup ? 'fa-caret-down' : 'fa-caret-right'"></span>
-            {{group.name}}
+            {{collection.name}}
           </a>
         </div>
         <ul class="sidebar-list-child" ng-show="expandGroup">
-          <li class="sidebar-list-child-item" ng-repeat="endpoint in group.endpoints">
+          <li class="sidebar-list-child-item" ng-repeat="item in collection.items">
             <a href="" class="sidebar-list-item-menu" bs-dropdown data-template="sidebar-list-child-item-menu" data-placement="auto bottom-right" data-container=".sidebar">
               <span class="fa fa-fw fa-lg fa-ellipsis-h"></span>
             </a>
-            <a href="">{{endpoint}}</a>
+            <a href="">{{item.name}}</a>
           </li>
         </ul>
       </li>
