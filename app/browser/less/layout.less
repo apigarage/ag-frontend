@@ -33,6 +33,11 @@ body {
   right: 0;
   bottom: @layout-footer-height;
   background: #FFF;
+
+  transition: bottom 0.25s;
+  &.history-maximized {
+    bottom: @layout-footer-height + 250px;
+  }
 }
 .layout-row-footer {
   position: absolute;
