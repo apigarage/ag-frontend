@@ -2,13 +2,12 @@ angular.module('app').controller('ForgotPasswordCtrl', [
   '$scope',
   '$rootScope',
   '$state',
-  '$timeout',
   'lodash',
   'Auth',
   'Projects',
   'Users',
   'ForgotPassword',
-  function ($scope, $rootScope, $state, $timeout,  _, Auth, Projects, Users, ForgotPassword){
+  function ($scope, $rootScope, $state,  _, Auth, Projects, Users, ForgotPassword){
 
   init();
 
@@ -17,10 +16,9 @@ angular.module('app').controller('ForgotPasswordCtrl', [
     $scope.showGetCode = true;
     $scope.showInputCode = false;
     $scope.showNewPassword = false;
-    $scope.showLoginError = false;
     $scope.emailError = false;
-    $scope.nameError = false;
     $scope.passwordError = false;
+    $scope.codeError = false;
   }
 
   function validEmail(){

@@ -28,8 +28,7 @@ angular.module('app')
     };
 
     var forgotPasswordNotify = function(){
-      if($rootScope.forgotPassword === undefined)
-        return false;
+      if($rootScope.forgotPassword === undefined) return false;
       return $rootScope.forgotPassword;
     };
 
@@ -67,8 +66,8 @@ angular.module('app')
         });
     };
 
-    var setForgotPassword = function(option){
-      $rootScope.forgotPassword = option;
+    var setForgotPassword = function(status){
+      $rootScope.forgotPassword = status;
     };
 
     return{
