@@ -1,17 +1,26 @@
 angular.module('app').controller('LayoutCtrl', [
   '$scope',
+  '$rootScope',
   '$timeout',
   '$modal',
   '$state',
-  function ($scope, $timeout, $modal, $state){
+  'Projects',
+  function ($scope, $rootScope, $timeout, $modal, $state, Projects){
 
-  $scope.layout = {
-    sidebarExpanded: false
-  };
+  init();
 
-  $scope.toggleSidebar = function()
-    {
-      $scope.layout.sidebarExpanded = !$scope.layout.sidebarExpanded;
+  function init(){
+    $scope.layout = {
+      sidebarExpanded: false
     };
+
+    // TODO - HARD CODED UNTIL THE PROJECT SCREEN.
+    // $rootScope.currentProjectId = 4;
+    return Projects.loadProjectToRootScope($rootScope.currentProjectId);
+  }
+
+  $scope.toggleSidebar = function(){
+    $scope.layout.sidebarExpanded = !$scope.layout.sidebarExpanded;
+  };
 
 }]);

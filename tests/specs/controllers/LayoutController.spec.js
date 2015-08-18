@@ -1,0 +1,75 @@
+describe('Controller: LayoutController', function() {
+
+  var $rootScope, $scope, $controller;
+  beforeEach(function(){
+    module('app');
+    module('ngMockE2E'); //<-- IMPORTANT! Without this line of code,
+      // it will not load templates, and will break the test infrastructure.
+  });
+
+  beforeEach(inject(function($injector){
+
+    $rootScope = $injector.get('$rootScope');
+    $scope = $rootScope.$new();
+    $controller = $injector.get('$controller');
+    $httpBackend = $injector.get('$httpBackend');
+    HttpBackendBuilder = $injector.get('HttpBackendBuilder');
+    ProjectsFixtures = $injector.get('ProjectsFixtures');
+
+    $httpBackend.when('GET',/.*html.*/).respond(200, '');
+
+  }));
+
+
+  describe('When LayoutCtrl is loaded with valid currentProjectId', function(){
+
+    beforeEach(function(){
+      $rootScope.currentProjectId = 4;
+      $controller('LayoutCtrl', {
+        $scope: $scope,
+        $rootScope: $rootScope,
+      });
+      var project = ProjectsFixtures.get('projectWithTwoCollectionsAndOneItem');
+      $rootScope.currentProjectId = project.id;
+
+      // Stubbing Project CRUD
+      var projectStub = ProjectsFixtures.getStub('retreiveProjectWithTwoCollectionsAndOneItem');
+      HttpBackendBuilder.build(projectStub.request, projectStub.response);
+
+      $httpBackend.flush();
+    });
+
+    afterEach(function(){
+      $scope.$digest();
+      $rootScope.$apply();
+    });
+
+    it('If the current project id is valid, load the project', function(){
+      expect($rootScope.currentProject).toBeDefined();
+      expect($rootScope.currentProject.collections).toBeDefined();
+      expect($rootScope.currentProject.collections.length).toEqual(2);
+      expect($rootScope.currentProject.items).toBeDefined();
+      expect($rootScope.currentProject.items.length).toEqual(1);
+    });
+
+    it('Sidebar is not expanded', function(){
+      expect($scope.layout.sidebarExpanded).toEqual(false);
+    });
+
+    describe('When Sidebar is toggled', function(){
+      it('and when the toggleSidebar value is true, it will be false',function(){
+        $scope.layout.sidebarExpanded = false;
+        $scope.toggleSidebar();
+        expect($scope.layout.sidebarExpanded).toEqual(true);
+      });
+
+      it('and when the toggleSidebar value is false, it will be true',function(){
+        $scope.layout.sidebarExpanded = true;
+        $scope.toggleSidebar();
+        expect($scope.layout.sidebarExpanded).toEqual(false);
+      });
+    });
+  });
+
+  xit('If the current project id is invalid, redirect to projects page', function(){});
+});
