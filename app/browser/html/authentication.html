@@ -4,9 +4,11 @@
     <img class="authentication-logo" src="img/api-garage-logo-large.png" />
 
     <form class="authentication-form" ng-submit="submit()">
-
+      <p class="authentication-validation" ng-if="forgotPassword">
+        Your password is reset. Please login with your latest password to continue.
+      </p>
       <input type="name" class="form-control authentication-name"
-        ng-class="{'input-lg': authType == LOGING}"
+        ng-class="{'input-lg': authType == LOGIN}"
         placeholder="Name" ng-if="authType == SIGNUP"
         ng-model="credentials.name" />
       <p class="authentication-validation"
@@ -44,7 +46,7 @@
         {{ authType == LOGIN ? "Sign in" : "Register" }}
       </button>
       <p class="authentication-forgot-link" ng-if="authType == LOGIN">
-        <a ui-sref="app">Forgot password?</a>
+        <a ui-sref="forgotpassword">Forgot password?</a>
       </p>
     </form>
 

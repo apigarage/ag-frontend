@@ -11,16 +11,18 @@ angular.module('app').controller('AuthenticationCtrl', [
   init();
 
   function init(){
-
     $scope.credentials = {};
     $scope.SIGNUP = 'signup';
     $scope.LOGIN = 'signin';
     $scope.authType  = $scope.SIGNUP;
     $scope.showLoginError = false;
-
     $scope.emailError = false;
     $scope.nameError = false;
     $scope.passwordError = false;
+    $scope.forgotPassword = Auth.forgotPasswordNotify();
+    if($scope.forgotPassword){
+      $scope.authType = $scope.LOGIN;
+    }
   }
 
   function validEmail(){
@@ -124,6 +126,7 @@ angular.module('app').controller('AuthenticationCtrl', [
   };
 
   $scope.submit = function() {
+    Auth.setForgotPassword(false);
     if ($scope.SIGNUP == $scope.authType){
       return $scope.signup();
     }else{

@@ -45,8 +45,6 @@
     });
   };
   gulp.task('copy', ['clean'], copyTask);
-  gulp.task('copy-watch', copyTask);
-
 
   // var transpileTask = function () {
   //   return gulp.src(paths.jsCodeToTranspile)
@@ -103,7 +101,13 @@
   gulp.task('watch', function () {
     // gulp.watch(paths.jsCodeToTranspile, ['transpile-watch']);
     gulp.watch('app/**/*.less', ['less-watch']);
-    gulp.watch(paths.toWatch, ['copy-watch']);
+    gulp.watch(paths.toWatch, function(obj){
+      if(obj.type === 'changed'){
+        gulp.src( obj.path, { "base": "./app/"})
+          .pipe(gulp.dest('./build/'));
+        console.log( new Date().toJSON() + ' - ' + obj.path + ' updated.' );
+      }
+    });
   });
 
 

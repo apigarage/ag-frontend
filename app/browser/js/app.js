@@ -45,12 +45,16 @@
       url: '/authentication',
       templateUrl: 'html/authentication.html'
     })
+    .state('forgotpassword', {
+      abstract: false,
+      url: '/forgotpassword',
+      templateUrl: 'html/forgot-password.html'
+    })
     .state('app', {
       abstract: false,
       url: '/app',
       templateUrl: 'html/app.html'
     });
-
   }]);
 
 })();

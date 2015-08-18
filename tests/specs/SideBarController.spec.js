@@ -14,12 +14,4 @@ describe('Controller: SideBar', function() {
     $controller('SidebarCtrl', {'$scope': $scope});
   }));
 
-  it('should make endpointGroups which contains an array of 8 elements', function() {
-    expect($scope.endpointGroups.length).toEqual(8);
-  });
-
-  it('Async: should make endpointGroups which contains an array of 8 elements', function(done) {
-    expect($scope.endpointGroups.length).toEqual(8);
-    done();
-  });
 });

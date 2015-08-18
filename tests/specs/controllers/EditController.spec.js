@@ -3,15 +3,15 @@ describe('Controller: EditController', function() {
   var $rootScope, $scope, $controller;
   beforeEach(module('app'));
 
-  beforeEach(inject(function(_$rootScope_, _$controller_, _$httpBackend_, _HttpBackendBuilder_, _Config_, _RequestStubs_, _RequestUtility_){
-    $rootScope = _$rootScope_;
+  beforeEach(inject(function($injector){
+    $rootScope = $injector.get('$rootScope');
     $scope = $rootScope.$new();
-    $controller = _$controller_;
-    $httpBackend = _$httpBackend_;
-    HttpBackendBuilder = _HttpBackendBuilder_;
-    Config = _Config_;
-    RequestStubs = _RequestStubs_;
-    RequestUtility = _RequestUtility_;
+    $controller = $injector.get('$controller');
+    $httpBackend = $injector.get('$httpBackend');
+    HttpBackendBuilder = $injector.get('HttpBackendBuilder');
+    Config = $injector.get('Config');
+    RequestStubs = $injector.get('RequestStubs');
+    RequestUtility = $injector.get('RequestUtility');
 
     $controller('EditorCtrl', {
       $scope: $scope,
