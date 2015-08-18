@@ -27,6 +27,11 @@ angular.module('app')
       $window.localStorage.removeItem(accessTokenStorageKey);
     };
 
+    var forgotPasswordNotify = function(){
+      if($rootScope.forgotPassword === undefined) return false;
+      return $rootScope.forgotPassword;
+    };
+
     var login = function(credentials){
       var email = credentials.email;
       var password = credentials.password;
@@ -61,10 +66,16 @@ angular.module('app')
         });
     };
 
+    var setForgotPassword = function(status){
+      $rootScope.forgotPassword = status;
+    };
+
     return{
       get: loadAccessToken, // get access token.
       set: setAccessToken, // set access token. it also saves it to the browser.
       login: login, // login the user
       logout: logout, // logout the user
+      forgotPasswordNotify : forgotPasswordNotify,
+      setForgotPassword : setForgotPassword
     };
   }]);
