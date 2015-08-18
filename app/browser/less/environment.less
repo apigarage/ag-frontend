@@ -1,55 +1,101 @@
-.modal {
-  .modal-dialog {
-    &.environment-modal {
-      min-width: 600px;
-    }
+.environment-modal {
+  .modal-content {
+    min-width: 700px;
+  }
+}
+
+.environment-section-title {
+  margin: 0 0 20px;
+  border-top: 1px solid #CCC;
+  padding: 8px 0;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 15px;
+  color: #888;
+
+  button {
+    margin-left: 5px;
+  }
+}
+.environment-section {
+  margin: 0 10px 30px;
+}
+.environment-section-landing {
+  margin-left: 20px;
+  max-width: 600px;
+
+  button {
+    margin-left: 10px;
   }
 }
 
 .environment-table {
+  margin: 0 -3px;
+
   th, td {
+    position: relative;
     padding: 3px;
+    height: 40px;
   }
 
   code {
-    padding: 4px 8px;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    right: 3px;
+    bottom: 3px;
+    display: block;
+    padding: 8px;
+    text-align: center;
   }
 
-  thead {
-    th {
-      text-align: center;
+  input {
+    width: 172px;
+  }
 
-      a {
-        text-decoration: none !important;
-      }
+  .dropdown-menu {
+    top: 30px !important;
+    left: 10px !important;
+  }
+}
 
-      code {
-        text-transform: uppercase;
-      }
+.environment-table-head {
+  th {
+    text-align: center;
+    font-weight: normal;
+
+    a {
+      text-decoration: none !important;
     }
-    td {
-      text-align: left;
+
+    code {
+      text-transform: lowercase;
     }
   }
-  tbody {
-    th {
-      min-width: 150px;
-      text-align: right;
-      font-weight: normal;
-
-      a {
-        text-decoration: none !important;
-      }
-    }
-    td {
-      input {
-        width: 175px;
-      }
-    }
+  td {
+    text-align: left;
   }
-  tfoot {
-    th {
-      text-align: right;
+}
+.environment-table-divider-a {
+  border-right: 1px solid #CCC;
+  padding: 0 5px;
+}
+.environment-table-divider-b {
+  padding: 0 5px;
+}
+.environment-table-body {
+  th {
+    min-width: 178px;
+    text-align: right;
+    font-weight: normal;
+
+    a {
+      text-decoration: none !important;
+    }
+
+    code {
+      font-weight: bold;
+      text-transform: uppercase;
     }
   }
 }

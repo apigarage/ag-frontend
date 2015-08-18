@@ -7,6 +7,7 @@
     'ui.router',
     'ui.ace',                     // ACE Text Editor
     'mgcrea.ngStrap',             // Angular Strap
+    'ngSanitize',                 // Allow rendering of html characters
     'ngAnimate',                  // Animations
     'angular-ladda',              // Loading disabled + spinner icon for buttons
     'puElasticInput',             // Input element grows as you type (grep codebase for pu-elastic-input)

@@ -56,6 +56,10 @@ describe('Controller: LayoutController', function() {
       expect($scope.layout.sidebarExpanded).toEqual(false);
     });
 
+    it('History is not expanded', function(){
+      expect($scope.layout.historyMaximized).toEqual(false);
+    });
+
     describe('When Sidebar is toggled', function(){
       it('and when the toggleSidebar value is true, it will be false',function(){
         $scope.layout.sidebarExpanded = false;
@@ -69,6 +73,30 @@ describe('Controller: LayoutController', function() {
         expect($scope.layout.sidebarExpanded).toEqual(false);
       });
     });
+
+    describe('When history is toggled', function(){
+      it('and when the historyMaximized value is true, it will be false',function(){
+        $scope.layout.historyMaximized = false;
+        $scope.toggleHistory();
+        expect($scope.layout.historyMaximized).toEqual(true);
+      });
+
+      it('and when the historyMaximized value is false, it will be true',function(){
+        $scope.layout.historyMaximized = true;
+        $scope.toggleHistory();
+        expect($scope.layout.historyMaximized).toEqual(false);
+      });
+    });
+
+    describe('When external link is clicked', function(){
+      it('opens the external link',function(){
+        // Not sure, how to test it yet.
+        // So, until we do that, this ia dummy test.
+        $scope.openExternal('http://www.google.com');
+        expect(true).toEqual(true);
+      });
+    });
+
   });
 
   xit('If the current project id is invalid, redirect to projects page', function(){});

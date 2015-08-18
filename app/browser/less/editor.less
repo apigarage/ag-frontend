@@ -15,26 +15,44 @@
   padding: 0 0 10px;
   border-bottom: 1px solid #CCC;
   margin-bottom: 20px;
+}
+.editor-titles {
+  overflow: hidden;
+  padding-right: 10px;
+
+  h1 {
+    margin: 0;
+    input {
+      font-size: 24px;
+      font-weight: 500;
+      min-width: 200px;
+      max-width: 100%;
+      padding: @padding-base-vertical @padding-base-horizontal; // Keep the padding so pu-elastic-input doesn't flicker
+      margin-left: -@padding-base-horizontal;                   // Makeup for the padding space with negative margin for left alignment
+
+      &:focus {
+        font-size: 24px;
+        height: 50px;
+        margin-left: 0;
+      }
+    }
+  }
 
   h2 {
-    margin: 0 0 5px;
+    display: inline-block; // Don't want the entire row clickable
+    margin: 0;
     font-size: 14px;
     line-height: 20px;
     color: #AAA;
-  }
-  h1 {
-    display: inline-block;
-    margin: 0;
-    font-size: 24px;
-    line-height: 30px;
-
-    &:hover,
-    &:focus {
-      display: inline-block;
-      font-size: 24px;
-    }
-    &:focus {
-      min-width: 50%;
+    cursor: pointer;
+    button {
+      border: 0;
+      background: 0;
+      padding: 0;
+      outline: 0;
+      &:focus {
+        text-decoration: underline;
+      }
     }
   }
 }
@@ -178,6 +196,10 @@
   border-left: 1px solid @input-border;
   padding-left: 15px;
   color: #888;
+
+  &.active {  // Make room for search bar when there is a response
+    padding-bottom: 10px;
+  }
 }
 // Allows the user to choose between Parse, RAW, and HTML Previews
 .response-tab-group {
@@ -186,7 +208,7 @@
   margin: 0;
   padding: 0;
   bottom: -1px;
-  right: 20px;
+  right: 8px;
   overflow: hidden;
 }
 .response-tab-item {
@@ -194,7 +216,7 @@
   list-style: none;
   border: 1px solid transparent;
   border-bottom: 0;
-  padding: 9px 15px 8px;
+  padding: 6px 15px 5px;
   font-family: @font-family-sans-serif;
   font-weight: bold;
   font-size: 12px;
@@ -222,6 +244,29 @@
   font-size: 14px;
   font-weight: bold;
 }
+.response-loading {
+  &.ng-animate {
+    -webkit-animation: none 0s; // Cancel ngAnimate for instant transitions upon successful response load
+  }
+}
+
+// ============================================================================
+// Response Search
+// ============================================================================
+.response-search {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  height: 26px;
+  margin: 0;
+  border-radius: 20px;
+  padding-left: 26px;
+  width: 228px;
+  background-image: url('../img/search-icon.png');
+  background-repeat: no-repeat;
+  background-size: 12px;
+  background-position: 8px 6px;
+}
 
 // ============================================================================
 // Response Headers
@@ -229,6 +274,10 @@
 .response-headers {
   position: relative;
   padding-top: 25px;
+}
+.request-headers-table-slider {
+  width: 100%;
+  overflow: auto;
 }
 .response-header-key,
 .response-header-value {
@@ -256,15 +305,53 @@
   .ace-editor-customization;
 }
 
-.response-raw {
+.response-body-parsed {
+  margin-top: 0;
+  position: relative;
+  padding-top: 0;
+  .ace-editor-customization;
+}
+
+.response-body-raw {
   margin-top: 5px;
   position: relative;
   padding-top: 25px;
+  .ace-editor-customization;
 }
 
-.response-preview{
+.response-preview {
+  line-height: 0; // Eliminate gap at bottom of iframe
+  margin: -15px;  // Eliminate all surrounding gaps
+  height: 480px;
+
   iframe {
+    border: 0;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
     width: 100%;
     height: 100%;
+  }
+}
+
+.response-body-unreachable {
+  margin-top: 0;
+  position: relative;
+  padding-top: 0;
+
+  img {
+    float: left;
+    width: 110px;
+  }
+
+  div {
+    overflow: hidden;
+  }
+
+  h4 {
+    margin: 5px 5px 10px 20px;
+  }
+
+  ol {
+    margin: 0;
   }
 }

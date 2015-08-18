@@ -11,16 +11,27 @@ angular.module('app').controller('LayoutCtrl', [
 
   function init(){
     $scope.layout = {
-      sidebarExpanded: false
+      sidebarExpanded: false,
+      historyMaximized: false
     };
 
     // TODO - HARD CODED UNTIL THE PROJECT SCREEN.
     // $rootScope.currentProjectId = 4;
     return Projects.loadProjectToRootScope($rootScope.currentProjectId);
+
   }
+
+
+  $scope.toggleHistory = function(){
+    $scope.layout.historyMaximized = !$scope.layout.historyMaximized;
+  };
 
   $scope.toggleSidebar = function(){
     $scope.layout.sidebarExpanded = !$scope.layout.sidebarExpanded;
+  };
+
+  $scope.openExternal = function(link){
+    require('shell').openExternal(link);
   };
 
 }]);

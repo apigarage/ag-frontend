@@ -3,19 +3,25 @@ angular.module('app').controller('EnvironmentsCtrl', [
   '$timeout',
   function ($scope, $timeout){
 
-  $scope.environmentVariables = [
-    'server-url',
-    'access_token',
-    'user_name'
-  ];
-
-  $scope.addEnvironment = function()
+  $scope.addEnvironment = function(type)
     {
-      $scope.environments.push(null);
+      switch(type)
+      {
+        case 'Public':  $scope.environments.public.push(  {name:'', variables:[]} ); break;
+        case 'Private': $scope.environments.private.push( {name:'', variables:[]} ); break;
+      }
     };
-  $scope.addVariable = function()
+  $scope.addVariable = function(type)
     {
-      $scope.environmentVariables.push(null);
+      switch(type)
+      {
+        case 'Public':  $scope.environments.publicVariables.push(  {name:'', values:[]} ); break;
+        case 'Private': $scope.environments.privateVariables.push( {name:'', values:[]} ); break;
+      }
+    };
+  $scope.openExternal = function(link)
+    {
+      require('shell').openExternal(link);
     };
   $scope.submit = function(responseCode)
     {

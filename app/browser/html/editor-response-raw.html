@@ -1,7 +1,8 @@
-Response Raw
+<span class="fa fa-spinner fa-pulse response-loading" ng-hide="response.data"></span>
+
 <div class="response-headers" ng-if="response.headers">
   <h4 class="response-headers-title editor-panel-subsection" ng-click="responseHeadersExpanded = !responseHeadersExpanded">
-    <a href="#">
+    <a>
       <span class="fa fa-lg" ng-class="responseHeadersExpanded ? 'fa-caret-down' : 'fa-caret-right'"></span>
       Response headers
     </a>
@@ -16,9 +17,9 @@ Response Raw
   </table>
 </div>
 
-<div class="response-raw" ng-if="response.data" ng-init="responseBodyExpanded = true">
+<div class="response-body-raw" ng-if="response.data" ng-init="responseBodyExpanded = true">
   <h4 class="response-y-title editor-panel-subsection" ng-click="responseBodyExpanded = !responseBodyExpanded">
-    <a href="#">
+    <a>
       <span class="fa fa-lg" ng-class="responseBodyExpanded ? 'fa-caret-down' : 'fa-caret-right'"></span>
       Response body
     </a>

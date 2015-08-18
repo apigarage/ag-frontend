@@ -9,7 +9,6 @@
 // See: http://stackoverflow.com/questions/18053408/vertically-centering-bootstrap-modal-window
 .modal {
   overflow: auto !important;  // Allow scrolling if bigger than viewport
-  pointer-events: none;       // Allow clicking backdrop to escape modal
 }
 .modal-wrapper {
   display: table;
@@ -23,9 +22,17 @@
 }
 .modal-content {
   margin: 30px;
+  min-width: 300px;
   display: inline-block;
   text-align: left;
-  pointer-events: all;        // Preent clicking modal from escaping modal (see above)
+}
+
+// Hide scrollbars from layers below the modal to prevent confusion in Windows
+.modal-open {
+  .layout-column-sidebar,
+  .layout-column-content {
+    overflow: hidden;
+  }
 }
 
 // ============================================================================

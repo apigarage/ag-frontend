@@ -8,93 +8,193 @@
 
           <h1>Environment Variables</h1>
           <p>
-            Each collaborator can store their own unique set of environment variables here.
-            <a href="">Read more.</a>
+            Use environment variables with API Garage much like you use them in regular <br/>
+            programming. For example, you could create a <code>host</code> variable and use it in your url like so: <br/>
+            <code ng-non-bindable>http://{{host}}/login</code>. Easily swap out values by changing the environment!
+            <a ng-click="openExternal('http://www.apigarage.com/#environments')">Read more.</a>
           </p>
 
         </div>
         <div class="modal-body">
 
-          <table class="environment-table">
-            <thead>
-              <tr>
-                <td><!-- Spacer --></td>
-                <th ng-repeat="environment in environments">
-                  <input type="text" class="form-control" ng-model="environment" placeholder="Environment name" ng-if="!environment" />
-                  <a href="" bs-dropdown data-template="environmentMenu" data-placement="bottom-center" ng-if="environment">
-                    <code>
-                      <span class="fa fa-sliders"></span>
-                      {{environment}}
-                      <span class="caret"></span>
-                    </code>
-                  </a>
-                  <script type="text/ng-template" id="environmentMenu">
-                    <ul class="dropdown-menu">
-                      <li>
-                        <a href="">
-                          <span class="fa fa-fw fa-pencil"></span>
-                          Rename environment
-                        </a>
-                      </li>
-                      <li>
-                        <a href="">
-                          <span class="fa fa-fw fa-trash-o"></span>
-                          Delete environment
-                        </a>
-                      </li>
-                    </ul>
-                  </script>
-                </th>
-                <td>
-                  <button type="button" class="btn btn-dashed" ng-click="addEnvironment()">
-                    <span class="fa fa-plus"></span>
-                    New Environment
-                  </button>
-                </td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="variable in environmentVariables">
-                <th>
-                  <a href="" bs-dropdown data-template="variableMenu" data-placement="bottom-center">
-                    <code>
-                      {{variable}}
-                      <span class="caret"></span>
-                    </code>
-                  </a>
-                  <script type="text/ng-template" id="variableMenu">
-                    <ul class="dropdown-menu">
-                      <li>
-                        <a href="">
-                          <span class="fa fa-fw fa-pencil"></span>
-                          Rename variable
-                        </a>
-                      </li>
-                      <li>
-                        <a href="">
-                          <span class="fa fa-fw fa-trash-o"></span>
-                          Delete variable
-                        </a>
-                      </li>
-                    </ul>
-                  </script>                  
-                </th>
-                <td ng-repeat="environment in environments">
-                  <input type="text" class="form-control" />
-                </td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <th>
-                  <button type="button" class="btn btn-dashed" ng-click="addVariable()">
-                    <span class="fa fa-plus"></span>
-                    New Variable
-                  </button>
-                </th>
-              </tr>
-            </tfoot>
-          </table>
+          <div class="environment-section">
+            <h2 class="environment-section-title">
+              <button type="button" class="btn btn-default btn-sm pull-right" ng-click="addVariable('Public')" ng-if="environments.public.length">
+                <span class="fa fa-plus"></span>
+                New Variable
+              </button>
+              <button type="button" class="btn btn-default btn-sm pull-right" ng-click="addEnvironment('Public')" ng-if="environments.public.length">
+                <span class="fa fa-plus"></span>
+                New Environment
+              </button>
+              Public Environments
+            </h2>
+            <p class="environment-section-landing" ng-if="!environments.public.length">
+              <button type="button" class="btn btn-default pull-right" ng-click="addEnvironment('Public')">
+                <span class="fa fa-plus"></span>
+                New Public Environment
+              </button>
+              Public Environments are shared with your team, e.g.: <br/>
+              <code><span class="fa fa-sliders"></span> PRODUCTION</code> or
+              <code><span class="fa fa-sliders"></span> STAGING</code>.
+              <em>
+                Create one now! <span class="fa fa-long-arrow-right"></span>
+              </em>
+            </p>
+
+            <table class="environment-table" ng-if="environments.public.length">
+              <tbody>
+                <tr class="environment-table-head">
+                  <td><!-- Spacer --></td>
+                  <th ng-repeat="variable in environments.publicVariables">
+                    <input type="text" class="form-control" ng-model="variable.name" ng-model-options="{updateOn: 'blur'}" placeholder="Variable name" ng-show="!variable.name || variable.edit" ng-blur="variable.edit = false" />
+                    <a bs-dropdown data-template="variableMenu" data-placement="bottom-center" ng-show="variable.name && !variable.edit">
+                      <code>
+                        {{variable.name}}
+                        <span class="caret"></span>
+                      </code>
+                    </a>
+                    <script type="text/ng-template" id="variableMenu">
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a ng-click="variable.edit = true">
+                            <span class="fa fa-fw fa-pencil"></span>
+                            Rename variable
+                          </a>
+                        </li>
+                        <li>
+                          <a>
+                            <span class="fa fa-fw fa-trash-o"></span>
+                            Delete variable
+                          </a>
+                        </li>
+                      </ul>
+                    </script>                  
+                  </th>
+                </tr>
+                <tr class="environment-table-body" ng-repeat="environment in environments.public">
+                  <th>
+                    <input type="text" class="form-control" ng-model="environment.name" ng-model-options="{updateOn: 'blur'}" placeholder="Environment name" ng-show="!environment.name || environment.edit" ng-blur="environment.edit = false" />
+                    <a bs-dropdown data-template="environmentMenu" data-placement="bottom-center" ng-show="environment.name && !environment.edit">
+                      <code>
+                        <span class="fa fa-sliders"></span>
+                        {{environment.name}}
+                        <span class="caret"></span>
+                      </code>
+                    </a>
+                    <script type="text/ng-template" id="environmentMenu">
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a ng-click="environment.edit = true">
+                            <span class="fa fa-fw fa-pencil"></span>
+                            Rename environment
+                          </a>
+                        </li>
+                        <li>
+                          <a>
+                            <span class="fa fa-fw fa-trash-o"></span>
+                            Delete environment
+                          </a>
+                        </li>
+                      </ul>
+                    </script>
+                  </th>
+                  <td ng-repeat="variable in environments.publicVariables">
+                    <input type="text" class="form-control" />
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+
+          </div>
+
+          <div class="environment-section">
+            <h2 class="environment-section-title">
+              <button type="button" class="btn btn-default btn-sm pull-right" ng-click="addVariable('Private')" ng-if="environments.private.length">
+                <span class="fa fa-plus"></span>
+                New Variable
+              </button>
+              <button type="button" class="btn btn-default btn-sm pull-right" ng-click="addEnvironment('Private')" ng-if="environments.private.length">
+                <span class="fa fa-plus"></span>
+                New Environment
+              </button>
+              Private Environments
+            </h2>
+            <p class="environment-section-landing" ng-if="!environments.private.length">
+              <button type="button" class="btn btn-default pull-right" ng-click="addEnvironment('Private')">
+                <span class="fa fa-plus"></span>
+                New Private Environment
+              </button>
+              Private Environments remain local to your computer and
+              are never shared with others.
+              <em>
+                Create one now! <span class="fa fa-long-arrow-right"></span>
+              </em>
+            </p>
+            <table class="environment-table" ng-if="environments.private.length">
+              <tbody>
+                <tr class="environment-table-head">
+                  <td><!-- Spacer --></td>
+                  <th ng-repeat="variable in environments.privateVariables">
+                    <input type="text" class="form-control" ng-model="variable.name" ng-model-options="{updateOn: 'blur'}" placeholder="Variable name" ng-show="!variable.name || variable.edit" ng-blur="variable.edit = false" />
+                    <a bs-dropdown data-template="variableMenu" data-placement="bottom-center" ng-show="variable.name && !variable.edit">
+                      <code>
+                        {{variable.name}}
+                        <span class="caret"></span>
+                      </code>
+                    </a>
+                    <script type="text/ng-template" id="variableMenu">
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a ng-click="variable.edit = true">
+                            <span class="fa fa-fw fa-pencil"></span>
+                            Rename variable
+                          </a>
+                        </li>
+                        <li>
+                          <a>
+                            <span class="fa fa-fw fa-trash-o"></span>
+                            Delete variable
+                          </a>
+                        </li>
+                      </ul>
+                    </script>                  
+                  </th>
+                </tr>
+                <tr class="environment-table-body" ng-repeat="environment in environments.private">
+                  <th>
+                    <input type="text" class="form-control" ng-model="environment.name" ng-model-options="{updateOn: 'blur'}" placeholder="Environment name" ng-show="!environment.name || environment.edit" ng-blur="environment.edit = false" />
+                    <a bs-dropdown data-template="environmentMenu" data-placement="bottom-center" ng-show="environment.name && !environment.edit">
+                      <code>
+                        <span class="fa fa-sliders"></span>
+                        {{environment.name}}
+                        <span class="caret"></span>
+                      </code>
+                    </a>
+                    <script type="text/ng-template" id="environmentMenu">
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a ng-click="environment.edit = true">
+                            <span class="fa fa-fw fa-pencil"></span>
+                            Rename environment
+                          </a>
+                        </li>
+                        <li>
+                          <a>
+                            <span class="fa fa-fw fa-trash-o"></span>
+                            Delete environment
+                          </a>
+                        </li>
+                      </ul>
+                    </script>
+                  </th>
+                  <td ng-repeat="variable in environments.privateVariables">
+                    <input type="text" class="form-control" />
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
 
         </div>
         <div class="modal-footer">

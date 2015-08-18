@@ -1,5 +1,5 @@
     <div class="panel panel-default editor-panel">
-      <div class="panel-heading editor-panel-heading">
+      <form class="panel-heading editor-panel-heading">
 
         <h3 class="editor-panel-heading-title">Request</h3>
 
@@ -12,7 +12,7 @@
             <script type="text/ng-template" id="requestMethodMenu">
               <ul class="dropdown-menu">
                 <li ng-repeat="requestMethod in requestMethods">
-                  <a href="" ng-click="setRequestMethod(requestMethod)">
+                  <a ng-click="setRequestMethod(requestMethod)">
                     <span class="fa fa-fw" ng-class="requestMethod == endpoint.requestMethod ? 'fa-check' : 'fa-spacer'"></span>
                     {{requestMethod}}
                   </a>
@@ -22,44 +22,56 @@
           </div><!-- /btn-group -->
           <input type="text" class="form-control" ng-model="endpoint.requestUrl" placeholder="Add a URL...">
           <div class="input-group-btn">
-            <button class="btn btn-default project-environment" bs-dropdown data-template="environmentSelect">
+            <button class="btn btn-default project-environment" type="button"
+                    bs-dropdown data-template="environmentSelect"
+                    ng-click="environments.public.length + environments.private.length ? null : manageEnvironments()">
               <span class="fa fa-sliders"></span>
-              {{endpoint.environment}}
+              {{endpoint.environment ? endpoint.environment.name : 'ENVIRONMENT'}}
               <span class="caret"></span>
             </button>
             <script type="text/ng-template" id="environmentSelect">
-              <ul class="dropdown-menu">
-                <li ng-repeat="environment in environments">
-                  <a href="" ng-click="setEnvironment(environment)">
+              <ul class="dropdown-menu" ng-show="environments.public.length + environments.private.length">
+                <li ng-repeat="environment in environments.public">
+                  <a ng-click="setEnvironment(environment)">
                     <span class="fa fa-fw" ng-class="environment == endpoint.environment ? 'fa-check' : 'fa-spacer'"></span>
-                    <code class="text-uppercase">{{environment}}</code>
+                    <code class="text-uppercase">{{environment.name}}</code>
                     <span class="dropdown-menu-hotkey">{{'OSX' ? '&#8984;' + ($index+1) : 'Ctrl+' + ($index+1)}}</span>
+                  </a>
+                </li>
+                <li ng-repeat="environment in environments.private">
+                  <a ng-click="setEnvironment(environment)">
+                    <span class="fa fa-fw" ng-class="environment == endpoint.environment ? 'fa-check' : 'fa-spacer'"></span>
+                    <code class="text-uppercase">{{environment.name}}</code>
+                    <span class="dropdown-menu-hotkey">{{'OSX' ? '&#8984;' + ($index+1+environments.global.length) : 'Ctrl+' + ($index+1+environments.global.length)}}</span>
                   </a>
                 </li>
                 <li class="divider"></li>
                 <li>
-                  <a href="" ng-click="manageEnvironments()">
+                  <a ng-click="manageEnvironments()">
                     <span class="fa fa-fw fa-sliders"></span>
                     Manage Environments
                   </a>
                 </li>
               </ul>
             </script>
-            <button class="btn btn-primary" ng-click="performRequest()"``
+            <button class="btn btn-primary" type="submit" ng-click="performRequest()"
                     ladda="response == 'loading'" data-style="expand-right"
-                    bs-tooltip data-title="{{'OSX' ? '&#8984;R' : 'Ctrl+R'}}" data-placement="bottom">
-              <span class="fa fa-upload"></span>
-               <span class="hidden-xs hidden-sm">Make request</span>
+                    bs-tooltip data-html="1"  data-placement="bottom"
+                    data-title="<span class='visible-xs-inline visible-sm-inline'>Make Request (</span>{{'OSX' ? '&#8984;R' : 'Ctrl+R'}}<span class='visible-xs-inline visible-sm-inline'>)</span>">
+              <span class="fa fa-download"></span>
+              <span class="hidden-xs hidden-sm">
+                Make request
+              </span>
             </button>
           </div>
         </div>
 
-      </div>
+      </form>
       <div class="panel-body editor-panel-body">
 
         <div class="request-headers">
           <h4 class="request-headers-title editor-panel-subsection" ng-click="requestHeadersExpanded = !requestHeadersExpanded">
-            <a href="#">
+            <a>
               <span class="fa fa-lg" ng-class="requestHeadersExpanded ? 'fa-caret-down' : 'fa-caret-right'"></span>
               Request headers
             </a>
@@ -69,7 +81,7 @@
               <th><input type="text" class="request-header-key"   ng-model="requestHeader.key"   placeholder="Header" pu-elastic-input /></th><td class="request-header-spacer">:</td>
               <td><input type="text" class="request-header-value" ng-model="requestHeader.value" placeholder="Value"  pu-elastic-input /></td>
               <td>
-                <a href="" class="request-header-delete" ng-click="deleteRequestHeader(requestHeader)">
+                <a class="request-header-delete" ng-click="deleteRequestHeader(requestHeader)">
                   <span class="fa fa-trash-o"></span>
                   <span class="hidden-xs hidden-sm">Delete</span>
                 </a>
@@ -88,7 +100,7 @@
 
         <div class="request-body" ng-show="showRequestBody">
           <h4 class="request-body-title editor-panel-subsection" ng-click="requestBodyExpanded = !requestBodyExpanded">
-            <a href="#">
+            <a>
               <span class="fa fa-lg" ng-class="requestBodyExpanded ? 'fa-caret-down' : 'fa-caret-right'"></span>
               Request body
             </a>

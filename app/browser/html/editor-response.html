@@ -3,7 +3,7 @@
 
         <h3 class="editor-panel-heading-title">Response</h3>
 
-        <div class="response-heading enable-select" ng-switch="response">
+        <div class="response-heading enable-select" ng-class="response && RESPONSE_SEARCH_FLAG ? 'active' : null" ng-switch="response">
           <div ng-switch-when="null">
             No requests have been made.
           </div>
@@ -20,32 +20,37 @@
             <div ng-show="response.status">
               <strong>
                 <span class="fa" ng-class="getResponseCodeClass(response.status)"></span>
-                {{response.status + ' ' + response.statusText}}
+                {{response.status}}
+                <span class="hidden-xs hidden-sm">
+                  {{response.statusText}}
+                </span>
               </strong>
-              <span class="hidden-xs hidden-sm">
+              <span class="hidden-xs hidden-sm hidden-md">
                 &mdash;
-                <strong >{{ response.data.length / 1024 }} kilobytes</strong>
+                <strong >{{ response.data.length / 1024 | number: 2 }} kilobytes</strong>
                 <!-- received in
                 <strong>{{response.time}} seconds</strong>. -->
               </span>
-              <span class="visible-xs-inline visible-sm-inline">
+              <span class="visible-xs-inline visible-sm-inline visible-md-inline">
                 &mdash;
-                {{ response.data.length / 1024 }} kB,
-                <!-- {{ response.time | number: 2 }} s -->
+                {{ response.data.length / 1024 | number: 2 }} kB<!--,
+                {{ response.time | number: 2 }} s -->
               </span>
             </div>
           </div>
         </div>
 
+        <input type="text" class="form-control response-search"
+               placeholder="Search..." ng-model="search"
+               ng-show="response && RESPONSE_SEARCH_FLAG" />
+
         <ul class="response-tab-group" ng-show="response">
           <li class="response-tab-item" ng-class="{'active': currentResponsePreviewTab.title == previewType.title}"
               ng-repeat="previewType in responsePreviewTab" ng-click="setResponsePreviewType(previewType)">
-            <a href="">{{previewType.title}}</a>
+            <a>{{previewType.title}}</a>
           </li>
         </ul>
-
       </div>
-
-      <div class="panel-body editor-panel-body" ng-if="response" ng-include="currentResponsePreviewTab.url">
+      <div class="panel-body editor-panel-body" ng-if="response" ng-include="response.statusText == 'Unreachable' ? 'html/editor-response-unreachable.html' : currentResponsePreviewTab.url">
       </div>
     </div>

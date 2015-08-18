@@ -51,8 +51,8 @@
     </form>
 
     <div class="authentication-toggle">
-      {{ authType === SIGNUP ? "Don't have an account?" : "Already have an account?" }}
-      <a href="#" ng-click="toggleAuthenticationType()">
+      {{ authType === SIGNUP ? "Already have an account?" : "Don't have an account?" }}
+      <a ng-click="toggleAuthenticationType()">
         {{ authType === SIGNUP ? "Sign in" : "Create an account" }}
       </a>
       </span>

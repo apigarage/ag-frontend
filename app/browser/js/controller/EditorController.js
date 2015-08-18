@@ -6,15 +6,16 @@ angular.module('app').controller('EditorCtrl', [
   '$sce',
   '$modal',
   'RequestUtility',
-  function (_, $scope, $filter, $http, $sce, $modal, RequestUtility){
+  '$focus',
+  function (_, $scope, $filter, $http, $sce, $modal, RequestUtility, $focus){
 
     // ----------------------------
     // Temporary MOCK Endpoint Use Case
     $scope.endpoint = {
-      requestUrl: "http://www.w3schools.com/",
-      category: "Untitled Request",
-      name: "Untitled Catgetory",
-      environment: 'production',
+      requestUrl: "https://www.facebook.com",
+      category: "Uncategorized",
+      name: "",
+      environment: null,
       requestMethod: 'GET',
       requestHeaders: [
         { key: "Content-Type", value: "application/json" },
@@ -24,7 +25,16 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
-    $scope.environments = ['local', 'staging', 'production'];
+    $scope.environments = {
+      public: [],
+      publicVariables: [
+        { name: '' }
+      ],
+      private: [],
+      privateVariables: [
+        { name: '' }
+      ]
+    };
     $scope.response = null;
     $scope.showRequestBody = false;
     $scope.responsePreviewTab = [
@@ -42,6 +52,23 @@ angular.module('app').controller('EditorCtrl', [
       url: 'html/editor-response-raw.html'
     };
     $scope.responsePreviewTypeContent = null;
+
+    // TEMPORARY FLAG TO DISABLE THE SEARCH BOX IN THE RESPONSE PANEL (note there is an extra padding created in the .response-heading div to make room for the search box)
+    $scope.RESPONSE_SEARCH_FLAG = false;
+
+    // Only run this line for NEW requests. This tells the user to name the request before doing anything else.
+    $focus('editor-title');
+
+    $scope.openNewCategoryModal = function(){
+      var myModal = $modal({
+        show: false,
+        template: "html/prompt.html",
+        backdrop: true
+      });
+
+      myModal.$scope.title  = "New Category";
+      myModal.$promise.then( myModal.show );
+    };
 
     $scope.setEnvironment = function(environment){
       $scope.endpoint.environment = environment;
@@ -104,11 +131,6 @@ angular.module('app').controller('EditorCtrl', [
         $scope.response = errorResponse;
         if(errorResponse.status === 0){
           $scope.response.statusText = 'Unreachable';
-          $scope.response.data = 'The URL is unreachable. Please verify' +
-          ' 1) Internet Connection. ' +
-          ' 2) HTTP vs HTTPS protocol. ' +
-          ' 3) If HTTPS, verify the certificate.' +
-          ' 4) URL Correctness.';
         }
       })
       .finally(function(){
