@@ -13,17 +13,12 @@ angular.module('app').controller('ForgotPasswordCtrl', [
   init();
 
   function init(){
-
     $scope.forgotPassword = {};
-    $scope.SIGNUP = 'signup';
-    $scope.LOGIN = 'signin';
     $scope.RESET = 'reset';
     $scope.authType  = $scope.RESET;
-
     $scope.showGetCode = true;
     $scope.showInputCode = false;
     $scope.showNewPassword = false;
-
     $scope.showLoginError = false;
     $scope.emailError = false;
     $scope.nameError = false;
@@ -36,21 +31,12 @@ angular.module('app').controller('ForgotPasswordCtrl', [
       $scope.emailError = true;
       return false;
     }
-    // Email validation RegEx that allosw Unicodes.
+    // Email validation RegEx that allows Unicodes.
     // Reference - https://stackoverflow.com/questions/46155/validate-email-address-in-javascript
     var re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
     if(!re.test($scope.forgotPassword.email)){
       $scope.emailErrorMessage = "The email field is invalid.";
       $scope.emailError = true;
-      return false;
-    }
-    return true;
-  }
-
-  function validName(){
-    if(_.isEmpty($scope.forgotPassword.name)){
-      $scope.nameErrorMessage = "The name field is required.";
-      $scope.nameError = true;
       return false;
     }
     return true;
@@ -67,24 +53,23 @@ angular.module('app').controller('ForgotPasswordCtrl', [
 
     if($scope.forgotPassword.newPassword.length <= 7 ||
       $scope.forgotPassword.newPasswordMatch.length <= 7){
-      console.log("Less character length");
       $scope.passwordErrorMessage = "The password mininum 8 characters.";
       $scope.passwordError = true;
       return false;
     }
 
     if($scope.forgotPassword.newPassword !== $scope.forgotPassword.newPasswordMatch){
-      console.log("password didn't match");
       $scope.passwordErrorMessage = "The password field didnt match.";
       $scope.passwordError = true;
       return false;
     }
 
+    $scope.forgotPassword.password = $scope.forgotPassword.newPassword;
     return true;
   }
 
   function validCode(){
-    if(_.isEmpty($scope.forgotPassword.code)){
+    if(_.isEmpty($scope.forgotPassword.token)){
       $scope.codeErrorMessage = "The code field is required.";
       $scope.codeError = true;
       return false;
@@ -92,79 +77,85 @@ angular.module('app').controller('ForgotPasswordCtrl', [
     return true;
   }
 
+  function isServiceAvailable(responseStatus){
+    return (responseStatus === undefined ||
+      responseStatus >= 404 ||
+      responseStatus === 0 ||
+      responseStatus >= 500);
+  }
+
   $scope.getCode = function(){
-    console.log("Get Code");
+    $scope.emailError = false;
     if (validEmail()){
       $scope.loading = true;
-      $timeout(function(){
-        console.log("email : " +
-          $scope.forgotPassword.email);
-      
-        //   how to send call get cade
-        // ForgotPassword.sendCodeRequestTest()
-        //   .then(function(data){
-        //     console.log("data" + data);
-        //   }
-        // );
-
-        $scope.loading = false;
-        $scope.showGetCode = false;
-        $scope.showInputCode = true;
-
-      }, 2000);
-
-
-
+      return ForgotPassword.sendCodeRequest($scope.forgotPassword)
+        .then(function(response){
+          if (isServiceAvailable(response.status)){
+            $scope.emailErrorMessage = "Unable to reach reset password service";
+            $scope.emailError = true;
+            $scope.loading = false;
+          }else if (response.status == 401){
+            // Email does not exist in the system.
+            $scope.emailErrorMessage = response.data.email[0];
+            $scope.emailError = true;
+            $scope.loading = false;
+          }else{
+            $scope.showGetCode = false;
+            $scope.showInputCode = true;
+            $scope.loading = false;
+          }
+        }
+      );
     }
   };
 
   $scope.submitCode = function(){
-    console.log("Submit Code");
     $scope.codeError = false;
-
     if (validCode()){
       $scope.loading = true; // start loading
-      $timeout(function() {
-        console.log("email : " +
-          $scope.forgotPassword.email);
-        console.log("code : " +
-          $scope.forgotPassword.code);
-        //   how to send call get cade
-        // if password reset is success load app
-        $scope.loading = false; // stop loading
-        // $state.go('app');
-        // else
-        $scope.showGetCode = false;
-        $scope.showInputCode = false;
-        $scope.showNewPassword = true;
-      }, 2000);
+      return ForgotPassword.verifyCodeRequest($scope.forgotPassword)
+        .then(function(response){
+          if(isServiceAvailable(response.status)){
+            $scope.codeErrorMessage = "Unable to reach reset password service";
+            $scope.codeError = true;
+            $scope.loading = false;
+          } else if (response.status == 401){
+            // Invalid Verification Code
+            $scope.codeErrorMessage = response.data.token[0];
+            $scope.codeError = true;
+            $scope.loading = false;
+          }else{
+            $scope.showInputCode = false;
+            $scope.showNewPassword = true;
+            $scope.loading = false;
+          }
+        }
+      );
     }
   };
 
   $scope.submitNewPassword = function(){
-    console.log("Submit New Password");
     $scope.passwordError = false;
-
     if (validPassword()){
-      $scope.loading = true; // start loading
-      $timeout(function() {
-        console.log("email : " +
-          $scope.forgotPassword.email);
-        console.log("code : " +
-          $scope.forgotPassword.code);
-        console.log("newPassword : " +
-          $scope.forgotPassword.newPassword);
-        //   how to send call get cade
-        // if password reset is success load app
-        $scope.loading = false; // stop loading
-        $state.go('app');
-        // else
-        //$scope.showGetCode = false;
-        //$scope.showInputCode = false;
-        //$scope.showNewPassword = true;
-      }, 2000);
+      $scope.loading = true;
+      return ForgotPassword.resetPassword($scope.forgotPassword)
+        .then(function(response){
+          if(isServiceAvailable(response.status)){
+            $scope.passwordErrorMessage = "Unable to reach reset password service";
+            $scope.passwordError = true;
+            $scope.loading = false;
+          } else if  (response.status == 401){
+            // Invalid Verification Code
+            $scope.passwordErrorMessage = response.data.token[0];
+            $scope.passwordError = true;
+            $scope.loading = false;
+          } else {
+            $scope.loading = false;
+            ForgotPassword.setForgotPassword(true);
+            $state.go('authentication');
+          }
+        }
+      );
     }
   };
-
-
 }]);

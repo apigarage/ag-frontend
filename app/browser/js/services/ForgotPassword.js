@@ -6,18 +6,17 @@ angular.module('app')
   .factory('ForgotPassword', [
     'ApiRequest',
     'Config',
-    '$httpBackend',
-    function($httpBackend, ApiRequest, Config){
-    var endpoint = 'users';
+    '$rootScope',
+    function(ApiRequest, Config, $rootScope){
 
      /* @data: object fields and values */
     var sendCodeRequest = function(data){
       var options = {
           'method': 'POST',
-          'url': 'http://localhost/',
+          'url': Config.url + Config.api + 'send_reset_code',
           'data': data
       };
-      return ApiRequest.send(options)
+      return ApiRequest.send(options, false)
                       .then(function(data){
                         return data;
                       });
@@ -26,10 +25,10 @@ angular.module('app')
     var verifyCodeRequest = function(data){
       var options = {
           'method': 'POST',
-          'url': 'http://localhost/',
+          'url': Config.url + Config.api + 'verify_code',
           'data': data
       };
-      return ApiRequest.send(options)
+      return ApiRequest.send(options, false)
                       .then(function(data){
                         return data;
                       });
@@ -38,32 +37,24 @@ angular.module('app')
     var resetPassword = function(data){
       var options = {
           'method': 'POST',
-          'url': 'http://localhost/',
+          'url': Config.url + Config.api + 'reset_password',
           'data': data
       };
-      return ApiRequest.send(options)
+      return ApiRequest.send(options, false)
                       .then(function(data){
                         return data;
                       });
     };
 
-    var sendCodeRequestTest = function(){
-      return $httpBackend.expect(
-          'request.method',
-          'request.url',
-          'request.data',
-          'request.headers')
-        .respond(
-          'result.status',
-          'result.data',
-          'result.headers',
-          'result.statusTextt'
-        );
+    var setForgotPassword = function(option){
+      $rootScope.forgotPassword = option;
     };
 
     return{
       sendCodeRequest : sendCodeRequest,
-      sendCodeRequestTest : sendCodeRequestTest
+      verifyCodeRequest : verifyCodeRequest,
+      resetPassword : resetPassword,
+      setForgotPassword : setForgotPassword
     };
 
   }]);
