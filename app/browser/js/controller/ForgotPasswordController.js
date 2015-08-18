@@ -14,8 +14,6 @@ angular.module('app').controller('ForgotPasswordCtrl', [
 
   function init(){
     $scope.forgotPassword = {};
-    $scope.RESET = 'reset';
-    $scope.authType  = $scope.RESET;
     $scope.showGetCode = true;
     $scope.showInputCode = false;
     $scope.showNewPassword = false;
