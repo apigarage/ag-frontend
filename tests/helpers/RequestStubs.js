@@ -163,11 +163,7 @@ angular.module('app')
       },
       response:{
         status : 0, // invalid URL
-        data : 'The URL is unreachable. Please verify' +
-        ' 1) Internet Connection. ' +
-        ' 2) HTTP vs HTTPS protocol. ' +
-        ' 3) If HTTPS, verify the certificate.' +
-        ' 4) URL Correctness.', // Default Error Response
+        data : '',
         statusText : 'Unreachable',
         headers : {
           'postresponse' : 'requestValue1'
@@ -199,11 +195,7 @@ angular.module('app')
       },
       response:{
         status : 0, // invalid URL
-        data : 'The URL is unreachable. Please verify' +
-        ' 1) Internet Connection. ' +
-        ' 2) HTTP vs HTTPS protocol. ' +
-        ' 3) If HTTPS, verify the certificate.' +
-        ' 4) URL Correctness.', // Default Error Response
+        data : '',
         statusText : 'Unreachable',
         headers : {
           'postresponse' : 'requestValue1'

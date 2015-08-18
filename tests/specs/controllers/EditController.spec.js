@@ -210,7 +210,6 @@ describe('Controller: EditController', function() {
         $scope.performRequest().then(function(){
           expect($scope.response).not.toBeNull();
           expect($scope.response.status).toEqual(stub.response.status);
-          expect($scope.response.data).toBe(stub.response.data);
           expect($scope.response.headers.postresponse).toBe(stub.response.headers.postresponse);
           expect($scope.response.statusText).toBe(stub.response.statusText);
         });
@@ -245,7 +244,6 @@ describe('Controller: EditController', function() {
         $scope.performRequest().then(function(){
           expect($scope.response).not.toBeNull();
           expect($scope.response.status).toEqual(stub.response.status);
-          expect($scope.response.data).toBe(stub.response.data);
           expect($scope.response.headers.postresponse).toBe(stub.response.headers.postresponse);
           expect($scope.response.statusText).toBe(stub.response.statusText);
         });

@@ -131,11 +131,6 @@ angular.module('app').controller('EditorCtrl', [
         $scope.response = errorResponse;
         if(errorResponse.status === 0){
           $scope.response.statusText = 'Unreachable';
-          $scope.response.data = 'The URL is unreachable. Please verify:\n\n' +
-          ' 1) Internet Connection.\n' +
-          ' 2) HTTP vs HTTPS protocol.\n' +
-          ' 3) If HTTPS, verify the certificate.\n' +
-          ' 4) URL Correctness.';
         }
       })
       .finally(function(){
