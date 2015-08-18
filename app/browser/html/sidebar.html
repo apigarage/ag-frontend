@@ -2,7 +2,7 @@
       bs-affix-target ng-controller="SidebarCtrl">
     <!-- NEW ENDPOINT BUTTON -->
     <button type="button" class="btn btn-default btn-block sidebar-new"
-            bs-tooltip data-title="{{ (navigator.appVersion.indexOf('Mac')!=-1) ? '&#8985;N' : 'Ctrl+N'}}" data-placement="bottom">
+            bs-tooltip data-title="{{ (navigator.appVersion.indexOf('Mac')!=-1) ? '&#8984;N' : 'Ctrl+N'}}" data-placement="bottom">
       <span class="glyphicon glyphicon-plus"></span>
       New Endpoint
     </button>
@@ -34,6 +34,12 @@
             <a href="">{{item.name}}</a>
           </li>
         </ul>
+      </li>
+      <li class="sidebar-list-child-item" ng-repeat="item in currentProject.items">
+        <a href="" class="sidebar-list-item-menu" bs-dropdown data-template="sidebar-list-child-item-menu" data-placement="auto bottom-right" data-container=".sidebar">
+          <span class="fa fa-fw fa-lg fa-ellipsis-h"></span>
+        </a>
+        <a href="">{{item.name}}</a>
       </li>
     </ul>
 

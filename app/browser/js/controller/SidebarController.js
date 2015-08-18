@@ -6,5 +6,6 @@ angular.module('app')
   '$scope',
   '$rootScope',
   function ($scope, $rootScope){
+    // Do not panick. Lots of functions will be here.
   }
 ]);

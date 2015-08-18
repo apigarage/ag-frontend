@@ -15,13 +15,12 @@ angular.module('app').controller('LayoutCtrl', [
     };
 
     // TODO - HARD CODED UNTIL THE PROJECT SCREEN.
-    $rootScope.currentProjectId = 4;
+    // $rootScope.currentProjectId = 4;
     return Projects.loadProjectToRootScope($rootScope.currentProjectId);
   }
 
   $scope.toggleSidebar = function(){
     $scope.layout.sidebarExpanded = !$scope.layout.sidebarExpanded;
   };
-
 
 }]);
