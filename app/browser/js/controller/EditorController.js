@@ -9,7 +9,8 @@ angular.module('app').controller('EditorCtrl', [
   '$modal',
   'RequestUtility',
   '$focus',
-  function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, RequestUtility, $focus){
+  '$q',
+  function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q, RequestUtility, $focus){
 
     // ----------------------------
     // Temporary MOCK Endpoint Use Case
@@ -114,16 +115,18 @@ angular.module('app').controller('EditorCtrl', [
       if( _.isEmpty($scope.endpoint.requestUrl) ) return;
       resetResponse();
 
+      var defferedAbort = $q;
       var options = {
         method: $scope.endpoint.requestMethod,
         url: $scope.endpoint.requestUrl,
         headers: $scope.endpoint.requestHeaders,
-        data: $scope.endpoint.requestBody
+        data: $scope.endpoint.requestBody,
+        timeout: deferredAbort.promise
       };
       options = RequestUtility.buildRequest(options);
       options.transformResponse = function(data){return data;};
       $scope.response = "loading";
-      return $http(options).then(function(response){
+      var promise = $http(options).then(function(response){
         $scope.response = response;
       })
       .catch(function(errorResponse){
@@ -137,6 +140,17 @@ angular.module('app').controller('EditorCtrl', [
         $scope.response.headers = JSON.parse(JSON.stringify($scope.response.headers()));
         $scope.setResponsePreviewType($scope.currentResponsePreviewTab);
       });
+
+      $scope.promise.abort = function() {
+        defferedAbort.resolve();
+      };
+
+      promise.finally(function(){
+        promise.abort = angular.noop;
+        deferredAbort = request = promise = null;
+      });
+
+      return promise;
     };
 
     $scope.getResponseCodeClass = function(responseCode){
