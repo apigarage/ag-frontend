@@ -11,12 +11,18 @@
   requestUtility.getHeaders = function(input, outputStyle){
     // First convert all the inputs into an array.
     // It will allow us to keep the index for later.
-    if(typeof input == 'string'){
+    if(!input){
+      input = [];
+    }
+
+    if(typeof input === 'string'){
+      if(input.length === 0) input = '[]';
       try{
         input = JSON.parse(input);
       } catch(e){
         console.log('Could not convert "' + input + '" into an object.');
         console.log(e);
+        input = [];
       }
       // if it's an array, input is in the right state.
       // if it's an object, will be converted into an array in next step.
@@ -44,6 +50,8 @@
           }
         });
         return output;
+      case 'string':
+        return JSON.stringify(input);
     }
   };
 

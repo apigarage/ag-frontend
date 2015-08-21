@@ -1,13 +1,15 @@
 angular.module('app').controller('EditorCtrl', [
   'lodash',
   '$scope',
+  '$rootScope',
+  '$window',
   '$filter',
   '$http',
   '$sce',
   '$modal',
   'RequestUtility',
   '$focus',
-  function (_, $scope, $filter, $http, $sce, $modal, RequestUtility, $focus){
+  function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, RequestUtility, $focus){
 
     // ----------------------------
     // Temporary MOCK Endpoint Use Case
@@ -36,7 +38,6 @@ angular.module('app').controller('EditorCtrl', [
       ]
     };
     $scope.response = null;
-    $scope.showRequestBody = false;
     $scope.responsePreviewTab = [
       { title: 'Raw',
         url: 'html/editor-response-raw.html'
@@ -86,15 +87,13 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     $scope.setRequestMethod = function(method){
-      if(method == "GET"){
-        $scope.showRequestBody = false;
-      }else{
-        $scope.showRequestBody = true;
-      }
       $scope.endpoint.requestMethod = method;
     };
 
     $scope.addRequestHeader = function(){
+      if(!_.isArray($scope.endpoint.requestHeaders)) {
+        $scope.endpoint.requestHeaders = [];
+      }
       $scope.endpoint.requestHeaders.push({});
     };
 
@@ -237,4 +236,68 @@ angular.module('app').controller('EditorCtrl', [
       }
     };
 
+    $scope.$watch(
+      function(){
+        return $rootScope.currentItem;
+      },
+      function(newValue, oldValue){
+        // Make sure if it's valid request.
+        if(newValue && newValue.url) $scope.loadRequestToScope(newValue);
+      }
+    );
+
+    /*
+     * Sets the scope variables based on the request
+     * @item = request item to be loaded.
+     */
+    $scope.loadRequestToScope = function(item){
+      // TODO - Check for any previous changes. if any changes are made to the
+      // previous request, ask if the user wants to save it.
+
+      $scope.endpoint = {};
+      $scope.endpoint.requestUrl = item.url;
+      $scope.endpoint.name = item.name;
+      // Check if the method is a valid method
+      item.method = _.find( $scope.requestMethods, function(data){ return data === item.method; });
+      // If method not found, set it to default method 'GET'
+      $scope.endpoint.requestMethod  = item.method ? item.method : 'GET';
+      if( $scope.endpoint.requestMethod !== 'GET' && _.isObject(item.data)){
+        $scope.endpoint.requestBody = JSON.stringify(item.data);
+      } else if($scope.endpoint.requestMethod !== 'GET' && item.data){
+        $scope.endpoint.requestBody = item.data;
+      } else {
+        $scope.endpoint.requestBody = "";
+      }
+      $scope.endpoint.uuid = _.isEmpty(item.uuid) ? undefined : item.uuid;
+      $scope.endpoint.requestHeaders = RequestUtility.getHeaders(item.headers, 'array');
+      $scope.response = null;
+      // Collection needs to be set
+    };
+    /*
+     * Saves the request from scope to DB.
+     */
+    $scope.saveCurrentRequest = function(){
+      var item = $scope.buildRequestOutOfScope();
+      console.log(item);
+      if( _.isEmpty(item.uuid)){ // Create a request
+        return; // TODO - Project.addItem() Or Project.addItemToCollection();
+      } else { // Update the request
+        return; // TODO - Project.updateItem() Or Project.updateItemToCollection();
+      }
+    };
+
+    /*
+     * Builds the request object (to be saved) using scope.
+     * Returns the request object.
+     */
+    $scope.buildRequestOutOfScope = function(){
+      var item = {};
+      item.url = $scope.endpoint.requestUrl;
+      item.name = $scope.endpoint.name;
+      item.method = $scope.endpoint.requestMethod ;
+      item.data = $scope.endpoint.requestBody;
+      item.uuid = $scope.endpoint.uuid;
+      item.headers = RequestUtility.getHeaders($scope.endpoint.requestHeaders, 'string');
+      return item;
+    };
   }]);

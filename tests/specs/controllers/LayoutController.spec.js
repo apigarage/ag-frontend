@@ -20,7 +20,6 @@ describe('Controller: LayoutController', function() {
 
   }));
 
-
   describe('When LayoutCtrl is loaded with valid currentProjectId', function(){
 
     beforeEach(function(){

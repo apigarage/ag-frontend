@@ -1,11 +1,10 @@
 angular.module('app').controller('LayoutCtrl', [
   '$scope',
   '$rootScope',
-  '$timeout',
   '$modal',
   '$state',
   'Projects',
-  function ($scope, $rootScope, $timeout, $modal, $state, Projects){
+  function ($scope, $rootScope, $modal, $state, Projects){
 
   init();
 
