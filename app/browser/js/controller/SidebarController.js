@@ -5,7 +5,17 @@ angular.module('app')
 .controller('SidebarCtrl', [
   '$scope',
   '$rootScope',
-  function ($scope, $rootScope){
-    // Do not panick. Lots of functions will be here.
+  '$window',
+  function ($scope, $rootScope, $window){
+
+    $scope.selectItem = function(item){
+      // Used for highlighting the currently selected item
+      $rootScope.selectedItemUID = item.uuid;
+      $rootScope.selectedCollectionId = item.collection_id;
+
+      // Used for loading the endpoint the editor
+      $rootScope.currentItem = item;
+    };
+
   }
 ]);

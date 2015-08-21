@@ -28,7 +28,7 @@
           </a>
         </div>
         <ul class="sidebar-list-child" ng-show="expandGroup">
-          <li class="sidebar-list-child-item" ng-repeat="item in collection.items">
+          <li class="sidebar-list-child-item" ng-repeat="item in collection.items" ng-click="selectItem(item)">
             <a class="sidebar-list-item-menu" bs-dropdown data-template="sidebar-list-child-item-menu" data-placement="auto bottom-right" data-container=".sidebar">
               <span class="fa fa-fw fa-lg fa-ellipsis-h"></span>
             </a>
@@ -36,7 +36,7 @@
           </li>
         </ul>
       </li>
-      <li class="sidebar-list-child-item" ng-repeat="item in currentProject.items">
+      <li class="sidebar-list-child-item" ng-repeat="item in currentProject.items" ng-click="selectItem(item)">
         <a class="sidebar-list-item-menu" bs-dropdown data-template="sidebar-list-child-item-menu" data-placement="auto bottom-right" data-container=".sidebar">
           <span class="fa fa-fw fa-lg fa-ellipsis-h"></span>
         </a>

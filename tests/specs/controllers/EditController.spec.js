@@ -15,8 +15,7 @@ describe('Controller: EditController', function() {
 
     $controller('EditorCtrl', {
       $scope: $scope,
-      $rootScope: $rootScope,
-      $modalInstance: {}
+      $rootScope: $rootScope
     });
   }));
 
@@ -277,7 +276,6 @@ describe('Controller: EditController', function() {
       $scope.setRequestMethod("GET");
       expect($scope.endpoint.requestMethod).toBe("GET");
       // get hides requestBody div
-      expect($scope.showRequestBody).toEqual(false);
     });
     it('request method POST', function(){
       $scope.setRequestMethod("POST");
@@ -396,4 +394,304 @@ describe('Controller: EditController', function() {
       expect('fa-circle icon-success').toBe(result);
     });
   });
+
+  describe('LoadRequestToScope', function(){
+    beforeEach(function(){
+
+    });
+
+    // Invalid Object means Object with url property
+    describe('When invalid object is being set', function(){
+      it('does not load the request', function(){
+        var url = $scope.endpoint.requestUrl;
+        $rootScope.currentItem = {};
+        $scope.$apply();
+        expect($scope.endpoint.requestUrl).toEqual(url);
+      });
+    });
+
+    // Valid Object means Object with url property
+    describe('When valid request is being loaded', function(){
+      beforeEach(function(){
+        endpoint = {
+          'name': 'request with post and data',
+          'uuid': 'uuid-uuid-uuid-uuid-1',
+          'url': 'https://abx.xyz',
+          'method': 'POST',
+          'headers': JSON.stringify([
+            {'key1': 'value1'},
+            {'key2': 'value2'}
+          ]),
+          'data': 'some data to be sent'
+        };
+      });
+
+      it('loads request', function(){
+        var url = $scope.endpoint.url;
+        $rootScope.currentItem = endpoint;
+        $scope.$apply();
+        expect($scope.endpoint.requestUrl).toEqual(endpoint.url);
+        expect($scope.response).toEqual(null);
+      });
+
+      describe('When the data is undefined', function(){
+        it('sets the data to empty string', function(){
+          endpoint.data = undefined;
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect($scope.endpoint.requestBody).toEqual("");
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the data is empty', function(){
+        it('sets the data to empty string', function(){
+          endpoint.data = "";
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect($scope.endpoint.requestBody).toEqual("");
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the data is valid, but request method is GET', function(){
+        it('sets the data to empty string', function(){
+          endpoint.data = "";
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect($scope.endpoint.requestBody).toEqual("");
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the data is an object', function(){
+        it('sets the data to valid stringified value of the object', function(){
+          endpoint.data = {"data":"is an object"};
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect($scope.endpoint.requestBody).toEqual(JSON.stringify(endpoint.data));
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the data is valid', function(){
+        it('sets the data to valid value', function(){
+          endpoint.data = "Some Data";
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect($scope.endpoint.requestBody).toEqual(endpoint.data);
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the headers are undefined', function(){
+        it('sets the headers to an empty array', function(){
+          endpoint.headers = undefined;
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
+          expect($scope.endpoint.requestHeaders.length).toEqual(0);
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the headers are empty string', function(){
+        it('sets the headers to an empty array', function(){
+          endpoint.headers = "";
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
+          expect($scope.endpoint.requestHeaders.length).toEqual(0);
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the headers are empty array stringified', function(){
+        it('sets the headers to an empty array', function(){
+          endpoint.headers = "[]";
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
+          expect($scope.endpoint.requestHeaders.length).toEqual(0);
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the headers are empty object', function(){
+        it('sets the headers to an empty array', function(){
+          endpoint.headers = {};
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
+          expect($scope.endpoint.requestHeaders.length).toEqual(0);
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the headers are empty object stringified', function(){
+        it('sets the headers to an empty array', function(){
+          endpoint.headers = {};
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
+          expect($scope.endpoint.requestHeaders.length).toEqual(0);
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the headers are filled object', function(){
+        it('sets the headers to an array with two elements', function(){
+          endpoint.headers = {key1: 'value1', key2: 'value2'};
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
+          expect($scope.endpoint.requestHeaders.length).toEqual(2);
+          expect($scope.endpoint.requestHeaders[0].key).toEqual('key1');
+          expect($scope.endpoint.requestHeaders[1].key).toEqual('key2');
+          expect($scope.endpoint.requestHeaders[0].value).toEqual('value1');
+          expect($scope.endpoint.requestHeaders[1].value).toEqual('value2');
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the headers are filled object stringified', function(){
+        it('sets the headers to an array with two elements', function(){
+          endpoint.headers = JSON.stringify({key1: 'value1', key2: 'value2'});
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
+          expect($scope.endpoint.requestHeaders.length).toEqual(2);
+          expect($scope.endpoint.requestHeaders[0].key).toEqual('key1');
+          expect($scope.endpoint.requestHeaders[1].key).toEqual('key2');
+          expect($scope.endpoint.requestHeaders[0].value).toEqual('value1');
+          expect($scope.endpoint.requestHeaders[1].value).toEqual('value2');
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the headers is an array with one element', function(){
+        it('sets the headers to an array with one element', function(){
+          endpoint.headers = [{'key': 'key1', 'value': 'value1'}];
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
+          expect($scope.endpoint.requestHeaders.length).toEqual(1);
+          expect($scope.endpoint.requestHeaders[0].key).toEqual('key1');
+          expect($scope.endpoint.requestHeaders[0].value).toEqual('value1');
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the headers is an array with two elements', function(){
+        it('sets the headers to an array with two elements', function(){
+          endpoint.headers = [
+            {'key': 'key1', 'value': 'value1'},
+            {'key': 'key2', 'value': 'value2'}
+          ];
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
+          expect($scope.endpoint.requestHeaders.length).toEqual(2);
+          expect($scope.endpoint.requestHeaders[0].key).toEqual('key1');
+          expect($scope.endpoint.requestHeaders[1].key).toEqual('key2');
+          expect($scope.endpoint.requestHeaders[0].value).toEqual('value1');
+          expect($scope.endpoint.requestHeaders[1].value).toEqual('value2');
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the headers is an array with one element stringified', function(){
+        it('sets the headers to an array with one element', function(){
+          endpoint.headers = JSON.stringify([{'key': 'key1', 'value': 'value1'}]);
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
+          expect($scope.endpoint.requestHeaders.length).toEqual(1);
+          expect($scope.endpoint.requestHeaders[0].key).toEqual('key1');
+          expect($scope.endpoint.requestHeaders[0].value).toEqual('value1');
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the headers is an array with two elements stringified', function(){
+        it('sets the headers to an array with two elements', function(){
+          endpoint.headers = JSON.stringify([
+            {'key': 'key1', 'value': 'value1'},
+            {'key': 'key2', 'value': 'value2'}
+          ]);
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
+          expect($scope.endpoint.requestHeaders.length).toEqual(2);
+          expect($scope.endpoint.requestHeaders[0].key).toEqual('key1');
+          expect($scope.endpoint.requestHeaders[1].key).toEqual('key2');
+          expect($scope.endpoint.requestHeaders[0].value).toEqual('value1');
+          expect($scope.endpoint.requestHeaders[1].value).toEqual('value2');
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the method is undefined', function(){
+        it('sets the method to GET', function(){
+          endpoint.method = undefined;
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect($scope.endpoint.requestMethod).toEqual('GET');
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the method is unknown', function(){
+        it('sets the method to GET', function(){
+          endpoint.method = 'GET-INVALID';
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect($scope.endpoint.requestMethod).toEqual('GET');
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the method is GET', function(){
+        it('sets the method to GET', function(){
+          endpoint.method = undefined;
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect($scope.endpoint.requestMethod).toEqual('GET');
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the method is anything other than GET (POST)', function(){
+        it('sets the method to POST', function(){
+          endpoint.method = 'POST';
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect($scope.endpoint.requestMethod).toEqual('POST');
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the uuid is set to undefined', function(){
+        it('sets the uuid to undefined', function(){
+          endpoint.uuid = undefined;
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect($scope.endpoint.uuid).toEqual(undefined);
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+      describe('When the uuid is set to empty string', function(){
+        it('sets the uuid to undefined', function(){
+          endpoint.uuid = undefined;
+          $rootScope.currentItem = endpoint;
+          $scope.$apply();
+          expect($scope.endpoint.uuid).toEqual(undefined);
+          expect($scope.response).toEqual(null);
+        });
+      });
+
+    });
+  });
+
 });
