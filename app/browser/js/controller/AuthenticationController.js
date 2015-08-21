@@ -72,7 +72,7 @@ angular.module('app').controller('AuthenticationCtrl', [
     return Auth.login($scope.credentials)
       .then(function(loggedIn){
         if(loggedIn){
-          $state.go('app');
+          $state.go('projectcreateoropen');
         }
         else{
           $scope.genericLoginErrorMessage =
@@ -102,7 +102,7 @@ angular.module('app').controller('AuthenticationCtrl', [
           return Auth.login(userData)
             .then(function(loggedIn){
               if(loggedIn){
-                $state.go('app');
+                $state.go('projectcreateoropen');
               } else {
                 $scope.genericSignupErrorMessage =
                   'Something went wrong. Please check your internet connection and try again';

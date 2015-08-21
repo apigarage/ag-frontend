@@ -1,0 +1,41 @@
+<div class="authentication-wrapper">
+  <div class="authentication" ng-controller="ProjectCreateOrOpenCtrl">
+    <img class="authentication-logo" src="img/api-garage-logo-large.png" />
+
+    <div ng-show="showOpenProject">
+      <form class="authentication-form" >
+        <p>Select a project to open</p>
+        <div class="list-group" ng-model="projects.selectedProject">
+          <a href="#" ng-click="openProject(project.id)" class="list-group-item"
+            ng-repeat="project in projects" >
+            <h4 class="list-group-item-heading">{{project.name}}</h4>
+            <p class="list-group-item-text">{{project.description}}</p>
+          </a>
+        </div>
+      </form>
+    </div>
+
+    <div ng-show="showCreateProject">
+      <form class="authentication-form" id="createProject">
+        <p>Create New Project</p>
+        <input id="projectName" type="name" class="form-control "
+          ng-class="{'input-lg': true}"
+          placeholder="Enter Project Name"
+          ng-model="createProject.projectName"/>
+          <p class="authentication-validation" ng-if="createProjectError">
+            {{createProjectErrorMessage}}
+          </p>
+        <p>Project Description</p>
+        <textarea id="projectDescription"rows="4" class="form-control"
+          name="description"
+          form="createProject"
+          placeholder="Enter Project Description"
+          ng-model="createProject.projectDescription"></textarea>
+        <button ng-click="createProject()" class="btn btn-primary btn-block btn-lg"
+          ladda="loading" data-style="expand-right">
+          Create
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

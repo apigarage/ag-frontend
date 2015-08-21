@@ -96,6 +96,51 @@ angular.module('app')
           statusText : 'OK',
         }
       },
+      "noHeadersProjectList" : {
+        request : {
+          method : 'GET',
+          url : Config.url + 'api/projects',
+          headers : {}
+        },
+        response : {
+          status : 200,
+          data: JSON.stringify([
+            projects.get('projectEmpty')
+          ]),
+          statusText : 'OK',
+        }
+      },
+      "createProject" : {
+        request : {
+          method : 'POST',
+          url : Config.url + 'api/projects',
+          headers : {"Content-Type":"application/json;charset=utf-8"},
+          data: JSON.stringify({
+            name: projects.get('projectEmpty').name,
+            description: projects.get('projectEmpty').description,
+          }),
+        },
+        response : {
+          status : 200,
+          data: JSON.stringify([
+            projects.get('projectEmpty')
+          ]),
+          statusText : 'OK'
+        }
+      },
+      "emptyProjectList" : {
+        request : {
+          method : 'GET',
+          url : Config.url + 'api/projects',
+          headers : {
+          }
+        },
+        response : {
+          status : 200,
+          data: [],
+          statusText : 'OK',
+        }
+      },
       "retreiveProjectWithTwoCollectionsAndOneItem": {
         request : {
           method : 'GET',

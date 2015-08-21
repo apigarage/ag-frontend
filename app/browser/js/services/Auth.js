@@ -24,6 +24,8 @@ angular.module('app')
     };
 
     var logout = function(){
+      // Clear user currentProejctId;
+      $rootScope.currentProjectId = NaN;
       $window.localStorage.removeItem(accessTokenStorageKey);
     };
 
