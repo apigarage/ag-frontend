@@ -7,9 +7,9 @@ angular.module('app').controller('EditorCtrl', [
   '$http',
   '$sce',
   '$modal',
+  '$q',
   'RequestUtility',
   '$focus',
-  '$q',
   function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q, RequestUtility, $focus){
 
     // ----------------------------
