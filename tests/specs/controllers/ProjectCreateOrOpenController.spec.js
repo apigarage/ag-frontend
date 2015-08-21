@@ -1,4 +1,4 @@
-describe('Controller: ProjectCreateOpenController', function() {
+describe('Controller: ProjectCreateOrOpenController', function() {
   var $rootScope, $scope, $controller;
 
   beforeEach(function(){
@@ -19,7 +19,7 @@ describe('Controller: ProjectCreateOpenController', function() {
 
   describe('Is loaded', function(){
     beforeEach(function(){
-      $controller('ProjectCreateOpenCtrl', {
+      $controller('ProjectCreateOrOpenCtrl', {
         $scope: $scope,
         $rootScope: $rootScope,
       });

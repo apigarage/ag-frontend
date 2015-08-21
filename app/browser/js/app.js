@@ -20,7 +20,7 @@
 
     var defaultView = '/authentication';
     if( localStorage.getItem('accessToken') ){
-      defaultView = '/projectcreateopen';
+      defaultView = '/projectcreateoropen';
     }
 
     angular.extend($tooltipProvider.defaults, {
@@ -50,10 +50,10 @@
       url: '/forgotpassword',
       templateUrl: 'html/forgot-password.html'
     })
-    .state('projectcreateopen', {
+    .state('projectcreateoropen', {
       abstract: false,
-      url: '/projectcreateopen',
-      templateUrl: 'html/project-create-open.html'
+      url: '/projectcreateoropen',
+      templateUrl: 'html/project-create-or-open.html'
     })
     .state('app', {
       abstract: false,

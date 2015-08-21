@@ -104,11 +104,9 @@ angular.module('app')
         },
         response : {
           status : 200,
-          data: JSON.stringify([{
-            id: projects.get('projectEmpty').id,
-            name: projects.get('projectEmpty').name,
-            description: projects.get('projectEmpty').description,
-            }]),
+          data: JSON.stringify([
+            projects.get('projectEmpty')
+          ]),
           statusText : 'OK',
         }
       },
@@ -124,11 +122,9 @@ angular.module('app')
         },
         response : {
           status : 200,
-          data: JSON.stringify([{
-            id: projects.get('projectEmpty').id,
-            name: projects.get('projectEmpty').name,
-            description: projects.get('projectEmpty').description,
-          }]),
+          data: JSON.stringify([
+            projects.get('projectEmpty')
+          ]),
           statusText : 'OK'
         }
       },

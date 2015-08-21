@@ -1,4 +1,4 @@
-angular.module('app').controller('ProjectCreateOpenCtrl', [
+angular.module('app').controller('ProjectCreateOrOpenCtrl', [
   '$scope',
   '$rootScope',
   '$modal',
@@ -12,12 +12,21 @@ angular.module('app').controller('ProjectCreateOpenCtrl', [
   function init(){
     $scope.showCreateProject = false;
     $scope.showOpenProject = false;
-    $scope.selectedProjectId = undefined;
     $scope.createProjectError = false;
     $scope.projects = {};
-    // TODD: handling of unauthorized or connection issues
+
+    // TODO: handling of unauthorized or connection issues
     // as discussed this should be covered in the ApiRequest
     // portion of the code
+
+    // Resolves issue where the open project will not go to the app
+    // the init() will run as the user moves to another state
+    // TODO: a user session handler to track currentProjectId
+    if(_.isFinite($rootScope.currentProjectId)) $state.go('app');
+
+    // Not returning the pomise will also resolve the issue
+    // But this will make this promise not testable
+    // Projects.getAll()
     return Projects.getAll()
       .then(function(projects){
         if(_.isEmpty(projects)){
@@ -38,15 +47,14 @@ angular.module('app').controller('ProjectCreateOpenCtrl', [
       $scope.loading = true;
       return Projects.create(projectData)
         .then(function(project){
-          $scope.selectedProjectId = project.id;
-          $scope.openProject();
+          $scope.openProject(project.id);
         }
       );
     }
   };
 
-  $scope.openProject = function(projectId, $index){
-    $rootScope.currentProjectId = $scope.selectedProjectId;
+  $scope.openProject = function(projectId){
+    $rootScope.currentProjectId = projectId;
     $state.go('app');
   };
 
@@ -60,4 +68,5 @@ angular.module('app').controller('ProjectCreateOpenCtrl', [
     }
     return true;
   }
+
 }]);

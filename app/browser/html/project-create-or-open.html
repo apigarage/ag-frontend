@@ -1,13 +1,12 @@
 <div class="authentication-wrapper">
-  <div class="authentication" ng-controller="ProjectCreateOpenCtrl">
+  <div class="authentication" ng-controller="ProjectCreateOrOpenCtrl">
     <img class="authentication-logo" src="img/api-garage-logo-large.png" />
 
     <div ng-show="showOpenProject">
       <form class="authentication-form" >
         <p>Select a project to open</p>
         <div class="list-group" ng-model="projects.selectedProject">
-          <a href="#" ng-click="openProject()" class="list-group-item"
-            ng-class="{ 'active': $index == selectedProjectIndex }"
+          <a href="#" ng-click="openProject(project.id)" class="list-group-item"
             ng-repeat="project in projects" >
             <h4 class="list-group-item-heading">{{project.name}}</h4>
             <p class="list-group-item-text">{{project.description}}</p>
