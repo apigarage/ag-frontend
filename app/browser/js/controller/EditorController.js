@@ -61,6 +61,22 @@ angular.module('app').controller('EditorCtrl', [
     // Only run this line for NEW requests. This tells the user to name the request before doing anything else.
     $focus('editor-title');
 
+    init();
+
+    function init(){
+      showRequestHideCancel();
+    }
+
+    function showRequestHideCancel(){
+      $scope.performRequestButton = true;
+      $scope.cancelRequestButton = false;
+    }
+
+    function showCancelHideRequest(){
+      $scope.performRequestButton = false;
+      $scope.cancelRequestButton = true;
+    }
+
     $scope.openNewCategoryModal = function(){
       var myModal = $modal({
         show: false,
@@ -114,14 +130,14 @@ angular.module('app').controller('EditorCtrl', [
     $scope.performRequest = function(){
       if( _.isEmpty($scope.endpoint.requestUrl) ) return;
       resetResponse();
-
-      var defferedAbort = $q;
+      showCancelHideRequest();
+      var deferedAbort = $q.defer();
       var options = {
         method: $scope.endpoint.requestMethod,
         url: $scope.endpoint.requestUrl,
         headers: $scope.endpoint.requestHeaders,
         data: $scope.endpoint.requestBody,
-        timeout: deferredAbort.promise
+        timeout: deferedAbort.promise,
       };
       options = RequestUtility.buildRequest(options);
       options.transformResponse = function(data){return data;};
@@ -139,19 +155,23 @@ angular.module('app').controller('EditorCtrl', [
         // Workaround: newType Error that appears when parsing headers root casue unknown
         $scope.response.headers = JSON.parse(JSON.stringify($scope.response.headers()));
         $scope.setResponsePreviewType($scope.currentResponsePreviewTab);
+        showRequestHideCancel();
       });
 
+      $scope.promise = promise;
       $scope.promise.abort = function() {
-        defferedAbort.resolve();
+        deferedAbort.resolve();
+        showRequestHideCancel();
       };
 
       promise.finally(function(){
         promise.abort = angular.noop;
-        deferredAbort = request = promise = null;
+        deferedAbort = request = promise = null;
       });
 
       return promise;
     };
+
 
     $scope.getResponseCodeClass = function(responseCode){
       if( responseCode === undefined )
