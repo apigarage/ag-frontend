@@ -13,20 +13,27 @@ angular.module('app').controller('EditorCtrl', [
   '$focus',
   function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q, RequestUtility, History, $focus){
 
-    // ----------------------------
-    // Temporary MOCK Endpoint Use Case
-    $scope.endpoint = {
-      requestUrl: "https://www.facebook.com",
-      category: "Uncategorized",
-      name: "",
-      environment: null,
-      requestMethod: 'GET',
-      requestHeaders: [
-        { key: "Content-Type", value: "application/json" },
-        { key: "language", value: "EN" }
-      ],
-      requestBody:  ''
-    };
+    init();
+
+    function setDefaultEndpoint(){
+      $scope.endpoint = {
+        requestUrl: "",
+        category: "Uncategorized",
+        name: "",
+        environment: null,
+        requestMethod: 'GET',
+        requestHeaders: [
+          { key: "Content-Type", value: "application/json" },
+          { key: "language", value: "EN" }
+        ],
+        requestBody:  ''
+      };
+    }
+
+    function init(){
+      setDefaultEndpoint();
+    }
+
 
     $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
     $scope.environments = {
@@ -80,8 +87,10 @@ angular.module('app').controller('EditorCtrl', [
     }
 
     $scope.changeCollection = function(collection){
-      // TODO - Persist the changes.
       $rootScope.currentCollection = collection;
+      if($scope.endpoint.uuid){
+        // TODO - Persist the changes.
+      }
     };
 
     $scope.openNewCategoryModal = function(){

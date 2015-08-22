@@ -19,7 +19,11 @@
       </div>
       <div class="editor-titles">
         <h2 bs-dropdown data-template="editor-category">
-          <button>
+          <button ng-hide="currentCollection.name">
+            Select Category
+            <span class="caret"></span>
+          </button>
+          <button ng-show="currentCollection.name">
             {{currentCollection.name}}
             <span class="caret"></span>
           </button>
@@ -33,8 +37,8 @@
       <script type="text/ng-template" id="editor-category">
         <ul class="dropdown-menu">
           <li ng-repeat="collection in currentProject.collections">
-            <a ng-click="changeCollection()">
-              <span class="fa fa-fw" ng-class="category == endpoint.category ? 'fa-check' : 'fa-spacer'"></span>
+            <a ng-click="changeCollection(collection)">
+              <span class="fa fa-fw" ng-class="collection.id == currentCollection.id ? 'fa-check' : 'fa-spacer'"></span>
               {{collection.name}}
             </a>
           </li>
