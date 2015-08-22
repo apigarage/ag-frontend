@@ -40,6 +40,7 @@ angular.module('app').controller('EditorCtrl', [
       ]
     };
     $scope.response = null;
+
     $scope.responsePreviewTab = [
       { title: 'Raw',
         url: 'html/editor-response-raw.html'
@@ -77,6 +78,11 @@ angular.module('app').controller('EditorCtrl', [
       $scope.performRequestButton = false;
       $scope.cancelRequestButton = true;
     }
+
+    $scope.changeCollection = function(collection){
+      // TODO - Persist the changes.
+      $rootScope.currentCollection = collection;
+    };
 
     $scope.openNewCategoryModal = function(){
       var myModal = $modal({
@@ -316,6 +322,7 @@ angular.module('app').controller('EditorCtrl', [
       $scope.response = null;
       // Collection needs to be set
     };
+
     /*
      * Saves the request from scope to DB.
      */

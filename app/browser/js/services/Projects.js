@@ -85,8 +85,14 @@ angular.module('app')
         .then(function(projectData){
           // If there is any project transformations, it should happen here.
           $rootScope.currentProject = projectData;
+          resetProjectValuesFromRootScope();
         });
       };
+
+      function resetProjectValuesFromRootScope(){
+        $rootScope.currentCollection = {};
+        $rootScope.currentItem = {};
+      }
 
       //
       // ****************************************************************

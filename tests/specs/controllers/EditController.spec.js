@@ -417,9 +417,6 @@ describe('Controller: EditController', function() {
   });
 
   describe('LoadRequestToScope', function(){
-    beforeEach(function(){
-
-    });
 
     // Invalid Object means Object with url property
     describe('When invalid object is being set', function(){

@@ -36,9 +36,6 @@
     $urlRouterProvider.when('', defaultView);
     $urlRouterProvider.otherwise(defaultView);
 
-    // Chinmay/Gamal - you'll obviously have to redo the route logic significantly
-    // for authentication to work correctly. Have fun :)
-    // Possible hints: http://stackoverflow.com/questions/22537311/angular-ui-router-login-authentication
     $stateProvider
     .state('authentication', {
       abstract: false,

@@ -20,7 +20,7 @@
       <div class="editor-titles">
         <h2 bs-dropdown data-template="editor-category">
           <button>
-            {{endpoint.category}}
+            {{currentCollection.name}}
             <span class="caret"></span>
           </button>
         </h2>
@@ -32,10 +32,10 @@
       </div>
       <script type="text/ng-template" id="editor-category">
         <ul class="dropdown-menu">
-          <li ng-repeat="category in ['Albums', 'Artists', 'Tracks', 'Playlists', 'User Profiles']">
-            <a ng-click="endpoint.category = category">
+          <li ng-repeat="collection in currentProject.collections">
+            <a ng-click="changeCollection()">
               <span class="fa fa-fw" ng-class="category == endpoint.category ? 'fa-check' : 'fa-spacer'"></span>
-              {{category}}
+              {{collection.name}}
             </a>
           </li>
           <li class="divider"></li>
