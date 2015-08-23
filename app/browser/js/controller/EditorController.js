@@ -64,15 +64,15 @@ angular.module('app').controller('EditorCtrl', [
     init();
 
     function init(){
-      showRequestHideCancel();
+      showRequestHideCancelButtons();
     }
 
-    function showRequestHideCancel(){
+    function showRequestHideCancelButtons(){
       $scope.performRequestButton = true;
       $scope.cancelRequestButton = false;
     }
 
-    function showCancelHideRequest(){
+    function showCancelHideRequestButtons(){
       $scope.performRequestButton = false;
       $scope.cancelRequestButton = true;
     }
@@ -130,7 +130,7 @@ angular.module('app').controller('EditorCtrl', [
     $scope.performRequest = function(){
       if( _.isEmpty($scope.endpoint.requestUrl) ) return;
       resetResponse();
-      showCancelHideRequest();
+      showCancelHideRequestButtons();
       var deferedAbort = $q.defer();
       var options = {
         method: $scope.endpoint.requestMethod,
@@ -141,8 +141,7 @@ angular.module('app').controller('EditorCtrl', [
       };
       options = RequestUtility.buildRequest(options);
       options.transformResponse = function(data){return data;};
-      $scope.response = "loading";
-      var promise = $http(options).then(function(response){
+      var requestPromise = $http(options).then(function(response){
         $scope.response = response;
       })
       .catch(function(errorResponse){
@@ -155,21 +154,21 @@ angular.module('app').controller('EditorCtrl', [
         // Workaround: newType Error that appears when parsing headers root casue unknown
         $scope.response.headers = JSON.parse(JSON.stringify($scope.response.headers()));
         $scope.setResponsePreviewType($scope.currentResponsePreviewTab);
-        showRequestHideCancel();
+        showRequestHideCancelButtons();
       });
 
-      $scope.promise = promise;
-      $scope.promise.abort = function() {
+      $scope.requestPromise = requestPromise;
+      $scope.requestPromise.abort = function() {
         deferedAbort.resolve();
-        showRequestHideCancel();
+        showRequestHideCancelButtons();
       };
 
-      promise.finally(function(){
-        promise.abort = angular.noop;
-        deferedAbort = request = promise = null;
+      requestPromise.finally(function(){
+        requestPromise.abort = angular.noop;
+        deferedAbort = request = requestPromise = null;
       });
 
-      return promise;
+      return requestPromise;
     };
 
 

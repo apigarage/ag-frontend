@@ -699,7 +699,7 @@ describe('Controller: EditController', function() {
           $scope.endpoint.requestUrl = stub.request.url;
           $scope.endpoint.headers = RequestUtility.getHeaders($scope.endpoint.headers, 'Array');
           $scope.performRequest();
-          $scope.promise.abort();
+          $scope.requestPromise.abort();
           expect($scope.performRequestButton).toBe(true);
           expect($scope.cancelRequestButton).toBe(false);
         });
@@ -713,7 +713,7 @@ describe('Controller: EditController', function() {
           $scope.endpoint.requestHeaders = stub.request.headers;
           $scope.endpoint.headers = RequestUtility.getHeaders($scope.endpoint.headers, 'Array');
           $scope.performRequest();
-          $scope.promise.abort();
+          $scope.requestPromise.abort();
           expect($scope.performRequestButton).toBe(true);
           expect($scope.cancelRequestButton).toBe(false);
         });
