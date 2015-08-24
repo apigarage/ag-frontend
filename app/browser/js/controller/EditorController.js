@@ -7,9 +7,10 @@ angular.module('app').controller('EditorCtrl', [
   '$http',
   '$sce',
   '$modal',
+  '$q',
   'RequestUtility',
   '$focus',
-  function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, RequestUtility, $focus){
+  function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q, RequestUtility, $focus){
 
     // ----------------------------
     // Temporary MOCK Endpoint Use Case
@@ -59,6 +60,22 @@ angular.module('app').controller('EditorCtrl', [
 
     // Only run this line for NEW requests. This tells the user to name the request before doing anything else.
     $focus('editor-title');
+
+    init();
+
+    function init(){
+      showRequestHideCancelButtons();
+    }
+
+    function showRequestHideCancelButtons(){
+      $scope.performRequestButton = true;
+      $scope.cancelRequestButton = false;
+    }
+
+    function showCancelHideRequestButtons(){
+      $scope.performRequestButton = false;
+      $scope.cancelRequestButton = true;
+    }
 
     $scope.openNewCategoryModal = function(){
       var myModal = $modal({
@@ -113,17 +130,18 @@ angular.module('app').controller('EditorCtrl', [
     $scope.performRequest = function(){
       if( _.isEmpty($scope.endpoint.requestUrl) ) return;
       resetResponse();
-
+      showCancelHideRequestButtons();
+      var deferedAbort = $q.defer();
       var options = {
         method: $scope.endpoint.requestMethod,
         url: $scope.endpoint.requestUrl,
         headers: $scope.endpoint.requestHeaders,
-        data: $scope.endpoint.requestBody
+        data: $scope.endpoint.requestBody,
+        timeout: deferedAbort.promise,
       };
       options = RequestUtility.buildRequest(options);
       options.transformResponse = function(data){return data;};
-      $scope.response = "loading";
-      return $http(options).then(function(response){
+      var requestPromise = $http(options).then(function(response){
         $scope.response = response;
       })
       .catch(function(errorResponse){
@@ -136,8 +154,23 @@ angular.module('app').controller('EditorCtrl', [
         // Workaround: newType Error that appears when parsing headers root casue unknown
         $scope.response.headers = JSON.parse(JSON.stringify($scope.response.headers()));
         $scope.setResponsePreviewType($scope.currentResponsePreviewTab);
+        showRequestHideCancelButtons();
       });
+
+      $scope.requestPromise = requestPromise;
+      $scope.requestPromise.abort = function() {
+        deferedAbort.resolve();
+        showRequestHideCancelButtons();
+      };
+
+      requestPromise.finally(function(){
+        requestPromise.abort = angular.noop;
+        deferedAbort = request = requestPromise = null;
+      });
+
+      return requestPromise;
     };
+
 
     $scope.getResponseCodeClass = function(responseCode){
       if( responseCode === undefined )

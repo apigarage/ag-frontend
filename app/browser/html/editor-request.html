@@ -55,12 +55,21 @@
               </ul>
             </script>
             <button class="btn btn-primary" type="submit" ng-click="performRequest()"
-                    ladda="response == 'loading'" data-style="expand-right"
+                    ng-show="performRequestButton"
                     bs-tooltip data-html="1"  data-placement="bottom"
                     data-title="<span class='visible-xs-inline visible-sm-inline'>Make Request (</span>{{'OSX' ? '&#8984;R' : 'Ctrl+R'}}<span class='visible-xs-inline visible-sm-inline'>)</span>">
               <span class="fa fa-download"></span>
               <span class="hidden-xs hidden-sm">
                 Make request
+              </span>
+            </button>
+            <button class="btn btn-primary" type="submit" ng-click="requestPromise.abort()"
+                    ng-show="cancelRequestButton"
+                    bs-tooltip data-html="1"  data-placement="bottom"
+                    data-title="<span class='visible-xs-inline visible-sm-inline'>Cancel Request (</span>{{'OSX' ? '&#8984;ESC' : 'Ctrl+ESC'}}<span class='visible-xs-inline visible-sm-inline'>)</span>">
+              <span class="fa fa-ban"></span>
+              <span class="hidden-xs hidden-sm">
+                Cancel Request
               </span>
             </button>
           </div>

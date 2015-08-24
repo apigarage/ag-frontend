@@ -691,6 +691,33 @@ describe('Controller: EditController', function() {
         });
       });
 
+      describe('When request is made', function(){
+        it('is able to abort GET', function(){
+          stub = RequestStubs.getWithResponseHeadersStub;
+          HttpBackendBuilder.build(stub.request, stub.response);
+          $scope.endpoint.method = stub.request.method;
+          $scope.endpoint.requestUrl = stub.request.url;
+          $scope.endpoint.headers = RequestUtility.getHeaders($scope.endpoint.headers, 'Array');
+          $scope.performRequest();
+          $scope.requestPromise.abort();
+          expect($scope.performRequestButton).toBe(true);
+          expect($scope.cancelRequestButton).toBe(false);
+        });
+
+        it('is able to abort POST', function(){
+          stub = RequestStubs.postWithDataWithResponseDataStub;
+          HttpBackendBuilder.build(stub.request, stub.response);
+          $scope.endpoint.requestMethod = stub.request.method;
+          $scope.endpoint.requestUrl = stub.request.url;
+          $scope.endpoint.requestBody = stub.request.data;
+          $scope.endpoint.requestHeaders = stub.request.headers;
+          $scope.endpoint.headers = RequestUtility.getHeaders($scope.endpoint.headers, 'Array');
+          $scope.performRequest();
+          $scope.requestPromise.abort();
+          expect($scope.performRequestButton).toBe(true);
+          expect($scope.cancelRequestButton).toBe(false);
+        });
+      });
     });
   });
 
