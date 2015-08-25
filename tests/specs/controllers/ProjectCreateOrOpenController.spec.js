@@ -50,6 +50,13 @@ describe('Controller: ProjectCreateOrOpenController', function() {
         expect($scope.showOpenProject).toBe(true);
       });
 
+      it('shows create project view', function(){
+        $scope.showCreateProjectForm();
+        expect($scope.showOpenProject).toBe(false);
+        expect($scope.showCreateProject).toBe(true);
+        $httpBackend.flush();
+      });
+
       it('create a project', function(){
         var projectStub = ProjectsFixtures.getStub('createProject');
         var projectData = ProjectsFixtures.get('projectEmpty');

@@ -12,6 +12,10 @@
             <p class="list-group-item-text">{{project.description}}</p>
           </a>
         </div>
+        <button ng-click="showCreateProjectForm()" class="btn btn-primary btn-block btn-lg"
+          ladda="loading" data-style="expand-right">
+          Create Project
+        </button>
       </form>
     </div>
 
@@ -35,7 +39,13 @@
           ladda="loading" data-style="expand-right">
           Create
         </button>
+        <button ng-click="showProjectsListForm()"  class="btn btn-primary btn-block btn-lg"
+          ladda="loading" data-style="expand-right"
+          ng-show="showProjectListButton">
+          Project List
+        </button>
       </form>
+
     </div>
   </div>
 </div>
