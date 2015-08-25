@@ -8,17 +8,30 @@ angular.module('app').controller('EditorCtrl', [
   '$sce',
   '$modal',
   '$q',
+  '$focus',
   'RequestUtility',
   'History',
-  '$focus',
-  function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q, RequestUtility, History, $focus){
+  'Collections',
+  'Projects',
+  function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q,
+    $focus, RequestUtility, History, Collections, Projects){
 
+    // Private Functions
     init();
+
+    function showRequestHideCancelButtons(){
+      $scope.performRequestButton = true;
+      $scope.cancelRequestButton = false;
+    }
+
+    function showCancelHideRequestButtons(){
+      $scope.performRequestButton = false;
+      $scope.cancelRequestButton = true;
+    }
 
     function setDefaultEndpoint(){
       $scope.endpoint = {
         requestUrl: "",
-        category: "Uncategorized",
         name: "",
         environment: null,
         requestMethod: 'GET',
@@ -28,12 +41,18 @@ angular.module('app').controller('EditorCtrl', [
         ],
         requestBody:  ''
       };
+
+      $scope.collection = {
+        name: 'Uncategorized (Select a Category)'
+      };
     }
 
     function init(){
+      showRequestHideCancelButtons();
       setDefaultEndpoint();
     }
 
+    // END - Private Functions
 
     $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
     $scope.environments = {
@@ -70,54 +89,65 @@ angular.module('app').controller('EditorCtrl', [
     // Only run this line for NEW requests. This tells the user to name the request before doing anything else.
     $focus('editor-title');
 
-    init();
-
-    function init(){
-      showRequestHideCancelButtons();
-    }
-
-    function showRequestHideCancelButtons(){
-      $scope.performRequestButton = true;
-      $scope.cancelRequestButton = false;
-    }
-
-    function showCancelHideRequestButtons(){
-      $scope.performRequestButton = false;
-      $scope.cancelRequestButton = true;
-    }
-
     $scope.changeCollection = function(collection){
+      var oldCollectionId = $rootScope.currentCollection.id;
+      var newCollectionId = collection.id;
+
       $rootScope.currentCollection = collection;
       if($scope.endpoint.uuid){
-        // TODO - Persist the changes.
+        var changes = { newCollectionId : newCollectionId };
+        return Projects.updateItem(oldCollectionId, $scope.endpoint.uuid, changes)
+          .then(function(data){
+            console.log('Request Updated Successfully');
+            // Some Sort of notification would be handy.
+          });
       }
     };
 
     $scope.openNewCategoryModal = function(){
-      var myModal = $modal({
+      var newModal = $modal({
         show: false,
         template: "html/prompt.html",
         backdrop: true
       });
 
-      myModal.$scope.title  = "New Category";
-      myModal.$promise.then( myModal.show );
+      newModal.$scope.title  = "New Category";
+
+      newModal.$scope.success = $scope.saveNewCategory(input);
+
+      newModal.$scope.cancel = function(error){
+        return $q.resolve();
+      };
+
+      newModal.$promise.then( newModal.show );
+    };
+
+    $scope.saveNewCategory = function(name){
+      var data = {
+        name: input,
+        project_id: $rootScope.currentProject.id
+      };
+      return Collections.create(data)
+        .then(function(collection){
+          Projects.addCollection(collection);
+          return $scope.changeCollection(collection);
+        });
     };
 
     $scope.setEnvironment = function(environment){
       $scope.endpoint.environment = environment;
     };
-
-    $scope.manageEnvironments = function(){
-      var myModal = $modal({
-        show: false,
-        template: "html/environments.html",
-        backdrop: true
-      });
-
-      myModal.$scope.environments  = $scope.environments;
-      myModal.$promise.then( myModal.show );
-    };
+    //
+    // $scope.manageEnvironments = function(){
+    //   var myModal = $modal({
+    //     show: false,
+    //     template: "html/environments.html",
+    //     backdrop: true
+    //   });
+    //
+    //   myModal.$scope.environments  = $scope.environments;
+    //   myModal.$promise.then( myModal.show );
+    // };
 
     $scope.setRequestMethod = function(method){
       $scope.endpoint.requestMethod = method;

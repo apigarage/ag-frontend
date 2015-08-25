@@ -1,6 +1,6 @@
   <button class="layout-column-sidebar project-box" ng-class="{expanded: layout.sidebarExpanded}"
           bs-dropdown data-template="projectMenu">
-    <h1 data-title="SOMETHING GOING On" placement="bottom"
+    <h1 data-title="{{currentProject.name}}" placement="bottom"
         bs-tooltip>{{currentProject.name}}</h1>
 
     <span class="caret"></span>

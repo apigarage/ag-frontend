@@ -41,8 +41,10 @@
     // Now, input is definitely an array (), convert into outputStyle.
     switch (outputStyle) {
       case 'array':
+      case 'Array':
         return input;
       case 'object':
+      case 'Object':
         var output = {};
         input.forEach(function(element, index, array){
           if(element.key && element.value){
@@ -51,6 +53,7 @@
         });
         return output;
       case 'string':
+      case 'String':
         return JSON.stringify(input);
     }
   };

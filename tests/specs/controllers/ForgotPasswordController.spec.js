@@ -8,15 +8,15 @@ describe('Controller: ForgotPasswordCtrl', function() {
       // it will not load templates, and will break the test infrastructure.
   });
 
-  beforeEach(inject(function(_$rootScope_, _$controller_, _$httpBackend_, _HttpBackendBuilder_, _Config_, _ForgotPasswordStubs_, _RequestUtility_){
-    $rootScope = _$rootScope_;
+  beforeEach(inject(function($injector){
+    $rootScope = $injector.get('$rootScope');
     $scope = $rootScope.$new();
-    $controller = _$controller_;
-    $httpBackend = _$httpBackend_;
-    HttpBackendBuilder = _HttpBackendBuilder_;
-    Config = _Config_;
-    ForgotPasswordStubs = _ForgotPasswordStubs_;
-    RequestUtility = _RequestUtility_;
+    $controller = $injector.get('$controller');
+    $httpBackend = $injector.get('$httpBackend');
+    HttpBackendBuilder = $injector.get('HttpBackendBuilder');
+    Config = $injector.get('Config');
+    ForgotPasswordStubs = $injector.get('ForgotPasswordStubs');
+    RequestUtility = $injector.get('RequestUtility');
 
     $controller('ForgotPasswordCtrl', {
       $scope: $scope,
