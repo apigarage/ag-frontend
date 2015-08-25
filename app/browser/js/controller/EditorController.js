@@ -9,8 +9,9 @@ angular.module('app').controller('EditorCtrl', [
   '$modal',
   '$q',
   'RequestUtility',
+  'History',
   '$focus',
-  function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q, RequestUtility, $focus){
+  function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q, RequestUtility, History, $focus){
 
     // ----------------------------
     // Temporary MOCK Endpoint Use Case
@@ -139,8 +140,10 @@ angular.module('app').controller('EditorCtrl', [
         data: $scope.endpoint.requestBody,
         timeout: deferedAbort.promise,
       };
+      History.setHistoryItem(options);
       options = RequestUtility.buildRequest(options);
       options.transformResponse = function(data){return data;};
+      $rootScope.$broadcast('updateHistory');
       var requestPromise = $http(options).then(function(response){
         $scope.response = response;
       })
@@ -269,6 +272,7 @@ angular.module('app').controller('EditorCtrl', [
       }
     };
 
+    // TODO: Refactor obsolete code in order to maintain tests passing.
     $scope.$watch(
       function(){
         return $rootScope.currentItem;
@@ -278,6 +282,12 @@ angular.module('app').controller('EditorCtrl', [
         if(newValue && newValue.url) $scope.loadRequestToScope(newValue);
       }
     );
+
+    $rootScope.$on('loadPerformRequest', function(event, item, loadOnly) {
+      if(_.isUndefined(loadOnly)) loadOnly = true;
+      $scope.loadRequestToScope(item);
+      if(!loadOnly) $scope.performRequest();
+    });
 
     /*
      * Sets the scope variables based on the request

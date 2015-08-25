@@ -9,7 +9,8 @@ angular.module('app')
     '$window',
     '$rootScope',
     'Config',
-    function($q, $http, $window, $rootScope, Config){
+    'History',
+    function($q, $http, $window, $rootScope, Config, History){
 
     var accessToken = null;
     var accessTokenStorageKey = 'accessToken';
@@ -27,6 +28,7 @@ angular.module('app')
       // Clear user currentProejctId;
       $rootScope.currentProjectId = NaN;
       $window.localStorage.removeItem(accessTokenStorageKey);
+      History.clearHistory();
     };
 
     var forgotPasswordNotify = function(){

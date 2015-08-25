@@ -14,7 +14,7 @@ angular.module('app')
       $rootScope.selectedCollectionId = item.collection_id;
 
       // Used for loading the endpoint the editor
-      $rootScope.currentItem = item;
+      $rootScope.$broadcast('loadPerformRequest', item);
     };
 
   }
