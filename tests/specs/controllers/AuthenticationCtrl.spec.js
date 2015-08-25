@@ -42,9 +42,26 @@ describe('Controller: Authentication', function() {
     $scope.$digest();
   });
 
+  // Creating a new instance of controller to test the forgot password
+  // flag during the initial load.
+  describe('When forgotPassword is set, ', function(){
+    beforeEach(function(){
+      $scope = $rootScope.$new();
+      $rootScope.forgotPassword = true;
+      $controller('AuthenticationCtrl', {
+        $scope: $scope,
+        $rootScope: $rootScope,
+      });
+    });
+    it('will set the the authType to Login', function(){
+      expect($scope.authType).toBe($scope.LOGIN);
+    });
+  });
+
   it('authType is set to SignUp Screen on startup', function(){
     expect($scope.authType).toBe($scope.SIGNUP);
   });
+
 
   describe('ToggleAuthenticationType', function(){
 
@@ -60,6 +77,34 @@ describe('Controller: Authentication', function() {
       expect($scope.authType).toBe($scope.SIGNUP);
     });
 
+  });
+  describe('Submit', function(){
+    beforeEach(function(){
+      spyOn($scope, 'signup').and.returnValue($scope.SIGNUP);
+      spyOn($scope, 'login').and.returnValue($scope.LOGIN);
+    });
+
+    describe('When authType is Signup', function(){
+      beforeEach(function(){
+        $scope.authType = $scope.SIGNUP;
+      });
+
+      it('will make the signup call', function(){
+        var returnValue = $scope.submit();
+        expect(returnValue).toBe($scope.SIGNUP);
+      });
+    });
+
+    describe('When authType is Login', function(){
+      beforeEach(function(){
+        $scope.authType = $scope.LOGIN;
+      });
+
+      it('will make the login call', function(){
+        var returnValue = $scope.submit();
+        expect(returnValue).toBe($scope.LOGIN);
+      });
+    });
   });
 
   describe('Sign In', function(){
