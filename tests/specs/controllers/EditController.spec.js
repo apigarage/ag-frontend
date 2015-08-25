@@ -372,6 +372,19 @@ describe('Controller: EditController', function() {
     });
   });
 
+  describe('able to receive broadcast ', function(){
+    it('is able to performRequest', function(){
+      stub = RequestStubs.setPreviewTypeParsedStub;
+      HttpBackendBuilder.build(stub.request, stub.response);
+      $rootScope.$broadcast('performRequest',stub);
+      console.log($scope.endpoint);
+      expect($scope.endpoint).not.toBeNull();
+      expect($scope.endpoint.status).toEqual(stub.request.status);
+      expect($scope.endpoint.data).toBe(stub.request.data);
+      expect($scope.endpoint.statusText).toBe(stub.request.statusText);
+    });
+  });
+
   describe('get response code class', function(){
     it('undefined', function(){
       var result = $scope.getResponseCodeClass(undefined);
