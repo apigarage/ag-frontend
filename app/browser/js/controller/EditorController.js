@@ -272,6 +272,7 @@ angular.module('app').controller('EditorCtrl', [
       }
     };
 
+    // TODO: Refactor obsolete code in order to maintain tests passing.
     $scope.$watch(
       function(){
         return $rootScope.currentItem;
@@ -282,9 +283,10 @@ angular.module('app').controller('EditorCtrl', [
       }
     );
 
-    $rootScope.$on('performRequest', function(event, item) {
+    $rootScope.$on('loadPerformRequest', function(event, item, loadOnly) {
+      if(_.isUndefined(loadOnly)) loadOnly = true;
       $scope.loadRequestToScope(item);
-      $scope.performRequest();
+      if(!loadOnly) $scope.performRequest();
     });
 
     /*

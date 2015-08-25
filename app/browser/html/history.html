@@ -9,9 +9,9 @@
       Last request:
       <span class="request-time hidden-xs">{{lastRequest.time | date:'yyyy-MM-dd h:mm:ssa'}}</span>
       <a>
-        <span class="request-type" ng-click="performRequest(lastRequest.time)">{{lastRequest.method}}</span>
+        <span class="request-type" ng-click="loadPerformRequest(lastRequest.time, false)">{{lastRequest.method}}</span>
       </a>
-      {{lastRequest.url}}
+      <a ng-click="loadPerformRequest(lastRequest.time, true)">{{lastRequest.url}}</a>
     </div>
 
     <a class="history-expand-icon" ng-click="toggleHistory()" bs-tooltip data-title="{{'OSX' ? '&#8984;H' : 'Ctrl+H'}}">
@@ -23,9 +23,9 @@
       <li class="request-url" ng-repeat="time in historyTimeStamps">
         <span class="request-time">{{time | date:'yyyy-MM-dd h:mm:ssa'}}</span>
         <a>
-          <span class="request-type" ng-click="performRequest(time)">{{recentRequests[time].method}}</span>
+          <span class="request-type" ng-click="loadPerformRequest(time, false)">{{recentRequests[time].method}}</span>
         </a>
-        {{recentRequests[time].url}}
+        <a ng-click="loadPerformRequest(time, true)">{{recentRequests[time].url}}</a>
       </li>
     </ul>
 

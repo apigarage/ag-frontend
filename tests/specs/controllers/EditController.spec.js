@@ -373,11 +373,19 @@ describe('Controller: EditController', function() {
   });
 
   describe('able to receive broadcast ', function(){
-    it('is able to performRequest', function(){
+    it('is able to perform request', function(){
       stub = RequestStubs.setPreviewTypeParsedStub;
       HttpBackendBuilder.build(stub.request, stub.response);
-      $rootScope.$broadcast('performRequest',stub);
-      console.log($scope.endpoint);
+      $rootScope.$broadcast('loadPerformRequest',stub, false);
+      expect($scope.endpoint).not.toBeNull();
+      expect($scope.endpoint.status).toEqual(stub.request.status);
+      expect($scope.endpoint.data).toBe(stub.request.data);
+      expect($scope.endpoint.statusText).toBe(stub.request.statusText);
+    });
+    it('is able to load request', function(){
+      stub = RequestStubs.setPreviewTypeParsedStub;
+      HttpBackendBuilder.build(stub.request, stub.response);
+      $rootScope.$broadcast('loadPerformRequest',stub);
       expect($scope.endpoint).not.toBeNull();
       expect($scope.endpoint.status).toEqual(stub.request.status);
       expect($scope.endpoint.data).toBe(stub.request.data);

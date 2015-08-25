@@ -9,7 +9,7 @@ angular.module('app').controller('HistoryCtrl', [
   $scope.lastRequest = {};
 
   init();
-  
+
   function init(){
     $scope.recentRequests = History.getHistory();
     $scope.historyTimeStamps = History.getHistoryTimeStamps();
@@ -22,9 +22,9 @@ angular.module('app').controller('HistoryCtrl', [
     $scope.lastRequest.time = _.first($scope.historyTimeStamps);
   }
 
-  $scope.performRequest = function (historyTimeStamp){
+  $scope.loadPerformRequest = function (historyTimeStamp, loadOnly){
     var historyItem = History.getHistoryItem(historyTimeStamp);
-    $rootScope.$broadcast('performRequest',historyItem);
+    $rootScope.$broadcast('loadPerformRequest',historyItem, loadOnly);
   };
 
   $rootScope.$on('updateHistory', function(event, data) {
