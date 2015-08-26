@@ -35,14 +35,14 @@
                   <a ng-click="setEnvironment(environment)">
                     <span class="fa fa-fw" ng-class="environment == endpoint.environment ? 'fa-check' : 'fa-spacer'"></span>
                     <code class="text-uppercase">{{environment.name}}</code>
-                    // <span class="dropdown-menu-hotkey">{{'OSX' ? '&#8984;' + ($index+1) : 'Ctrl+' + ($index+1)}}</span>
+                    <!-- <span class="dropdown-menu-hotkey">{{'OSX' ? '&#8984;' + ($index+1) : 'Ctrl+' + ($index+1)}}</span> -->
                   </a>
                 </li>
                 <li ng-repeat="environment in environments.private">
                   <a ng-click="setEnvironment(environment)">
                     <span class="fa fa-fw" ng-class="environment == endpoint.environment ? 'fa-check' : 'fa-spacer'"></span>
                     <code class="text-uppercase">{{environment.name}}</code>
-                    // <span class="dropdown-menu-hotkey">{{'OSX' ? '&#8984;' + ($index+1+environments.global.length) : 'Ctrl+' + ($index+1+environments.global.length)}}</span>
+                    <!-- <span class="dropdown-menu-hotkey">{{'OSX' ? '&#8984;' + ($index+1+environments.global.length) : 'Ctrl+' + ($index+1+environments.global.length)}}</span> -->
                   </a>
                 </li>
                 <li class="divider"></li>
