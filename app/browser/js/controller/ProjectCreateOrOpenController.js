@@ -31,13 +31,27 @@ angular.module('app').controller('ProjectCreateOrOpenCtrl', [
       .then(function(projects){
         if(_.isEmpty(projects)){
           $scope.showCreateProject = true;
+          $scope.showProjectListLink = false;
         }
         else if(projects.length > 0){
           $scope.projects = projects;
           $scope.showOpenProject = true;
+          $scope.showProjectCreateLink = true;
+          $scope.showProjectListLink = false;
         }
       });
   }
+
+  $scope.showCreateProjectForm = function(){
+    $scope.showCreateProject = true;
+    $scope.showOpenProject = false;
+    $scope.showProjectCreateLink = false;
+    $scope.showProjectListLink = true;
+  };
+
+  $scope.showProjectsListForm = function (){
+    init();
+  };
 
   $scope.createProject = function(){
     var projectData = {};

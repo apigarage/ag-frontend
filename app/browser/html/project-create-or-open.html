@@ -37,5 +37,19 @@
         </button>
       </form>
     </div>
+    <div class="authentication-toggle">
+      <span ng-show="showProjectCreateLink">
+      Need to create a new project?
+      <a ng-click="showCreateProjectForm()">
+        Create Project
+      </a>
+      </span>
+      <span ng-show="showProjectListLink">
+      Need to open a project?
+      <a ng-click="showProjectsListForm()">
+        Project List
+      </a>
+      </span>
+    </div>
   </div>
 </div>
