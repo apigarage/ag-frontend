@@ -144,6 +144,33 @@ body {
     }
   }
 }
+.header-item-status {
+  float: left;
+  display: inline-block;
+  position: relative;
+  border: 0;
+  padding: 15px;
+  background: none;
+  line-height: 19px;  // 50px - 2 * 15px = 20px, less 1px for the border! (without that 1px gap, will get overflow on hover!)
+
+  &:focus,
+  &:hover {
+  }
+  outline: none !important;
+
+  &.active {
+    font-weight: bold;
+    &:after {
+      content: "";
+      display: block;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      border-top: 5px solid @brand-primary;
+    }
+  }
+}
 .header-sidebar-toggle {
   position: absolute;
   top: 8px;
