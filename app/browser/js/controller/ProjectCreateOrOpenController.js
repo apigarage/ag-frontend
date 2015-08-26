@@ -31,12 +31,13 @@ angular.module('app').controller('ProjectCreateOrOpenCtrl', [
       .then(function(projects){
         if(_.isEmpty(projects)){
           $scope.showCreateProject = true;
-          $scope.showProjectListButton = false;
+          $scope.showProjectListLink = false;
         }
         else if(projects.length > 0){
           $scope.projects = projects;
           $scope.showOpenProject = true;
-          $scope.showProjectListButton = true;
+          $scope.showProjectCreateLink = true;
+          $scope.showProjectListLink = false;
         }
       });
   }
@@ -44,6 +45,8 @@ angular.module('app').controller('ProjectCreateOrOpenCtrl', [
   $scope.showCreateProjectForm = function(){
     $scope.showCreateProject = true;
     $scope.showOpenProject = false;
+    $scope.showProjectCreateLink = false;
+    $scope.showProjectListLink = true;
   };
 
   $scope.showProjectsListForm = function (){
