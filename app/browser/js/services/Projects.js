@@ -86,11 +86,13 @@ angular.module('app')
         .then(function(projectData){
           // If there is any project transformations, it should happen here.
 
-          // Transoform project.collections from an array to an object.
+          // Transforming project.collections from an array to an object.
+          // collection_id will be the key.
           projectData.collections = _.reduce(projectData.collections, function(result, collection){
             if(collection.id){
 
-              // Transoform collection.items from an array to an object.
+              // Transforming collection.items from an array to an object.
+              // items.uuid will be the key.
               collection.items = _.reduce(collection.items, function(itemResult, item){
                 if(item.uuid){
                   itemResult[item.uuid] = item;
@@ -112,6 +114,7 @@ angular.module('app')
       function resetProjectValuesFromRootScope(){
         $rootScope.currentCollection = {};
         $rootScope.currentItem = {};
+        $rootScope.$broadcast('loadPerformRequest', {});
       }
 
       //

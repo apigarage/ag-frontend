@@ -26,13 +26,13 @@ angular.module('app')
         "name": "Project 1",
         "description": "This is a perfectly fine project.",
       },
-      "projectWithOneCollectionNoItems": {
+      "projectWithTwoCollectionNoItems": {
         "id": "2",
         "name": "Project 1",
         "description": "This is a perfectly fine project.",
         "collections":[
-          CollectionsFixtures.get('collection1'),
-          CollectionsFixtures.get('collection2')
+          CollectionsFixtures.get('collectionWithTwoItems'),
+          CollectionsFixtures.get('collectionWithOneItems')
         ],
         "items":[
           ItemsFixtures.get('item1')
@@ -145,12 +145,26 @@ angular.module('app')
         request : {
           method : 'GET',
           url : Config.url + 'api/projects/' +
-          projects.get('projectWithTwoCollectionsAndOneItem').id,
+            projects.get('projectWithTwoCollectionsAndOneItem').id,
         },
         response : {
           status : 200,
           data: JSON.stringify(
             projects.get('projectWithTwoCollectionsAndOneItem')
+          ),
+          statusText : 'OK',
+        }
+      },
+      "retrieveProjectWithTwoCollectionNoItems": {
+        request : {
+          method : 'GET',
+          url : Config.url + 'api/projects/' +
+            projects.get('projectWithTwoCollectionNoItems').id,
+        },
+        response : {
+          status : 200,
+          data: JSON.stringify(
+            projects.get('projectWithTwoCollectionNoItems')
           ),
           statusText : 'OK',
         }

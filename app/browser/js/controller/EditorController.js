@@ -47,47 +47,56 @@ angular.module('app').controller('EditorCtrl', [
       };
     }
 
+    function resetResponse(){
+      $scope.response = null;
+    }
     function init(){
+      $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
+
+      $scope.environments = {
+        public: [],
+        publicVariables: [
+          { name: '' }
+        ],
+        private: [],
+        privateVariables: [
+          { name: '' }
+        ]
+      };
+
+      $scope.responsePreviewTab = [
+        {
+          title: 'Raw',
+          url: 'html/editor-response-raw.html'
+        }, {
+          title: 'Parsed',
+          url: 'html/editor-response-parsed.html'
+        }, {
+          title: 'Preview',
+          url: 'html/editor-response-preview.html'
+        }
+      ];
+      $scope.currentResponsePreviewTab = {
+        title: 'Raw',
+        url: 'html/editor-response-raw.html'
+      };
+      $scope.responsePreviewTypeContent = null;
+
+      // TEMPORARY FLAG TO DISABLE THE SEARCH BOX IN THE RESPONSE PANEL (note there is an extra padding created in the .response-heading div to make room for the search box)
+      $scope.RESPONSE_SEARCH_FLAG = false;
+
+      // Only run this line for NEW requests. This tells the user to name the request before doing anything else.
+      $focus('editor-title');
+
       showRequestHideCancelButtons();
+
+      resetResponse();
+
       setDefaultEndpoint();
     }
 
     // END - Private Functions
 
-    $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
-    $scope.environments = {
-      public: [],
-      publicVariables: [
-        { name: '' }
-      ],
-      private: [],
-      privateVariables: [
-        { name: '' }
-      ]
-    };
-    $scope.response = null;
-
-    $scope.responsePreviewTab = [
-      { title: 'Raw',
-        url: 'html/editor-response-raw.html'
-      },
-      { title: 'Parsed',
-        url: 'html/editor-response-parsed.html'
-      },
-      { title: 'Preview',
-        url: 'html/editor-response-preview.html'
-    }];
-    $scope.currentResponsePreviewTab = {
-      title: 'Raw',
-      url: 'html/editor-response-raw.html'
-    };
-    $scope.responsePreviewTypeContent = null;
-
-    // TEMPORARY FLAG TO DISABLE THE SEARCH BOX IN THE RESPONSE PANEL (note there is an extra padding created in the .response-heading div to make room for the search box)
-    $scope.RESPONSE_SEARCH_FLAG = false;
-
-    // Only run this line for NEW requests. This tells the user to name the request before doing anything else.
-    $focus('editor-title');
 
     $scope.changeCollection = function(collection){
       var oldCollectionId = $rootScope.currentCollection.id;
@@ -112,19 +121,16 @@ angular.module('app').controller('EditorCtrl', [
       });
 
       newModal.$scope.title  = "New Category";
-
-      newModal.$scope.success = $scope.saveNewCategory(input);
-
-      newModal.$scope.cancel = function(error){
-        return $q.resolve();
-      };
+      newModal.$scope.success = $scope.saveNewCategory;
+      newModal.$scope.cancel = function(error){ return $q.resolve(); };
 
       newModal.$promise.then( newModal.show );
+      return newModal;
     };
 
     $scope.saveNewCategory = function(name){
       var data = {
-        name: input,
+        name: name,
         project_id: $rootScope.currentProject.id
       };
       return Collections.create(data)
@@ -137,17 +143,17 @@ angular.module('app').controller('EditorCtrl', [
     $scope.setEnvironment = function(environment){
       $scope.endpoint.environment = environment;
     };
-    //
-    // $scope.manageEnvironments = function(){
-    //   var myModal = $modal({
-    //     show: false,
-    //     template: "html/environments.html",
-    //     backdrop: true
-    //   });
-    //
-    //   myModal.$scope.environments  = $scope.environments;
-    //   myModal.$promise.then( myModal.show );
-    // };
+
+    $scope.manageEnvironments = function(){
+      var myModal = $modal({
+        show: false,
+        template: "html/environments.html",
+        backdrop: true
+      });
+
+      myModal.$scope.environments  = $scope.environments;
+      myModal.$promise.then( myModal.show );
+    };
 
     $scope.setRequestMethod = function(method){
       $scope.endpoint.requestMethod = method;
@@ -164,14 +170,6 @@ angular.module('app').controller('EditorCtrl', [
       var position = $scope.endpoint.requestHeaders.indexOf( header );
       $scope.endpoint.requestHeaders.splice(position, 1);
     };
-
-    function resetResponse() {
-      $scope.response = {
-        status : -1,
-        statusText : '',
-        data : ''
-      };
-    }
 
     $scope.performRequest = function(){
       if( _.isEmpty($scope.endpoint.requestUrl) ) return;
@@ -358,7 +356,7 @@ angular.module('app').controller('EditorCtrl', [
       }
       $scope.endpoint.uuid = _.isEmpty(item.uuid) ? undefined : item.uuid;
       $scope.endpoint.requestHeaders = RequestUtility.getHeaders(item.headers, 'array');
-      $scope.response = null;
+      resetResponse();
       // Collection needs to be set
     };
 

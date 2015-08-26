@@ -36,7 +36,7 @@ angular.module('app')
         "items": [
           ItemsFixtures.get('item1'),
           ItemsFixtures.get('item2'),
-          ItemsFixtures.get('item3')
+          ItemsFixtures.get('itemWithFullDetails')
         ]
       },
       "collection1":{
@@ -53,6 +53,18 @@ angular.module('app')
         "id": "7",
         "name": "Collection 3",
         "description": "This is a perfectly fine collection."
+      },
+      "newCollection":{
+        "id": "8",
+        "name": "New collection",
+        "project_id": "5",
+        "description": "Use to test newly created collections"
+      },
+      "newCollectionEmptyProject":{
+        "id": "9",
+        "name": "New collection Empty project",
+        "project_id": "1",
+        "description": "Use to test newly created collections"
       }
     };
 
@@ -82,7 +94,43 @@ angular.module('app')
           ),
           statusText : 'OK',
         }
-      }
+      },
+      "createNewCollectionForEmptyProject" : {
+        request : {
+          method : 'POST',
+          url : Config.url + 'api/collections',
+          headers : {"Content-Type":"application/json;charset=utf-8"},
+          data: JSON.stringify({
+            name: collections.get('newCollectionEmptyProject').name,
+            project_id: collections.get('newCollectionEmptyProject').project_id
+          }),
+        },
+        response : {
+          status : 200,
+          data: JSON.stringify(
+            collections.get('newCollectionEmptyProject')
+          ),
+          statusText : 'OK'
+        }
+      },
+      "createNewCollection" : {
+        request : {
+          method : 'POST',
+          url : Config.url + 'api/collections',
+          headers : {"Content-Type":"application/json;charset=utf-8"},
+          data: JSON.stringify({
+            name: collections.get('newCollection').name,
+            project_id: collections.get('newCollection').project_id
+          }),
+        },
+        response : {
+          status : 200,
+          data: JSON.stringify(
+            collections.get('newCollection')
+          ),
+          statusText : 'OK'
+        }
+      },
     };
     return collections;
   }]);
