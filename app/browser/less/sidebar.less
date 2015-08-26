@@ -7,7 +7,7 @@
   overflow: auto;
 
   // 3D Look
-  border-right: 1px solid #DDD; 
+  border-right: 1px solid #DDD;
   box-shadow: 0 0 4px rgba(0,0,0,0.125);
   z-index: 10;
 }
@@ -39,23 +39,27 @@
   margin-bottom: 10px;
 }
 .sidebar-list-parent-item {
-  padding-left: 10px;
   line-height: 1.4;
   margin: 8px 0;
-
   font-weight: bold;
 }
 .sidebar-list-parent-item-container {
   > a {
     text-decoration: none !important;
   }
-  
+
   &:hover {
     > .sidebar-list-item-menu {
       visibility: visible;
       float: right;
     }
   }
+}
+.sidebar-list-parent-item-selected {
+  background: @brand-secondary;
+  border-radius: 2px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 .sidebar-list-item-menu {
   visibility: hidden;
@@ -83,4 +87,10 @@
       float: right;
     }
   }
+}
+.sidebar-list-child-item-selected {
+  background: @lighter-yellow;
+  border-radius: 2px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }

@@ -8,65 +8,16 @@ angular.module('app').controller('EditorCtrl', [
   '$sce',
   '$modal',
   '$q',
+  '$focus',
   'RequestUtility',
   'History',
-  '$focus',
-  function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q, RequestUtility, History, $focus){
+  'Collections',
+  'Projects',
+  function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q,
+    $focus, RequestUtility, History, Collections, Projects){
 
-    // ----------------------------
-    // Temporary MOCK Endpoint Use Case
-    $scope.endpoint = {
-      requestUrl: "https://www.facebook.com",
-      category: "Uncategorized",
-      name: "",
-      environment: null,
-      requestMethod: 'GET',
-      requestHeaders: [
-        { key: "Content-Type", value: "application/json" },
-        { key: "language", value: "EN" }
-      ],
-      requestBody:  ''
-    };
-
-    $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
-    $scope.environments = {
-      public: [],
-      publicVariables: [
-        { name: '' }
-      ],
-      private: [],
-      privateVariables: [
-        { name: '' }
-      ]
-    };
-    $scope.response = null;
-    $scope.responsePreviewTab = [
-      { title: 'Raw',
-        url: 'html/editor-response-raw.html'
-      },
-      { title: 'Parsed',
-        url: 'html/editor-response-parsed.html'
-      },
-      { title: 'Preview',
-        url: 'html/editor-response-preview.html'
-    }];
-    $scope.currentResponsePreviewTab = {
-      title: 'Raw',
-      url: 'html/editor-response-raw.html'
-    };
-    $scope.responsePreviewTypeContent = null;
-
-    // TEMPORARY FLAG TO DISABLE THE SEARCH BOX IN THE RESPONSE PANEL (note there is an extra padding created in the .response-heading div to make room for the search box)
-    $scope.RESPONSE_SEARCH_FLAG = false;
-
-    // Only run this line for NEW requests. This tells the user to name the request before doing anything else.
-    $focus('editor-title');
-
+    // Private Functions
     init();
-
-    function init(){
-      showRequestHideCancelButtons();
-    }
 
     function showRequestHideCancelButtons(){
       $scope.performRequestButton = true;
@@ -78,15 +29,115 @@ angular.module('app').controller('EditorCtrl', [
       $scope.cancelRequestButton = true;
     }
 
+    function setDefaultEndpoint(){
+      $scope.endpoint = {
+        requestUrl: "",
+        name: "",
+        environment: null,
+        requestMethod: 'GET',
+        requestHeaders: [
+          { key: "Content-Type", value: "application/json" },
+          { key: "language", value: "EN" }
+        ],
+        requestBody:  ''
+      };
+
+      $scope.collection = {
+        name: 'Uncategorized (Select a Category)'
+      };
+    }
+
+    function resetResponse(){
+      $scope.response = null;
+    }
+    function init(){
+      $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
+
+      $scope.environments = {
+        public: [],
+        publicVariables: [
+          { name: '' }
+        ],
+        private: [],
+        privateVariables: [
+          { name: '' }
+        ]
+      };
+
+      $scope.responsePreviewTab = [
+        {
+          title: 'Raw',
+          url: 'html/editor-response-raw.html'
+        }, {
+          title: 'Parsed',
+          url: 'html/editor-response-parsed.html'
+        }, {
+          title: 'Preview',
+          url: 'html/editor-response-preview.html'
+        }
+      ];
+      $scope.currentResponsePreviewTab = {
+        title: 'Raw',
+        url: 'html/editor-response-raw.html'
+      };
+      $scope.responsePreviewTypeContent = null;
+
+      // TEMPORARY FLAG TO DISABLE THE SEARCH BOX IN THE RESPONSE PANEL (note there is an extra padding created in the .response-heading div to make room for the search box)
+      $scope.RESPONSE_SEARCH_FLAG = false;
+
+      // Only run this line for NEW requests. This tells the user to name the request before doing anything else.
+      $focus('editor-title');
+
+      showRequestHideCancelButtons();
+
+      resetResponse();
+
+      setDefaultEndpoint();
+    }
+
+    // END - Private Functions
+
+
+    $scope.changeCollection = function(collection){
+      var oldCollectionId = $rootScope.currentCollection.id;
+      var newCollectionId = collection.id;
+
+      $rootScope.currentCollection = collection;
+      if($scope.endpoint.uuid){
+        var changes = { newCollectionId : newCollectionId };
+        return Projects.updateItem(oldCollectionId, $scope.endpoint.uuid, changes)
+          .then(function(data){
+            console.log('Request Updated Successfully');
+            // Some Sort of notification would be handy.
+          });
+      }
+    };
+
     $scope.openNewCategoryModal = function(){
-      var myModal = $modal({
+      var newModal = $modal({
         show: false,
         template: "html/prompt.html",
         backdrop: true
       });
 
-      myModal.$scope.title  = "New Category";
-      myModal.$promise.then( myModal.show );
+      newModal.$scope.title  = "New Category";
+      newModal.$scope.success = $scope.saveNewCategory;
+      newModal.$scope.cancel = function(error){ return $q.resolve(); };
+
+      newModal.$promise.then( newModal.show );
+      return newModal;
+    };
+
+    $scope.saveNewCategory = function(name){
+      var data = {
+        name: name,
+        project_id: $rootScope.currentProject.id
+      };
+      return Collections.create(data)
+        .then(function(collection){
+          Projects.addCollection(collection);
+          return $scope.changeCollection(collection);
+        });
     };
 
     $scope.setEnvironment = function(environment){
@@ -119,14 +170,6 @@ angular.module('app').controller('EditorCtrl', [
       var position = $scope.endpoint.requestHeaders.indexOf( header );
       $scope.endpoint.requestHeaders.splice(position, 1);
     };
-
-    function resetResponse() {
-      $scope.response = {
-        status : -1,
-        statusText : '',
-        data : ''
-      };
-    }
 
     $scope.performRequest = function(){
       if( _.isEmpty($scope.endpoint.requestUrl) ) return;
@@ -313,9 +356,10 @@ angular.module('app').controller('EditorCtrl', [
       }
       $scope.endpoint.uuid = _.isEmpty(item.uuid) ? undefined : item.uuid;
       $scope.endpoint.requestHeaders = RequestUtility.getHeaders(item.headers, 'array');
-      $scope.response = null;
+      resetResponse();
       // Collection needs to be set
     };
+
     /*
      * Saves the request from scope to DB.
      */

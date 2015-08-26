@@ -1,33 +1,22 @@
   <button class="layout-column-sidebar project-box" ng-class="{expanded: layout.sidebarExpanded}"
           bs-dropdown data-template="projectMenu">
-    <h1>Current Project Name</h1>
+    <h1 data-title="{{currentProject.name}}" placement="bottom"
+        bs-tooltip>{{currentProject.name}}</h1>
+
     <span class="caret"></span>
   </button>
   <script type="text/ng-template" id="projectMenu">
     <ul class="dropdown-menu dropdown-menu-project">
       <li>
-        <a>
+        <a ui-sref="projectcreateoropen">
           <span class="fa fa-fw fa-file"></span>
           Switch Project
-          <span class="dropdown-menu-hotkey">{{'OSX' ? '&#8984;N' : 'Ctrl+N'}}</span>
         </a>
       </li>
       <li>
         <a>
           <span class="fa fa-fw fa-pencil"></span>
           Rename
-        </a>
-      </li>
-      <li>
-        <a>
-          <span class="fa fa-upload"></span>
-          Import from Postman
-        </a>
-      </li>
-      <li>
-        <a>
-          <span class="fa fa-fw fa-share"></span>
-          Share project
         </a>
       </li>
     </ul>

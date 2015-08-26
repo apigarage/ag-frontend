@@ -8,12 +8,10 @@ angular.module('app')
   '$window',
   function ($scope, $rootScope, $window){
 
-    $scope.selectItem = function(item){
-      // Used for highlighting the currently selected item
-      $rootScope.selectedItemUID = item.uuid;
-      $rootScope.selectedCollectionId = item.collection_id;
-
-      // Used for loading the endpoint the editor
+    $scope.selectItem = function(item, collection){
+      // These assignments are used for loading the endpoint in the editor
+      $rootScope.currentCollection = collection;
+      $rootScope.currentItem = item;
       $rootScope.$broadcast('loadPerformRequest', item);
     };
 

@@ -17,23 +17,37 @@ describe('Controller: SideBar', function() {
     });
   }));
 
-  describe('setItem', function(){
+  describe('selectItem', function(){
     beforeEach(function(){
+      collection = {
+        id: 10
+      };
       item = {
         uuid: 'uuid-uuid-uuid-uuid-1',
         collection_id: '2'
       };
     });
 
-    describe('When all the values are set', function(){
+    describe('When only item value is set', function(){
       beforeEach(function(){
         $scope.selectItem(item);
       });
 
       it('it will set correct values', function(){
         $scope.$apply();
-        expect($rootScope.selectedItemUID).toBe(item.uuid);
-        expect($rootScope.selectedCollectionId).toBe(item.collection_id);
+        expect($rootScope.currentItem.id).toEqual(item.id);
+        expect($rootScope.currentCollection).not.toBeDefined();
+      });
+    });
+    describe('When all the values are set', function(){
+      beforeEach(function(){
+        $scope.selectItem(item, collection);
+      });
+
+      it('it will set correct values', function(){
+        $scope.$apply();
+        expect($rootScope.currentItem.id).toEqual(item.id);
+        expect($rootScope.currentCollection.id).toEqual(collection.id);
       });
     });
   });

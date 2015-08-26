@@ -18,7 +18,7 @@
     <!-- EXISTING ENDPOINTS -->
     <ul class="sidebar-list-parent">
       <li class="sidebar-list-parent-item" ng-repeat="collection in currentProject.collections">
-        <div class="sidebar-list-parent-item-container">
+        <div class="sidebar-list-parent-item-container" ng-class="{'sidebar-list-parent-item-selected':currentCollection.id==collection.id}">
           <a class="sidebar-list-item-menu" bs-dropdown data-template="sidebar-list-parent-item-menu" data-placement="auto bottom-right" data-container=".sidebar">
             <span class="fa fa-fw fa-lg fa-ellipsis-h"></span>
           </a>
@@ -28,7 +28,8 @@
           </a>
         </div>
         <ul class="sidebar-list-child" ng-show="expandGroup">
-          <li class="sidebar-list-child-item" ng-repeat="item in collection.items" ng-click="selectItem(item)">
+          <li class="sidebar-list-child-item" ng-repeat="item in collection.items" ng-click="selectItem(item, collection)"
+            ng-class="{'sidebar-list-child-item-selected':currentItem.id==item.id}">
             <a class="sidebar-list-item-menu" bs-dropdown data-template="sidebar-list-child-item-menu" data-placement="auto bottom-right" data-container=".sidebar">
               <span class="fa fa-fw fa-lg fa-ellipsis-h"></span>
             </a>
@@ -36,7 +37,8 @@
           </li>
         </ul>
       </li>
-      <li class="sidebar-list-child-item" ng-repeat="item in currentProject.items" ng-click="selectItem(item)">
+      <li class="sidebar-list-child-item" ng-repeat="item in currentProject.items" ng-click="selectItem(item, null)"
+        ng-class="{'sidebar-list-child-item-selected':currentItem.id==item.id}">
         <a class="sidebar-list-item-menu" bs-dropdown data-template="sidebar-list-child-item-menu" data-placement="auto bottom-right" data-container=".sidebar">
           <span class="fa fa-fw fa-lg fa-ellipsis-h"></span>
         </a>

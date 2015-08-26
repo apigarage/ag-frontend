@@ -39,6 +39,7 @@
     }
 
     // Now, input is definitely an array (), convert into outputStyle.
+    outputStyle = outputStyle.toLowerCase();
     switch (outputStyle) {
       case 'array':
         return input;

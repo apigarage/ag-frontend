@@ -15,6 +15,7 @@ describe('Controller: LayoutController', function() {
     $httpBackend = $injector.get('$httpBackend');
     HttpBackendBuilder = $injector.get('HttpBackendBuilder');
     ProjectsFixtures = $injector.get('ProjectsFixtures');
+    _ = $injector.get('lodash');
 
     $httpBackend.when('GET',/.*html.*/).respond(200, '');
 
@@ -46,9 +47,13 @@ describe('Controller: LayoutController', function() {
     it('If the current project id is valid, load the project', function(){
       expect($rootScope.currentProject).toBeDefined();
       expect($rootScope.currentProject.collections).toBeDefined();
-      expect($rootScope.currentProject.collections.length).toEqual(2);
+      expect(_.isObject($rootScope.currentProject.collections)).toEqual(true);
+      Object.keys($rootScope.currentProject.collections).forEach(function(key){
+        var collection = $rootScope.currentProject.collections[key];
+        expect(_.isObject(collection.items)).toEqual(true);
+      });
       expect($rootScope.currentProject.items).toBeDefined();
-      expect($rootScope.currentProject.items.length).toEqual(1);
+      expect(_.isObject($rootScope.currentProject.items)).toEqual(true);
     });
 
     it('Sidebar is not expanded', function(){

@@ -14,10 +14,8 @@ angular.module('app').controller('LayoutCtrl', [
       historyMaximized: false
     };
 
-    // TODO - HARD CODED UNTIL THE PROJECT SCREEN.
-    // $rootScope.currentProjectId = 4;
+    if(!$rootScope.currentProjectId) $state.go('projectcreateoropen');
     return Projects.loadProjectToRootScope($rootScope.currentProjectId);
-
   }
 
 
