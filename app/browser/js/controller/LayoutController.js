@@ -3,9 +3,10 @@ angular.module('app').controller('LayoutCtrl', [
   '$rootScope',
   '$modal',
   '$state',
+  '$window',
   'Projects',
   'Auth',
-  function ($scope, $rootScope, $modal, $state, Projects, Auth){
+  function ($scope, $rootScope, $modal, $state, $window, Projects, Auth){
 
   init();
 
@@ -18,9 +19,27 @@ angular.module('app').controller('LayoutCtrl', [
     return Projects.loadProjectToRootScope($rootScope.currentProjectId);
   }
 
+  var onlineStatus = {};
+
+  onlineStatus.onLine = $window.navigator.onLine;
+
+  onlineStatus.isOnline = function() {
+      return onlineStatus.onLine;
+  };
+
+  $window.addEventListener("online", function () {
+      onlineStatus.onLine = true;
+      $rootScope.$digest();
+  }, true);
+
+  $window.addEventListener("offline", function () {
+      onlineStatus.onLine = false;
+      $rootScope.$digest();
+  }, true);
+
   $scope.$watch(
     function(){
-      return Auth.onlineStatus.isOnline();
+      return onlineStatus.isOnline();
     },
     function(online){
       $scope.online = online;

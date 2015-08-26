@@ -74,31 +74,12 @@ angular.module('app')
       $rootScope.forgotPassword = status;
     };
 
-    var onlineStatus = {};
-
-    onlineStatus.onLine = $window.navigator.onLine;
-
-    onlineStatus.isOnline = function() {
-        return onlineStatus.onLine;
-    };
-
-    $window.addEventListener("online", function () {
-        onlineStatus.onLine = true;
-        $rootScope.$digest();
-    }, true);
-
-    $window.addEventListener("offline", function () {
-        onlineStatus.onLine = false;
-        $rootScope.$digest();
-    }, true);
-
     return{
       get: loadAccessToken, // get access token.
       set: setAccessToken, // set access token. it also saves it to the browser.
       login: login, // login the user
       logout: logout, // logout the user
       forgotPasswordNotify : forgotPasswordNotify,
-      setForgotPassword : setForgotPassword,
-      onlineStatus : onlineStatus
+      setForgotPassword : setForgotPassword
     };
   }]);
