@@ -1,7 +1,8 @@
   <div class="history noselect" ng-class="{expanded: layout.sidebarExpanded, maximized: layout.historyMaximized}"
        ng-controller="HistoryCtrl">
 
-    <h1 ng-click="toggleHistory()" bs-tooltip data-title="{{'OSX' ? '&#8984;H' : 'Ctrl+H'}}">
+    <!-- <h1 ng-click="toggleHistory()" bs-tooltip data-title="{{'OSX' ? '&#8984;H' : 'Ctrl+H'}}"> -->
+    <h1 ng-click="toggleHistory()">
       <span class="fa" ng-class="layout.historyMaximized ? 'fa-minus-square-o' : 'fa-plus-square-o'"></span>
       REQUEST HISTORY
     </h1>
@@ -14,7 +15,8 @@
       <a ng-click="loadPerformRequest(lastRequest.time, true)">{{lastRequest.url}}</a>
     </div>
 
-    <a class="history-expand-icon" ng-click="toggleHistory()" bs-tooltip data-title="{{'OSX' ? '&#8984;H' : 'Ctrl+H'}}">
+    <!-- <a class="history-expand-icon" ng-click="toggleHistory()" bs-tooltip data-title="{{'OSX' ? '&#8984;H' : 'Ctrl+H'}}"> -->
+    <a class="history-expand-icon" ng-click="toggleHistory()">
       {{ layout.historyMaximized ? 'Collapse' : 'Expand' }}
       <span class="fa" ng-class="layout.historyMaximized ? 'fa-times-circle' : 'fa-external-link'"></span>
     </a>
