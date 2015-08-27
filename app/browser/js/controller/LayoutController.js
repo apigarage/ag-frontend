@@ -8,45 +8,33 @@ angular.module('app').controller('LayoutCtrl', [
   'Auth',
   function ($scope, $rootScope, $modal, $state, $window, Projects, Auth){
 
-  init();
 
   function init(){
     $scope.layout = {
       sidebarExpanded: false,
       historyMaximized: false
     };
+    $scope.online = $window.navigator.onLine;
+    $scope.setConnectionStatus($scope.online);
     if(!$rootScope.currentProjectId) $state.go('projectcreateoropen');
     return Projects.loadProjectToRootScope($rootScope.currentProjectId);
   }
 
-  var onlineStatus = {};
-
-  onlineStatus.onLine = $window.navigator.onLine;
-
-  onlineStatus.isOnline = function() {
-      return onlineStatus.onLine;
-  };
-
   $window.addEventListener("online", function () {
-      onlineStatus.onLine = true;
+      $scope.setConnectionStatus(true);
       $rootScope.$digest();
   }, true);
 
   $window.addEventListener("offline", function () {
-      onlineStatus.onLine = false;
+      $scope.setConnectionStatus(false);
       $rootScope.$digest();
   }, true);
 
-  $scope.$watch(
-    function(){
-      return onlineStatus.isOnline();
-    },
-    function(online){
+  $scope.setConnectionStatus = function (online){
       $scope.online = online;
-      $scope.ConnectionStatus = "Offline";
-      if($scope.online) $scope.ConnectionStatus = "Online";
-    }
-  );
+      $scope.connectionStatus = "Offline";
+      if($scope.online) $scope.connectionStatus = "Online";
+  };
 
   $scope.refreshProject = function(){
     Projects.loadProjectToRootScope($rootScope.currentProjectId);
@@ -64,4 +52,7 @@ angular.module('app').controller('LayoutCtrl', [
     require('shell').openExternal(link);
   };
 
+
+    init();
+    
 }]);
