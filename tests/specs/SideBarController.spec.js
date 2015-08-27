@@ -4,48 +4,45 @@ describe('Controller: SideBar', function() {
 
   var $rootScope, $scope, $controller;
 
-  beforeEach(module('app'));
+  beforeEach(function(){
+    localStorage.clear();
+    module('app');
+    module('ngMockE2E'); //<-- IMPORTANT! Without this line of code,
+      // it will not load templates, and will break the test infrastructure.
+  });
 
   beforeEach(inject(function($injector){
     $rootScope = $injector.get('$rootScope');
     $controller = $injector.get('$controller');
+    Projects = $injector.get('Projects');
+    HttpBackendBuilder = $injector.get('HttpBackendBuilder');
+    $httpBackend = $injector.get('$httpBackend');
     $scope = $rootScope.$new();
+    ProjectsFixtures = $injector.get('ProjectsFixtures');
 
     $controller('SidebarCtrl', {
       $scope: $scope,
       $rootScope: $rootScope
     });
+
+    // This allows all the html requests for templates to go to server.
+    // Also, passThrough() is not working, so we are using response()
+    // and returning nothing. It should not affect our testing as we
+    // are only testing controllers (and not html).
+    $httpBackend.when('GET',/.*html.*/).respond(200, '');
   }));
 
   describe('When searching', function(){
-    var collections = {
-      "1": {
-        "id": 1,
-        "name": "Fruit",
-        "items": {
-          "uuid-1": {
-            "id": 3,
-            "uuid": "uuid-1",
-            "name": "Banana"
-          },
-          "uuid-2": {
-            "id": 5,
-            "uuid": "uuid-2",
-            "name": "Apple"
-          },
-          "uuid-5": {
-            "id": 8,
-            "uuid": "uuid-5",
-            "name": "Grape"
-          }
-        }
-      }
-    };
     beforeEach(function(){
+      var p = ProjectsFixtures.get('searchProject');
+      var pStub = ProjectsFixtures.getStub('retrieveProjectForSearch');
+      HttpBackendBuilder.build(pStub.request, pStub.response);
       $rootScope.currentProject = {};
       $rootScope.currentProject.collections = {};
-      $rootScope.currentProject.collections = collections;
       $scope.search = "Grape";
+      Projects.loadProjectToRootScope(p.id);
+      $httpBackend.flush();
+      $scope.$apply();
     });
 
     afterEach(function(){
@@ -55,14 +52,24 @@ describe('Controller: SideBar', function() {
 
     it('will find values on project refresh', function(){
       $scope.$apply();
-      var result = $scope.searchResultsCollection[1].items['uuid-5'].name;
+      var result;
+      try {
+        result = $scope.searchResultsCollection[1].items['uuid-5'].name;
+      } catch (e) {
+        result = "Not Found";
+      }
       expect(result).toBe("Grape");
     });
 
     it('will find values', function(){
       $scope.$apply();
       $scope.searchFilter("Grape");
-      var result = $scope.searchResultsCollection[1].items['uuid-5'].name;
+      var result;
+      try {
+        result = $scope.searchResultsCollection[1].items['uuid-5'].name;
+      } catch (e) {
+        result = "Not Found";
+      }
       expect(result).toBe("Grape");
     });
 

@@ -65,6 +65,15 @@ angular.module('app')
         "name": "New collection Empty project",
         "project_id": "1",
         "description": "Use to test newly created collections"
+      },
+      "searchCollection":{
+        "id": 1,
+        "name": "Fruit",
+        items : [
+          ItemsFixtures.get('item1'),
+          ItemsFixtures.get('item2'),
+          ItemsFixtures.get('itemForSearch')
+        ]
       }
     };
 
