@@ -29,7 +29,7 @@
         </div>
         <ul class="sidebar-list-child" ng-show="expandGroup">
           <li class="sidebar-list-child-item" ng-repeat="item in collection.items " ng-click="selectItem(item, collection)"
-            ng-class="{'sidebar-list-child-item-selected':currentItem.id==item.id}">
+            ng-class="{'sidebar-list-child-item-selected' : currentItem.uuid==item.uuid}">
             <a class="sidebar-list-item-menu" bs-dropdown data-template="sidebar-list-child-item-menu" data-placement="auto bottom-right" data-container=".sidebar">
               <span class="fa fa-fw fa-lg fa-ellipsis-h"></span>
             </a>
@@ -38,7 +38,7 @@
         </ul>
       </li>
       <li class="sidebar-list-child-item" ng-repeat="item in collection.items" ng-click="selectItem(item, null)"
-        ng-class="{'sidebar-list-child-item-selected':currentItem.id==item.id}">
+        ng-class="{'sidebar-list-child-item-selected' : currentItem.uuid==item.uuid}">
         <a class="sidebar-list-item-menu" bs-dropdown data-template="sidebar-list-child-item-menu" data-placement="auto bottom-right" data-container=".sidebar">
           <span class="fa fa-fw fa-lg fa-ellipsis-h"></span>
         </a>

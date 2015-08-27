@@ -74,6 +74,7 @@ angular.module('app')
       try {
         result = name.toLowerCase().search(search.toLowerCase());
       } catch (e) {
+        console.log("search", search);
         result = 0;
       }
       return (result > -1);
