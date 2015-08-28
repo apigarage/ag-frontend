@@ -13,3 +13,7 @@ out how to watch for changes in the Service variables.
 PromptCtrl should be a directive
 ================================
 Prompt Controller should be a directive. It would be very easy to manage that way.
+
+$rootScope.currentItem should be upadted only from the broadcast listener
+=========================================================================
+Prompt Controller should be a directive. It would be very easy to manage that way.

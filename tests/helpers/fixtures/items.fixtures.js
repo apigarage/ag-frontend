@@ -63,10 +63,10 @@ angular.module('app')
         'uuid': 'uuid-uuid-uuid-uuid-2',
         'url': 'https://abx.xyz',
         'method': 'POST',
-        'headers': JSON.stringify([
-          {'key1': 'value1'},
-          {'key2': 'value2'}
-        ]),
+        'headers': {
+          'key1': 'value1',
+          'key2': 'value2'
+        },
         'data': 'some data to be sent'
       },
       "itemForSearch":{
@@ -99,6 +99,92 @@ angular.module('app')
             items.get('item2'),
             items.get('item3')
           ]),
+          statusText : 'OK',
+        }
+      },
+      "createItemWithFullDetails":{
+        request : {
+          method : 'POST',
+          url : Config.url + 'api/items',
+          data : JSON.stringify({
+            url: items.get('itemWithFullDetails').url,
+            name: items.get('itemWithFullDetails').name,
+            method: items.get('itemWithFullDetails').method,
+            data: items.get('itemWithFullDetails').data,
+            uuid: items.get('itemWithFullDetails').uuid,
+            headers: items.get('itemWithFullDetails').headers,
+            id: items.get('itemWithFullDetails').id,
+            collection_id: '2'
+          }),
+          headers : {
+            "Content-Type":"application/json;charset=utf-8",
+          }
+        },
+        response : {
+          status : 201,
+          data: JSON.stringify(
+            items.get('itemWithFullDetails')
+          ),
+          statusText : 'OK',
+        }
+      },
+      "createItemWithFullDetailsNameUpdated":{
+        request : {
+          method : 'PATCH',
+          url : Config.url + 'api/items/' + items.get('itemWithFullDetails').uuid,
+          data : JSON.stringify({
+            url: items.get('itemWithFullDetails').url,
+            name: items.get('itemWithFullDetails').name + 'updated',
+            method: items.get('itemWithFullDetails').method,
+            data: items.get('itemWithFullDetails').data,
+            uuid: items.get('itemWithFullDetails').uuid,
+            headers: items.get('itemWithFullDetails').headers
+          }),
+          headers : {
+            "Content-Type":"application/json;charset=utf-8",
+          }
+        },
+        response : {
+          status : 200,
+          data : JSON.stringify({
+            url: items.get('itemWithFullDetails').url,
+            name: items.get('itemWithFullDetails').name + 'updated',
+            method: items.get('itemWithFullDetails').method,
+            data: items.get('itemWithFullDetails').data,
+            uuid: items.get('itemWithFullDetails').uuid,
+            headers: items.get('itemWithFullDetails').headers,
+            collection_id: '2'
+          }),
+          statusText : 'OK',
+        }
+      },
+      "createItemWithFullDetailsHeadersUpdated":{
+        request : {
+          method : 'PATCH',
+          url : Config.url + 'api/items/' + items.get('itemWithFullDetails').uuid,
+          data : JSON.stringify({
+            url: items.get('itemWithFullDetails').url,
+            name: items.get('itemWithFullDetails').name,
+            method: items.get('itemWithFullDetails').method,
+            data: items.get('itemWithFullDetails').data,
+            uuid: items.get('itemWithFullDetails').uuid,
+            headers: {}
+          }),
+          headers : {
+            "Content-Type":"application/json;charset=utf-8",
+          }
+        },
+        response : {
+          status : 201,
+          data : JSON.stringify({
+            url: items.get('itemWithFullDetails').url,
+            name: items.get('itemWithFullDetails').name,
+            method: items.get('itemWithFullDetails').method,
+            data: items.get('itemWithFullDetails').data,
+            uuid: items.get('itemWithFullDetails').uuid,
+            headers: [],
+            collection_id: '2'
+          }),
           statusText : 'OK',
         }
       },

@@ -29,7 +29,7 @@
         </button>
       </div>
       <div class="editor-titles">
-        <h2 bs-dropdown data-template="editor-category">
+        <h2 bs-dropdown data-template="editor-category" id="editor-category">
           <button ng-hide="currentCollection.name">
             Select Category
             <span class="caret"></span>
@@ -38,6 +38,9 @@
             {{currentCollection.name}}
             <span class="caret"></span>
           </button>
+          <span class="authentication-validation" ng-show="showCategoryMissingErrorMessage">
+            Select or create a category for the request.
+          </span>
         </h2>
         <h1 id="editor-title">
           <input type="text" class="content-editable"
