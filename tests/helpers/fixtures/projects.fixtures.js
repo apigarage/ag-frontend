@@ -69,6 +69,13 @@ angular.module('app')
         "name": "Project 3",
         "description": "This is a perfectly fine project.",
       },
+      "searchProject":{
+        "id": "1",
+        "name": "Search Project",
+        "collections":[
+          CollectionsFixtures.get('searchCollection'),
+        ]
+      }
     };
 
     projects.list = {
@@ -165,6 +172,20 @@ angular.module('app')
           status : 200,
           data: JSON.stringify(
             projects.get('projectWithTwoCollectionNoItems')
+          ),
+          statusText : 'OK',
+        }
+      },
+      "retrieveProjectForSearch": {
+        request : {
+          method : 'GET',
+          url : Config.url + 'api/projects/' +
+            projects.get('searchProject').id,
+        },
+        response : {
+          status : 200,
+          data: JSON.stringify(
+            projects.get('searchProject')
           ),
           statusText : 'OK',
         }

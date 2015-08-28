@@ -68,6 +68,10 @@ angular.module('app')
           {'key2': 'value2'}
         ]),
         'data': 'some data to be sent'
+      },
+      "itemForSearch":{
+        'name': 'Grape',
+        'uuid': 'uuid-5'
       }
     };
 
@@ -104,7 +108,7 @@ angular.module('app')
           url : Config.url + 'api/items/' +
             items.get('item1').uuid,
           data : JSON.stringify({
-            'collection_id': "2" 
+            'collection_id': "2"
           }),
           headers : {
             "Content-Type":"application/json;charset=utf-8",
