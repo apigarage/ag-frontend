@@ -19,7 +19,9 @@
   function ($stateProvider,   $urlRouterProvider,   $controllerProvider,   $compileProvider,   $filterProvider,   $provide,   $tooltipProvider,   $dropdownProvider) {
 
     var defaultView = '/authentication';
-    if( localStorage.getItem('accessToken') ){
+
+    var access_token_key = env.access_token_key; // getting env from the window
+    if( localStorage.getItem(access_token_key) ){
       defaultView = '/projectcreateoropen';
     }
 

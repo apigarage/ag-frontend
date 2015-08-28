@@ -13,7 +13,9 @@ angular.module('app')
     function($q, $http, $window, $rootScope, Config, History){
 
     var accessToken = null;
-    var accessTokenStorageKey = 'accessToken';
+
+    // Configurable so that we can use all the environment at the same time
+    var accessTokenStorageKey = Config.access_token_key;
 
     var loadAccessToken = function() {
       return $window.localStorage.getItem(accessTokenStorageKey);

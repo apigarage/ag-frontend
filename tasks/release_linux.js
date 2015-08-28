@@ -56,7 +56,7 @@
     packDir.write('usr/share/applications/' + manifest.name + '.desktop', desktop);
 
     // Copy icon
-    projectDir.copy('resources/icon.png', readyAppDir.path('icon.png'));
+    projectDir.copy('resources/icon-128.png', readyAppDir.path('icon-128.png'));
 
     return Q(); // jshint ignore:line
   };
