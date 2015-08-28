@@ -7,8 +7,9 @@ angular.module('app')
       '$rootScope',
       '$q',
       'ApiRequest',
+      'UUID',
       'Config',
-      function($rootScope, $q, ApiRequest, Config){
+      function($rootScope, $q, ApiRequest, UUID, Config){
     var endpoint = 'items';
 
     var Item = {};
@@ -54,6 +55,7 @@ angular.module('app')
      * @data: object fields and values
      */
      Item.create = function(data){
+       data.uuid = UUID.generate();
        var options = {
          'method': 'POST',
          'url': Config.url + Config.api + endpoint,

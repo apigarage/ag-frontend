@@ -18,6 +18,22 @@ Controller On Load Assignments
 Set the rootScope values before constructing the controllers.
 For example, checkout LayoutController.spec.js
 
+How to load project, collection and items in the current test
+-------------------------------------------------------------
+```
+p = ProjectsFixtures.get('projectWithTwoCollectionNoItems');
+pStub = ProjectsFixtures.getStub('retrieveProjectWithTwoCollectionNoItems');
+HttpBackendBuilder.build(pStub.request, pStub.response);
+Projects.loadProjectToRootScope(p.id);
+
+c = CollectionsFixtures.get('collectionWithOneItems');
+$rootScope.currentCollection = c;
+
+i = ItemsFixtures.get('itemWithFullDetails');
+
+$httpBackend.flush();
+```
+
 Known Errors
 ============
 http (template) pages are not loaded inside the tests

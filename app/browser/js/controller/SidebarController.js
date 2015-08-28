@@ -78,5 +78,12 @@ angular.module('app')
       }
       return (result > -1);
     }
+
+    $scope.newRequest = function(){
+      $rootScope.$broadcast('loadPerformRequest', {});
+      $rootScope.currentCollection = {};
+      $rootScope.currentItem = {};
+    };
+
   }
 ]);

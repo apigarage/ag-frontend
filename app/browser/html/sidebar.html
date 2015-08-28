@@ -3,7 +3,8 @@
 
     <!-- NEW ENDPOINT BUTTON -->
     <button type="button" class="btn btn-default btn-block sidebar-new"
-            bs-tooltip data-title="{{ (navigator.appVersion.indexOf('Mac')!=-1) ? '&#8984;N' : 'Ctrl+N'}}" data-placement="bottom">
+            bs-tooltip data-title="{{ (navigator.appVersion.indexOf('Mac')!=-1) ? '&#8984;N' : 'Ctrl+N'}}" data-placement="bottom"
+            ng-click="newRequest()">
       <span class="glyphicon glyphicon-plus"></span>
       New Endpoint
     </button>

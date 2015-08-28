@@ -10,9 +10,11 @@ angular.module('app')
     'ApiRequest',
     'RequestUtility',
     'Config',
+    'UUID',
     'Collections',
     'Items',
-    function($rootScope, $q, _, ApiRequest, RequestUtility, Config, Collections, Items){
+    function($rootScope, $q, _, ApiRequest, RequestUtility, Config, UUID,
+      Collections, Items){
 
       var endpoint = 'projects';
 
@@ -156,41 +158,21 @@ angular.module('app')
       };
 
       /*
-      * adds item to project.items array
-      */
-      // Project.addItem = function(item){
-      //   // TODO - Add to DB
-      //   if(!_.isArray($rootScope.items)){
-      //     $rootScope.itemjs = [];
-      //   }
-      //   return $rootScope.items.push(item);
-      // };
-
-      /*
-      * remove item from project.items array
-      */
-      // Project.removeItem = function(itemUUID){
-      //   // TODO - Remove from DB
-      //   if(!_.isArray($rootScope.items)) return false;
-      //   $rootScope.items = _.reject($rootScope.items, function(item){
-      //     return (item.uuid === itemUUID);
-      //   });
-      //   return true;
-      // };
-
-      /*
       * add item to given collectionId inside project.collections array
       */
-      // Project.addItemToCollection = function(collectionId, item){
-      //   // TODO - Add to DB
-      //   if(!_.isArray($rootScope.collections)) return false;
-      //
-      //   $rootScope.collections.forEach(function(collection, index, array){
-      //     if(collection.id !== collectionId) return;
-      //     if(!_.isArray(collection.items)) array.items = [];
-      //     array.items.push(item);
-      //   });
-      // };
+      Project.addItemToCollection = function(collectionId, item){
+
+        if(_.isEmpty($rootScope.currentProject.collections)) return false;
+        if(_.isEmpty($rootScope.currentProject.collections[collectionId].items)){
+          $rootScope.currentProject.collections[collectionId].items = {};
+        }
+
+        item.collection_id = collectionId;
+        return Items.create(item).then(function(data){
+          $rootScope.currentProject.collections[collectionId].items[data.uuid] = data;
+          return data;
+        });
+      };
 
       /*
       * remove item from given collectionId inside project.collections array
@@ -209,38 +191,44 @@ angular.module('app')
       // };
 
       /*
-      * update item from collectionId, project.collections array
-      * if changes.newCollectionId ---> Changes the owner collection of the item
-      * if changes.name ---> Changes name of the item
-      * if changes.description ---> Changes description of the item
-      * if changes.headers ---> Changes headers of the item
-      * if changes.body ---> Changes body of the item
-      * if changes.method ---> Changes method of the item
+      * Update item from collectionId (project.collections object)
+      * @collectionId = collection where item belongs to
+      * @item = item to be updated
       */
-      Project.updateItem = function(collectionId, itemUUID, changes){
-        var data = changes; // Used for API Payload. Assigns name, headers, data, description.
-        var item = $rootScope.currentProject.collections[collectionId].items[itemUUID];
+      Project.updateItemInCollection = function(collectionId, item){
+        // Reset the item in the collection
+        $rootScope.currentProject.collections[collectionId].items[item.uuid] = item;
+        var data = {
+          name: item.name,
+          headers: item.headers,
+          data: item.data,
+          url: item.url,
+          method: item.method
+        };
 
-        if(changes.newCollectionId){
-          // When collections does not have any items
-          if(! _.isObject($rootScope.currentProject.collections[changes.newCollectionId].items)){
-            $rootScope.currentProject.collections[changes.newCollectionId].items = {};
-          }
+        return Items.update(item.uuid, item);
+      };
 
-          // The item is moved from to new collection.
-          $rootScope.currentProject.collections[changes.newCollectionId].items[itemUUID] = item;
-          delete $rootScope.currentProject.collections[collectionId].items[itemUUID];
 
-          // Assign data for DB update
-          data.collection_id = changes.newCollectionId;
-          delete data.newCollectionId;
+      Project.setNewCollectionForItem = function(oldCollectionId, newCollectionId, itemUUID){
+        var item = $rootScope.currentProject.collections[oldCollectionId].items[itemUUID];
+
+        // When the new collection does not have any items, create a new object
+        if(! _.isObject($rootScope.currentProject.collections[newCollectionId].items)){
+          $rootScope.currentProject.collections[newCollectionId].items = {};
         }
 
-        if(changes.headers){
-          data.headers = RequestUtility.getHeaders(changes.headers, 'string');
-          // TODO - do headers transformation using RequestUtility
-        }
+        // The item is removed from the old collection
+        delete $rootScope.currentProject.collections[oldCollectionId].items[itemUUID];
 
+        // Reset the item in the new collection
+        item.collection_id = newCollectionId;
+        $rootScope.currentProject.collections[newCollectionId].items[itemUUID] = item;
+
+        // Make the DB Changes
+        var data = {
+          collection_id : newCollectionId
+        };
         return Items.update(itemUUID, data);
       };
 

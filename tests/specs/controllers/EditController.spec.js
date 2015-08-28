@@ -20,6 +20,7 @@ describe('Controller: EditController', function() {
     ProjectsFixtures = $injector.get('ProjectsFixtures');
     RequestStubs = $injector.get('RequestStubs');
     RequestUtility = $injector.get('RequestUtility');
+    UUID = $injector.get('UUID');
 
     $controller('EditorCtrl', {
       $scope: $scope,
@@ -470,7 +471,7 @@ describe('Controller: EditController', function() {
 
       it('loads request', function(){
         var url = $scope.endpoint.url;
-        $rootScope.currentItem = endpoint;
+        $rootScope.$broadcast('loadPerformRequest', endpoint);
         $scope.$apply();
         expect($scope.endpoint.requestUrl).toEqual(endpoint.url);
         expect($scope.response).toEqual(null);
@@ -479,7 +480,7 @@ describe('Controller: EditController', function() {
       describe('When the data is undefined', function(){
         it('sets the data to empty string', function(){
           endpoint.data = undefined;
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect($scope.endpoint.requestBody).toEqual("");
           expect($scope.response).toEqual(null);
@@ -489,7 +490,7 @@ describe('Controller: EditController', function() {
       describe('When the data is empty', function(){
         it('sets the data to empty string', function(){
           endpoint.data = "";
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect($scope.endpoint.requestBody).toEqual("");
           expect($scope.response).toEqual(null);
@@ -499,7 +500,7 @@ describe('Controller: EditController', function() {
       describe('When the data is valid, but request method is GET', function(){
         it('sets the data to empty string', function(){
           endpoint.data = "";
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect($scope.endpoint.requestBody).toEqual("");
           expect($scope.response).toEqual(null);
@@ -509,7 +510,7 @@ describe('Controller: EditController', function() {
       describe('When the data is an object', function(){
         it('sets the data to valid stringified value of the object', function(){
           endpoint.data = {"data":"is an object"};
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect($scope.endpoint.requestBody).toEqual(JSON.stringify(endpoint.data));
           expect($scope.response).toEqual(null);
@@ -519,7 +520,7 @@ describe('Controller: EditController', function() {
       describe('When the data is valid', function(){
         it('sets the data to valid value', function(){
           endpoint.data = "Some Data";
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect($scope.endpoint.requestBody).toEqual(endpoint.data);
           expect($scope.response).toEqual(null);
@@ -529,7 +530,7 @@ describe('Controller: EditController', function() {
       describe('When the headers are undefined', function(){
         it('sets the headers to an empty array', function(){
           endpoint.headers = undefined;
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
           expect($scope.endpoint.requestHeaders.length).toEqual(0);
@@ -540,7 +541,7 @@ describe('Controller: EditController', function() {
       describe('When the headers are empty string', function(){
         it('sets the headers to an empty array', function(){
           endpoint.headers = "";
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
           expect($scope.endpoint.requestHeaders.length).toEqual(0);
@@ -551,7 +552,7 @@ describe('Controller: EditController', function() {
       describe('When the headers are empty array stringified', function(){
         it('sets the headers to an empty array', function(){
           endpoint.headers = "[]";
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
           expect($scope.endpoint.requestHeaders.length).toEqual(0);
@@ -562,7 +563,7 @@ describe('Controller: EditController', function() {
       describe('When the headers are empty object', function(){
         it('sets the headers to an empty array', function(){
           endpoint.headers = {};
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
           expect($scope.endpoint.requestHeaders.length).toEqual(0);
@@ -573,7 +574,7 @@ describe('Controller: EditController', function() {
       describe('When the headers are empty object stringified', function(){
         it('sets the headers to an empty array', function(){
           endpoint.headers = {};
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
           expect($scope.endpoint.requestHeaders.length).toEqual(0);
@@ -584,7 +585,7 @@ describe('Controller: EditController', function() {
       describe('When the headers are filled object', function(){
         it('sets the headers to an array with two elements', function(){
           endpoint.headers = {key1: 'value1', key2: 'value2'};
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
           expect($scope.endpoint.requestHeaders.length).toEqual(2);
@@ -599,7 +600,7 @@ describe('Controller: EditController', function() {
       describe('When the headers are filled object stringified', function(){
         it('sets the headers to an array with two elements', function(){
           endpoint.headers = JSON.stringify({key1: 'value1', key2: 'value2'});
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
           expect($scope.endpoint.requestHeaders.length).toEqual(2);
@@ -614,7 +615,7 @@ describe('Controller: EditController', function() {
       describe('When the headers is an array with one element', function(){
         it('sets the headers to an array with one element', function(){
           endpoint.headers = [{'key': 'key1', 'value': 'value1'}];
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
           expect($scope.endpoint.requestHeaders.length).toEqual(1);
@@ -630,7 +631,7 @@ describe('Controller: EditController', function() {
             {'key': 'key1', 'value': 'value1'},
             {'key': 'key2', 'value': 'value2'}
           ];
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
           expect($scope.endpoint.requestHeaders.length).toEqual(2);
@@ -645,7 +646,7 @@ describe('Controller: EditController', function() {
       describe('When the headers is an array with one element stringified', function(){
         it('sets the headers to an array with one element', function(){
           endpoint.headers = JSON.stringify([{'key': 'key1', 'value': 'value1'}]);
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
           expect($scope.endpoint.requestHeaders.length).toEqual(1);
@@ -661,7 +662,7 @@ describe('Controller: EditController', function() {
             {'key': 'key1', 'value': 'value1'},
             {'key': 'key2', 'value': 'value2'}
           ]);
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect(Array.isArray($scope.endpoint.requestHeaders)).toEqual(true);
           expect($scope.endpoint.requestHeaders.length).toEqual(2);
@@ -676,7 +677,7 @@ describe('Controller: EditController', function() {
       describe('When the method is undefined', function(){
         it('sets the method to GET', function(){
           endpoint.method = undefined;
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect($scope.endpoint.requestMethod).toEqual('GET');
           expect($scope.response).toEqual(null);
@@ -686,7 +687,7 @@ describe('Controller: EditController', function() {
       describe('When the method is unknown', function(){
         it('sets the method to GET', function(){
           endpoint.method = 'GET-INVALID';
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect($scope.endpoint.requestMethod).toEqual('GET');
           expect($scope.response).toEqual(null);
@@ -696,7 +697,7 @@ describe('Controller: EditController', function() {
       describe('When the method is GET', function(){
         it('sets the method to GET', function(){
           endpoint.method = undefined;
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect($scope.endpoint.requestMethod).toEqual('GET');
           expect($scope.response).toEqual(null);
@@ -706,7 +707,7 @@ describe('Controller: EditController', function() {
       describe('When the method is anything other than GET (POST)', function(){
         it('sets the method to POST', function(){
           endpoint.method = 'POST';
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect($scope.endpoint.requestMethod).toEqual('POST');
           expect($scope.response).toEqual(null);
@@ -716,7 +717,7 @@ describe('Controller: EditController', function() {
       describe('When the uuid is set to undefined', function(){
         it('sets the uuid to undefined', function(){
           endpoint.uuid = undefined;
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect($scope.endpoint.uuid).toEqual(undefined);
           expect($scope.response).toEqual(null);
@@ -726,7 +727,7 @@ describe('Controller: EditController', function() {
       describe('When the uuid is set to empty string', function(){
         it('sets the uuid to undefined', function(){
           endpoint.uuid = undefined;
-          $rootScope.currentItem = endpoint;
+          $rootScope.$broadcast('loadPerformRequest', endpoint);
           $scope.$apply();
           expect($scope.endpoint.uuid).toEqual(undefined);
           expect($scope.response).toEqual(null);
@@ -820,6 +821,137 @@ describe('Controller: EditController', function() {
 
     });
 
+  });
+
+  describe('saveCurrentRequest', function(){
+    beforeEach(function(){
+      p = ProjectsFixtures.get('projectWithTwoCollectionNoItems');
+      pStub = ProjectsFixtures.getStub('retrieveProjectWithTwoCollectionNoItems');
+      HttpBackendBuilder.build(pStub.request, pStub.response);
+      Projects.loadProjectToRootScope(p.id);
+
+      c = CollectionsFixtures.get('collectionWithOneItems');
+
+      i = ItemsFixtures.get('itemWithFullDetails');
+
+      $httpBackend.flush();
+    });
+
+    describe('When name is not provided', function(){
+        xit('it will show the error message');
+    });
+
+    describe('When name is not provided', function(){
+        xit('it will focus the name');
+    });
+
+    describe('When the request is newly created request', function(){
+
+      beforeEach(function(){
+        $rootScope.$broadcast('loadPerformRequest', i);
+        $rootScope.currentCollection = c;
+        $scope.$apply();
+        delete $scope.endpoint.uuid;
+
+        // SPY ON FOR UUID GENERATOR. Otherwise, payload will be different than expected
+        spyOn(UUID, 'generate').and.returnValue(i.uuid);
+      });
+
+      describe('When all the details are provided', function(){
+
+        afterEach(function(){
+          $httpBackend.flush();
+        });
+
+        it('will create the item.', function(){
+          iStub = ItemsFixtures.getStub('createItemWithFullDetails');
+          HttpBackendBuilder.build(iStub.request, iStub.response);
+          $scope.saveCurrentRequest().then(function(){
+            expect($rootScope.currentProject.collections[c.id].items[i.uuid]).toBeDefined();
+          });
+        });
+
+      });
+
+      describe('When url is not provided', function(){
+        xit('will create the item without url');
+      });
+
+      describe('When data is not provided', function(){
+        xit('will create the item without data');
+      });
+
+      describe('When headers is not provided', function(){
+        xit('will create the item without headers');
+      });
+    });
+
+    describe('When request is being updated', function(){
+
+      beforeEach(function(){
+        $rootScope.$broadcast('loadPerformRequest', i);
+        $rootScope.currentCollection = c;
+        $scope.$apply();
+      });
+
+      describe('When name is upated', function(){
+
+        beforeEach(function(){
+          updatedName = $scope.endpoint.name += 'updated';
+        });
+
+        afterEach(function(){
+          $httpBackend.flush();
+        });
+
+        it('will update the item.', function(){
+          iStub = ItemsFixtures.getStub('createItemWithFullDetailsNameUpdated');
+          HttpBackendBuilder.build(iStub.request, iStub.response);
+          $scope.saveCurrentRequest().then(function(){
+            expect($rootScope.currentProject.collections[c.id].items[i.uuid]).toBeDefined();
+            expect($rootScope.currentProject.collections[c.id].items[i.uuid].name).toBe(updatedName);
+            expect($scope.endpoint.name).toBe(updatedName);
+          });
+        });
+
+      });
+
+      describe('When headers is upated', function(){
+
+        beforeEach(function(){
+          updatedHeaders = $scope.endpoint.requestHeaders = [];
+        });
+
+        afterEach(function(){
+          $httpBackend.flush();
+        });
+
+        it('will update the item.', function(){
+          iStub = ItemsFixtures.getStub('createItemWithFullDetailsHeadersUpdated');
+          HttpBackendBuilder.build(iStub.request, iStub.response);
+          $scope.saveCurrentRequest().then(function(){
+            expect($rootScope.currentProject.collections[c.id].items[i.uuid]).toBeDefined();
+            expect($rootScope.currentProject.collections[c.id].items[i.uuid].headers).toEqual({});
+            // ^^ Returned as an empty object from the server
+            expect($scope.endpoint.requestHeaders).toEqual(updatedHeaders);
+            // ^^ loadRequestToScope will convert into an empty array
+          });
+        });
+
+      });
+      describe('When url is updated', function(){
+        xit('will update the url');
+      });
+      describe('When description is updated', function(){
+        xit('will update the description');
+      });
+      describe('When method is updated', function(){
+        xit('will update the method');
+      });
+      describe('When data is updated', function(){
+        xit('will update the data');
+      });
+    });
   });
 
   describe('changeCollection', function(){

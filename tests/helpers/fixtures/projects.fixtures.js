@@ -1,5 +1,6 @@
 'use strict';
 angular.module('app')
+
 .factory('ProjectsFixtures', [
   '$httpBackend',
   'Config',
@@ -33,9 +34,6 @@ angular.module('app')
         "collections":[
           CollectionsFixtures.get('collectionWithTwoItems'),
           CollectionsFixtures.get('collectionWithOneItems')
-        ],
-        "items":[
-          ItemsFixtures.get('item1')
         ]
       },
       "projectWithNoCollectionsAndTwoItems": {

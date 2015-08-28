@@ -50,6 +50,11 @@ angular.module('app').controller('EditorCtrl', [
     function resetResponse(){
       $scope.response = null;
     }
+
+    function resetErrorMessages(){
+      $scope.showCategoryMissingErrorMessage = false;
+    }
+
     function init(){
       $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
 
@@ -88,10 +93,9 @@ angular.module('app').controller('EditorCtrl', [
       // Only run this line for NEW requests. This tells the user to name the request before doing anything else.
       $focus('editor-title');
 
-      showRequestHideCancelButtons();
-
+      resetErrorMessages();
       resetResponse();
-
+      showRequestHideCancelButtons();
       setDefaultEndpoint();
     }
 
@@ -101,11 +105,11 @@ angular.module('app').controller('EditorCtrl', [
     $scope.changeCollection = function(collection){
       var oldCollectionId = $rootScope.currentCollection.id;
       var newCollectionId = collection.id;
+      $scope.showCategoryMissingErrorMessage = false;
 
       $rootScope.currentCollection = collection;
       if($scope.endpoint.uuid){
-        var changes = { newCollectionId : newCollectionId };
-        return Projects.updateItem(oldCollectionId, $scope.endpoint.uuid, changes)
+        return Projects.setNewCollectionForItem(oldCollectionId, newCollectionId, $scope.endpoint.uuid)
           .then(function(data){
             console.log('Request Updated Successfully');
             // Some Sort of notification would be handy.
@@ -315,18 +319,8 @@ angular.module('app').controller('EditorCtrl', [
       }
     };
 
-    // TODO: Refactor obsolete code in order to maintain tests passing.
-    $scope.$watch(
-      function(){
-        return $rootScope.currentItem;
-      },
-      function(newValue, oldValue){
-        // Make sure if it's valid request.
-        if(newValue && newValue.url) $scope.loadRequestToScope(newValue);
-      }
-    );
-
     $rootScope.$on('loadPerformRequest', function(event, item, loadOnly) {
+      $rootScope.currentItem = item;
       if(_.isUndefined(loadOnly)) loadOnly = true;
       $scope.loadRequestToScope(item);
       if(!loadOnly) $scope.performRequest();
@@ -364,13 +358,28 @@ angular.module('app').controller('EditorCtrl', [
      * Saves the request from scope to DB.
      */
     $scope.saveCurrentRequest = function(){
-      var item = $scope.buildRequestOutOfScope();
-      console.log(item);
-      if( _.isEmpty(item.uuid)){ // Create a request
-        return; // TODO - Project.addItem() Or Project.addItemToCollection();
-      } else { // Update the request
-        return; // TODO - Project.updateItem() Or Project.updateItemToCollection();
+      resetErrorMessages();
+      if(_.isEmpty($scope.endpoint.name)){
+        return;
       }
+      if(_.isEmpty($rootScope.currentCollection)){
+        $scope.showCategoryMissingErrorMessage = true;
+        return;
+      }
+
+      var item = $scope.buildRequestOutOfScope();
+      var promise = null;
+
+      if( _.isEmpty(item.uuid) ){ // Create a request
+        promise = Projects.addItemToCollection($rootScope.currentCollection.id, item);
+      } else { // Update the request
+        promise = Projects.updateItemInCollection($rootScope.currentCollection.id, item);
+      }
+
+      return promise.then(function(item){
+        $rootScope.currentItem = item;
+        $rootScope.$broadcast('loadPerformRequest', item);
+      });
     };
 
     /*
@@ -384,7 +393,7 @@ angular.module('app').controller('EditorCtrl', [
       item.method = $scope.endpoint.requestMethod ;
       item.data = $scope.endpoint.requestBody;
       item.uuid = $scope.endpoint.uuid;
-      item.headers = RequestUtility.getHeaders($scope.endpoint.requestHeaders, 'string');
+      item.headers = RequestUtility.getHeaders($scope.endpoint.requestHeaders, 'object');
       return item;
     };
   }]);
