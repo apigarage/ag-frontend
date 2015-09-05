@@ -11,10 +11,13 @@ angular.module('app')
     'RequestUtility',
     'Config',
     'UUID',
+    'Environments',
+    'ProjectKeys',
+    'ProjectKeyValues',
     'Collections',
     'Items',
     function($rootScope, $q, _, ApiRequest, RequestUtility, Config, UUID,
-      Collections, Items){
+      Environments, ProjectKeys, ProjectKeyValues, Collections, Items){
 
       var endpoint = 'projects';
 
@@ -86,26 +89,10 @@ angular.module('app')
       Project.loadProjectToRootScope = function(id){
         return Project.get(id)
         .then(function(projectData){
-          // If there is any project transformations, it should happen here.
 
-          // Transforming project.collections from an array to an object.
-          // collection_id will be the key.
-          projectData.collections = _.reduce(projectData.collections, function(result, collection){
-            if(collection.id){
-
-              // Transforming collection.items from an array to an object.
-              // items.uuid will be the key.
-              collection.items = _.reduce(collection.items, function(itemResult, item){
-                if(item.uuid){
-                  itemResult[item.uuid] = item;
-                }
-                return itemResult;
-              }, {});
-              result[collection.id] = collection;
-
-            }
-            return result;
-          }, {});
+          projectData.collections = Collections.loadAll(projectData.collections);
+          projectData.keys = ProjectKeys.loadAll(projectData.keys);
+          projectData.environments = Environments.loadAll(projectData.environments);
 
           // Set the project to rootScope
           $rootScope.currentProject = projectData;
@@ -125,10 +112,19 @@ angular.module('app')
       //  * Uses $rootScope.currentProject to do the operations
       //  ****************************************************************
       //
+
+
+      //
+      // ****************************************************************
+      //  currentProject.collections Management
+      //  ****************************************************************
+      //
+
       /*
       * add collection to project.collections array
       */
       Project.addCollection = function(collection){
+        // TODO - Make DB call here, instead of in the contorller.
         if(!_.isObject($rootScope.currentProject.collections)){
           $rootScope.currentProject.collections = {};
         }
@@ -136,19 +132,22 @@ angular.module('app')
       };
 
       /*
-      * remove collection from project.collections array
+      * remove collection from project.collections object
       */
-      // Project.removeCollection = function(collectionId){
-      //   // TODO - Add to DB
-      //   if(!_.isObject($rootScope.collections)) return false;
-      //   delete $rootScope.collections[collectionId];
-      // };
+      Project.removeCollection = function(collectionId){
+        // TODO - Add to DB
+        // TODO - TEST THE FUNCTION. NEVER USED BEFORE.
+        if(!_.isObject($rootScope.collections)) return false;
+        delete $rootScope.collections[collectionId];
+      };
 
       /*
-      * update collection from project.collections array
+      * update collection from project.collections object
+      * only collection.name and collection.description can be updated.
       */
       Project.updateCollection = function(collectionId, data){
         // TODO - Add to DB
+        // TODO - TEST THE FUNCTION. NEVER USED BEFORE.
         if(data.description){
           $rootScope.currentProject.collections[collectionId].description = data.description;
         }
@@ -157,6 +156,13 @@ angular.module('app')
         }
       };
 
+
+      //
+      // ****************************************************************
+      //  currentProject.collections.items Management
+      //  ****************************************************************
+
+      //
       /*
       * add item to given collectionId inside project.collections array
       */
@@ -179,15 +185,7 @@ angular.module('app')
       */
       // Project.removeItemFromCollection = function(collectionId, itemUUID){
       //   // TODO - Remove from DB
-      //   if(!_.isArray($rootScope.collections)) return false;
-      //   $rootScope.collections.forEach(function(collection, collectionIndex, array){
-      //     if(collection.id !== collectionId) return;
-      //     if(!_.isArray(collection.items)) return;
-      //
-      //     array[collectionIndex].items = _.reject(collection.items, function(item){
-      //       return (item.uuid === itemUUID);
-      //     });
-      //   });
+      //   // TODO - Revemo item from the currentProject.collections[collectionId].items[itemUUID]
       // };
 
       /*
@@ -230,6 +228,53 @@ angular.module('app')
           collection_id : newCollectionId
         };
         return Items.update(itemUUID, data);
+      };
+
+
+      //
+      // ****************************************************************
+      //  currentProject.environments Management
+      //  ****************************************************************
+      //
+
+      Project.addNewEnvironment = function(environment){
+        return Environments.create($rootScope.currentProject.id, environment)
+          .then(function(){
+            // If no key exists, create a project keys.
+            if( _.isEmpty($rootScope.currentProject.keys)){
+              var variable = {name: ''};
+              return Project.addNewVariable(variable);
+            }
+          });
+      };
+
+      Project.updateEnvironment = function(environment){
+        var data = {
+          name: environment.name
+        };
+
+        return Environments.update($rootScope.currentProject.id, environment.id, data);
+      };
+
+      Project.addNewVariable = function(variable){
+        return ProjectKeys.create($rootScope.currentProject.id, variable);
+      };
+
+      Project.updateVariable = function(variable){
+        var data = {
+          name: variable.name
+        };
+
+        return ProjectKeys.update($rootScope.currentProject.id, variable.id, data);
+      };
+
+      Project.updateVariableEnvironmentValue = function(variableId, environmentId, value){
+        var data = {
+          'value': value
+        };
+        return ProjectKeyValues.update(
+          $rootScope.currentProject.id, variableId, environmentId, data
+        );
       };
 
       return Project;

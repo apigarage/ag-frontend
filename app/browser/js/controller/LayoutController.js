@@ -54,5 +54,5 @@ angular.module('app').controller('LayoutCtrl', [
 
 
     init();
-    
+
 }]);

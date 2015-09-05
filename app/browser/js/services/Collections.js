@@ -6,10 +6,11 @@ angular.module('app')
   .factory('Collections', [
       '$rootScope',
       '$q',
+      'lodash',
       'ApiRequest',
       'Config',
       'Items',
-      function($rootScope, $q, ApiRequest, Config, Items){
+      function($rootScope, $q, _, ApiRequest, Config, Items){
     var endpoint = 'collections';
 
     var Collection = {};
@@ -72,6 +73,21 @@ angular.module('app')
          'url': Config.url + Config.api + endpoint + '/' + id
        };
        return ApiRequest.send(options);
+     };
+
+     Collection.loadAll = function(collectionsFromDB){
+
+       // Transforming project.collections from an array to an object.
+       // collection_id will be the key.
+       return _.reduce( collectionsFromDB, function(result, collection){
+         if(collection.id){
+
+           collection.items = Items.loadAll(collection.items);
+           result[collection.id] = collection;
+
+         }
+         return result;
+       }, {});
      };
 
     return Collection;

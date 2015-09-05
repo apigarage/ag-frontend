@@ -87,7 +87,17 @@ describe('Services : Projects', function() {
 
   // // PROJECT MANAGEMENT
   // describe('When user has a project already', function(){
-  //   describe('', function(){
+  //   beforeEach(function(){
+  //     ProjectsFixtures.get('projectWithTwoCollectionNoItems');
+  //     pStub = ProjectsFixtures.getStub('retrieveProjectWithTwoCollectionNoItems');
+  //     HttpBackendBuilder.build(pStub.request, pStub.response);
+  //
+  //     Projects.loadProjectToRootScope(p.id);
+  //
+  //     $httpBackend.flush();
+  //   });
+  //
+  //   it('', function(){
   //
   //   });
   // });

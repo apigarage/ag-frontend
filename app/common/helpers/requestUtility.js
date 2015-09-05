@@ -1,5 +1,6 @@
 (function(){
   'use strict';
+  var _ = require('lodash');
 
   var requestUtility = {};
 
@@ -57,14 +58,38 @@
   };
 
   requestUtility.buildRequest = function(options, environment){
-    if( environment ){
-      // options will be updated with environment variables.
-    }
     if(options.headers){
       options.headers = requestUtility.getHeaders(options.headers, 'object');
     }
+
+    if(environment && environment.vars){
+      options.url = replaceValue(options.url, environment);
+      options.data = replaceValue(options.data, environment);
+
+      if(options.headers){
+        var headers = {};
+        _.forEach(options.headers, function(value, key){
+          key = replaceValue(key, environment);
+          value = replaceValue(value, environment);
+          headers[key] = value;
+        });
+        options.headers = headers;
+      }
+
+    }
     return options;
   };
+
+
+  function replaceValue(str, environment){
+    if(!str || !str.length || Array.isArray(str) ) return str;
+
+    // may be something better? http://stackoverflow.com/a/15604206/802054
+    _.forEach(environment.vars, function(variable){
+      str = str.replace('{{' + variable.name + '}}', variable.value);
+    });
+    return str;
+  }
 
   if(window){
     window.requestUtility = requestUtility;

@@ -17,9 +17,11 @@ angular.module('app')
     // and receive the collection here
     $scope.$watch(
       function(){
+        if( _.isEmpty($rootScope.currentProject) ) return;
         return $rootScope.currentProject.collections;
       },
       function(collection){
+        if( _.isEmpty($rootScope.currentProject) ) return;
         copyOfCollection = angular.copy( $rootScope.currentProject.collections, $scope.searchResultsCollection);
         if(!_.isEmpty($scope.search)){
           $scope.searchFilter($scope.search);
