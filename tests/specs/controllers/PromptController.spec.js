@@ -30,8 +30,7 @@ describe('Controller: PromptController', function() {
     };
 
     $scope.content = JSON.stringify({
-      // Submit Modal Type
-      'modalType': 'shareProject',
+
       // modal window properties
       'disableCloseButton': false,
       'promptMessage': false,

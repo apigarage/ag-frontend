@@ -61,13 +61,12 @@ angular.module('app').controller('LayoutCtrl', [
       backdrop: true,
       title: "Share Project",
       content: JSON.stringify({
-        // Submit Modal Type
-        'modalType': 'shareProject',
         // modal window properties
         'disableCloseButton': false,
         'promptMessage': false,
         'promptMessageText': 'Share Project to : ',
         'promptIsError': false,
+        'hideModalOnSubmit': false,
 
         // submit button properties
         'showSubmitButton' : true,
@@ -99,14 +98,11 @@ angular.module('app').controller('LayoutCtrl', [
     return newModal;
   };
 
-  $scope.shareProject = function(email){
-    var data = {
-      email: email
-    };
+  $scope.shareProject = function(data){
     return Projects.shareProject($rootScope.currentProject.id, data)
       .then(function(response){
         if (_.isEqual(response.status, 200)){
-          return "Shared Project: ";
+          return "Shared Project: " + data.email;
         }else{
           return "Failed to Share Project: ";
         }

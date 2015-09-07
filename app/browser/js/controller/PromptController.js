@@ -12,13 +12,12 @@ angular.module('app').controller('PromptCtrl', [
       try {
         /*
         Content property JSON object
-
-        'modalType': 'string', // value to determine how Submit is handled
         // modal window properties
         'disableCloseButton': boolean,
         'promptMessage': 'boolean',
         'promptMessageText': 'string',
         'promptIsError': boolean,
+        'hideModalOnSubmit': boolean,
 
         // submit button properties
         'showSubmitButton' : boolean,
@@ -84,32 +83,33 @@ angular.module('app').controller('PromptCtrl', [
       $scope.promptProperty.promptIsError = showError;
     }
 
+    function getFormVisibleData(promptControllerForm){
+      var data = {};
+      if($scope.promptProperty.showInputPrompt){
+        data.name = promptControllerForm.inputPrompt.$viewValue;
+      }
+      if($scope.promptProperty.showInputEmailPrompt){
+        data.email = promptControllerForm.inputEmailPrompt.$viewValue;
+      }
+      return data;
+    }
+    
     $scope.submit = function(promptControllerForm){
       setLoading(true);
-      switch ($scope.promptProperty.modalType) {
-        case 'shareProject':
-          return $scope.success(promptControllerForm.inputEmailPrompt.$viewValue).then(function(response){
-            setPromptMessage(true, response + promptControllerForm.inputEmailPrompt.$viewValue, false);
-          })
-          .catch(function(error){
-            setPromptMessage(true, "Something went wrong " + error.message, true);
-          })
-          .finally(function(){
-            setLoading(false);
-          });
-        case 'addCategory':
-          return $scope.success(promptControllerForm.inputPrompt.$viewValue).then(function(){
-            $scope.$hide();
-          })
-          .catch(function(error){
-            setPromptMessage(true, "Something went wrong " + error.message, true);
-          })
-          .finally(function(){
-            setLoading(false);
-          });
-        default:
-          setLoading(false);
-      }
+      return $scope.success(getFormVisibleData(promptControllerForm)).then(function(response){
+        if($scope.promptProperty.hideModalOnSubmit){
+          $scope.$hide();
+        }else{
+          setPromptMessage(true, response, false);
+        }
+      })
+      .catch(function(error){
+        setPromptMessage(true, "Something went wrong " + error.message, true);
+      })
+      .finally(function(){
+        setLoading(false);
+      });
+
     };
 
     $scope.discard = function(){

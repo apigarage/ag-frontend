@@ -111,18 +111,17 @@ angular.module('app').controller('EditorCtrl', [
         backdrop: true,
         title: "New Category",
         content: JSON.stringify({
-          // Submit Modal Type
-          'modalType': 'addCategory',
           // modal window properties
           'disableCloseButton': false,
           'promptMessage': false,
           'promptMessageText': 'Add Category Message: ',
+          'promptIsError': false,
+          'hideModalOnSubmit': true,
 
           // submit button properties
           'showSubmitButton' : true,
           'disbledSubmitButton' : false,
           'submitButtonText' : 'Add',
-          'promptIsError': false,
 
           // discard button properties
           'showDiscardButton' : true,
@@ -148,11 +147,8 @@ angular.module('app').controller('EditorCtrl', [
       return newModal;
     };
 
-    $scope.saveNewCategory = function(name){
-      var data = {
-        name: name,
-        project_id: $rootScope.currentProject.id
-      };
+    $scope.saveNewCategory = function(data){
+      data.project_id = $rootScope.currentProject.id;
       return Collections.create(data)
         .then(function(collection){
           Projects.addCollection(collection);
