@@ -6,7 +6,9 @@ angular.module('app')
   'Config',
   'ItemsFixtures',
   'CollectionsFixtures',
-  function($httpBackend, Config, ItemsFixtures, CollectionsFixtures){
+  'ProjectKeysFixtures',
+  function($httpBackend, Config, ItemsFixtures, CollectionsFixtures,
+    ProjectKeysFixtures){
     var projects = {};
 
     projects.get = function(key){
@@ -73,7 +75,16 @@ angular.module('app')
         "collections":[
           CollectionsFixtures.get('searchCollection'),
         ]
-      }
+      },
+      "projectWithOneKeyOneEnvironment":{
+        "id": "8",
+        "name": "Project with one key and one environments",
+        "description": "This is a perfectly fine project.",
+        "keys":[
+          ProjectKeysFixtures.get('key1')
+        ],
+        // TODO - Environments TO BE ADDED
+      },
     };
 
     projects.list = {
@@ -143,6 +154,34 @@ angular.module('app')
         response : {
           status : 200,
           data: [],
+          statusText : 'OK',
+        }
+      },
+      "getProjectWithOneKeyOneEnvironment": {
+        request : {
+          method : 'GET',
+          url : Config.url + 'api/projects/' +
+            projects.get('projectWithOneKeyOneEnvironment').id,
+        },
+        response : {
+          status : 200,
+          data: JSON.stringify(
+            projects.get('projectWithOneKeyOneEnvironment')
+          ),
+          statusText : 'OK',
+        }
+      },
+      "getEmptyProject": {
+        request : {
+          method : 'GET',
+          url : Config.url + 'api/projects/' +
+            projects.get('projectEmpty').id,
+        },
+        response : {
+          status : 200,
+          data: JSON.stringify(
+            projects.get('projectEmpty')
+          ),
           statusText : 'OK',
         }
       },

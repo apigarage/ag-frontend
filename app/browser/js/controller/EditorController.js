@@ -33,7 +33,6 @@ angular.module('app').controller('EditorCtrl', [
       $scope.endpoint = {
         requestUrl: "",
         name: "",
-        environment: null,
         requestMethod: 'GET',
         requestHeaders: [
           { key: "Content-Type", value: "application/json" },
@@ -57,17 +56,6 @@ angular.module('app').controller('EditorCtrl', [
 
     function init(){
       $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
-
-      $scope.environments = {
-        public: [],
-        publicVariables: [
-          { name: '' }
-        ],
-        private: [],
-        privateVariables: [
-          { name: '' }
-        ]
-      };
 
       $scope.responsePreviewTab = [
         {
@@ -100,7 +88,6 @@ angular.module('app').controller('EditorCtrl', [
     }
 
     // END - Private Functions
-
 
     $scope.changeCollection = function(collection){
       var oldCollectionId = $rootScope.currentCollection.id;
@@ -144,8 +131,13 @@ angular.module('app').controller('EditorCtrl', [
         });
     };
 
+    $scope.isEmptyEnvironment = function(){
+      return _.isEmpty($rootScope.currentProject.environments.public) &&
+        _.isEmpty($rootScope.currentProject.environments.private);
+    };
+
     $scope.setEnvironment = function(environment){
-      $scope.endpoint.environment = environment;
+      $rootScope.currentEnvironment = environment;
     };
 
     $scope.manageEnvironments = function(){
@@ -188,7 +180,7 @@ angular.module('app').controller('EditorCtrl', [
         timeout: deferedAbort.promise,
       };
       History.setHistoryItem(options);
-      options = RequestUtility.buildRequest(options);
+      options = RequestUtility.buildRequest(options, $rootScope.currentEnvironment);
       options.transformResponse = function(data){return data;};
       $rootScope.$broadcast('updateHistory');
       var requestPromise = $http(options).then(function(response){
@@ -220,7 +212,6 @@ angular.module('app').controller('EditorCtrl', [
 
       return requestPromise;
     };
-
 
     $scope.getResponseCodeClass = function(responseCode){
       if( responseCode === undefined )

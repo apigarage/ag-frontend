@@ -6,10 +6,11 @@ angular.module('app')
   .factory('Items', [
       '$rootScope',
       '$q',
+      'lodash',
       'ApiRequest',
       'UUID',
       'Config',
-      function($rootScope, $q, ApiRequest, UUID, Config){
+      function($rootScope, $q, _, ApiRequest, UUID, Config){
     var endpoint = 'items';
 
     var Item = {};
@@ -71,8 +72,16 @@ angular.module('app')
        var options = {
          'method': 'DELETE',
          'url': Config.url + Config.api + endpoint + '/' + id
-       };
-       return ApiRequest.send(options);
+       }; return ApiRequest.send(options);
+     };
+
+     Item.loadAll = function(itemsFromDB){
+       return _.reduce(itemsFromDB, function(itemResult, item){
+         if(item.uuid){
+           itemResult[item.uuid] = item;
+         }
+         return itemResult;
+       }, {});
      };
 
     return Item;

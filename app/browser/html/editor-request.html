@@ -24,25 +24,28 @@
           <div class="input-group-btn">
             <button class="btn btn-default project-environment" type="button"
                     bs-dropdown data-template="environmentSelect"
-                    ng-click="environments.public.length + environments.private.length ? null : manageEnvironments()">
+                    ng-click="isEmptyEnvironment() ? manageEnvironments() : null">
               <span class="fa fa-sliders"></span>
-              {{endpoint.environment ? endpoint.environment.name : 'ENVIRONMENT'}}
+              {{currentEnvironment ? currentEnvironment.name : 'ENVIRONMENT'}}
               <span class="caret"></span>
             </button>
             <script type="text/ng-template" id="environmentSelect">
-              <ul class="dropdown-menu" ng-show="environments.public.length + environments.private.length">
-                <li ng-repeat="environment in environments.public">
+              <ul class="dropdown-menu" ng-show="!isEmptyEnvironment()">
+                <li ng-repeat="environment in currentProject.environments.private">
                   <a ng-click="setEnvironment(environment)">
-                    <span class="fa fa-fw" ng-class="environment == endpoint.environment ? 'fa-check' : 'fa-spacer'"></span>
+                    <span class="fa fa-fw"
+                      ng-class="environment.id == currentEnvironment.id ? 'fa-check' : 'fa-spacer'">
+                    </span>
                     <code class="text-uppercase">{{environment.name}}</code>
-                    <!-- <span class="dropdown-menu-hotkey">{{'OSX' ? '&#8984;' + ($index+1) : 'Ctrl+' + ($index+1)}}</span> -->
                   </a>
                 </li>
-                <li ng-repeat="environment in environments.private">
+                <li class="divider"></li>
+                <li ng-repeat="environment in currentProject.environments.public">
                   <a ng-click="setEnvironment(environment)">
-                    <span class="fa fa-fw" ng-class="environment == endpoint.environment ? 'fa-check' : 'fa-spacer'"></span>
+                    <span class="fa fa-fw"
+                      ng-class="environment.id == currentEnvironment.id ? 'fa-check' : 'fa-spacer'">
+                    </span>
                     <code class="text-uppercase">{{environment.name}}</code>
-                    <!-- <span class="dropdown-menu-hotkey">{{'OSX' ? '&#8984;' + ($index+1+environments.global.length) : 'Ctrl+' + ($index+1+environments.global.length)}}</span> -->
                   </a>
                 </li>
                 <li class="divider"></li>
