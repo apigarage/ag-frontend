@@ -108,13 +108,42 @@ angular.module('app').controller('EditorCtrl', [
       var newModal = $modal({
         show: false,
         template: "html/prompt.html",
-        backdrop: true
-      });
+        backdrop: true,
+        title: "New Category",
+        content: JSON.stringify({
+          // Submit Modal Type
+          'modalType': 'addCategory',
+          // modal window properties
+          'disableCloseButton': false,
+          'promptMessage': false,
+          'promptMessageText': 'Add Category Message: ',
 
-      newModal.$scope.title  = "New Category";
+          // submit button properties
+          'showSubmitButton' : true,
+          'disbledSubmitButton' : false,
+          'submitButtonText' : 'Add',
+          'promptIsError': false,
+
+          // discard button properties
+          'showDiscardButton' : true,
+          'disbleDiscardButton' : false,
+          'discardButtonText' : 'Cancel',
+
+          // input prompt properties
+          'showInputPrompt' : true,
+          'requiredInputPrompt' : true,
+          'placeHolderInputText': 'New Category Name',
+          'labelInputText': 'Add New Category',
+
+          // input email prompt properties
+          'showInputEmailPrompt' : false,
+          'requiredInputEmailPrompt': false,
+          'placeHolderInputEmailText': '',
+          'labelInputEmailText': ''
+        })
+      });
       newModal.$scope.success = $scope.saveNewCategory;
       newModal.$scope.cancel = function(error){ return $q.resolve(); };
-
       newModal.$promise.then( newModal.show );
       return newModal;
     };
