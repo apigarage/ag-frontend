@@ -769,7 +769,6 @@ describe('Controller: EditController', function() {
       modal = $scope.openNewCategoryModal();
     });
     it('will open new category model', function(){
-      expect(modal.$scope.title).toBe('New Category');
       expect(modal.$scope.success).toBe($scope.saveNewCategory);
       expect(modal.$scope.cancel).toBeDefined();
     });

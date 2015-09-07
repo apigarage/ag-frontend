@@ -105,41 +105,43 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     $scope.openNewCategoryModal = function(){
+      var modalContent = {
+        // modal window properties
+        'disableCloseButton': false,
+        'promptMessage': false,
+        'promptMessageText': 'Add Category Message: ',
+        'promptIsError': false,
+        'hideModalOnSubmit': true,
+
+        // submit button properties
+        'showSubmitButton' : true,
+        'disbledSubmitButton' : false,
+        'submitButtonText' : 'Add',
+
+        // discard button properties
+        'showDiscardButton' : true,
+        'disbleDiscardButton' : false,
+        'discardButtonText' : 'Cancel',
+
+        // input prompt properties
+        'showInputPrompt' : true,
+        'requiredInputPrompt' : true,
+        'placeHolderInputText': 'New Category Name',
+        'labelInputText': 'Add New Category',
+
+        // input email prompt properties
+        'showInputEmailPrompt' : false,
+        'requiredInputEmailPrompt': false,
+        'placeHolderInputEmailText': '',
+        'labelInputEmailText': ''
+      };
+
       var newModal = $modal({
         show: false,
         template: "html/prompt.html",
         backdrop: true,
         title: "New Category",
-        content: JSON.stringify({
-          // modal window properties
-          'disableCloseButton': false,
-          'promptMessage': false,
-          'promptMessageText': 'Add Category Message: ',
-          'promptIsError': false,
-          'hideModalOnSubmit': true,
-
-          // submit button properties
-          'showSubmitButton' : true,
-          'disbledSubmitButton' : false,
-          'submitButtonText' : 'Add',
-
-          // discard button properties
-          'showDiscardButton' : true,
-          'disbleDiscardButton' : false,
-          'discardButtonText' : 'Cancel',
-
-          // input prompt properties
-          'showInputPrompt' : true,
-          'requiredInputPrompt' : true,
-          'placeHolderInputText': 'New Category Name',
-          'labelInputText': 'Add New Category',
-
-          // input email prompt properties
-          'showInputEmailPrompt' : false,
-          'requiredInputEmailPrompt': false,
-          'placeHolderInputEmailText': '',
-          'labelInputEmailText': ''
-        })
+        content: JSON.stringify(modalContent)
       });
       newModal.$scope.success = $scope.saveNewCategory;
       newModal.$scope.cancel = function(error){ return $q.resolve(); };
@@ -147,8 +149,12 @@ angular.module('app').controller('EditorCtrl', [
       return newModal;
     };
 
-    $scope.saveNewCategory = function(data){
-      data.project_id = $rootScope.currentProject.id;
+    $scope.saveNewCategory = function(collectionName){
+      var data = {
+        name: collectionName,
+        project_id: $rootScope.currentProject.id
+      };
+
       return Collections.create(data)
         .then(function(collection){
           Projects.addCollection(collection);
