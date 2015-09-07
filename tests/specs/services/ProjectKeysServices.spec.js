@@ -136,6 +136,31 @@ describe('Service : Project Keys', function() {
         //   });
       });
     });
+
+    describe('when a key name is deleted', function(){
+      beforeEach(function(){
+        key = ProjectKeysFixtures.get('key1');
+        cStub = ProjectKeysFixtures.getStub('updateKey1Name');
+        HttpBackendBuilder.build(cStub.request, cStub.response);
+      });
+
+      it('will add the value to the rootScope', function(){
+        ProjectKeys.update($rootScope.currentProject.id, key.id)
+          .then(function(){
+            expect($rootScope.currentProject.keys).toEqual(jasmine.any(Object));
+            expect($rootScope.currentProject.keys[key.id]).toBeUndefined();
+          });
+      });
+      xit('will add the values to environments', function(){
+        // TODO
+        // ProjectKeys.create($rootScope.currentProject.id, key)
+        //   .then(function(){
+        //     expect($rootScope.currentProject.keys).toEqual(jasmine.any(Object));
+        //     expect($rootScope.currentProject.keys[key.id]).not.toBeUndefined();
+        //   });
+      });
+    });
+
   });
 
 });

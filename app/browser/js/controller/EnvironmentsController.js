@@ -1,8 +1,10 @@
 angular.module('app').controller('EnvironmentsCtrl', [
   '$scope',
   '$focus',
+  '$q',
+  '$modal',
   'Projects',
-  function ($scope, $focus, Projects){
+  function ($scope, $focus, $q, $modal, Projects){
 
   //
   // --  Environments Functions
@@ -17,6 +19,48 @@ angular.module('app').controller('EnvironmentsCtrl', [
     return Projects.updateEnvironment(environment);
   };
 
+  $scope.deleteEnvironment = function(environment){
+    var newModal = $modal({
+      show: false,
+      template: "html/prompt.html",
+      backdrop: true,
+      title: "Delete Environment",
+      content: JSON.stringify({
+        // modal window properties
+        'disableCloseButton': false,
+        'promptMessage': true,
+        'promptMessageText': 'Are you sure you want to delete the environment - ' + environment.name  + ' ?' ,
+        'promptIsError': true,
+        'hideModalOnSubmit': true,
+
+        // submit button properties
+        'showSubmitButton' : true,
+        'disbledSubmitButton' : false,
+        'submitButtonText' : 'Delete',
+
+        // discard button properties
+        'showDiscardButton' : true,
+        'disbleDiscardButton' : false,
+        'discardButtonText' : 'Cancel',
+
+        // input prompt properties
+        'showInputPrompt' : false,
+        'requiredInputPrompt' : false,
+
+        // input email prompt properties
+        'showInputEmailPrompt' : false,
+        'requiredInputEmailPrompt': false,
+      })
+    });
+    newModal.$scope.success = function(){
+      return Projects.deleteEnvironment(environment);
+    };
+
+    newModal.$scope.cancel = function(){ return $q.resolve(); };
+
+    newModal.$promise.then( newModal.show );
+  };
+
   //
   // --  Variables Functions
   //
@@ -28,6 +72,48 @@ angular.module('app').controller('EnvironmentsCtrl', [
 
   $scope.updateVariable = function(variable){
     return Projects.updateVariable(variable);
+  };
+
+  $scope.deleteVariable = function(variable){
+    var newModal = $modal({
+      show: false,
+      template: "html/prompt.html",
+      backdrop: true,
+      title: "Delete Variable",
+      content: JSON.stringify({
+        // modal window properties
+        'disableCloseButton': false,
+        'promptMessage': true,
+        'promptMessageText': 'Are you sure you want to delete the variable - ' + variable.name  + ' ?' ,
+        'promptIsError': true,
+        'hideModalOnSubmit': true,
+
+        // submit button properties
+        'showSubmitButton' : true,
+        'disbledSubmitButton' : false,
+        'submitButtonText' : 'Delete',
+
+        // discard button properties
+        'showDiscardButton' : true,
+        'disbleDiscardButton' : false,
+        'discardButtonText' : 'Cancel',
+
+        // input prompt properties
+        'showInputPrompt' : false,
+        'requiredInputPrompt' : false,
+
+        // input email prompt properties
+        'showInputEmailPrompt' : false,
+        'requiredInputEmailPrompt': false,
+      })
+    });
+    newModal.$scope.success = function(){
+      return Projects.deleteVariable(variable);
+    };
+
+    newModal.$scope.cancel = function(){ return $q.resolve(); };
+
+    newModal.$promise.then( newModal.show );
   };
 
   //

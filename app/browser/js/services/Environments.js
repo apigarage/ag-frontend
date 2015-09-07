@@ -105,7 +105,17 @@ angular.module('app')
           'url': Config.url + Config.api + projectsEndpoint + project_id +
             '/' + environmentsEndpoint + '/' + id,
         };
-        return ApiRequest.send(options);
+        return ApiRequest.send(options)
+          .then(function(data){
+            var envs = $rootScope.currentProject.environments;
+
+            if( envs && envs.public && envs.public[id] )
+              delete envs.public[id];
+
+            if( envs && envs.private && envs.private[id] )
+              delete envs.private[id];
+
+          });
       };
 
       //

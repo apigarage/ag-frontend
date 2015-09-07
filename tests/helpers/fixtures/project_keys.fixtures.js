@@ -94,7 +94,7 @@ angular.module('app')
         response : {
           status : 204,
           data: {},
-          statusText : '',
+          statusText : 'No Content'
         }
       },
       "createNewKey" : {
