@@ -82,6 +82,21 @@ angular.module('app')
           statusText : 'OK',
         }
       },
+      "deleteKey1Name" : {
+        request : {
+          method : 'DELETE',
+          url : Config.url + 'api/projects/' + keys.get('key1').project_id +
+            '/keys/' + keys.get('key1').id,
+          headers : {
+            "Content-Type":"application/json;charset=utf-8",
+          }
+        },
+        response : {
+          status : 204,
+          data: {},
+          statusText : '',
+        }
+      },
       "createNewKey" : {
         request : {
           method : 'POST',
