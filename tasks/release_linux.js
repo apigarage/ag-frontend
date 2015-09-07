@@ -37,6 +37,8 @@
     var deferred = Q.defer();
 
     asar.createPackage(projectDir.path('build'), readyAppDir.path('resources/app.asar'), function() {
+    // asar.createPackage(projectDir.path('build'), readyAppDir.path('resources/app_v_01.asar'), function() {
+      // jetpack.symlinkAsync('app_v_01.asar',  'tmp/api-garage_0.0.2/opt/api-garage/resources/app.asar');
       deferred.resolve();
     });
 
