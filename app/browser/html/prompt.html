@@ -3,21 +3,60 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" ng-click="cancel()"><span>&times;</span></button>
+          <button type="button" class="close" ng-click="discard()"
+            ng-disabled="promptProperty.disableCloseButton"><span>&times;</span>
+          </button>
           <h1>{{title}}</h1>
         </div>
+        <form name="promptControllerForm" novalidate role="form" class="form-control-static">
         <div class="modal-body">
 
-          <input type="text" class="form-control" placeholder="{{title}}" ng-model="input"/>
-          <p class="authentication-validation" ng-if="inputError">
-            {{inputErrorMessage}}
-          </p>
+            <div class="form-group-sm">
+
+              <label for="inputPrompt" data-ng-show="promptProperty.showInputPrompt">{{promptProperty.labelInputText}}</label>
+              <input name="inputPrompt" type="text" class="form-control modal-form"
+                placeholder="{{promptProperty.placeHolderInputText}}"
+                data-ng-show="promptProperty.showInputPrompt"
+                ng-required="promptProperty.requiredInputPrompt" data-ng-model="inputPrompt"/>
+              <span class="modal-validation has-error"
+                data-ng-show="promptControllerForm.inputPrompt.$dirty && promptControllerForm.inputPrompt.$error.required">
+                {{ promptControllerForm.inputPrompt.$error.required && promptControllerForm.inputPrompt.$dirty ? "Can't be empty" : "" }}
+              </span>
+
+              <label for="inputEmailPrompt" data-ng-show="promptProperty.showInputEmailPrompt">{{promptProperty.labelInputEmailText}}</label>
+              <input name="inputEmailPrompt" type="text" class="form-control modal-form"
+                placeholder="{{promptProperty.placeHolderInputEmailText}}"
+                data-ng-show="promptProperty.showInputEmailPrompt"
+                ng-pattern="/^(([^&lt;&gt;()[\]\.,;:\s@\&quot;]+(\.[^&lt;&gt;()[\]\.,;:\s@\&quot;]+)*)|(\&quot;.+\&quot;))@(([^&lt;&gt;()[\]\.,;:\s@\&quot;]+\.)+[^&lt;&gt;()[\]\.,;:\s@\&quot;]{2,})$/i"
+                ng-required="promptProperty.requiredInputEmailPrompt" data-ng-model="inputEmailPrompt"/>
+              <span class="modal-validation has-error"
+                data-ng-show="promptControllerForm.inputEmailPrompt.$dirty && promptControllerForm.inputEmailPrompt.$error.pattern ||
+                promptControllerForm.inputEmailPrompt.$error.required">
+                {{ promptControllerForm.inputEmailPrompt.$error.pattern ? "Invalid email address" : "" }}
+                {{ promptControllerForm.inputEmailPrompt.$error.required && promptControllerForm.inputEmailPrompt.$dirty ? "Can't be empty" : "" }}
+              </span>
+
+              <span class="modal-validation" ng-class="promptProperty.promptIsError ? 'has-error' : 'has-success'"
+                ng-if="promptProperty.promptMessage"
+                data-ng-show="{{ promptProperty.promptMessage = promptControllerForm.$invalid ? false : true}}">
+                {{promptProperty.promptMessageText}}
+              </span>
+            </div>
 
         </div>
+
         <div class="modal-footer">
-          <button class="btn btn-primary" ng-click="submit()" type="submit">Save</button>
-          <button class="btn btn-default" ng-click="discard()" type="submit">Cancel</button>
+          <button class="btn btn-primary" type="submit" ng-click="submit(promptControllerForm)"
+          ladda="promptProperty.submitLoading" data-style="expand-left"
+          ng-disabled="promptProperty.disableSubmitButton || promptControllerForm.$invalid"
+          ng-show="promptProperty.showSubmitButton">{{promptProperty.submitButtonText}}</button>
+
+          <button class="btn btn-default" ng-click="discard()"
+          ng-disabled="disableDiscardButton" ng-show="promptProperty.showDiscardButton">
+          {{promptProperty.discardButtonText}}</button>
         </div>
+      </form>
+
       </div>
     </div>
   </div>
