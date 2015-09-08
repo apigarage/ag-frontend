@@ -19,6 +19,7 @@ angular.module('app').controller('EditorCtrl', [
     // Private Functions
     init();
 
+
     function showRequestHideCancelButtons(){
       $scope.performRequestButton = true;
       $scope.cancelRequestButton = false;
@@ -81,6 +82,7 @@ angular.module('app').controller('EditorCtrl', [
       // Only run this line for NEW requests. This tells the user to name the request before doing anything else.
       $focus('editor-title');
 
+      $scope.isDeleteButtonDisabled = true;
       resetErrorMessages();
       resetResponse();
       showRequestHideCancelButtons();
@@ -149,16 +151,60 @@ angular.module('app').controller('EditorCtrl', [
       return newModal;
     };
 
-    $scope.saveNewCategory = function(collectionName){
-      var data = {
-        name: collectionName,
-        project_id: $rootScope.currentProject.id
-      };
-
+    $scope.saveNewCategory = function(data){
+      data.project_id = $rootScope.currentProject.id;
       return Collections.create(data)
         .then(function(collection){
           Projects.addCollection(collection);
           return $scope.changeCollection(collection);
+        });
+    };
+
+    $scope.openDeleteItemModal = function(){
+      var newModal = $modal({
+        show: false,
+        template: "html/prompt.html",
+        backdrop: true,
+        title: "Delete Item",
+        content: JSON.stringify({
+          // modal window properties
+          'disableCloseButton': false,
+          'promptMessage': true,
+          'promptMessageText': $rootScope.currentItem.name,
+          'promptIsError': true,
+          'hideModalOnSubmit': true,
+
+          // submit button properties
+          'showSubmitButton' : true,
+          'disbledSubmitButton' : false,
+          'submitButtonText' : 'Confirm',
+
+          // discard button properties
+          'showDiscardButton' : true,
+          'disbleDiscardButton' : false,
+          'discardButtonText' : 'Cancel',
+
+          // input prompt properties
+          'showInputPrompt' : false,
+          'requiredInputPrompt' : false,
+
+          // input email prompt properties
+          'showInputEmailPrompt' : false,
+          'requiredInputEmailPrompt': false,
+        })
+
+      });
+      newModal.$scope.success = $scope.deleteItem;
+      newModal.$scope.cancel = function(error){ return $q.resolve(); };
+      newModal.$promise.then( newModal.show );
+      return newModal;
+    };
+
+    $scope.deleteItem = function(){
+      return Projects.removeItemFromCollection($rootScope.currentCollection.id, $rootScope.currentItem.uuid)
+        .then(function(response){
+          //
+          return response;
         });
     };
 
@@ -373,6 +419,12 @@ angular.module('app').controller('EditorCtrl', [
       $scope.endpoint.uuid = _.isEmpty(item.uuid) ? undefined : item.uuid;
       $scope.endpoint.requestHeaders = RequestUtility.getHeaders(item.headers, 'array');
       resetResponse();
+
+      if(_.isEqual($scope.endpoint.name,"") || _.isUndefined($scope.endpoint.name)){
+        $scope.isDeleteButtonDisabled = true;
+      }else{
+        $scope.isDeleteButtonDisabled = false;
+      }
       // Collection needs to be set
     };
 

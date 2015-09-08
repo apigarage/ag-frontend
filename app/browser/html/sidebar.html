@@ -51,13 +51,13 @@
     <script type="text/ng-template" id="sidebar-list-parent-item-menu">
       <ul class="dropdown-menu">
         <li>
-          <a ng-click="rename">
+          <a ng-click="openRenameCollectionModal(collection)">
             <span class="fa fa-fw fa-pencil"></span>
             Rename
           </a>
         </li>
         <li>
-          <a>
+          <a ng-click="openDeleteCollectionModal(collection)">
             <span class="fa fa-fw fa-trash-o"></span>
             Delete
           </a>
@@ -79,7 +79,7 @@
           </a>
         </li>
         <li>
-          <a>
+          <a ng-click="openDeleteItemModal(collection,item)">
             <span class="fa fa-fw fa-trash-o"></span>
             Delete
           </a>

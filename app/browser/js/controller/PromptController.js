@@ -32,6 +32,7 @@ angular.module('app').controller('PromptCtrl', [
         // input prompt properties
         'placeHolderInputText': 'string',
         'labelInputText': 'string',
+        'inputPromptText' : 'string',
         'showInputPrompt' : boolean,
 
         // input email prompt properties
@@ -93,7 +94,7 @@ angular.module('app').controller('PromptCtrl', [
       }
       return data;
     }
-    
+
     $scope.submit = function(promptControllerForm){
       setLoading(true);
       return $scope.success(getFormVisibleData(promptControllerForm)).then(function(response){
@@ -105,6 +106,7 @@ angular.module('app').controller('PromptCtrl', [
       })
       .catch(function(error){
         setPromptMessage(true, "Something went wrong " + error.message, true);
+        setLoading(false);
       })
       .finally(function(){
         setLoading(false);
