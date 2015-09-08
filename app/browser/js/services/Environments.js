@@ -61,9 +61,11 @@ angular.module('app')
             if(updatedEnvironment){
               var envs = $rootScope.currentProject.environments;
               if(updatedEnvironment.private){
-                envs.private[updatedEnvironment.id] = updatedEnvironment;
+                envs.private[updatedEnvironment.id].name = updatedEnvironment.name;
+                envs.private[updatedEnvironment.id].description = updatedEnvironment.description;
               } else {
-                envs.public[updatedEnvironment.id] = updatedEnvironment;
+                envs.public[updatedEnvironment.id].name = updatedEnvironment.name;
+                envs.public[updatedEnvironment.id].description = updatedEnvironment.description;
               }
               return updatedEnvironment;
             } else {

@@ -3,7 +3,8 @@ angular.module('app')
 .factory('ItemsFixtures', [
   '$httpBackend',
   'Config',
-  function($httpBackend, Config){
+  'UUID',
+  function($httpBackend, Config, UUID){
     var items = {};
     items.data = {
       "item1": {
@@ -11,7 +12,7 @@ angular.module('app')
         "name": "Item 1",
         "description": "This is a perfectly fine item.",
         'uuid': 'uuid-uuid-uuid-uuid-1',
-        "collection_id": 3
+        "collection_id":'3'
         // other fields will be added, as required.
       },
       "item2":{
@@ -99,6 +100,38 @@ angular.module('app')
             items.get('item2'),
             items.get('item3')
           ]),
+          statusText : 'OK',
+        }
+      },
+      "copyItem1":{
+        request : {
+          method : 'POST',
+          url : Config.url + 'api/items',
+          data : JSON.stringify({
+            url: items.get('item1').url,
+            name: items.get('item1').name + ' Copy',
+            method: 'GET',
+            data: '',
+            uuid: 'newCopyUUID',
+            headers: {},
+            collection_id: items.get('item1').collection_id
+          }),
+          headers : {
+            "Content-Type":"application/json;charset=utf-8",
+          }
+        },
+        response : {
+          status : 201,
+          data : JSON.stringify({
+            url: items.get('item1').url,
+            name: items.get('item1').name + ' Copy',
+            method: items.get('item1').method,
+            data: items.get('item1').data,
+            uuid: 'newCopyUUID',
+            headers: items.get('item1').headers,
+            id: items.get('item1').id,
+            collection_id: items.get('item1').collection_id
+          }),
           statusText : 'OK',
         }
       },

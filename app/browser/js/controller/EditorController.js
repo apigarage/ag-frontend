@@ -86,6 +86,22 @@ angular.module('app').controller('EditorCtrl', [
 
     // END - Private Functions
 
+    $scope.copyCurrentRequest = function(){
+      // This should never happen. If it happens, just in case, the current request is its own copy.
+      if(!$scope.endpoint.uuid) return;
+
+      var newItem = $scope.endpoint;
+      newItem.uuid = undefined;
+      newItem.name = newItem.name + ' Copy';
+
+      newItem = $scope.buildRequestOutOfScope();
+      return Projects.addItemToCollection($rootScope.currentCollection.id, newItem)
+        .then(function(item){
+          $rootScope.currentItem = item;
+          $rootScope.$broadcast('loadPerformRequest', item);
+        });
+    };
+
     $scope.changeCollection = function(collection){
       var oldCollectionId = $rootScope.currentCollection.id;
       var newCollectionId = collection.id;
