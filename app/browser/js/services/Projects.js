@@ -265,6 +265,10 @@ angular.module('app')
         return Environments.update($rootScope.currentProject.id, environment.id, data);
       };
 
+      Project.deleteEnvironment = function(environment){
+        return Environments.remove($rootScope.currentProject.id, environment.id);
+      };
+
       Project.addNewVariable = function(variable){
         return ProjectKeys.create($rootScope.currentProject.id, variable);
       };
@@ -275,6 +279,10 @@ angular.module('app')
         };
 
         return ProjectKeys.update($rootScope.currentProject.id, variable.id, data);
+      };
+
+      Project.deleteVariable = function(variable){
+        return ProjectKeys.remove($rootScope.currentProject.id, variable.id);
       };
 
       Project.updateVariableEnvironmentValue = function(variableId, environmentId, value){

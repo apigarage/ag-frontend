@@ -105,7 +105,25 @@ angular.module('app')
           'url': Config.url + Config.api + projectsEndpoint + project_id +
             '/' + keysEndpoint + '/' + id,
         };
-        return ApiRequest.send(options);
+        return ApiRequest.send(options)
+          .then(function(data){
+            if( $rootScope.currentProject.keys[id] ){
+              delete  $rootScope.currentProject.keys[id];
+            }
+
+            var envs = $rootScope.currentProject.environments;
+            if( envs && envs.public ){
+              _.forEach(envs.public, function(environment){
+                delete environment.vars[id];
+              });
+            }
+
+            if( envs && envs.private ){
+              _.forEach(envs.private, function(environment){
+                delete environment.vars[id];
+              });
+            }
+          });
       };
 
       /*
@@ -121,7 +139,9 @@ angular.module('app')
 
       function helperUpdateVariableNameToAllEnvironments(environments, variable){
         _.forEach(environments, function(env){
-          env.vars[variable.id].name = variable.name;
+          if(env.vars && env.vars[variable.id]){
+            env.vars[variable.id].name = variable.name;
+          }
         });
       }
 

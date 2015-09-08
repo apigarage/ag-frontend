@@ -59,7 +59,12 @@ angular.module('app')
         return ApiRequest.send(options)
           .then(function(updatedEnvironment){
             if(updatedEnvironment){
-              $rootScope.currentProject.environments[updatedEnvironment.id] = updatedEnvironment;
+              var envs = $rootScope.currentProject.environments;
+              if(updatedEnvironment.private){
+                envs.private[updatedEnvironment.id] = updatedEnvironment;
+              } else {
+                envs.public[updatedEnvironment.id] = updatedEnvironment;
+              }
               return updatedEnvironment;
             } else {
               throw updatedEnvironment;
@@ -105,7 +110,17 @@ angular.module('app')
           'url': Config.url + Config.api + projectsEndpoint + project_id +
             '/' + environmentsEndpoint + '/' + id,
         };
-        return ApiRequest.send(options);
+        return ApiRequest.send(options)
+          .then(function(data){
+            var envs = $rootScope.currentProject.environments;
+
+            if( envs && envs.public && envs.public[id] )
+              delete envs.public[id];
+
+            if( envs && envs.private && envs.private[id] )
+              delete envs.private[id];
+
+          });
       };
 
       //

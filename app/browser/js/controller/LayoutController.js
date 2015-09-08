@@ -18,7 +18,7 @@ angular.module('app').controller('LayoutCtrl', [
     };
     $scope.online = $window.navigator.onLine;
     $scope.setConnectionStatus($scope.online);
-    if(!$rootScope.currentProjectId) $state.go('projectcreateoropen');
+    if(_.isEmpty( $rootScope.currentProjectId )) $state.go('projectcreateoropen');
     return Projects.loadProjectToRootScope($rootScope.currentProjectId);
   }
 
