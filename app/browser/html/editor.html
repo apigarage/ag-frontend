@@ -12,14 +12,17 @@
           <span class="fa fa-fw fa-floppy-o"></span>
           <span class="hidden-xs hidden-sm">Save changes</span>
         </button> -->
-        <button class="btn btn-primary"
+        <button class="btn"
                 ng-click="saveCurrentRequest()"
+                ng-class="{'btn-primary': requestChanged, 'btn-default': !requestChanged}"
                 data-title="<span class='visible-xs-inline visible-sm-inline'>Save Changes (</span>
                 <span class='visible-xs-inline visible-sm-inline'>)</span>">
           <span class="fa fa-fw fa-floppy-o"></span>
           <span class="hidden-xs hidden-sm">Save changes</span>
         </button>
-        <button class="btn btn-default">
+        <button class="btn btn-default"
+          ng-click="copyCurrentRequest()"
+          ng-show="currentItem.uuid">
           <span class="fa fa-fw fa-files-o"></span>
           <span class="hidden-xs hidden-sm">Make a copy</span>
         </button>

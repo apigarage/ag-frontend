@@ -822,6 +822,55 @@ describe('Controller: EditController', function() {
 
   });
 
+  describe('copyCurrentRequest()', function(){ // GET and POST
+    describe('When current item is selected (current collection has to be selected)', function(){
+
+      beforeEach(function(){
+        p = ProjectsFixtures.get('projectWithTwoCollectionNoItems');
+        pStub = ProjectsFixtures.getStub('retrieveProjectWithTwoCollectionNoItems');
+        HttpBackendBuilder.build(pStub.request, pStub.response);
+        Projects.loadProjectToRootScope(p.id);
+
+        $httpBackend.flush();
+
+        collection = CollectionsFixtures.get('collectionWithTwoItems');
+        $rootScope.currentCollection = collection;
+
+        item = ItemsFixtures.get('item1');
+        $scope.loadRequestToScope(item);
+
+        newUUID = 'newCopyUUID';
+        spyOn(UUID, 'generate').and.callFake(function(){
+          return newUUID;
+        });
+
+        copyStub = ItemsFixtures.getStub('copyItem1');
+        HttpBackendBuilder.build(copyStub.request, copyStub.response);
+      });
+
+      afterEach(function(){
+        $httpBackend.flush();
+      });
+
+      it('will create the copy of the current request.', function(){
+        $scope.copyCurrentRequest().then(function(){
+
+          expect($rootScope.currentProject.collections[collection.id].items[newUUID])
+            .toBeDefined();
+
+          expect($rootScope.currentProject.collections[collection.id].items[newUUID].name)
+            .toBe(item.name + ' Copy');
+
+          expect($scope.endpoint.uuid).toBe(newUUID);
+          expect($scope.endpoint.name).toBe(item.name + ' Copy');
+        });
+      });
+
+    });
+
+  });
+
+
   describe('saveCurrentRequest', function(){
     beforeEach(function(){
       p = ProjectsFixtures.get('projectWithTwoCollectionNoItems');
