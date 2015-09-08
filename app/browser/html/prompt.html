@@ -17,7 +17,7 @@
               <input name="inputPrompt" type="text" class="form-control modal-form"
                 placeholder="{{promptProperty.placeHolderInputText}}"
                 data-ng-show="promptProperty.showInputPrompt"
-                ng-required="promptProperty.requiredInputPrompt" data-ng-model="inputPrompt"/>
+                ng-required="promptProperty.requiredInputPrompt" data-ng-model="promptProperty.inputPromptText"/>
               <span class="modal-validation has-error"
                 data-ng-show="promptControllerForm.inputPrompt.$dirty && promptControllerForm.inputPrompt.$error.required">
                 {{ promptControllerForm.inputPrompt.$error.required && promptControllerForm.inputPrompt.$dirty ? "Can't be empty" : "" }}

@@ -26,8 +26,9 @@
           <span class="fa fa-fw fa-files-o"></span>
           <span class="hidden-xs hidden-sm">Make a copy</span>
         </button>
-        <button class="btn btn-default">
-          <span class="fa fa-fw fa-trash-o"></span>
+        <button class="btn btn-default" ng-disabled="isDeleteButtonDisabled"
+          ng-click="openDeleteItemModal()">
+          <span class="fa fa-fw fa-trash-o" ></span>
           <span class="hidden-xs hidden-sm">Delete</span>
         </button>
       </div>
