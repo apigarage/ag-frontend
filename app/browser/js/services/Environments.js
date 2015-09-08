@@ -59,7 +59,12 @@ angular.module('app')
         return ApiRequest.send(options)
           .then(function(updatedEnvironment){
             if(updatedEnvironment){
-              $rootScope.currentProject.environments[updatedEnvironment.id] = updatedEnvironment;
+              var envs = $rootScope.currentProject.environments;
+              if(updatedEnvironment.private){
+                envs.private[updatedEnvironment.id] = updatedEnvironment;
+              } else {
+                envs.public[updatedEnvironment.id] = updatedEnvironment;
+              }
               return updatedEnvironment;
             } else {
               throw updatedEnvironment;

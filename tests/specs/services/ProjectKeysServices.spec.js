@@ -122,7 +122,7 @@ describe('Service : Project Keys', function() {
           .then(function(){
             // updated name in the
             expect($rootScope.currentProject.keys).toEqual(jasmine.any(Object));
-            expect($rootScope.currentProject.keys[key.id]).not.toBeUndefined();
+            expect($rootScope.currentProject.keys[key.id]).toBeDefined();
             expect($rootScope.currentProject.keys[key.id].name)
               .toBe(key.name + 'updated');
           });
@@ -137,15 +137,15 @@ describe('Service : Project Keys', function() {
       });
     });
 
-    describe('when a key name is deleted', function(){
+    describe('when a key is deleted', function(){
       beforeEach(function(){
         key = ProjectKeysFixtures.get('key1');
-        cStub = ProjectKeysFixtures.getStub('updateKey1Name');
+        cStub = ProjectKeysFixtures.getStub('deleteKey1');
         HttpBackendBuilder.build(cStub.request, cStub.response);
       });
 
-      it('will add the value to the rootScope', function(){
-        ProjectKeys.update($rootScope.currentProject.id, key.id)
+      it('will remove the value from the rootScope', function(){
+        ProjectKeys.remove($rootScope.currentProject.id, key.id)
           .then(function(){
             expect($rootScope.currentProject.keys).toEqual(jasmine.any(Object));
             expect($rootScope.currentProject.keys[key.id]).toBeUndefined();

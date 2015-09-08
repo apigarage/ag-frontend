@@ -82,14 +82,12 @@ angular.module('app')
           statusText : 'OK',
         }
       },
-      "deleteKey1Name" : {
+      "deleteKey1" : {
         request : {
           method : 'DELETE',
           url : Config.url + 'api/projects/' + keys.get('key1').project_id +
             '/keys/' + keys.get('key1').id,
-          headers : {
-            "Content-Type":"application/json;charset=utf-8",
-          }
+          headers : {}
         },
         response : {
           status : 204,
@@ -117,7 +115,8 @@ angular.module('app')
         request : {
           method : 'POST',
           url : Config.url + 'api/projects/' +
-            keys.get('newKeyForProjectWithOneKeyOneEnvironment').project_id + '/keys',
+            keys.get('newKeyForProjectWithOneKeyOneEnvironment').project_id +
+           '/keys',
           headers : {
             "Content-Type":"application/json;charset=utf-8",
           }

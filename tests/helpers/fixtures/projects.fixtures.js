@@ -7,8 +7,9 @@ angular.module('app')
   'ItemsFixtures',
   'CollectionsFixtures',
   'ProjectKeysFixtures',
+  'EnvironmentsFixtures',
   function($httpBackend, Config, ItemsFixtures, CollectionsFixtures,
-    ProjectKeysFixtures){
+    ProjectKeysFixtures, EnvironmentsFixtures){
     var projects = {};
 
     projects.get = function(key){
@@ -83,6 +84,10 @@ angular.module('app')
         "keys":[
           ProjectKeysFixtures.get('key1')
         ],
+        "environments": [
+            EnvironmentsFixtures.get('environment-public'),
+            EnvironmentsFixtures.get('environment-private')
+        ]
         // TODO - Environments TO BE ADDED
       },
     };

@@ -139,7 +139,9 @@ angular.module('app')
 
       function helperUpdateVariableNameToAllEnvironments(environments, variable){
         _.forEach(environments, function(env){
-          env.vars[variable.id].name = variable.name;
+          if(env.vars && env.vars[variable.id]){
+            env.vars[variable.id].name = variable.name;
+          }
         });
       }
 
