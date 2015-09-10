@@ -105,7 +105,7 @@ angular.module('app')
           // Set the project to rootScope
           $rootScope.currentProject = projectData;
           resetProjectValuesFromRootScope();
-          $rootScope.$broadcast('updateSideBar', $rootScope.currentProject.collections);
+          $rootScope.$broadcast('updateSideBar');
         });
       };
 
@@ -138,15 +138,13 @@ angular.module('app')
           $rootScope.currentProject.collections = {};
         }
         $rootScope.currentProject.collections[collection.id] = collection;
-        $rootScope.$broadcast('updateSideBar', $rootScope.currentProject.collections);
+        $rootScope.$broadcast('updateSideBar');
       };
 
       /*
       * remove collection from project.collections object
       */
       Project.removeCollection = function(collection){
-        if(!_.isObject($rootScope.currentProject.collections)) return $q.resolve(false);
-
         return Collections.remove(collection.id)
         .then(function(response){
           delete $rootScope.currentProject.collections[collection.id];
@@ -159,17 +157,17 @@ angular.module('app')
       * update collection from project.collections object
       * only collection.name and collection.description can be updated.
       */
-      Project.updateCollection = function(collectionId, data){
+      Project.updateCollection = function(collection, data){
         if(data.description){
-          $rootScope.currentProject.collections[collectionId].description = data.description;
+          $rootScope.currentProject.collections[collection.id].description = data.description;
         }
         if(data.name){
-          $rootScope.currentProject.collections[collectionId].name = data.name;
+          $rootScope.currentProject.collections[collection.id].name = data.name;
         }
-        return Collections.update(collectionId, $rootScope.currentProject.collections[collectionId])
-          .then(function(data){
-            $rootScope.$broadcast('updateSideBar', $rootScope.currentProject.collections);
-            return data;
+        return Collections.update(collection.id, data)
+          .then(function(response){
+            $rootScope.$broadcast('updateSideBar');
+            return response;
         });
       };
 
@@ -199,7 +197,7 @@ angular.module('app')
       Project.removeItemFromCollection = function(collectionID, itemUUID){
         return Items.remove(itemUUID).then(function(data){
           delete $rootScope.currentProject.collections[collectionID].items[itemUUID];
-          $rootScope.$broadcast('updateSideBar', $rootScope.currentProject.collections);
+          $rootScope.$broadcast('updateSideBar');
           return data;
         });
       };
@@ -219,8 +217,7 @@ angular.module('app')
           url: item.url,
           method: item.method
         };
-
-        $rootScope.$broadcast('updateSideBar', $rootScope.currentProject.collections);
+        $rootScope.$broadcast('updateSideBar');
         return Items.update(item.uuid, item);
       };
 
@@ -239,7 +236,7 @@ angular.module('app')
         var data = {
           collection_id : newCollectionId
         };
-        $rootScope.$broadcast('updateSideBar', $rootScope.currentProject.collections);
+        $rootScope.$broadcast('updateSideBar');
         return Items.update(itemUUID, data);
       };
 

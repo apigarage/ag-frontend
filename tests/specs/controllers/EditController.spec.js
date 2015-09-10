@@ -768,10 +768,48 @@ describe('Controller: EditController', function() {
     beforeEach(function(){
       modal = $scope.openNewCategoryModal();
     });
-    it('will open new category model', function(){
+    it('will open new category modal', function(){
       expect(modal.$scope.success).toBe($scope.saveNewCategory);
       expect(modal.$scope.cancel).toBeDefined();
     });
+  });
+
+  describe('openDeleteItemModal', function(){
+    var modalDeleteItem;
+    beforeEach(function(){
+      $rootScope.currentItem = { name: 'itemName'};
+      modalDeleteItem = $scope.openDeleteItemModal();
+    });
+    it('will open new delete modal', function(){
+      expect(modalDeleteItem.$scope.success).toBe($scope.deleteItem);
+      expect(modalDeleteItem.$scope.cancel).toBeDefined();
+    });
+  });
+
+  describe('deleteItemCollection', function(){
+    beforeEach(function(){
+      project = ProjectsFixtures.get('projectWithTwoCollectionNoItems');
+      $rootScope.currentProject = project;
+
+      createStub = ProjectsFixtures.getStub('retrieveProjectWithTwoCollectionNoItems');
+      HttpBackendBuilder.build(createStub.request, createStub.response);
+      Projects.loadProjectToRootScope(project.id);
+
+      item = ItemsFixtures.get('item1');
+      $rootScope.$broadcast('loadPerformRequest', item);
+
+      createItemsStub = ItemsFixtures.getStub('deleteItemId');
+      HttpBackendBuilder.build(createItemsStub.request, createItemsStub.response);
+    });
+
+    it('will delete item.collection_id on the server and locally.', function(){
+      $rootScope.currentCollection = CollectionsFixtures.get('collectionWithTwoItems');
+      $scope.deleteItem().then(function(){
+        expect($scope.endpoint.uuid).toBeUndefined();
+      });
+      $httpBackend.flush();
+    });
+
   });
 
   // Save New Collection (Collection and Category are the same things)
@@ -793,7 +831,7 @@ describe('Controller: EditController', function() {
         });
 
         it('will update item.collection_id on the server and locally.', function(){
-          $scope.saveNewCategory(c.name).then(function(){
+          $scope.saveNewCategory({name: c.name}).then(function(){
             expect($rootScope.currentProject.collections[c.id]).toBeDefined();
           });
           $httpBackend.flush();
@@ -811,7 +849,7 @@ describe('Controller: EditController', function() {
         });
 
         it('will update item.collection_id on the server and locally.', function(){
-          $scope.saveNewCategory(c.name).then(function(){
+          $scope.saveNewCategory({name: c.name}).then(function(){
             expect($rootScope.currentProject.collections[c.id]).toBeDefined();
           });
           $httpBackend.flush();
