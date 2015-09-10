@@ -13,15 +13,17 @@ angular.module('app')
   function ($scope, $rootScope, $window, $modal, $q, _, Projects){
 
     var copyOfCollection = {};
-    var currentItemUUID = null;
-    $scope.searchResultsCollection = {};
+    $scope.searchResultsCollection = null;
     $scope.search = "";
 
     // Braodcast Receiver to update the sidebar contents.
     // This is leverged by any Services that modifies the Project Colleciton
-    $rootScope.$on('updateSideBar', function(event, data) {
+    $rootScope.$on('updateSideBar', function(event) {
+      $scope.searchResultsCollection = null;
       if( _.isEmpty($rootScope.currentProject) ) return;
-      copyOfCollection = angular.copy( data, $scope.searchResultsCollection);
+      copyOfCollection = angular.copy($rootScope.currentProject.collections);
+      $scope.searchResultsCollection = angular.copy($rootScope.currentProject.collections);
+
       if(!_.isEmpty($scope.search)){
         $scope.searchFilter($scope.search);
       }
@@ -86,7 +88,6 @@ angular.module('app')
     };
 
     $scope.openRenameCollectionModal = function(currentCollection){
-      $rootScope.currentCollection.id = currentCollection.id;
       var newModal = $modal({
         show: false,
         template: "html/prompt.html",
@@ -123,22 +124,25 @@ angular.module('app')
         })
 
       });
-      newModal.$scope.success = $scope.saveCategory;
+      newModal.$scope.success = function(data){
+        return $scope.saveCategory(currentCollection,data).then(function(response){
+          return;
+        });
+      };
       newModal.$scope.cancel = function(error){ return $q.resolve(); };
       newModal.$promise.then( newModal.show );
       return newModal;
     };
 
-    $scope.saveCategory = function(data){
-      return Projects.updateCollection($rootScope.currentCollection.id, data)
+    $scope.saveCategory = function(currentCollection,data){
+      return Projects.updateCollection(currentCollection, data)
         .then(function(response){
-          //
-          return response;
+          // TODO: Error handling
+          return;
         });
     };
 
     $scope.openDeleteCollectionModal = function(currentCollection){
-      $rootScope.currentCollection.id = currentCollection;
       var newModal = $modal({
         show: false,
         template: "html/prompt.html",
@@ -172,23 +176,27 @@ angular.module('app')
         })
 
       });
-      newModal.$scope.success = $scope.deleteCategory;
+      newModal.$scope.success = function(){
+        return $scope.deleteCategory(currentCollection)
+        .then(function(response){
+          // TODO: Error handling
+          return response;
+        });
+      };
       newModal.$scope.cancel = function(error){ return $q.resolve(); };
       newModal.$promise.then( newModal.show );
       return newModal;
     };
 
-    $scope.deleteCategory = function(){
-      return Projects.removeCollection($rootScope.currentCollection.id)
+    $scope.deleteCategory = function(currentCollection){
+      return Projects.removeCollection(currentCollection)
         .then(function(response){
-          //
+          // TODO: Error handling
           return response;
         });
     };
 
     $scope.openDeleteItemModal = function(currentCollection, currentItem){
-      $rootScope.currentCollection.id = currentCollection.id;
-      currentItemUUID = currentItem.uuid;
       var newModal = $modal({
         show: false,
         template: "html/prompt.html",
@@ -222,16 +230,22 @@ angular.module('app')
         })
 
       });
-      newModal.$scope.success = $scope.deleteItem;
+      newModal.$scope.success = function(){
+        return $scope.deleteItem(currentCollection, currentItem)
+        .then(function(response){
+          // TODO: Error handling
+          return response;
+        });
+      };
       newModal.$scope.cancel = function(error){ return $q.resolve(); };
       newModal.$promise.then( newModal.show );
       return newModal;
     };
 
-    $scope.deleteItem = function(){
-      return Projects.removeItemFromCollection($rootScope.currentCollection.id, currentItemUUID)
+    $scope.deleteItem = function(currentCollection, currentItem){
+      return Projects.removeItemFromCollection(currentCollection.id, currentItem.uuid)
         .then(function(response){
-          //
+          // TODO: Error handling
           return response;
         });
     };

@@ -203,7 +203,8 @@ angular.module('app').controller('EditorCtrl', [
     $scope.deleteItem = function(){
       return Projects.removeItemFromCollection($rootScope.currentCollection.id, $rootScope.currentItem.uuid)
         .then(function(response){
-          //
+          // TODO: Error handling
+          $scope.endpoint = {};
           return response;
         });
     };

@@ -7,6 +7,11 @@ angular.module('app')
   function($httpBackend, Config, ItemsFixtures){
     var collections = {};
     collections.data = {
+      "collectionWithNoItemsZero": {
+        "id": "0",
+        "name": "Collection 1",
+        "description": "This is a perfectly fine collection."
+      },
       "collectionWithNoItems": {
         "id": "1",
         "name": "Collection 1",
@@ -23,6 +28,15 @@ angular.module('app')
       "collectionWithTwoItems":{
         "id": "3",
         "name": "Collection 3",
+        "description": "This is a perfectly fine collection.",
+        "items": [
+          ItemsFixtures.get('item1'),
+          ItemsFixtures.get('item2')
+        ]
+      },
+      "renamedCollection":{
+        "id": "3",
+        "name": "newCollectionName",
         "description": "This is a perfectly fine collection.",
         "items": [
           ItemsFixtures.get('item1'),
@@ -140,6 +154,33 @@ angular.module('app')
           statusText : 'OK'
         }
       },
+      "renameCollection" : {
+        request : {
+          method : 'PATCH',
+          url : Config.url + 'api/collections' + '/' + collections.get('collectionWithTwoItems').id,
+          headers : {"Content-Type":"application/json;charset=utf-8"},
+          data: JSON.stringify({
+            "name" : "newCollectionName"
+          }),
+        },
+        response : {
+          status : 200,
+          data: JSON.stringify(
+            collections.get('renamedCollection')
+          ),
+          statusText : 'OK'
+        }
+      },
+      "deleteCollection" : {
+        request : {
+          method : 'DELETE',
+          url : Config.url + 'api/collections' + '/' + collections.get('collectionWithNoItemsZero').id,
+        },
+        response : {
+          status : 200,
+          statusText : 'OK'
+        }
+      }
     };
     return collections;
   }]);
