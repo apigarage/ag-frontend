@@ -14,21 +14,22 @@
         </button> -->
         <button class="btn"
                 ng-click="saveCurrentRequest()"
-                ng-class="{'btn-primary': requestChanged, 'btn-default': !requestChanged}"
+                ng-class="{'btn-primary': requestChangedFlag, 'btn-default': !requestChangedFlag}"
                 data-title="<span class='visible-xs-inline visible-sm-inline'>Save Changes (</span>
                 <span class='visible-xs-inline visible-sm-inline'>)</span>">
           <span class="fa fa-fw fa-floppy-o"></span>
           <span class="hidden-xs hidden-sm">Save changes</span>
         </button>
-        <button class="btn btn-default"
+        <!-- <button class="btn btn-default"
           ng-click="copyCurrentRequest()"
           ng-show="currentItem.uuid">
           <span class="fa fa-fw fa-files-o"></span>
           <span class="hidden-xs hidden-sm">Make a copy</span>
-        </button>
+        </button> -->
         <button class="btn btn-default" ng-disabled="isDeleteButtonDisabled"
-          ng-click="openDeleteItemModal()">
-          <span class="fa fa-fw fa-trash-o" ></span>
+          ng-click="openDeleteItemModal()"
+          ng-show="currentItem.uuid">
+          <span class="fa fa-fw fa-trash-o"></span>
           <span class="hidden-xs hidden-sm">Delete</span>
         </button>
       </div>
@@ -49,9 +50,11 @@
         <h1 id="editor-title">
           <input type="text" class="content-editable"
                  placeholder="Untitled Request" pu-elastic-input
-                 ng-model="endpoint.name" />
+                 ng-model="endpoint.name"
+                 ng-change="requestChanged()"/>
         </h1>
       </div>
+      <!-- http://stackoverflow.com/questions/23698316/how-to-prevent-an-angular-bootstrap-dropdown-from-closing-unbind-event-which-wa -->
       <script type="text/ng-template" id="editor-category">
         <ul class="dropdown-menu">
           <li ng-repeat="collection in currentProject.collections">

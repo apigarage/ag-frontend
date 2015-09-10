@@ -27,3 +27,8 @@ or Items.js or any other services.
 UUID into a Core Service
 ================================
 UUID into a Core Service
+
+
+Always Return a promise
+========================
+Wherever we are returning false, or other values, we should be returning the promise.

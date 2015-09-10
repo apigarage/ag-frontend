@@ -398,23 +398,110 @@ describe('Controller: EditController', function() {
   });
 
   describe('able to receive broadcast ', function(){
-    it('is able to perform request', function(){
-      stub = RequestStubs.setPreviewTypeParsedStub;
-      HttpBackendBuilder.build(stub.request, stub.response);
-      $rootScope.$broadcast('loadPerformRequest',stub, false);
-      expect($scope.endpoint).not.toBeNull();
-      expect($scope.endpoint.status).toEqual(stub.request.status);
-      expect($scope.endpoint.data).toBe(stub.request.data);
-      expect($scope.endpoint.statusText).toBe(stub.request.statusText);
+
+    describe('When lodaOnly is set', function(){
+      it('is able to perform request', function(){
+        stub = RequestStubs.setPreviewTypeParsedStub;
+        HttpBackendBuilder.build(stub.request, stub.response);
+        $rootScope.$broadcast('loadPerformRequest',stub, false);
+        expect($scope.endpoint).not.toBeNull();
+        expect($scope.endpoint.status).toEqual(stub.request.status);
+        expect($scope.endpoint.data).toBe(stub.request.data);
+        expect($scope.endpoint.statusText).toBe(stub.request.statusText);
+      });
     });
-    it('is able to load request', function(){
-      stub = RequestStubs.setPreviewTypeParsedStub;
-      HttpBackendBuilder.build(stub.request, stub.response);
-      $rootScope.$broadcast('loadPerformRequest',stub);
-      expect($scope.endpoint).not.toBeNull();
-      expect($scope.endpoint.status).toEqual(stub.request.status);
-      expect($scope.endpoint.data).toBe(stub.request.data);
-      expect($scope.endpoint.statusText).toBe(stub.request.statusText);
+
+
+    describe('When old item is not selected', function(){
+
+      describe('When non-empty item is loaded', function(){
+        beforeEach(function(){
+          item = ItemsFixtures.get('itemWithFullDetails');
+        });
+
+        it('loads a non empty item', function(){
+          $rootScope.$broadcast('loadPerformRequest',item);
+          expect($scope.endpoint.requestUrl).toBe(item.url);
+          expect($scope.endpoint.name).toBe(item.name);
+          expect($scope.endpoint.requestHeaders).toBeDefined();
+          expect($scope.endpoint.requestBody).toBeDefined();
+          expect($scope.requestChangedFlag).toBe(false);
+        });
+      });
+
+      describe('When empty item is loaded', function(){
+        beforeEach(function(){
+          item = {};
+        });
+
+        it('loads an empty item', function(){
+          $rootScope.$broadcast('loadPerformRequest',item);
+          expect($scope.endpoint).not.toBeNull();
+          expect($scope.url).toBeUndefined();
+          expect($scope.name).toBeUndefined();
+          expect($scope.requestChangedFlag).toBe(false);
+        });
+      });
+    });
+
+    describe('When old item is already selected', function(){
+
+      beforeEach(function(){
+        oldItem = ItemsFixtures.get('itemWithFullDetails');
+        $rootScope.$broadcast('loadPerformRequest',oldItem);
+      });
+
+      describe('When non-empty item is loaded', function(){
+        beforeEach(function(){
+          item = ItemsFixtures.get('itemWithFullDetails');
+        });
+
+        it('loads a non empty item', function(){
+          $rootScope.$broadcast('loadPerformRequest',item);
+          expect($scope.endpoint.requestUrl).toBe(item.url);
+          expect($scope.endpoint.name).toBe(item.name);
+          expect($scope.endpoint.requestHeaders).toBeDefined();
+          expect($scope.endpoint.requestBody).toBeDefined();
+          expect($scope.requestChangedFlag).toBe(false);
+        });
+      });
+
+      describe('When empty item is loaded', function(){
+        beforeEach(function(){
+          item = {};
+        });
+
+        it('loads an empty item', function(){
+          $rootScope.$broadcast('loadPerformRequest',item);
+          expect($scope.endpoint).not.toBeNull();
+          expect($scope.url).toBeUndefined();
+          expect($scope.name).toBeUndefined();
+          expect($scope.requestChangedFlag).toBe(false);
+        });
+      });
+
+    });
+
+    describe('When changes are made to the old request', function(){
+      beforeEach(function(){
+        $scope.requestChanged();
+      });
+
+      describe('When an empty request is being loaded', function(){
+        beforeEach(function(){
+          item = ItemsFixtures.get('itemWithFullDetails');
+          $rootScope.$broadcast('loadPerformRequest',item);
+          // It is showing the modal.
+        });
+
+        it('does not load the item', function(){
+          // It is showing the modal. So, the the item is not loaded, YET.
+          expect($scope.endpoint.requestUrl).toBe("");
+          expect($scope.endpoint.name).toBe("");
+          expect($scope.endpoint.requestBody).toBe("");
+          expect($scope.requestChangedFlag).toBe(true);
+        });
+      });
     });
   });
 

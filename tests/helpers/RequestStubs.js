@@ -11,7 +11,6 @@ angular.module('app')
         // expected google get header
         headers : {
           "Content-Type":"application/json",
-          "language":"EN",
           "Accept":"application/json, text/plain, */*"
         }
       },
@@ -29,7 +28,6 @@ angular.module('app')
         data : 'Test Data POST request',
         // expected google post header
         headers : {
-          "language":"EN",
           "Accept":"application/json, text/plain, */*",
           "Content-Type":"application/json;charset=utf-8"
         }
@@ -49,7 +47,6 @@ angular.module('app')
         url : 'www.google.com',
         // expected google post header
         headers : {
-          "language":"EN",
           "Accept":"application/json, text/plain, */*"
         }
       },
@@ -68,7 +65,6 @@ angular.module('app')
         data : 'Test Data POST request',
         // expected google post header
         headers : {
-          "language":"EN",
           "Accept":"application/json, text/plain, */*",
           "Content-Type":"application/json;charset=utf-8"
         }
@@ -85,7 +81,6 @@ angular.module('app')
         url : 'www.google.com',
         // expected google post header
         headers : {
-          "language":"EN",
           "Accept":"application/json, text/plain, */*"
         }
       },
@@ -104,7 +99,6 @@ angular.module('app')
         url : 'www.google.com',
         // expected google post header
         headers : {
-          "language":"EN",
           "Accept":"application/json, text/plain, */*"
         }
       },
@@ -122,7 +116,6 @@ angular.module('app')
         url : 'www.google.com',
         // expected google post header
         headers : {
-          "language":"EN",
           "Accept":"application/json, text/plain, */*"
         }
       },
@@ -141,7 +134,6 @@ angular.module('app')
         url : 'www.google.com',
         // expected google post header
         headers : {
-          "language":"EN",
           "Accept":"application/json, text/plain, */*"
         }
       },
@@ -157,7 +149,6 @@ angular.module('app')
         url : 'www.api-garage.com/invalid/url',
         // expected headers
         headers : {
-          "language":"EN",
           "Accept":"application/json, text/plain, */*"
         }
       },
@@ -176,7 +167,6 @@ angular.module('app')
         url : 'www.api-garage.com/invalid/url',
         // expected headers
         headers : {
-          "language":"EN",
           "Accept":"application/json, text/plain, */*"
         }
       },
@@ -189,7 +179,6 @@ angular.module('app')
         url : 'www.google.com',
         // expected google post header
         headers : {
-          "language":"EN",
           "Accept":"application/json, text/plain, */*"
         }
       },
@@ -209,7 +198,6 @@ angular.module('app')
         data : 'Test Data POST request',
         // expected headers
         headers : {
-          "language":"EN",
           "Accept":"application/json, text/plain, */*",
           "Content-Type":"application/json;charset=utf-8"
         }
@@ -229,7 +217,6 @@ angular.module('app')
         // expected google get header
         headers : {
           "Content-Type":"application/json",
-          "language":"EN",
           "Accept":"application/json, text/plain, */*"
         }
       },
@@ -253,7 +240,6 @@ angular.module('app')
         // expected google get header
         headers : {
           "Content-Type":"application/json",
-          "language":"EN",
           "Accept":"application/json, text/plain, */*"
         }
       },
@@ -276,7 +262,6 @@ angular.module('app')
         // expected google get header
         headers : {
           "Content-Type":"application/json",
-          "language":"EN",
           "Accept":"application/json, text/plain, */*"
         }
       },
