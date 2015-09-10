@@ -28,7 +28,7 @@ angular.module('app')
     };
 
     /*
-     * @id: project id
+     * @id: item id
      */
     Item.get = function(id){
       var options = {
@@ -39,7 +39,7 @@ angular.module('app')
     };
 
     /*
-     * @id: project id
+     * @id: item id
      * @data: object fields and values
      */
     Item.update = function(id, data){
@@ -66,13 +66,14 @@ angular.module('app')
      };
 
     /*
-     * @id: project id
+     * @id: item id
      */
      Item.remove = function(id){
        var options = {
          'method': 'DELETE',
          'url': Config.url + Config.api + endpoint + '/' + id
-       }; return ApiRequest.send(options);
+       };
+       return ApiRequest.send(options);
      };
 
      Item.loadAll = function(itemsFromDB){

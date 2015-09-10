@@ -28,7 +28,7 @@ angular.module('app')
     };
 
     /*
-     * @id: project id
+     * @id: collection id
      */
     Collection.get = function(id){
       var options = {
@@ -39,11 +39,10 @@ angular.module('app')
     };
 
     /*
-     * @id: project id
+     * @id: collection id
      * @data: object fields and values
      */
     Collection.update = function(id, data){
-
       var options = {
         'method': 'PATCH',
         'url': Config.url + Config.api + endpoint + '/' + id,
@@ -65,7 +64,7 @@ angular.module('app')
      };
 
     /*
-     * @id: project id
+     * @id: collection id
      */
      Collection.remove = function(id){
        var options = {
