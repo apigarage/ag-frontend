@@ -36,8 +36,7 @@ angular.module('app').controller('EditorCtrl', [
         name: "",
         requestMethod: 'GET',
         requestHeaders: [
-          { key: "Content-Type", value: "application/json" },
-          { key: "language", value: "EN" }
+          { key: "Content-Type", value: "application/json" }
         ],
         requestBody:  ''
       };
@@ -53,6 +52,10 @@ angular.module('app').controller('EditorCtrl', [
 
     function resetErrorMessages(){
       $scope.showCategoryMissingErrorMessage = false;
+    }
+
+    function resetRequestChanged(){
+      $scope.requestChangedFlag = false;
     }
 
     function init(){
@@ -84,9 +87,16 @@ angular.module('app').controller('EditorCtrl', [
       resetResponse();
       showRequestHideCancelButtons();
       setDefaultEndpoint();
+      resetRequestChanged();
     }
 
     // END - Private Functions
+
+    $scope.requestChanged = function(){
+      if(!$scope.requestChangedFlag){
+        $scope.requestChangedFlag = true;
+      }
+    };
 
     $scope.copyCurrentRequest = function(){
       // This should never happen. If it happens, just in case, the current request is its own copy.
@@ -402,11 +412,90 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     $rootScope.$on('loadPerformRequest', function(event, item, loadOnly) {
-      $rootScope.currentItem = item;
-      if(_.isUndefined(loadOnly)) loadOnly = true;
-      $scope.loadRequestToScope(item);
-      if(!loadOnly) $scope.performRequest();
+
+      if( $scope.requestChangedFlag && item.uuid !== $scope.endpoint.uuid ){
+
+        var modalContent = {
+          // modal window properties
+          'disableCloseButton': false,
+          'promptMessage': true,
+          'promptMessageText': 'You have made changes to the endpoint. Would you like to save?',
+          'promptIsError': true,
+          'hideModalOnSubmit': true,
+
+          // submit button properties
+          'showSubmitButton' : true,
+          'disbledSubmitButton' : false,
+          'submitButtonText' : 'Save Current Endpoint',
+
+          'showDiscardButton' : true,
+          'disbleDiscardButton' : false,
+          'discardButtonText' : 'Continue without editing',
+
+          // input prompt properties
+          'showInputPrompt' : false,
+          'requiredInputPrompt' : false,
+          'placeHolderInputText': '',
+          'labelInputText': '',
+
+          // input email prompt properties
+          'showInputEmailPrompt' : false,
+          'requiredInputEmailPrompt': false,
+          'placeHolderInputEmailText': '',
+          'labelInputEmailText': ''
+        };
+
+        var newModal = $modal({
+          show: false,
+          template: "html/prompt.html",
+          backdrop: true,
+          title: "Confirm Changing Endpoint",
+          content: JSON.stringify(modalContent)
+        });
+
+        newModal.$scope.success = function(){
+          return $scope.saveCurrentRequest()
+            .then(function(){
+              return loadRequest(item, loadOnly);
+            });
+        };
+
+        newModal.$scope.cancel = function(){
+          loadRequest(item, loadOnly);
+        };
+
+        newModal.$promise.then( newModal.show );
+
+        return newModal;
+      }
+
+      // If current request is being loaded
+      // if(item && item.uuid === $scope.endpoint.uuid ){
+
+      // If empty item is being loaded on the initial rendering
+      // if(! (item && item.name) ) {
+
+      // If old item is not changed
+      // if(!$scope.requestChangedFlag){
+
+      loadRequest(item, loadOnly);
+      return $q.resolve();
     });
+
+    function loadRequest(item, loadOnly){
+      if(_.isUndefined(loadOnly)) loadOnly = true;
+
+      resetRequestChanged();
+
+      $rootScope.currentItem = item;
+      $scope.loadRequestToScope(item);
+
+      if(!loadOnly){
+        $scope.performRequest();
+      }
+
+      return $q.resolve();
+    }
 
     /*
      * Sets the scope variables based on the request
@@ -449,11 +538,11 @@ angular.module('app').controller('EditorCtrl', [
       resetErrorMessages();
       if(_.isEmpty($rootScope.currentCollection)){
         $scope.showCategoryMissingErrorMessage = true;
-        return;
+        $q.reject();
       }
       if(_.isEmpty($scope.endpoint.name)){
         $focus('editor-title');
-        return;
+        $q.reject();
       }
 
       var item = $scope.buildRequestOutOfScope();
