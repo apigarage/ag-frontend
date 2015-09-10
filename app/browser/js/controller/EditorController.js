@@ -8,12 +8,13 @@ angular.module('app').controller('EditorCtrl', [
   '$sce',
   '$modal',
   '$q',
+  '$focus',
   'RequestUtility',
   'History',
   'Collections',
   'Projects',
   function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q,
-    RequestUtility, History, Collections, Projects){
+    $focus, RequestUtility, History, Collections, Projects){
 
     // Private Functions
     init();
@@ -451,6 +452,7 @@ angular.module('app').controller('EditorCtrl', [
         return;
       }
       if(_.isEmpty($scope.endpoint.name)){
+        $focus('editor-title');
         return;
       }
 
