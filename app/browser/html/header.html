@@ -11,10 +11,15 @@
     <button class="header-item">
       Testing
     </button> -->
-
-    <div class="header-item-status pull-right">
-      <span class="glyphicon " ng-class="online == true ? 'glyphicon-globe' : 'glyphicon-warning-sign'"></span>
-        {{connectionStatus}}
+    <div class="header-item-status pull-right ">
+      <span
+        bs-tooltip
+        data-title="{{online == true ? 'API Garage is online.' : 'API Garage - was unable to connect to the internet.
+        The application is not offline optimized, and you may experience some unexpected behaviour.'}}"
+        data-placement="bottom">
+      <span class="glyphicon" ng-class="online == true ? 'glyphicon-globe' : 'glyphicon-warning-sign'"></span>
+        <span >{{connectionStatus}}</span>
+      </span>
     </div>
     <button class="header-item pull-right" bs-dropdown data-template="accountMenu" data-placement="bottom-right">
       <span class="glyphicon glyphicon-user"></span>
