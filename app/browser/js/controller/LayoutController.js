@@ -17,11 +17,11 @@ angular.module('app').controller('LayoutCtrl', [
     $scope.online = $window.navigator.onLine;
     $scope.setConnectionStatus($scope.online);
 
-    // TODO: This clause is only needed in development and is not used in produciton
-    if(!_.isFinite( $rootScope.currentProjectId )){
+    if( $rootScope.currentProjectId && isNaN($rootScope.currentProjectId) ){
       $state.go('projectcreateoropen');
       return $q.resolve();
     }
+
     return Projects.loadProjectToRootScope($rootScope.currentProjectId);
   }
 
