@@ -17,18 +17,6 @@ angular.module('app').controller('ProjectCreateOrOpenCtrl', [
     // TODO: handling of unauthorized or connection issues
     // as discussed this should be covered in the ApiRequest
     // portion of the code
-
-    // Resolves issue where the open project will not go to the app
-    // the init() will run as the user moves to another state
-    // TODO: a user session handler to track currentProjectId
-    if(_.isFinite($rootScope.currentProjectId)){
-      $state.go('app');
-      return $q.resolve();
-    }
-
-    // Not returning the pomise will also resolve the issue
-    // But this will make this promise not testable
-    // Projects.getAll()
     return Projects.getAll()
       .then(function(projects){
         if(_.isEmpty(projects)){
