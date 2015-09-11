@@ -2,14 +2,12 @@ angular.module('app').controller('LayoutCtrl', [
   '$scope',
   '$rootScope',
   '$modal',
-  '$state',
   '$window',
   '$q',
+  '$state',
   'lodash',
   'Projects',
-  'Auth',
-  function ($scope, $rootScope, $modal, $state, $window, $q, _, Projects, Auth){
-
+  function ($scope, $rootScope, $modal, $window, $q, $state, _, Projects ){
 
   function init(){
     $scope.layout = {
@@ -18,7 +16,12 @@ angular.module('app').controller('LayoutCtrl', [
     };
     $scope.online = $window.navigator.onLine;
     $scope.setConnectionStatus($scope.online);
-    if(_.isEmpty( $rootScope.currentProjectId )) $state.go('projectcreateoropen');
+
+    // TODO: This clause is only needed in development and is not used in produciton
+    if(!_.isFinite( $rootScope.currentProjectId )){
+      $state.go('projectcreateoropen');
+      return $q.resolve();
+    }
     return Projects.loadProjectToRootScope($rootScope.currentProjectId);
   }
 
@@ -32,10 +35,17 @@ angular.module('app').controller('LayoutCtrl', [
       $rootScope.$digest();
   }, true);
 
+  $scope.switchProject = function(){
+    // Reset Current Proejct to undefined when switching between projects
+    $rootScope.currentProjectId = undefined;
+    $state.go('projectcreateoropen');
+  };
   $scope.setConnectionStatus = function (online){
       $scope.online = online;
       $scope.connectionStatus = "Offline";
-      if($scope.online) $scope.connectionStatus = "Online";
+      if($scope.online){
+        $scope.connectionStatus = "";
+      }
   };
 
   $scope.refreshProject = function(){

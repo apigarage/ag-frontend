@@ -2,12 +2,11 @@ angular.module('app').controller('ProjectCreateOrOpenCtrl', [
   '$scope',
   '$rootScope',
   '$modal',
+  '$q',
   '$state',
   'lodash',
   'Projects',
-  function ($scope, $rootScope, $modal, $state, _, Projects){
-
-  init();
+  function ($scope, $rootScope, $modal, $q, $state, _, Projects){
 
   function init(){
     $scope.showCreateProject = false;
@@ -22,7 +21,10 @@ angular.module('app').controller('ProjectCreateOrOpenCtrl', [
     // Resolves issue where the open project will not go to the app
     // the init() will run as the user moves to another state
     // TODO: a user session handler to track currentProjectId
-    if(_.isFinite($rootScope.currentProjectId)) $state.go('app');
+    if(_.isFinite($rootScope.currentProjectId)){
+      $state.go('app');
+      return $q.resolve();
+    }
 
     // Not returning the pomise will also resolve the issue
     // But this will make this promise not testable
@@ -83,4 +85,5 @@ angular.module('app').controller('ProjectCreateOrOpenCtrl', [
     return true;
   }
 
+  init();
 }]);

@@ -67,7 +67,7 @@ describe('Controller: LayoutController', function() {
     it('Application is online', function(){
       $scope.setConnectionStatus(true);
       expect($scope.online).toEqual(true);
-      expect($scope.connectionStatus).toBe("Online");
+      expect($scope.connectionStatus).toBe("");
     });
 
     it('Application is offline', function(){
