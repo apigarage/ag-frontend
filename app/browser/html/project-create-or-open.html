@@ -6,7 +6,7 @@
       <form class="authentication-form" >
         <p>Select a project to open</p>
         <div class="list-group" ng-model="projects.selectedProject">
-          <a href="#" ng-click="openProject(project.id)" class="list-group-item"
+          <a ng-click="openProject(project.id)" class="list-group-item"
             ng-repeat="project in projects" >
             <h4 class="list-group-item-heading">{{project.name}}</h4>
             <p class="list-group-item-text">{{project.description}}</p>
