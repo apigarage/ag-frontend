@@ -270,8 +270,11 @@ angular.module('app').controller('EditorCtrl', [
 
     $scope.performRequest = function(){
       if( _.isEmpty($scope.endpoint.requestUrl) ) return;
+
       resetResponse();
       showCancelHideRequestButtons();
+      resetErrorMessages();
+
       var deferedAbort = $q.defer();
       var options = {
         method: $scope.endpoint.requestMethod,
@@ -461,7 +464,7 @@ angular.module('app').controller('EditorCtrl', [
         };
 
         newModal.$scope.cancel = function(){
-          loadRequest(item, loadOnly);
+          return loadRequest(item, loadOnly);
         };
 
         newModal.$promise.then( newModal.show );
@@ -486,6 +489,7 @@ angular.module('app').controller('EditorCtrl', [
       if(_.isUndefined(loadOnly)) loadOnly = true;
 
       resetRequestChanged();
+      resetErrorMessages();
 
       $rootScope.currentItem = item;
       $scope.loadRequestToScope(item);
@@ -538,11 +542,11 @@ angular.module('app').controller('EditorCtrl', [
       resetErrorMessages();
       if(_.isEmpty($rootScope.currentCollection)){
         $scope.showCategoryMissingErrorMessage = true;
-        $q.reject();
+        return $q.resolve(); // Tests expect a promise back.
       }
       if(_.isEmpty($scope.endpoint.name)){
         $focus('editor-title');
-        $q.reject();
+        return $q.resolve(); // Tests expect a promise back.
       }
 
       var item = $scope.buildRequestOutOfScope();
@@ -556,6 +560,7 @@ angular.module('app').controller('EditorCtrl', [
 
       return promise.then(function(item){
         $rootScope.currentItem = item;
+        resetRequestChanged();
         $rootScope.$broadcast('loadPerformRequest', item);
       });
     };

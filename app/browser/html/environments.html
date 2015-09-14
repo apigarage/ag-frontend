@@ -8,6 +8,7 @@
 
           <h1>Environment Variables</h1>
           <p>
+            Environment variables allow you to switch between environments easily. <br/>
             Use environment variables with API Garage much like you use them in regular <br/>
             programming. For example, you could create a <code>host</code> variable and use it in your url like so: <br/>
             <code ng-non-bindable>http://{{host}}/login</code>. Easily swap out values by changing the environment!
@@ -36,15 +37,12 @@
               <button type="button" class="btn btn-default pull-right"
                 ng-click="addEnvironment('public')">
                 <span class="fa fa-plus"></span>
-                New Shared Environment
+                Create First Shared Environment
               </button>
-              Shared Environments are shared with your team, e.g.: <br/>
+              Shared Environments are shared with your team, <br/> e.g.
               <code><span class="fa fa-sliders"></span> PRODUCTION</code> or
               <code><span class="fa fa-sliders"></span> STAGING</code>.
               <code><span class="fa fa-sliders"></span> UAT</code>.
-              <em>
-                Create one now! <span class="fa fa-long-arrow-right"></span>
-              </em>
             </p>
 
 
@@ -158,14 +156,12 @@
               <button type="button" class="btn btn-default pull-right"
                 ng-click="addEnvironment('private')">
                 <span class="fa fa-plus"></span>
-                New Private Environment
+                Create First Private Environment
               </button>
-              Private Environments are not shared with anyone, and is only available to you e.g.: <br/>
+              Private Environments are not shared with anyone, and is only available to you. <br/>
+              e.g.:
               <code><span class="fa fa-sliders"></span> LOCAL</code> or
               <code><span class="fa fa-sliders"></span> LOCAL-UAT</code>.
-              <em>
-                Create one now! <span class="fa fa-long-arrow-right"></span>
-              </em>
             </p>
 
             <table class="environment-table" ng-if="!!currentProject.environments.private">

@@ -17,7 +17,7 @@ angular.module('app').controller('LayoutCtrl', [
     $scope.online = $window.navigator.onLine;
     $scope.setConnectionStatus($scope.online);
 
-    if( $rootScope.currentProjectId && isNaN($rootScope.currentProjectId) ){
+    if( isNaN($rootScope.currentProjectId) ){
       $state.go('projectcreateoropen');
       return $q.resolve();
     }
