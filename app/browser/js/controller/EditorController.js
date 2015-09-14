@@ -538,11 +538,11 @@ angular.module('app').controller('EditorCtrl', [
       resetErrorMessages();
       if(_.isEmpty($rootScope.currentCollection)){
         $scope.showCategoryMissingErrorMessage = true;
-        $q.reject(); // Tests expect a promise back.
+        $q.reject();
       }
       if(_.isEmpty($scope.endpoint.name)){
         $focus('editor-title');
-        $q.reject(); // Tests expect a promise back.
+        $q.reject();
       }
 
       var item = $scope.buildRequestOutOfScope();
