@@ -330,15 +330,14 @@ angular.module('app').controller('EditorCtrl', [
     // and assigns response data accoringly.
     $scope.setResponsePreviewType = function(previewType){
       $scope.responsePreviewTypeContent = null;
+      $scope.currentResponsePreviewTab = previewType;
+
       if( previewType.title == "Raw" ){
-        $scope.currentResponsePreviewTab = previewType;
         $scope.responsePreviewTypeContent = $scope.response.data;
       }
       else if ( previewType.title == "Parsed" ){
-        $scope.currentResponsePreviewTab = previewType;
         try{
-          JSON.parse($scope.response.data); // checks  valid JSON
-          $scope.responsePreviewTypeContent = $scope.response.data;
+          $scope.responsePreviewTypeContent = $filter('json')( JSON.parse($scope.response.data ) );
         }
         catch(error){
           console.log("Invalid JSON " + error.stack);
@@ -347,11 +346,10 @@ angular.module('app').controller('EditorCtrl', [
         }
       }
       else if  ( previewType.title == "Preview" ){
-
-        $scope.currentResponsePreviewTab = previewType;
         // Loading in the iframe it sandboxes the html by default
         $scope.responsePreviewTypeContent = $sce.trustAsHtml($scope.response.data);
       }
+
     };
 
     $scope.requestBodyEditorOptions = {
@@ -400,7 +398,7 @@ angular.module('app').controller('EditorCtrl', [
       useWrapMode : true,
       showGutter: false,
       theme: 'kuroir',
-      mode: 'xml',
+      mode: 'json',
       onLoad: function(editor){
         editor.setShowPrintMargin(false);
         editor.setHighlightActiveLine(false);
