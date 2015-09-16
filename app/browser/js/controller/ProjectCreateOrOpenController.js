@@ -4,15 +4,18 @@ angular.module('app').controller('ProjectCreateOrOpenCtrl', [
   '$modal',
   '$q',
   '$state',
+  '$window',
   'lodash',
   'Projects',
-  function ($scope, $rootScope, $modal, $q, $state, _, Projects){
+  'Auth',
+  function ($scope, $rootScope, $modal, $q, $state, $window, _, Projects, Auth){
 
   function init(){
     $scope.showCreateProject = false;
     $scope.showOpenProject = false;
     $scope.createProjectError = false;
     $scope.projects = {};
+    $scope.isConnectedToInternet = $window.navigator.onLine;
 
     // TODO: handling of unauthorized or connection issues
     // as discussed this should be covered in the ApiRequest
@@ -62,6 +65,11 @@ angular.module('app').controller('ProjectCreateOrOpenCtrl', [
     $state.go('app');
   };
 
+  $scope.logout = function(){
+    Auth.logout();
+    $state.go('authentication');
+  };
+
   function isValidProjectName(){
     $scope.createProjectError = false;
     if(_.isUndefined($scope.createProject.projectName) ||
@@ -72,6 +80,16 @@ angular.module('app').controller('ProjectCreateOrOpenCtrl', [
     }
     return true;
   }
+
+  $window.addEventListener("online", function () {
+      $scope.isConnectedToInternet = true;
+      $rootScope.$digest();
+  }, true);
+
+  $window.addEventListener("offline", function () {
+      $scope.isConnectedToInternet = false;
+      $rootScope.$digest();
+  }, true);
 
   init();
 }]);
