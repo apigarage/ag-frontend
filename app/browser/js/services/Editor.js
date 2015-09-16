@@ -61,61 +61,15 @@ angular.module('app')
           // CREATE REQUEST
 
           // Show modal
-
           var newModal = $modal({
             show: false,
             template: "html/prompt.html",
             backdrop: true,
             title: "Confirm Save Changes",
-            content: JSON.stringify({
-              // modal window properties
-              'disableCloseButton': false,
-              'promptMessage': false,
-              'promptMessageText': 'Save Request',
-              'promptIsError': false,
-              'hideModalOnSubmit': true,
-
-              // submit button properties
-              'showSubmitButton' : true,
-              'disbledSubmitButton' : false,
-              'submitButtonText' : 'Save',
-
-              // discard button properties
-              'showDiscardButton' : true,
-              'disbleDiscardButton' : false,
-              'discardButtonText' : 'Cancel',
-
-              // input prompt properties
-              'placeHolderInputText': 'Untitled Request',
-              'labelInputText': 'Request Name',
-              'inputPromptText' : endpoint.name,
-              'showInputPrompt' : true,
-              'requiredInputPrompt' : true,
-
-              // input email prompt properties
-              'placeHolderInputEmailText': 'string',
-              'labelInputEmailText': 'string',
-              'showInputEmailPrompt' : false,
-
-              // dropdown prompt properteis
-              'showDropdown' : true,
-              'dropdownItems' :  $rootScope.currentProject.collections,
-              'dropdownSelectedItem' : $rootScope.currentCollection,
-              'showDividerItem' : true,
-              'dividerItemName' : 'New Category',
-              'requiredDropDownItem' : true,
-              'labelDropdownText': 'Category',
-
-              // input prompt properties A
-              'placeHolderInputTextA': 'Untitled Category',
-              'labelInputTextA': 'New Category Name',
-              'inputPromptTextA' : '',
-              'showInputPromptA' : false,
-              'requiredInputPromptA' : false,
-            })
+            content: saveModalRequestContent()
           });
 
-          // so that this save function can return the promise.
+          // so that save() function can return the promise.
           newModal.$scope.deferred = deferred;
 
           newModal.$scope.success = function(data){
@@ -140,9 +94,9 @@ angular.module('app')
             return $q.all(promises).then(function(){
               return Projects.addItemToCollection(collection.id, endpointForDB)
                 .then(function(data){
-                  if( endpoint.uuid === undefined ){
-                    $rootScope.$broadcast('loadPerformRequest', data);
-                  }
+                  // We do not have the current item loaded to controller.
+                  // Let's do that.
+                  $rootScope.$broadcast('loadPerformRequest', data);
                 });
             });
           };
@@ -153,27 +107,80 @@ angular.module('app')
 
           newModal.$promise.then( newModal.show );
 
-          // Use data from modal
-        } else { // Update the request
+        } else {
+          // UPDATE REQUEST
           Projects.updateItemInCollection($rootScope.currentCollection.id, endpointForDB)
-            .then(function(){
+            .catch(function(data){
+              console.log(data);
+            })
+            .finally(function(){
               deferred.resolve();
             });
         }
 
         return deferred.promise;
-
       };
+
+      function saveModalRequestContent(){
+        return JSON.stringify({
+          // modal window properties
+          'disableCloseButton': false,
+          'promptMessage': false,
+          'promptMessageText': 'Save Request',
+          'promptIsError': false,
+          'hideModalOnSubmit': true,
+
+          // submit button properties
+          'showSubmitButton' : true,
+          'disbledSubmitButton' : false,
+          'submitButtonText' : 'Save',
+
+          // discard button properties
+          'showDiscardButton' : true,
+          'disbleDiscardButton' : false,
+          'discardButtonText' : 'Cancel',
+
+          // input prompt properties
+          'placeHolderInputText': 'Untitled Request',
+          'labelInputText': 'Request Name',
+          'inputPromptText' : endpoint.name,
+          'showInputPrompt' : true,
+          'requiredInputPrompt' : true,
+
+          // input email prompt properties
+          'placeHolderInputEmailText': 'string',
+          'labelInputEmailText': 'string',
+          'showInputEmailPrompt' : false,
+
+          // dropdown prompt properteis
+          'showDropdown' : true,
+          'dropdownItems' :  $rootScope.currentProject.collections,
+          'dropdownSelectedItem' : $rootScope.currentCollection,
+          'showDividerItem' : true,
+          'dividerItemName' : 'New Category',
+          'requiredDropDownItem' : true,
+          'labelDropdownText': 'Category',
+
+          // input prompt properties A
+          'placeHolderInputTextA': 'Untitled Category',
+          'labelInputTextA': 'New Category Name',
+          'inputPromptTextA' : '',
+          'showInputPromptA' : false,
+          'requiredInputPromptA' : false,
+        });
+      }
 
       /*
        * Save Current Request Flow while Changing Request
        */
       Editor.saveChangedEndpoint = function(){
-        $window.console.log('Should I show modal');
+        $window.console.log('Should I show modal?');
         if( ! Editor.requestChanged ) return $q.resolve();
         $window.console.log('Yes');
+
         $window.console.log('Modal shown, selected save');
-        return Editor.save();
+        return $q.resolve();
+        // return Editor.save();
       };
 
       /*

@@ -212,7 +212,6 @@ angular.module('app')
       */
       Project.updateItemInCollection = function(collectionId, item){
         // Reset the item in the collection
-        $rootScope.currentProject.collections[collectionId].items[item.uuid] = item;
         var data = {
           name: item.name,
           headers: item.headers,
@@ -220,8 +219,11 @@ angular.module('app')
           url: item.url,
           method: item.method
         };
-        $rootScope.$broadcast('updateSideBar');
-        return Items.update(item.uuid, item);
+        return Items.update(item.uuid, item).then(function(data){
+          $rootScope.currentProject.collections[collectionId].items[item.uuid] = data;
+          $rootScope.$broadcast('updateSideBar');
+          return data;
+        });
       };
 
       Project.setNewCollectionForItem = function(oldCollectionId, newCollectionId, itemUUID){
@@ -230,17 +232,21 @@ angular.module('app')
         if(! _.isObject($rootScope.currentProject.collections[newCollectionId].items)){
           $rootScope.currentProject.collections[newCollectionId].items = {};
         }
-        // The item is removed from the old collection
-        delete $rootScope.currentProject.collections[oldCollectionId].items[itemUUID];
-        // Reset the item in the new collection
-        item.collection_id = newCollectionId;
-        $rootScope.currentProject.collections[newCollectionId].items[itemUUID] = item;
         // Make the DB Changes
         var data = {
           collection_id : newCollectionId
         };
-        $rootScope.$broadcast('updateSideBar');
-        return Items.update(itemUUID, data);
+
+        return Items.update(itemUUID, data).then(function(data){
+          // The item is removed from the old collection
+          delete $rootScope.currentProject.collections[oldCollectionId].items[itemUUID];
+          // Reset the item in the new collection
+          item.collection_id = newCollectionId;
+          $rootScope.currentProject.collections[newCollectionId].items[itemUUID] = data;
+          $rootScope.$broadcast('updateSideBar');
+          return data;
+        });
+
       };
 
       //

@@ -405,15 +405,14 @@ angular.module('app').controller('EditorCtrl', [
 
     $scope.$on('loadPerformRequest', function(event, item, loadOnly) {
 
-      $rootScope.currentItem = item;
-      $rootScope.currentCollection = $rootScope.currentProject.collections[item.collection_id];
+      return Editor.saveChangedEndpoint().then(function(){
+        $rootScope.currentItem = item;
+        $rootScope.currentCollection = $rootScope.currentProject.collections[item.collection_id];
 
-      // return Editor.saveChangedEndpoint().then(function(){
-      //
-      //   $window.console.log('Loading new Request');
-      //   Editor.resetRequestChangedFlag();
-      //   return loadRequest(item, loadOnly);
-      // });
+        $window.console.log('Loading new Request');
+        Editor.resetRequestChangedFlag();
+        return loadRequest(item, loadOnly);
+      });
 
       // if( $scope.requestChangedFlag && item.uuid !== $scope.endpoint.uuid ){
       //
@@ -487,9 +486,6 @@ angular.module('app').controller('EditorCtrl', [
     function loadRequest(item, loadOnly){
       if(_.isUndefined(loadOnly)) loadOnly = true;
 
-
-      $rootScope.currentItem = item;
-
       $scope.loadRequestToScope(item);
 
       if(!loadOnly){
@@ -524,24 +520,7 @@ angular.module('app').controller('EditorCtrl', [
      * Saves the request from scope to DB.
      */
     $scope.saveCurrentRequest = function(){
-
       return Editor.save();
-
-      // if( _.isEmpty(item.uuid) ){ // Create a request
-      //   promise = Projects.addItemToCollection($rootScope.currentCollection.id, item);
-      // } else { // Update the request
-      //   promise = Projects.updateItemInCollection($rootScope.currentCollection.id, item);
-      // }
-
-      // return promise.then(function(item){
-      //   $rootScope.currentItem = item;
-      //   $rootScope.$broadcast('loadPerformRequest', item);
-      // });
-
     };
 
-    /*
-     * Builds the request object (to be saved) using scope.
-     * Returns the request object.
-     */
   }]);

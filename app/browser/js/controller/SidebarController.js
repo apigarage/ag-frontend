@@ -31,8 +31,6 @@ angular.module('app')
 
     $scope.selectItem = function(item, collection){
       // These assignments are used for loading the endpoint in the editor
-      $rootScope.currentCollection = collection;
-      $rootScope.currentItem = item;
       $rootScope.$broadcast('loadPerformRequest', item);
     };
 
