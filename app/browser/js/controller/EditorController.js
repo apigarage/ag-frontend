@@ -13,8 +13,9 @@ angular.module('app').controller('EditorCtrl', [
   'History',
   'Collections',
   'Projects',
+  'Editor',
   function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q,
-    $focus, RequestUtility, History, Collections, Projects){
+    $focus, RequestUtility, History, Collections, Projects, Editor){
 
     // Private Functions
     init();
@@ -50,14 +51,6 @@ angular.module('app').controller('EditorCtrl', [
       $scope.response = null;
     }
 
-    function resetErrorMessages(){
-      $scope.showCategoryMissingErrorMessage = false;
-    }
-
-    function resetRequestChanged(){
-      $scope.requestChangedFlag = false;
-    }
-
     function init(){
       $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
 
@@ -68,9 +61,9 @@ angular.module('app').controller('EditorCtrl', [
         }, {
           title: 'Parsed',
           url: 'html/editor-response-parsed.html'
-        }, {
-          title: 'Preview',
-          url: 'html/editor-response-preview.html'
+        // }, {
+        //   title: 'Preview',
+        //   url: 'html/editor-response-preview.html'
         }
       ];
       $scope.currentResponsePreviewTab = {
@@ -83,105 +76,106 @@ angular.module('app').controller('EditorCtrl', [
       $scope.RESPONSE_SEARCH_FLAG = false;
 
       $scope.isDeleteButtonDisabled = true;
-      resetErrorMessages();
       resetResponse();
       showRequestHideCancelButtons();
       setDefaultEndpoint();
-      resetRequestChanged();
     }
 
     // END - Private Functions
 
     $scope.requestChanged = function(){
+      Editor.setEndpoint( $scope.endpoint );
       if(!$scope.requestChangedFlag){
         $scope.requestChangedFlag = true;
       }
     };
 
-    $scope.copyCurrentRequest = function(){
-      // This should never happen. If it happens, just in case, the current request is its own copy.
-      if(!$scope.endpoint.uuid) return;
+    // THIS LOGIC SHOULD NOT EXIST HERE. IT's PART OF SIDEBAR.
+    // $scope.copyCurrentRequest = function(){
+    //   // This should never happen. If it happens, just in case, the current request is its own copy.
+    //   if(!$scope.endpoint.uuid) return;
+    //
+    //   var newItem = $scope.endpoint;
+    //   newItem.uuid = undefined;
+    //   newItem.name = newItem.name + ' Copy';
+    //
+    //   newItem = $scope.buildRequestOutOfScope();
+    //   return Projects.addItemToCollection($rootScope.currentCollection.id, newItem)
+    //     .then(function(item){
+    //       $rootScope.currentItem = item;
+    //       $rootScope.$broadcast('loadPerformRequest', item);
+    //     });
+    // };
 
-      var newItem = $scope.endpoint;
-      newItem.uuid = undefined;
-      newItem.name = newItem.name + ' Copy';
+    // THIS LOGIC SHOULD NOT EXIST HERE. IT's PART OF SIDEBAR.
+    // $scope.changeCollection = function(collection){
+    //   var oldCollectionId = $rootScope.currentCollection.id;
+    //   var newCollectionId = collection.id;
+    //
+    //   $rootScope.currentCollection = collection;
+    //   if($scope.endpoint.uuid){
+    //     return Projects.setNewCollectionForItem(oldCollectionId, newCollectionId, $scope.endpoint.uuid)
+    //       .then(function(data){
+    //         console.log('Request Updated Successfully');
+    //         // Some Sort of notification would be handy.
+    //       });
+    //   }
+    // };
 
-      newItem = $scope.buildRequestOutOfScope();
-      return Projects.addItemToCollection($rootScope.currentCollection.id, newItem)
-        .then(function(item){
-          $rootScope.currentItem = item;
-          $rootScope.$broadcast('loadPerformRequest', item);
-        });
-    };
+    // $scope.openNewCategoryModal = function(){
+    //   var modalContent = {
+    //     // modal window properties
+    //     'disableCloseButton': false,
+    //     'promptMessage': false,
+    //     'promptMessageText': 'Add Category Message: ',
+    //     'promptIsError': false,
+    //     'hideModalOnSubmit': true,
+    //
+    //     // submit button properties
+    //     'showSubmitButton' : true,
+    //     'disbledSubmitButton' : false,
+    //     'submitButtonText' : 'Add',
+    //
+    //     // discard button properties
+    //     'showDiscardButton' : true,
+    //     'disbleDiscardButton' : false,
+    //     'discardButtonText' : 'Cancel',
+    //
+    //     // input prompt properties
+    //     'showInputPrompt' : true,
+    //     'requiredInputPrompt' : true,
+    //     'placeHolderInputText': 'New Category Name',
+    //     'labelInputText': 'Add New Category',
+    //
+    //     // input email prompt properties
+    //     'showInputEmailPrompt' : false,
+    //     'requiredInputEmailPrompt': false,
+    //     'placeHolderInputEmailText': '',
+    //     'labelInputEmailText': ''
+    //   };
+    //
+    //   var newModal = $modal({
+    //     show: false,
+    //     template: "html/prompt.html",
+    //     backdrop: true,
+    //     title: "New Category",
+    //     content: JSON.stringify(modalContent)
+    //   });
 
-    $scope.changeCollection = function(collection){
-      var oldCollectionId = $rootScope.currentCollection.id;
-      var newCollectionId = collection.id;
-      $scope.showCategoryMissingErrorMessage = false;
+    //   newModal.$scope.success = $scope.saveNewCategory;
+    //   newModal.$scope.cancel = function(error){ return $q.resolve(); };
+    //   newModal.$promise.then( newModal.show );
+    //   return newModal;
+    // };
 
-      $rootScope.currentCollection = collection;
-      if($scope.endpoint.uuid){
-        return Projects.setNewCollectionForItem(oldCollectionId, newCollectionId, $scope.endpoint.uuid)
-          .then(function(data){
-            console.log('Request Updated Successfully');
-            // Some Sort of notification would be handy.
-          });
-      }
-    };
-
-    $scope.openNewCategoryModal = function(){
-      var modalContent = {
-        // modal window properties
-        'disableCloseButton': false,
-        'promptMessage': false,
-        'promptMessageText': 'Add Category Message: ',
-        'promptIsError': false,
-        'hideModalOnSubmit': true,
-
-        // submit button properties
-        'showSubmitButton' : true,
-        'disbledSubmitButton' : false,
-        'submitButtonText' : 'Add',
-
-        // discard button properties
-        'showDiscardButton' : true,
-        'disbleDiscardButton' : false,
-        'discardButtonText' : 'Cancel',
-
-        // input prompt properties
-        'showInputPrompt' : true,
-        'requiredInputPrompt' : true,
-        'placeHolderInputText': 'New Category Name',
-        'labelInputText': 'Add New Category',
-
-        // input email prompt properties
-        'showInputEmailPrompt' : false,
-        'requiredInputEmailPrompt': false,
-        'placeHolderInputEmailText': '',
-        'labelInputEmailText': ''
-      };
-
-      var newModal = $modal({
-        show: false,
-        template: "html/prompt.html",
-        backdrop: true,
-        title: "New Category",
-        content: JSON.stringify(modalContent)
-      });
-      newModal.$scope.success = $scope.saveNewCategory;
-      newModal.$scope.cancel = function(error){ return $q.resolve(); };
-      newModal.$promise.then( newModal.show );
-      return newModal;
-    };
-
-    $scope.saveNewCategory = function(data){
-      data.project_id = $rootScope.currentProject.id;
-      return Collections.create(data)
-        .then(function(collection){
-          Projects.addCollection(collection);
-          return $scope.changeCollection(collection);
-        });
-    };
+    // $scope.saveNewCategory = function(data){
+    //   data.project_id = $rootScope.currentProject.id;
+    //   return Collections.create(data)
+    //     .then(function(collection){
+    //       Projects.addCollection(collection);
+    //       return $scope.changeCollection(collection);
+    //     });
+    // };
 
     $scope.openDeleteItemModal = function(){
       var newModal = $modal({
@@ -409,83 +403,93 @@ angular.module('app').controller('EditorCtrl', [
       }
     };
 
-    $rootScope.$on('loadPerformRequest', function(event, item, loadOnly) {
+    $scope.$on('loadPerformRequest', function(event, item, loadOnly) {
 
-      if( $scope.requestChangedFlag && item.uuid !== $scope.endpoint.uuid ){
+      $rootScope.currentItem = item;
+      $rootScope.currentCollection = $rootScope.currentProject.collections[item.collection_id];
 
-        var modalContent = {
-          // modal window properties
-          'disableCloseButton': false,
-          'promptMessage': true,
-          'promptMessageText': 'You have made changes to the endpoint. Would you like to save?',
-          'promptIsError': true,
-          'hideModalOnSubmit': true,
+      // return Editor.saveChangedEndpoint().then(function(){
+      //
+      //   $window.console.log('Loading new Request');
+      //   Editor.resetRequestChangedFlag();
+      //   return loadRequest(item, loadOnly);
+      // });
 
-          // submit button properties
-          'showSubmitButton' : true,
-          'disbledSubmitButton' : false,
-          'submitButtonText' : 'Save Current Endpoint',
-
-          'showDiscardButton' : true,
-          'disbleDiscardButton' : false,
-          'discardButtonText' : 'Continue without editing',
-
-          // input prompt properties
-          'showInputPrompt' : false,
-          'requiredInputPrompt' : false,
-          'placeHolderInputText': '',
-          'labelInputText': '',
-
-          // input email prompt properties
-          'showInputEmailPrompt' : false,
-          'requiredInputEmailPrompt': false,
-          'placeHolderInputEmailText': '',
-          'labelInputEmailText': ''
-        };
-
-        var newModal = $modal({
-          show: false,
-          template: "html/prompt.html",
-          backdrop: true,
-          title: "Confirm Changing Endpoint",
-          content: JSON.stringify(modalContent)
-        });
-
-        newModal.$scope.success = function(){
-          return $scope.saveCurrentRequest()
-            .then(function(){
-              return loadRequest(item, loadOnly);
-            });
-        };
-
-        newModal.$scope.cancel = function(){
-          loadRequest(item, loadOnly);
-        };
-
-        newModal.$promise.then( newModal.show );
-
-        return newModal;
-      }
-
-      // If current request is being loaded
-      // if(item && item.uuid === $scope.endpoint.uuid ){
-
-      // If empty item is being loaded on the initial rendering
-      // if(! (item && item.name) ) {
-
-      // If old item is not changed
-      // if(!$scope.requestChangedFlag){
-
-      loadRequest(item, loadOnly);
-      return $q.resolve();
+      // if( $scope.requestChangedFlag && item.uuid !== $scope.endpoint.uuid ){
+      //
+      //   var modalContent = {
+      //     // modal window properties
+      //     'disableCloseButton': false,
+      //     'promptMessage': true,
+      //     'promptMessageText': 'You have made changes to the endpoint. Would you like to save?',
+      //     'promptIsError': true,
+      //     'hideModalOnSubmit': true,
+      //
+      //     // submit button properties
+      //     'showSubmitButton' : true,
+      //     'disbledSubmitButton' : false,
+      //     'submitButtonText' : 'Save Current Endpoint',
+      //
+      //     'showDiscardButton' : true,
+      //     'disbleDiscardButton' : false,
+      //     'discardButtonText' : 'Continue without editing',
+      //
+      //     // input prompt properties
+      //     'showInputPrompt' : false,
+      //     'requiredInputPrompt' : false,
+      //     'placeHolderInputText': '',
+      //     'labelInputText': '',
+      //
+      //     // input email prompt properties
+      //     'showInputEmailPrompt' : false,
+      //     'requiredInputEmailPrompt': false,
+      //     'placeHolderInputEmailText': '',
+      //     'labelInputEmailText': ''
+      //   };
+      //
+      //   var newModal = $modal({
+      //     show: false,
+      //     template: "html/prompt.html",
+      //     backdrop: true,
+      //     title: "Confirm Changing Endpoint",
+      //     content: JSON.stringify(modalContent)
+      //   });
+      //
+      //   newModal.$scope.success = function(){
+      //     return $scope.saveCurrentRequest()
+      //       .then(function(){
+      //         return loadRequest(item, loadOnly);
+      //       });
+      //   };
+      //
+      //   newModal.$scope.cancel = function(){
+      //     loadRequest(item, loadOnly);
+      //   };
+      //
+      //   newModal.$promise.then( newModal.show );
+      //
+      //   return newModal;
+      // }
+      //
+      // // If current request is being loaded
+      // // if(item && item.uuid === $scope.endpoint.uuid ){
+      //
+      // // If empty item is being loaded on the initial rendering
+      // // if(! (item && item.name) ) {
+      //
+      // // If old item is not changed
+      // // if(!$scope.requestChangedFlag){
+      //
+      // loadRequest(item, loadOnly);
+      // return $q.resolve();
     });
 
     function loadRequest(item, loadOnly){
       if(_.isUndefined(loadOnly)) loadOnly = true;
 
-      resetRequestChanged();
 
       $rootScope.currentItem = item;
+
       $scope.loadRequestToScope(item);
 
       if(!loadOnly){
@@ -503,25 +507,12 @@ angular.module('app').controller('EditorCtrl', [
       // TODO - Check for any previous changes. if any changes are made to the
       // previous request, ask if the user wants to save it.
 
-      $scope.endpoint = {};
-      $scope.endpoint.requestUrl = item.url;
-      $scope.endpoint.name = item.name;
-      // Check if the method is a valid method
       item.method = _.find( $scope.requestMethods, function(data){ return data === item.method; });
-      // If method not found, set it to default method 'GET'
-      $scope.endpoint.requestMethod  = item.method ? item.method : 'GET';
-      if( $scope.endpoint.requestMethod !== 'GET' && _.isObject(item.data)){
-        $scope.endpoint.requestBody = JSON.stringify(item.data);
-      } else if($scope.endpoint.requestMethod !== 'GET' && item.data){
-        $scope.endpoint.requestBody = item.data;
-      } else {
-        $scope.endpoint.requestBody = "";
-      }
-      $scope.endpoint.uuid = _.isEmpty(item.uuid) ? undefined : item.uuid;
-      $scope.endpoint.requestHeaders = RequestUtility.getHeaders(item.headers, 'array');
+      $scope.endpoint = Editor.loadAndGetEndpoint(item);
+
       resetResponse();
 
-      if(_.isEqual($scope.endpoint.name,"") || _.isUndefined($scope.endpoint.name)){
+      if(_.isEqual($scope.endpoint.uuid,"") || _.isUndefined($scope.endpoint.uuid)){
         $scope.isDeleteButtonDisabled = true;
       }else{
         $scope.isDeleteButtonDisabled = false;
@@ -533,43 +524,24 @@ angular.module('app').controller('EditorCtrl', [
      * Saves the request from scope to DB.
      */
     $scope.saveCurrentRequest = function(){
-      resetErrorMessages();
-      if(_.isEmpty($rootScope.currentCollection)){
-        $scope.showCategoryMissingErrorMessage = true;
-        $q.reject();
-      }
-      if(_.isEmpty($scope.endpoint.name)){
-        $focus('editor-title');
-        $q.reject();
-      }
 
-      var item = $scope.buildRequestOutOfScope();
-      var promise = null;
+      return Editor.save();
 
-      if( _.isEmpty(item.uuid) ){ // Create a request
-        promise = Projects.addItemToCollection($rootScope.currentCollection.id, item);
-      } else { // Update the request
-        promise = Projects.updateItemInCollection($rootScope.currentCollection.id, item);
-      }
+      // if( _.isEmpty(item.uuid) ){ // Create a request
+      //   promise = Projects.addItemToCollection($rootScope.currentCollection.id, item);
+      // } else { // Update the request
+      //   promise = Projects.updateItemInCollection($rootScope.currentCollection.id, item);
+      // }
 
-      return promise.then(function(item){
-        $rootScope.currentItem = item;
-        $rootScope.$broadcast('loadPerformRequest', item);
-      });
+      // return promise.then(function(item){
+      //   $rootScope.currentItem = item;
+      //   $rootScope.$broadcast('loadPerformRequest', item);
+      // });
+
     };
 
     /*
      * Builds the request object (to be saved) using scope.
      * Returns the request object.
      */
-    $scope.buildRequestOutOfScope = function(){
-      var item = {};
-      item.url = $scope.endpoint.requestUrl;
-      item.name = $scope.endpoint.name;
-      item.method = $scope.endpoint.requestMethod ;
-      item.data = $scope.endpoint.requestBody;
-      item.uuid = $scope.endpoint.uuid;
-      item.headers = RequestUtility.getHeaders($scope.endpoint.requestHeaders, 'object');
-      return item;
-    };
   }]);

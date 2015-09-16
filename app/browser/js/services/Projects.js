@@ -81,7 +81,7 @@ angular.module('app')
       };
 
       /*
-      * @id: project id
+      d
       */
       Project.remove = function(id){
         var options = {
@@ -133,12 +133,15 @@ angular.module('app')
       * add collection to project.collections array
       */
       Project.addCollection = function(collection){
-        // TODO - Make DB call here, instead of in the contorller.
-        if(!_.isObject($rootScope.currentProject.collections)){
-          $rootScope.currentProject.collections = {};
-        }
-        $rootScope.currentProject.collections[collection.id] = collection;
-        $rootScope.$broadcast('updateSideBar');
+        collection.project_id = $rootScope.currentProject.id;
+        return Collections.create(collection).then(function(data){
+          if(!_.isObject($rootScope.currentProject.collections)){
+            $rootScope.currentProject.collections = {};
+          }
+          $rootScope.currentProject.collections[data.id] = data;
+          $rootScope.$broadcast('updateSideBar');
+          return data;
+        });
       };
 
       /*
@@ -148,7 +151,7 @@ angular.module('app')
         return Collections.remove(collection.id)
         .then(function(response){
           delete $rootScope.currentProject.collections[collection.id];
-          $rootScope.$broadcast('updateSideBar', $rootScope.currentProject.collections);
+          $rootScope.$broadcast('updateSideBar');
           return response;
         });
       };
@@ -186,7 +189,7 @@ angular.module('app')
         item.collection_id = collectionId;
         return Items.create(item).then(function(data){
           $rootScope.currentProject.collections[collectionId].items[data.uuid] = data;
-          $rootScope.$broadcast('updateSideBar', $rootScope.currentProject.collections);
+          $rootScope.$broadcast('updateSideBar');
           return data;
         });
       };

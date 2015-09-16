@@ -34,17 +34,37 @@ angular.module('app').controller('PromptCtrl', [
         'labelInputText': 'string',
         'inputPromptText' : 'string',
         'showInputPrompt' : boolean,
+        'requiredInputPrompt' : boolean,
 
         // input email prompt properties
         'placeHolderInputEmailText': 'string',
         'labelInputEmailText': 'string',
-        'showInputEmailPrompt' : boolean
+        'showInputEmailPrompt' : boolean,
+
+        // dropdown prompt properties
+        'showDropdown' : boolean,
+        'dropdownItems' : object,
+        'dropdownSelectedItem' : 'object{item{name:string}}',
+        'showDividerItem' : boolean,
+        'dividerItemName' : 'string',
+        'requiredDropDownItem' : boolean,
+        'labelDropdownText': 'string',
+
+        // input prompt properties A
+        'placeHolderInputTextA': 'string',
+        'labelInputTextA': 'string',
+        'inputPromptTextA' : 'string',
+        'showInputPromptA' : boolean,
+        'requiredInputPromptA' : boolean,
+
         */
         contentData = JSON.parse($scope.content);
+
       } catch (e) {
         // if it fails to parse the JSON content data it will set blank default
         $scope.promptProperty = {};
       }
+
       _.forEach(contentData, function(value, property) {
         if(_.isBoolean(value)){
           setModalProperty(property, value, true);
@@ -53,6 +73,7 @@ angular.module('app').controller('PromptCtrl', [
           setModalProperty(property, value);
         }
       });
+
     }
 
     function setModalProperty(property, value, setBoolean){
@@ -86,18 +107,64 @@ angular.module('app').controller('PromptCtrl', [
 
     function getFormVisibleData(promptControllerForm){
       var data = {};
+
       if($scope.promptProperty.showInputPrompt){
         data.name = promptControllerForm.inputPrompt.$viewValue;
       }
+
       if($scope.promptProperty.showInputEmailPrompt){
         data.email = promptControllerForm.inputEmailPrompt.$viewValue;
       }
+
+      if($scope.promptProperty.showDropdown){
+        data.dropdownItem = $scope.promptProperty.dropdownSelectedItem;
+      }
+
+      if($scope.promptProperty.showInputPromptA){
+        data.inputPromptA = promptControllerForm.inputPromptA.$viewValue;
+      }
+
+      if($scope.promptProperty.showDropdown &&
+        _.isEmpty(data.dropdownItem) &&
+        _.isEmpty(data.inputPromptA)){
+        $scope.selectItemErrorMessage = true;
+      }
+
       return data;
     }
 
+    function setInputPromptA(status){
+      if(status){
+        $scope.promptProperty.showInputPromptA = true;
+        $scope.promptProperty.requiredInputPromptA = true;
+      }else{
+        $scope.promptProperty.showInputPromptA = false;
+        $scope.promptProperty.requiredInputPromptA = false;
+      }
+    }
+
+    $scope.selectDropdown = function(item){
+      if(_.isEqual(item, $scope.promptProperty.dividerItemName)){
+        $scope.promptProperty.dropdownSelectedItem = undefined;
+        setInputPromptA(true);
+      }else{
+        $scope.selectItemErrorMessage = false;
+        $scope.promptProperty.dropdownSelectedItem = item;
+        setInputPromptA(false);
+      }
+    };
+
     $scope.submit = function(promptControllerForm){
+      var data = getFormVisibleData(promptControllerForm);
+
+      // If input is invalid for drop down.
+      if( _.isEmpty(data.dropdownItem) &&
+        _.isEmpty(data.inputPromptA) &&
+        $scope.promptProperty.showDropdown
+      ) return true;
+
       setLoading(true);
-      return $scope.success(getFormVisibleData(promptControllerForm)).then(function(response){
+      return $scope.success(data).then(function(response){
         if($scope.promptProperty.hideModalOnSubmit){
           $scope.$hide();
         }else{
@@ -105,11 +172,12 @@ angular.module('app').controller('PromptCtrl', [
         }
       })
       .catch(function(error){
-        setPromptMessage(true, "Something went wrong " + error.message, true);
+        setPromptMessage(true, "Something went wrong " +  error.message, true);
         setLoading(false);
       })
       .finally(function(){
         setLoading(false);
+        if(!_.isEmpty($scope.deferred)) $scope.deferred.resolve(data);
       });
 
     };
@@ -119,6 +187,8 @@ angular.module('app').controller('PromptCtrl', [
       setPromptMessage(false, "", false);
       return $scope.cancel().then(function(){
         $scope.$hide();
+      }).finally(function(){
+        if(!_.isEmpty($scope.deferred)) $scope.deferred.reject();
       });
     };
 

@@ -18,7 +18,7 @@ angular.module('app')
 
     // Braodcast Receiver to update the sidebar contents.
     // This is leverged by any Services that modifies the Project Colleciton
-    $rootScope.$on('updateSideBar', function(event) {
+    $scope.$on('updateSideBar', function(event) {
       $scope.searchResultsCollection = null;
       if( _.isEmpty($rootScope.currentProject) ) return;
       copyOfCollection = angular.copy($rootScope.currentProject.collections);
