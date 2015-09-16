@@ -130,11 +130,7 @@ angular.module('app').controller('EnvironmentsCtrl', [
     obj.edit = false;
   };
 
-  $scope.submit = function(responseCode){
-    $scope.$hide();
-  };
-
-  $scope.cancel = function(previewType){
+  $scope.close = function(previewType){
     $scope.$hide();
   };
 
