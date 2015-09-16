@@ -50,6 +50,24 @@
         Project List
       </a>
       </span>
+      <div ng-show="isConnectedToInternet">
+        Not what you are looking for?
+        <a ng-click="logout()">
+          Try logging back in.
+        </a>
+      </div>
     </div>
+
+    <div>
+      <div ng-hide="isConnectedToInternet">
+        <p> &nbsp; </p>
+        <p>API Garage was unable to connect to the internet.</p>
+        <p>
+          The application does not work offline, yet. Sorry for any inconvenience.
+        </p>
+      </div>
+    </div>
+
   </div>
+
 </div>
