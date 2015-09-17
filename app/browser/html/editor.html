@@ -14,6 +14,7 @@
         </button> -->
         <button class="btn"
                 ng-click="saveCurrentRequest()"
+                ng-disabled="!requestChangedFlag"
                 ng-class="{'btn-primary': requestChangedFlag, 'btn-default': !requestChangedFlag}"
                 data-title="<span class='visible-xs-inline visible-sm-inline'>Save Changes (</span>
                 <span class='visible-xs-inline visible-sm-inline'>)</span>">
@@ -34,18 +35,10 @@
         </button>
       </div>
       <div class="editor-titles">
-        <h2 bs-dropdown data-template="editor-category" id="editor-category">
-          <button ng-hide="currentCollection.name">
-            Select Category
-            <span class="caret"></span>
-          </button>
+        <h2>
           <button ng-show="currentCollection.name">
             {{currentCollection.name}}
-            <span class="caret"></span>
           </button>
-          <span class="authentication-validation" ng-show="showCategoryMissingErrorMessage">
-            Select or create a category for the request.
-          </span>
         </h2>
         <h1 id="editor-title">
           <input type="text" class="content-editable"
@@ -55,24 +48,6 @@
         </h1>
       </div>
       <!-- http://stackoverflow.com/questions/23698316/how-to-prevent-an-angular-bootstrap-dropdown-from-closing-unbind-event-which-wa -->
-      <script type="text/ng-template" id="editor-category">
-        <ul class="dropdown-menu">
-          <li ng-repeat="collection in currentProject.collections">
-            <a ng-click="changeCollection(collection)">
-              <span class="fa fa-fw" ng-class="collection.id == currentCollection.id ? 'fa-check' : 'fa-spacer'"></span>
-              {{collection.name}}
-            </a>
-          </li>
-          <li class="divider"></li>
-          <li>
-            <a ng-click="openNewCategoryModal()">
-              <span class="fa fa-fw fa-pencil"></span>
-              New Category
-            </a>
-          </li>
-        </ul>
-      </script>
-
     </div>
     <!--
     <div class="editor-description">

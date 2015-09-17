@@ -37,8 +37,11 @@ angular.module('app').controller('LayoutCtrl', [
 
   $scope.switchProject = function(){
     // Reset Current Proejct to undefined when switching between projects
-    $rootScope.currentProjectId = undefined;
-    $state.go('projectcreateoropen');
+    $rootScope.$broadcast('loadPerformRequest', {}, true, function(){
+      $rootScope.currentProjectId = undefined;
+      $state.go('projectcreateoropen');
+    });
+
   };
   $scope.setConnectionStatus = function (online){
       $scope.online = online;

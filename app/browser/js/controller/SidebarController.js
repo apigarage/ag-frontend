@@ -18,7 +18,7 @@ angular.module('app')
 
     // Braodcast Receiver to update the sidebar contents.
     // This is leverged by any Services that modifies the Project Colleciton
-    $rootScope.$on('updateSideBar', function(event) {
+    $scope.$on('updateSideBar', function(event) {
       $scope.searchResultsCollection = null;
       if( _.isEmpty($rootScope.currentProject) ) return;
       copyOfCollection = angular.copy($rootScope.currentProject.collections);
@@ -31,9 +31,9 @@ angular.module('app')
 
     $scope.selectItem = function(item, collection){
       // These assignments are used for loading the endpoint in the editor
-      $rootScope.currentCollection = collection;
-      $rootScope.currentItem = item;
-      $rootScope.$broadcast('loadPerformRequest', item);
+      if(item.uuid !== $rootScope.currentItem.uuid ){
+        $rootScope.$broadcast('loadPerformRequest', item);
+      }
     };
 
     $scope.searchFilter = function (search){
@@ -83,8 +83,6 @@ angular.module('app')
 
     $scope.newRequest = function(){
       $rootScope.$broadcast('loadPerformRequest', {});
-      $rootScope.currentCollection = {};
-      $rootScope.currentItem = {};
     };
 
     $scope.openRenameCollectionModal = function(currentCollection){
@@ -192,6 +190,12 @@ angular.module('app')
       return Projects.removeCollection(currentCollection)
         .then(function(response){
           // TODO: Error handling
+          // check to see if  currentCollction is selected collection
+          if($rootScope.currentCollection){
+            if($rootScope.currentCollection.id == currentCollection.id){
+              $rootScope.$broadcast('loadPerformRequest', {});
+            }
+          }
           return response;
         });
     };
@@ -246,9 +250,15 @@ angular.module('app')
       return Projects.removeItemFromCollection(currentCollection.id, currentItem.uuid)
         .then(function(response){
           // TODO: Error handling
+          // If currentItem is selected and the item being
+          // deleted is the same clear editor
+          if($rootScope.currentItem){
+            if($rootScope.currentItem.uuid == currentItem.uuid){
+              $rootScope.$broadcast('loadPerformRequest', {});
+            }
+          }
           return response;
         });
     };
-
   }
 ]);

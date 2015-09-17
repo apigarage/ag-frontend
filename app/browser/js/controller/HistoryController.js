@@ -27,7 +27,7 @@ angular.module('app').controller('HistoryCtrl', [
     $rootScope.$broadcast('loadPerformRequest',historyItem, loadOnly);
   };
 
-  $rootScope.$on('updateHistory', function(event, data) {
+  $scope.$on('updateHistory', function(event, data) {
     $scope.recentRequests = History.getHistory();
     $scope.historyTimeStamps = History.getHistoryTimeStamps();
     getLastRequest();
