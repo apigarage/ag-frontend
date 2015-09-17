@@ -34,12 +34,12 @@
           </a>
         </div>
         <ul class="sidebar-list-child" ng-show="expandGroup">
-          <li class="sidebar-list-child-item" ng-repeat="item in collection.items " ng-click="selectItem(item, collection)"
+          <li class="sidebar-list-child-item" ng-repeat="item in collection.items "
             ng-class="{'sidebar-list-child-item-selected' : currentItem.uuid==item.uuid}">
             <a class="sidebar-list-item-menu" bs-dropdown data-template="sidebar-list-child-item-menu" data-placement="auto bottom-right" data-container=".sidebar">
               <span class="fa fa-fw fa-lg fa-ellipsis-h"></span>
             </a>
-            <a>{{item.name}}</a>
+            <a ng-click="selectItem(item, collection)">{{item.name}}</a>
           </li>
         </ul>
       </li>

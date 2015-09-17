@@ -238,7 +238,6 @@ angular.module('app')
         return $scope.deleteItem(currentCollection, currentItem)
         .then(function(response){
           // TODO: Error handling
-          $rootScope.$broadcast('loadPerformRequest', {});
           return response;
         });
       };
@@ -251,6 +250,13 @@ angular.module('app')
       return Projects.removeItemFromCollection(currentCollection.id, currentItem.uuid)
         .then(function(response){
           // TODO: Error handling
+          // If currentItem is selected and the item being
+          // deleted is the same clear editor
+          if($rootScope.currentItem){
+            if($rootScope.currentItem.uuid == currentItem.uuid){
+              $rootScope.$broadcast('loadPerformRequest', {});
+            }
+          }
           return response;
         });
     };
