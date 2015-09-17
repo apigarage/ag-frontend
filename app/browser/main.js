@@ -5,7 +5,7 @@
   var env = require('../vendor/electron_boilerplate/env_config');
   var Menu = require('menu');
   var MenuItem = require('menu-item');
-  var utils = require('../../tasks/utils.js');
+  var utils = require('../vendor/app_utils.js');
 
   module.exports.init = function(){
 
