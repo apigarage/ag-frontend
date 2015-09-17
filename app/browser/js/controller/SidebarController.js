@@ -190,7 +190,12 @@ angular.module('app')
       return Projects.removeCollection(currentCollection)
         .then(function(response){
           // TODO: Error handling
-          $rootScope.$broadcast('loadPerformRequest', {});
+          // check to see if  currentCollction is selected collection
+          if($rootScope.currentCollection){
+            if($rootScope.currentCollection.id == currentCollection.id){
+              $rootScope.$broadcast('loadPerformRequest', {});
+            }
+          }
           return response;
         });
     };
