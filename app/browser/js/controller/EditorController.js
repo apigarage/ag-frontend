@@ -18,8 +18,6 @@ angular.module('app').controller('EditorCtrl', [
     $focus, RequestUtility, History, Collections, Projects, Editor){
 
     // Private Functions
-    init();
-
 
     function showRequestHideCancelButtons(){
       $scope.performRequestButton = true;
@@ -51,6 +49,18 @@ angular.module('app').controller('EditorCtrl', [
       $scope.response = null;
     }
 
+    function loadRequest(item, loadOnly){
+      if(_.isUndefined(loadOnly)) loadOnly = true;
+
+      $scope.loadRequestToScope(item);
+
+      if(!loadOnly){
+        $scope.performRequest();
+      }
+
+      return $q.resolve();
+    }
+
     function init(){
       $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
 
@@ -72,7 +82,9 @@ angular.module('app').controller('EditorCtrl', [
       };
       $scope.responsePreviewTypeContent = null;
 
-      // TEMPORARY FLAG TO DISABLE THE SEARCH BOX IN THE RESPONSE PANEL (note there is an extra padding created in the .response-heading div to make room for the search box)
+      // TEMPORARY FLAG TO DISABLE THE SEARCH BOX IN THE RESPONSE PANEL
+      // (note there is an extra padding created in the .response-heading
+      // div to make room for the search box)
       $scope.RESPONSE_SEARCH_FLAG = false;
 
       $scope.isDeleteButtonDisabled = true;
@@ -92,7 +104,8 @@ angular.module('app').controller('EditorCtrl', [
 
     // THIS LOGIC SHOULD NOT EXIST HERE. IT's PART OF SIDEBAR.
     // $scope.copyCurrentRequest = function(){
-    //   // This should never happen. If it happens, just in case, the current request is its own copy.
+    //   // This should never happen. If it happens, just in case, the current
+    //   // request is its own copy.
     //   if(!$scope.endpoint.uuid) return;
     //
     //   var newItem = $scope.endpoint;
@@ -407,7 +420,6 @@ angular.module('app').controller('EditorCtrl', [
 
       return Editor.confirmSave()
         .then(function(response){
-          console.log(response);
           if(response){
             return Editor.saveOrUpdate( false );
           }
@@ -416,8 +428,8 @@ angular.module('app').controller('EditorCtrl', [
           $rootScope.currentItem = item;
           $rootScope.currentCollection = $rootScope.currentProject.collections[item.collection_id];
 
-          $window.console.log('Loading new Request');
           Editor.resetRequestChangedFlag();
+          $scope.requestChangedFlag = false;
           return loadRequest(item, loadOnly)
             .then(function(){
               if(done) done();
@@ -426,17 +438,7 @@ angular.module('app').controller('EditorCtrl', [
 
     });
 
-    function loadRequest(item, loadOnly){
-      if(_.isUndefined(loadOnly)) loadOnly = true;
 
-      $scope.loadRequestToScope(item);
-
-      if(!loadOnly){
-        $scope.performRequest();
-      }
-
-      return $q.resolve();
-    }
 
     /*
      * Sets the scope variables based on the request
@@ -463,7 +465,13 @@ angular.module('app').controller('EditorCtrl', [
      * Saves the request from scope to DB.
      */
     $scope.saveCurrentRequest = function(){
-      return Editor.saveOrUpdate();
+      return Editor.saveOrUpdate().then(function(){
+        // Rest Endpoint Flags and Editor Controller button to be disabled
+        Editor.resetRequestChangedFlag();
+        $scope.requestChangedFlag = false;
+      });
     };
+
+    init();
 
   }]);

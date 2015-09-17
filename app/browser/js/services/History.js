@@ -60,7 +60,8 @@ angular.module('app')
       };
 
       var getHistory = function(){
-        _historyTimeStamps = JSON.parse(localStorage.getItem("historyTimeStamps"));
+        // SORT the unsorted localstorage history timestamps entry before loading to the editor.
+        _historyTimeStamps = JSON.parse(localStorage.getItem("historyTimeStamps")).sort();
         if(_.isNull(_historyTimeStamps)) _historyTimeStamps = [];
         var editorHistory = _.reduce(_historyTimeStamps, function(historyItem, key) {
           historyItem[key] = JSON.parse(localStorage.getItem(key));

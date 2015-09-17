@@ -27,15 +27,8 @@ angular.module('app')
       };
 
       Editor.setEndpoint = function(updatedEndpoint){
-        $window.console.log('Endpoint is updated');
         endpoint = updatedEndpoint;
         if( !Editor.requestChanged ) Editor.requestChanged = true;
-        $window.console.log('requestChanged', Editor.requestChanged);
-      };
-
-      Editor.resetEndpoint = function(){
-        Editor.resetRequestChangedFlag();
-        $window.console.log('reseting the falg endpoint');
       };
 
       // If item is provided, load that into the current endpoint.
@@ -55,7 +48,7 @@ angular.module('app')
 
         if( loadAfterSaving === undefined || loadAfterSaving ){
           loadAfterSaving = true;
-        } 
+        }
 
         var deferred = $q.defer();
 
@@ -95,6 +88,7 @@ angular.module('app')
                   // We do not have the current item loaded to controller.
                   // Let's do that.
                   if(loadAfterSaving) {
+                    Editor.resetRequestChangedFlag();
                     $rootScope.$broadcast('loadPerformRequest', data);
                   }
                 });
@@ -111,7 +105,7 @@ angular.module('app')
           // UPDATE REQUEST
           Projects.updateItemInCollection($rootScope.currentCollection.id, endpointForDB)
             .catch(function(data){
-              console.log(data);
+              Editor.resetRequestChangedFlag();
             })
             .finally(function(){
               deferred.resolve();
