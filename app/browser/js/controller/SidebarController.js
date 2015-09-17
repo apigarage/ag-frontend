@@ -31,7 +31,9 @@ angular.module('app')
 
     $scope.selectItem = function(item, collection){
       // These assignments are used for loading the endpoint in the editor
-      $rootScope.$broadcast('loadPerformRequest', item);
+      if(item.uuid !== $rootScope.currentItem.uuid ){
+        $rootScope.$broadcast('loadPerformRequest', item);
+      }
     };
 
     $scope.searchFilter = function (search){

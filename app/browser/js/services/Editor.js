@@ -50,8 +50,12 @@ angular.module('app')
       /*
        * Save Current Request Flow
        */
-      Editor.save = function(){
+      Editor.saveOrUpdate = function( loadAfterSaving ){
         if( ! Editor.requestChanged ) return $q.resolve();
+
+        if( loadAfterSaving === undefined || loadAfterSaving ){
+          loadAfterSaving = true;
+        } 
 
         var deferred = $q.defer();
 
@@ -61,13 +65,7 @@ angular.module('app')
           // CREATE REQUEST
 
           // Show modal
-          var newModal = $modal({
-            show: false,
-            template: "html/prompt.html",
-            backdrop: true,
-            title: "Confirm Save Changes",
-            content: saveModalRequestContent()
-          });
+          var newModal = $modal(saveRequestModal());
 
           // so that save() function can return the promise.
           newModal.$scope.deferred = deferred;
@@ -96,7 +94,9 @@ angular.module('app')
                 .then(function(data){
                   // We do not have the current item loaded to controller.
                   // Let's do that.
-                  $rootScope.$broadcast('loadPerformRequest', data);
+                  if(loadAfterSaving) {
+                    $rootScope.$broadcast('loadPerformRequest', data);
+                  }
                 });
             });
           };
@@ -121,67 +121,106 @@ angular.module('app')
         return deferred.promise;
       };
 
-      function saveModalRequestContent(){
-        return JSON.stringify({
-          // modal window properties
-          'disableCloseButton': false,
-          'promptMessage': false,
-          'promptMessageText': 'Save Request',
-          'promptIsError': false,
-          'hideModalOnSubmit': true,
+      function saveRequestModal(){
+        return {
+          show: false,
+          template: "html/prompt.html",
+          backdrop: true,
+          title: "Save New Request",
+          content: JSON.stringify({
+            // modal window properties
+            'disableCloseButton': false,
+            'hideModalOnSubmit': true,
 
-          // submit button properties
-          'showSubmitButton' : true,
-          'disbledSubmitButton' : false,
-          'submitButtonText' : 'Save',
+            // submit button properties
+            'showSubmitButton' : true,
+            'disbledSubmitButton' : false,
+            'submitButtonText' : 'Save',
 
-          // discard button properties
-          'showDiscardButton' : true,
-          'disbleDiscardButton' : false,
-          'discardButtonText' : 'Cancel',
+            // discard button properties
+            'showDiscardButton' : true,
+            'disbleDiscardButton' : false,
+            'discardButtonText' : 'Cancel',
 
-          // input prompt properties
-          'placeHolderInputText': 'Untitled Request',
-          'labelInputText': 'Request Name',
-          'inputPromptText' : endpoint.name,
-          'showInputPrompt' : true,
-          'requiredInputPrompt' : true,
+            // input prompt properties
+            'placeHolderInputText': 'Untitled Request',
+            'labelInputText': 'Request Name',
+            'inputPromptText' : endpoint.name,
+            'showInputPrompt' : true,
+            'requiredInputPrompt' : true,
 
-          // input email prompt properties
-          'placeHolderInputEmailText': 'string',
-          'labelInputEmailText': 'string',
-          'showInputEmailPrompt' : false,
+            // dropdown prompt properteis
+            'showDropdown' : true,
+            'dropdownItems' :  $rootScope.currentProject.collections,
+            'dropdownSelectedItem' : $rootScope.currentCollection,
+            'showDividerItem' : true,
+            'dividerItemName' : 'New Category',
+            'requiredDropDownItem' : true,
+            'labelDropdownText': 'Category',
 
-          // dropdown prompt properteis
-          'showDropdown' : true,
-          'dropdownItems' :  $rootScope.currentProject.collections,
-          'dropdownSelectedItem' : $rootScope.currentCollection,
-          'showDividerItem' : true,
-          'dividerItemName' : 'New Category',
-          'requiredDropDownItem' : true,
-          'labelDropdownText': 'Category',
-
-          // input prompt properties A
-          'placeHolderInputTextA': 'Untitled Category',
-          'labelInputTextA': 'New Category Name',
-          'inputPromptTextA' : '',
-          'showInputPromptA' : false,
-          'requiredInputPromptA' : false,
-        });
+            // input prompt properties A
+            'placeHolderInputTextA': 'Untitled Category',
+            'labelInputTextA': 'New Category Name',
+            'inputPromptTextA' : '',
+            'showInputPromptA' : false,
+            'requiredInputPromptA' : false,
+          })
+        };
       }
 
       /*
        * Save Current Request Flow while Changing Request
        */
-      Editor.saveChangedEndpoint = function(){
-        $window.console.log('Should I show modal?');
-        if( ! Editor.requestChanged ) return $q.resolve();
-        $window.console.log('Yes');
+      Editor.confirmSave = function(){
+        if( ! Editor.requestChanged ) return $q.resolve(false);
 
-        $window.console.log('Modal shown, selected save');
-        return $q.resolve();
-        // return Editor.save();
+        var deferred = $q.defer();
+        var newModal = $modal(confirmSaveModal());
+
+        // so that save() function can return the promise.
+        newModal.$scope.deferred = deferred;
+
+        newModal.$scope.success = function(data){
+          return $q.resolve();
+        };
+
+        newModal.$scope.cancel = function(error){
+          return $q.resolve();
+        };
+
+        newModal.$promise.then( newModal.show );
+
+        return deferred.promise;
       };
+
+
+      function confirmSaveModal(){
+        return {
+          show: false,
+          template: "html/prompt.html",
+          backdrop: true,
+          title: "Confirm Save Changes",
+          content: JSON.stringify({
+            // modal window properties
+            'disableCloseButton': false,
+            'promptMessage': false,
+            'promptMessageText': 'You have some unsaved changes to the endpoint.' +
+              ' Would you like to save current request?',
+            'promptIsError': false,
+            'hideModalOnSubmit': true,
+
+            // submit button properties
+            'showSubmitButton' : true,
+            'disbledSubmitButton' : false,
+            'submitButtonText' : 'Save',
+
+            // discard button properties
+            'showDiscardButton' : true,
+            'disbleDiscardButton' : false,
+            'discardButtonText' : 'Cancel',
+          })
+        };
+      }
 
       /*
        * PRIVATE FUNCTIONS

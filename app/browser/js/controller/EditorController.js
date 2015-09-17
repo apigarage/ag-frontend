@@ -403,84 +403,27 @@ angular.module('app').controller('EditorCtrl', [
       }
     };
 
-    $scope.$on('loadPerformRequest', function(event, item, loadOnly) {
+    $scope.$on('loadPerformRequest', function(event, item, loadOnly, done) {
 
-      return Editor.saveChangedEndpoint().then(function(){
-        $rootScope.currentItem = item;
-        $rootScope.currentCollection = $rootScope.currentProject.collections[item.collection_id];
+      return Editor.confirmSave()
+        .then(function(response){
+          console.log(response);
+          if(response){
+            return Editor.saveOrUpdate( false );
+          }
+        })
+        .finally(function(){
+          $rootScope.currentItem = item;
+          $rootScope.currentCollection = $rootScope.currentProject.collections[item.collection_id];
 
-        $window.console.log('Loading new Request');
-        Editor.resetRequestChangedFlag();
-        return loadRequest(item, loadOnly);
-      });
+          $window.console.log('Loading new Request');
+          Editor.resetRequestChangedFlag();
+          return loadRequest(item, loadOnly)
+            .then(function(){
+              if(done) done();
+            });
+        });
 
-      // if( $scope.requestChangedFlag && item.uuid !== $scope.endpoint.uuid ){
-      //
-      //   var modalContent = {
-      //     // modal window properties
-      //     'disableCloseButton': false,
-      //     'promptMessage': true,
-      //     'promptMessageText': 'You have made changes to the endpoint. Would you like to save?',
-      //     'promptIsError': true,
-      //     'hideModalOnSubmit': true,
-      //
-      //     // submit button properties
-      //     'showSubmitButton' : true,
-      //     'disbledSubmitButton' : false,
-      //     'submitButtonText' : 'Save Current Endpoint',
-      //
-      //     'showDiscardButton' : true,
-      //     'disbleDiscardButton' : false,
-      //     'discardButtonText' : 'Continue without editing',
-      //
-      //     // input prompt properties
-      //     'showInputPrompt' : false,
-      //     'requiredInputPrompt' : false,
-      //     'placeHolderInputText': '',
-      //     'labelInputText': '',
-      //
-      //     // input email prompt properties
-      //     'showInputEmailPrompt' : false,
-      //     'requiredInputEmailPrompt': false,
-      //     'placeHolderInputEmailText': '',
-      //     'labelInputEmailText': ''
-      //   };
-      //
-      //   var newModal = $modal({
-      //     show: false,
-      //     template: "html/prompt.html",
-      //     backdrop: true,
-      //     title: "Confirm Changing Endpoint",
-      //     content: JSON.stringify(modalContent)
-      //   });
-      //
-      //   newModal.$scope.success = function(){
-      //     return $scope.saveCurrentRequest()
-      //       .then(function(){
-      //         return loadRequest(item, loadOnly);
-      //       });
-      //   };
-      //
-      //   newModal.$scope.cancel = function(){
-      //     loadRequest(item, loadOnly);
-      //   };
-      //
-      //   newModal.$promise.then( newModal.show );
-      //
-      //   return newModal;
-      // }
-      //
-      // // If current request is being loaded
-      // // if(item && item.uuid === $scope.endpoint.uuid ){
-      //
-      // // If empty item is being loaded on the initial rendering
-      // // if(! (item && item.name) ) {
-      //
-      // // If old item is not changed
-      // // if(!$scope.requestChangedFlag){
-      //
-      // loadRequest(item, loadOnly);
-      // return $q.resolve();
     });
 
     function loadRequest(item, loadOnly){
@@ -520,7 +463,7 @@ angular.module('app').controller('EditorCtrl', [
      * Saves the request from scope to DB.
      */
     $scope.saveCurrentRequest = function(){
-      return Editor.save();
+      return Editor.saveOrUpdate();
     };
 
   }]);
