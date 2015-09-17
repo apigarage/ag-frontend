@@ -83,8 +83,6 @@ angular.module('app')
 
     $scope.newRequest = function(){
       $rootScope.$broadcast('loadPerformRequest', {});
-      $rootScope.currentCollection = {};
-      $rootScope.currentItem = {};
     };
 
     $scope.openRenameCollectionModal = function(currentCollection){
@@ -192,6 +190,7 @@ angular.module('app')
       return Projects.removeCollection(currentCollection)
         .then(function(response){
           // TODO: Error handling
+          $rootScope.$broadcast('loadPerformRequest', {});
           return response;
         });
     };
@@ -234,6 +233,7 @@ angular.module('app')
         return $scope.deleteItem(currentCollection, currentItem)
         .then(function(response){
           // TODO: Error handling
+          $rootScope.$broadcast('loadPerformRequest', {});
           return response;
         });
       };
@@ -249,6 +249,5 @@ angular.module('app')
           return response;
         });
     };
-
   }
 ]);
