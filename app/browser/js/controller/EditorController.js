@@ -267,7 +267,10 @@ angular.module('app').controller('EditorCtrl', [
       if(!_.isArray($scope.endpoint.requestHeaders)) {
         $scope.endpoint.requestHeaders = [];
       }
-      $scope.endpoint.requestHeaders.push({});
+      if(!_.isEmpty(_.last($scope.endpoint.requestHeaders)) ||
+        _.isEmpty($scope.endpoint.requestHeaders)){
+        $scope.endpoint.requestHeaders.push({});
+      }
     };
 
     $scope.deleteRequestHeader = function(header){
