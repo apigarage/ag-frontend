@@ -119,7 +119,7 @@
                   pu-elastic-input />
               </td>
               <td>
-                <a class="request-header-delete" ng-click="deleteRequestHeader(requestHeader)">
+                <a class="request-header-delete" ng-click="deleteRequestHeader(requestHeader) || requestChanged()">
                   <span class="fa fa-trash-o"></span>
                   <span class="hidden-xs hidden-sm">Delete</span>
                 </a>
