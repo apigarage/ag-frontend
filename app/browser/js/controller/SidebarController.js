@@ -200,6 +200,71 @@ angular.module('app')
         });
     };
 
+    $scope.copyItem = function(currentItem){
+      currentItem.name = currentItem.name + " - Copy";
+      return Projects.addItemToCollection(currentItem.collection_id, currentItem)
+        .then(function(response){
+          // TODO: Error handling
+          return;
+        });
+    };
+
+    $scope.openRenameItemModal = function(currentItem){
+      var newModal = $modal({
+        show: false,
+        template: "html/prompt.html",
+        backdrop: true,
+        title: "Rename Item",
+        content: JSON.stringify({
+          // modal window properties
+          'disableCloseButton': false,
+          'promptMessage': false,
+          'promptMessageText': '',
+          'promptIsError': false,
+          'hideModalOnSubmit': true,
+
+          // submit button properties
+          'showSubmitButton' : true,
+          'disbledSubmitButton' : false,
+          'submitButtonText' : 'Rename',
+
+          // discard button properties
+          'showDiscardButton' : true,
+          'disbleDiscardButton' : false,
+          'discardButtonText' : 'Cancel',
+
+          // input prompt properties
+          'showInputPrompt' : true,
+          'requiredInputPrompt' : true,
+          'placeHolderInputText': 'New Item Name',
+          'labelInputText': 'Item Name',
+          'inputPromptText': currentItem.name,
+
+          // input email prompt properties
+          'showInputEmailPrompt' : false,
+          'requiredInputEmailPrompt': false,
+        })
+
+      });
+      newModal.$scope.success = function(data){
+        currentItem.name = data.name;
+        return $scope.saveItemName(currentItem).then(function(response){
+          return;
+        });
+      };
+      newModal.$scope.cancel = function(error){ return $q.resolve(); };
+      newModal.$promise.then( newModal.show );
+      return newModal;
+    };
+
+    $scope.saveItemName = function(currentItem){
+      return Projects.updateItemInCollection(currentItem.collection_id, currentItem)
+        .then(function(response){
+          // TODO: Error handling
+          return;
+        });
+    };
+
     $scope.openDeleteItemModal = function(currentCollection, currentItem){
       var newModal = $modal({
         show: false,
