@@ -65,13 +65,13 @@
     <script type="text/ng-template" id="sidebar-list-child-item-menu">
       <ul class="dropdown-menu">
         <li>
-          <a ng-click="rename">
+          <a ng-click="openRenameItemModal(item)">
             <span class="fa fa-fw fa-pencil"></span>
             Rename
           </a>
         </li>
         <li>
-          <a ng-click="rename">
+          <a ng-click="copyItem(item)">
             <span class="fa fa-fw fa-files-o"></span>
             Make a copy
           </a>
