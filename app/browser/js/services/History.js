@@ -60,9 +60,10 @@ angular.module('app')
       };
 
       var getHistory = function(){
-        // SORT the unsorted localstorage history timestamps entry before loading to the editor.
-        _historyTimeStamps = JSON.parse(localStorage.getItem("historyTimeStamps")).sort();
+        _historyTimeStamps = JSON.parse(localStorage.getItem("historyTimeStamps"));
         if(_.isNull(_historyTimeStamps)) _historyTimeStamps = [];
+        // SORT the unsorted localstorage history timestamps entry before loading to the editor.
+        _historyTimeStamps = _historyTimeStamps.sort();
         var editorHistory = _.reduce(_historyTimeStamps, function(historyItem, key) {
           historyItem[key] = JSON.parse(localStorage.getItem(key));
           historyItem[key].time = JSON.stringify(key);

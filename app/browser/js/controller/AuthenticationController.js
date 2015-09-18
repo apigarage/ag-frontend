@@ -2,13 +2,12 @@ angular.module('app').controller('AuthenticationCtrl', [
   '$scope',
   '$rootScope',
   '$state',
+  '$q',
   'lodash',
   'Auth',
   'Projects',
   'Users',
-  function ($scope, $rootScope, $state, _, Auth, Projects, Users){
-
-  init();
+  function ($scope, $rootScope, $state, $q, _, Auth, Projects, Users){
 
   function init(){
     $scope.credentials = {};
@@ -67,7 +66,7 @@ angular.module('app').controller('AuthenticationCtrl', [
     $scope.passwordError = false;
     $scope.genericLoginErrorMessage = false;
 
-    if(!validEmail() || !validPassword()) return;
+    if(!validEmail() || !validPassword()) return $q.reject();
 
     return Auth.login($scope.credentials)
       .then(function(loggedIn){
@@ -91,7 +90,7 @@ angular.module('app').controller('AuthenticationCtrl', [
     $scope.genericSignupErrorMessage = false;
     var allowSignup = true;
 
-    if(!validName() || !validEmail() || !validPassword()) return;
+    if(!validName() || !validEmail() || !validPassword()) return $q.reject();
 
     return Users.create($scope.credentials)
       .then(function(data){
@@ -118,19 +117,25 @@ angular.module('app').controller('AuthenticationCtrl', [
             $scope.nameError = true;
           }
           if(typeof data.data.password != 'undefined'){
-            $scope.passordErrorMessage = data.data.password[0];
+            $scope.passwordErrorMessage = data.data.password[0];
             $scope.passwordError = true;
           }
+          return;
         }
       });
   };
 
   $scope.submit = function() {
     Auth.setForgotPassword(false);
+    $scope.loading = true;
     if ($scope.SIGNUP == $scope.authType){
-      return $scope.signup();
+      return $scope.signup().then(function(data){
+        $scope.loading = false;
+      });
     }else{
-      return $scope.login();
+      return $scope.login().then(function(){
+        $scope.loading = false;
+      });
     }
   };
 
@@ -139,4 +144,5 @@ angular.module('app').controller('AuthenticationCtrl', [
       ( $scope.authType === $scope.LOGIN ? $scope.SIGNUP : $scope.LOGIN );
   };
 
+  init();
 }]);

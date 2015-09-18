@@ -17,7 +17,7 @@
 
         </div>
         <div class="modal-body">
-          <div class="environment-section">
+          <div class="environment-section-shared">
             <h2 class="environment-section-title">
               <button type="button" class="btn btn-default btn-sm pull-right"
                 ng-click="addVariable('public')" ng-if="!!currentProject.environments.public">
@@ -124,11 +124,12 @@
                   </th>
                   <td ng-repeat="variable in environment.vars" ng-if="!!currentProject.environments.public">
                     <input type="text" class="form-control"
-                      placeholder="{{variable.name}} - {{ environment.name}}"
+                      placeholder="{{variable.name}} - {{environment.name}}"
                       ng-model="variable.value"
                       ng-model-options="{updateOn : 'blur'}"
                       data-update-model-on-enter-key-pressed
-                      ng-change="updateValue(variable, environment )" />
+                      ng-change="updateValue(variable, environment)"
+                      />
                   </td>
                 </tr>
               </tfoot>
@@ -136,7 +137,7 @@
 
           </div>
 
-          <div class="environment-section">
+          <div class="environment-section-private">
             <h2 class="environment-section-title">
               <button type="button" class="btn btn-default btn-sm pull-right"
                 ng-click="addVariable('private')" ng-if="!!currentProject.environments.private">
@@ -246,16 +247,16 @@
                       ng-model="variable.value"
                       ng-model-options="{updateOn : 'blur'}"
                       data-update-model-on-enter-key-pressed
-                      ng-change="updateValue(variable, environment)" />
+                      ng-change="updateValue(variable, environment)"
+                      />
                   </td>
                 </tr>
               </tfoot>
             </table>
           </div>
-
         </div>
-
         <div class="modal-footer">
+          <span class="success" ng-show="showSaved">Saved Environment Variable: {{savedEnvironment}} - {{savedVariable}}</span>
           <button class="btn btn-default" ng-click="close()" type="submit">Close</button>
         </div>
 
