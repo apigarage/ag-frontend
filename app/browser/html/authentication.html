@@ -23,7 +23,6 @@
       <p class="authentication-validation" ng-if="emailError">
         {{emailErrorMessage}}
       </p>
-
       <input type="password" class="form-control authentication-password"
         ng-class="{'input-lg': authType == LOGIN}"
         placeholder="Password"
@@ -42,7 +41,8 @@
         {{genericSignupErrorMessage}}
       </p>
 
-      <button type="submit" class="btn btn-primary btn-block btn-lg">
+      <button type="submit" class="btn btn-primary btn-block btn-lg"
+      ladda="loading" data-style="expand-right">
         {{ authType == LOGIN ? "Sign in" : "Register" }}
       </button>
       <p class="authentication-forgot-link" ng-if="authType == LOGIN">

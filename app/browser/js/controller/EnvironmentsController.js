@@ -6,6 +6,7 @@ angular.module('app').controller('EnvironmentsCtrl', [
   'Projects',
   function ($scope, $focus, $q, $modal, Projects){
 
+  $scope.showSaved = false;
   //
   // --  Environments Functions
   //
@@ -122,7 +123,12 @@ angular.module('app').controller('EnvironmentsCtrl', [
   $scope.updateValue = function(variable, environment){
     return Projects.updateVariableEnvironmentValue(
       variable.project_key_id, environment.id, variable.value
-    );
+    ).then(function(){
+      // Show Saved Message
+      $scope.savedEnvironment = environment.name;
+      $scope.savedVariable = variable.value;
+      $scope.showSaved = true;
+    });
   };
 
   // obj can be an environment or a variable
