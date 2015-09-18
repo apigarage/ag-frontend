@@ -20,20 +20,21 @@
           <div class="environment-section-shared">
             <h2 class="environment-section-title">
               <button type="button" class="btn btn-default btn-sm pull-right"
-                ng-click="addVariable('public')" ng-if="!!currentProject.environments.public">
+                ng-click="addVariable('public')" ng-if="!isEmptyEnvironment('public')">
                 <span class="fa fa-plus"></span>
                 New Variable
               </button>
               <button type="button" class="btn btn-default btn-sm pull-right"
                 ng-click="addEnvironment('public')"
-                ng-if="!!currentProject.environments.public">
+                ng-if="!isEmptyEnvironment('public')">
                 <span class="fa fa-plus"></span>
                 New Environment
               </button>
+              <i class="fa fa-group"></i>
               Shared Environments
             </h2>
             <p class="environment-section-landing"
-              ng-if="!currentProject.environments.public">
+              ng-if="isEmptyEnvironment('public')">
               <button type="button" class="btn btn-default pull-right"
                 ng-click="addEnvironment('public')">
                 <span class="fa fa-plus"></span>
@@ -46,7 +47,7 @@
             </p>
 
 
-            <table class="environment-table" ng-if="!!currentProject.environments.public">
+            <table class="environment-table" ng-if="!isEmptyEnvironment('public')">
               <tbody>
                 <tr class="environment-table-head">
                   <td><!-- Spacer --></td>
@@ -122,7 +123,7 @@
                       </ul>
                     </script>
                   </th>
-                  <td ng-repeat="variable in environment.vars" ng-if="!!currentProject.environments.public">
+                  <td ng-repeat="variable in environment.vars" ng-if="!isEmptyEnvironment('public')">
                     <input type="text" class="form-control"
                       placeholder="{{variable.name}} - {{environment.name}}"
                       ng-model="variable.value"
@@ -140,20 +141,21 @@
           <div class="environment-section-private">
             <h2 class="environment-section-title">
               <button type="button" class="btn btn-default btn-sm pull-right"
-                ng-click="addVariable('private')" ng-if="!!currentProject.environments.private">
+                ng-click="addVariable('private')" ng-if="!isEmptyEnvironment('private')">
                 <span class="fa fa-plus"></span>
                 New Variable
               </button>
               <button type="button" class="btn btn-default btn-sm pull-right"
                 ng-click="addEnvironment('private')"
-                ng-if="!!currentProject.environments.private">
+                ng-if="!isEmptyEnvironment('private')">
                 <span class="fa fa-plus"></span>
                 New Environment
               </button>
+              <i class="fa fa-lock"></i>
               Private Environments
             </h2>
             <p class="environment-section-landing"
-              ng-if="!currentProject.environments.private">
+              ng-if="isEmptyEnvironment('private')">
               <button type="button" class="btn btn-default pull-right"
                 ng-click="addEnvironment('private')">
                 <span class="fa fa-plus"></span>
@@ -165,7 +167,7 @@
               <code><span class="fa fa-sliders"></span> LOCAL-UAT</code>.
             </p>
 
-            <table class="environment-table" ng-if="!!currentProject.environments.private">
+            <table class="environment-table" ng-if="!isEmptyEnvironment('private')">
               <tbody>
                 <tr class="environment-table-head">
                   <td><!-- Spacer --></td>
@@ -241,7 +243,7 @@
                       </ul>
                     </script>
                   </th>
-                  <td ng-repeat="variable in environment.vars" ng-if="!!currentProject.environments.private">
+                  <td ng-repeat="variable in environment.vars" ng-if="!isEmptyEnvironment('private')">
                     <input type="text" class="form-control"
                       placeholder="{{variable.name}} - {{ environment.name}}"
                       ng-model="variable.value"
@@ -256,7 +258,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <span class="success" ng-show="showSaved">Saved Environment Variable: {{savedEnvironment}} - {{savedVariable}}</span>
+          <span ng-show="showSaved">Saved <code>{{savedVariable}}</code> for <code>{{savedEnvironment}}</code> to <code>{{savedValue}}</code>.</span>
           <button class="btn btn-default" ng-click="close()" type="submit">Close</button>
         </div>
 

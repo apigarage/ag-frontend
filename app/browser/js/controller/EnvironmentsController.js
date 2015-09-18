@@ -1,10 +1,12 @@
 angular.module('app').controller('EnvironmentsCtrl', [
   '$scope',
+  '$rootScope',
   '$focus',
   '$q',
   '$modal',
+  'lodash',
   'Projects',
-  function ($scope, $focus, $q, $modal, Projects){
+  function ($scope, $rootScope, $focus, $q, $modal, _, Projects){
 
   $scope.showSaved = false;
   //
@@ -15,6 +17,12 @@ angular.module('app').controller('EnvironmentsCtrl', [
     env.private = (type == 'private');
     return Projects.addNewEnvironment(env);
   };
+
+  $scope.isEmptyEnvironment = function(publicOrPrivate){
+    if( _.isEmpty( $rootScope.currentProject.environments) ) return true;
+    if( _.isEmpty( $rootScope.currentProject.environments[publicOrPrivate]) ) return true;
+    return false;
+  }
 
   $scope.updateEnvironment = function(environment){
     return Projects.updateEnvironment(environment);
@@ -126,7 +134,8 @@ angular.module('app').controller('EnvironmentsCtrl', [
     ).then(function(){
       // Show Saved Message
       $scope.savedEnvironment = environment.name;
-      $scope.savedVariable = variable.value;
+      $scope.savedVariable = variable.name;
+      $scope.savedValue = variable.value;
       $scope.showSaved = true;
     });
   };
