@@ -260,6 +260,11 @@ angular.module('app')
     $scope.saveItemName = function(currentItem){
       return Projects.updateItemInCollection(currentItem.collection_id, currentItem)
         .then(function(response){
+          if($rootScope.currentItem){
+            if($rootScope.currentItem.uuid == currentItem.uuid){
+              $rootScope.$broadcast('loadPerformRequest', currentItem);
+            }
+          }
           // TODO: Error handling
           return;
         });
