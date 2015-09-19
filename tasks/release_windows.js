@@ -20,6 +20,10 @@
     tmpDir = projectDir.dir('./tmp', { empty: true });
     releasesDir = projectDir.dir('./releases');
     manifest = projectDir.read('app/package.json', 'json');
+    if( utils.getEnvName() == 'staging' ){
+       manifest.name = 'stag-' + manifest.name;
+       manifest.productName = 'stag-' + manifest.productName;
+    }
     readyAppDir = tmpDir.cwd(manifest.name);
 
     return Q(); // jshint ignore:line

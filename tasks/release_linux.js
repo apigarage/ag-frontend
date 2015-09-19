@@ -23,6 +23,10 @@
     releasesDir = projectDir.dir('./releases');
     manifest = projectDir.read('app/package.json', 'json');
     packName = manifest.name + '_' + manifest.version;
+    if( utils.getEnvName() == 'staging' ){
+       manifest.name = 'stag-' + manifest.name;
+       manifest.productName = 'stag-' + manifest.productName;
+    }
     packDir = tmpDir.dir(packName);
     readyAppDir = packDir.cwd('opt', manifest.name);
 
@@ -58,7 +62,7 @@
     packDir.write('usr/share/applications/' + manifest.name + '.desktop', desktop);
 
     // Copy icon
-    projectDir.copy('resources/icon.png', readyAppDir.path('icon.png'));
+    projectDir.copy('resources/icon-512.png', readyAppDir.path('icon.png'));
 
     return Q(); // jshint ignore:line
   };
