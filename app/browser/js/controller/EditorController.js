@@ -135,65 +135,11 @@ angular.module('app').controller('EditorCtrl', [
     //   }
     // };
 
-    // $scope.openNewCategoryModal = function(){
-    //   var modalContent = {
-    //     // modal window properties
-    //     'disableCloseButton': false,
-    //     'promptMessage': false,
-    //     'promptMessageText': 'Add Category Message: ',
-    //     'promptIsError': false,
-    //     'hideModalOnSubmit': true,
-    //
-    //     // submit button properties
-    //     'showSubmitButton' : true,
-    //     'disbledSubmitButton' : false,
-    //     'submitButtonText' : 'Add',
-    //
-    //     // discard button properties
-    //     'showDiscardButton' : true,
-    //     'disbleDiscardButton' : false,
-    //     'discardButtonText' : 'Cancel',
-    //
-    //     // input prompt properties
-    //     'showInputPrompt' : true,
-    //     'requiredInputPrompt' : true,
-    //     'placeHolderInputText': 'New Category Name',
-    //     'labelInputText': 'Add New Category',
-    //
-    //     // input email prompt properties
-    //     'showInputEmailPrompt' : false,
-    //     'requiredInputEmailPrompt': false,
-    //     'placeHolderInputEmailText': '',
-    //     'labelInputEmailText': ''
-    //   };
-    //
-    //   var newModal = $modal({
-    //     show: false,
-    //     template: "html/prompt.html",
-    //     backdrop: true,
-    //     title: "New Category",
-    //     content: JSON.stringify(modalContent)
-    //   });
-
-    //   newModal.$scope.success = $scope.saveNewCategory;
-    //   newModal.$scope.cancel = function(error){ return $q.resolve(); };
-    //   newModal.$promise.then( newModal.show );
-    //   return newModal;
-    // };
-
-    // $scope.saveNewCategory = function(data){
-    //   data.project_id = $rootScope.currentProject.id;
-    //   return Collections.create(data)
-    //     .then(function(collection){
-    //       Projects.addCollection(collection);
-    //       return $scope.changeCollection(collection);
-    //     });
-    // };
-
     $scope.openDeleteItemModal = function(){
       var newModal = $modal({
         show: false,
         template: "html/prompt.html",
+        animation: false,
         backdrop: true,
         title: "Delete Item",
         content: JSON.stringify({
@@ -252,6 +198,7 @@ angular.module('app').controller('EditorCtrl', [
       var myModal = $modal({
         show: false,
         template: "html/environments.html",
+        animation: false,
         backdrop: true
       });
 
