@@ -109,7 +109,7 @@
         }];
 
 
-        if (env.name === 'development') {
+        if (env.name === 'staging' || env.name === 'development') {
           template.push({
             label: 'View',
             submenu: [
