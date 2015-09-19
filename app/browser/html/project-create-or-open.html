@@ -51,18 +51,18 @@
       </form>
     </div>
     <div class="authentication-toggle">
-      <span ng-show="showProjectCreateLink">
+      <div ng-show="showProjectCreateLink">
       Need to create a new project?
       <a ng-click="showCreateProjectForm()">
         Create Project
       </a>
-      </span>
-      <span ng-show="showProjectListLink">
+      </div>
+      <div ng-show="showProjectListLink">
       Need to open a project?
       <a ng-click="showProjectsListForm()">
         Project List
       </a>
-      </span>
+      </div>
       <div ng-show="showImportPostmanProjectLink">
       Import a Collection from Postman
       <a ng-click="showImportPostmanProjectForm()">

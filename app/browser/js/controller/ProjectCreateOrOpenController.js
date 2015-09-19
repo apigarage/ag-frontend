@@ -18,6 +18,7 @@ angular.module('app').controller('ProjectCreateOrOpenCtrl', [
     $scope.showImportPostmanProjectLink = true;
     PostmanImport.init();
     $scope.uploader = PostmanImport.serviceUploader();
+    $scope.uploader.removeAfterUpload = true;
     $scope.uploader.onCompleteAll = onUploadComplete;
     $scope.uploader.onErrorItem = onUploadError;
     $scope.uploader.onProgressItem = onProgressItem;
@@ -45,7 +46,7 @@ angular.module('app').controller('ProjectCreateOrOpenCtrl', [
 
   function onUploadComplete(){
     $scope.loading = false;
-    init();
+    $state.go($state.current, {}, {reload: true});
   }
 
   function onUploadError(item, response, status, headers){
@@ -57,18 +58,32 @@ angular.module('app').controller('ProjectCreateOrOpenCtrl', [
     $scope.loading = true;
   }
 
+  // DELETE PROJECT FUNCTION - WILL DELETE PROJECT ACROSS ALL USER SHARED
+  // $scope.deleteProject = function(projectID){
+  //   $scope.loading = true;
+  //   return Projects.remove(projectID).then(function(data){
+  //     console.log(data);
+  //     $scope.loading = false;
+  //     init();
+  //   });
+  // };
+
   $scope.showCreateProjectForm = function(){
     $scope.showCreateProject = true;
     $scope.showOpenProject = false;
     $scope.showImportPostmanProject = false;
     $scope.showProjectCreateLink = false;
     $scope.showProjectListLink = true;
+    $scope.showImportPostmanProjectLink = true;
   };
 
   $scope.showImportPostmanProjectForm = function(){
     $scope.showCreateProject = false;
     $scope.showOpenProject = false;
+    $scope.showImportPostmanProjectLink = false;
     $scope.showImportPostmanProject = true;
+    $scope.showProjectCreateLink = true;
+    $scope.showProjectListLink = true;
   };
   $scope.showProjectsListForm = function (){
     init();
@@ -77,8 +92,6 @@ angular.module('app').controller('ProjectCreateOrOpenCtrl', [
   $scope.importFromPostman = function(){
     PostmanImport.save();
   };
-
-
 
   $scope.createProject = function(){
     var projectData = {};
