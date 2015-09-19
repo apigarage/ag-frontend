@@ -50,7 +50,7 @@
       'icon': projectDir.path('resources/windows/icon.ico'),
       'version-string': {
         'ProductName': manifest.productName,
-        'FileDescription': manifest.description,
+        'FileDescription': manifest.productName,
       }
     }, function (err) {
       if (!err) {
@@ -74,7 +74,7 @@
       dest: releasesDir.path(finalPackageName),
       icon: readyAppDir.path('icon.ico'),
       setupIcon: projectDir.path('resources/windows/setup-icon.ico'),
-      banner: projectDir.path('resources/windows/setup-banner.bmp'),
+      banner: projectDir.path('resources/windows/setup-banner-crop.bmp'),
     });
     tmpDir.write('installer.nsi', installScript);
 
