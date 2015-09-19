@@ -3,7 +3,7 @@
   "productName": "API Garage",
   "identifier": "apigarage.client.rest",
   "description": "Best API design, development, and documentation tool.",
-  "version": "0.0.9",
+  "version": "0.9.0",
   "author": "Chinmay Patel<cpatel@apigarage.com>",
   "main": "bootstrap.js",
   "config": {
