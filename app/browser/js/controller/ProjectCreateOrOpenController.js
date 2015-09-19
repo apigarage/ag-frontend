@@ -7,16 +7,23 @@ angular.module('app').controller('ProjectCreateOrOpenCtrl', [
   '$window',
   'lodash',
   'Projects',
+  'PostmanImport',
   'Auth',
-  function ($scope, $rootScope, $modal, $q, $state, $window, _, Projects, Auth){
+  function ($scope, $rootScope, $modal, $q, $state, $window, _, Projects, PostmanImport, Auth){
 
   function init(){
     $scope.showCreateProject = false;
     $scope.showOpenProject = false;
     $scope.createProjectError = false;
+    $scope.showImportPostmanProjectLink = true;
+    PostmanImport.init();
+    $scope.uploader = PostmanImport.serviceUploader();
+    $scope.uploader.removeAfterUpload = true;
+    $scope.uploader.onCompleteAll = onUploadComplete;
+    $scope.uploader.onErrorItem = onUploadError;
+    $scope.uploader.onProgressItem = onProgressItem;
     $scope.projects = {};
     $scope.isConnectedToInternet = $window.navigator.onLine;
-
     // TODO: handling of unauthorized or connection issues
     // as discussed this should be covered in the ApiRequest
     // portion of the code
@@ -25,25 +32,65 @@ angular.module('app').controller('ProjectCreateOrOpenCtrl', [
         if(_.isEmpty(projects)){
           $scope.showCreateProject = true;
           $scope.showProjectListLink = false;
+          $scope.showImportPostmanProject = false;
         }
         else if(projects.length > 0){
           $scope.projects = projects;
           $scope.showOpenProject = true;
           $scope.showProjectCreateLink = true;
           $scope.showProjectListLink = false;
+          $scope.showImportPostmanProject = false;
         }
       });
   }
 
+  function onUploadComplete(){
+    $scope.loading = false;
+    $state.go($state.current, {}, {reload: true});
+  }
+
+  function onUploadError(item, response, status, headers){
+    $scope.loading = false;
+    console.log(item, response, status, headers);
+  }
+
+  function onProgressItem(item, progress){
+    $scope.loading = true;
+  }
+
+  // DELETE PROJECT FUNCTION - WILL DELETE PROJECT ACROSS ALL USER SHARED
+  // $scope.deleteProject = function(projectID){
+  //   $scope.loading = true;
+  //   return Projects.remove(projectID).then(function(data){
+  //     console.log(data);
+  //     $scope.loading = false;
+  //     init();
+  //   });
+  // };
+
   $scope.showCreateProjectForm = function(){
     $scope.showCreateProject = true;
     $scope.showOpenProject = false;
+    $scope.showImportPostmanProject = false;
     $scope.showProjectCreateLink = false;
     $scope.showProjectListLink = true;
+    $scope.showImportPostmanProjectLink = true;
   };
 
+  $scope.showImportPostmanProjectForm = function(){
+    $scope.showCreateProject = false;
+    $scope.showOpenProject = false;
+    $scope.showImportPostmanProjectLink = false;
+    $scope.showImportPostmanProject = true;
+    $scope.showProjectCreateLink = true;
+    $scope.showProjectListLink = true;
+  };
   $scope.showProjectsListForm = function (){
     init();
+  };
+
+  $scope.importFromPostman = function(){
+    PostmanImport.save();
   };
 
   $scope.createProject = function(){

@@ -15,6 +15,19 @@
       </form>
     </div>
 
+    <div ng-show="showImportPostmanProject">
+      <form class="authentication-form" id="importFromPostman">
+        <p>Import From Postman</p>
+        <div class="form-control list-group" >
+           <input type="file" nv-file-select uploader="uploader"/><br/>
+        </div>
+        <button ng-click="importFromPostman()" class="btn btn-primary btn-block btn-lg"
+          ladda="loading" data-style="expand-right">
+          Import
+        </button>
+      </form>
+    </div>
+
     <div ng-show="showCreateProject">
       <form class="authentication-form" id="createProject">
         <p>Create New Project</p>
@@ -38,18 +51,25 @@
       </form>
     </div>
     <div class="authentication-toggle">
-      <span ng-show="showProjectCreateLink">
+      <div ng-show="showProjectCreateLink">
       Need to create a new project?
       <a ng-click="showCreateProjectForm()">
         Create Project
       </a>
-      </span>
-      <span ng-show="showProjectListLink">
+      </div>
+      <div ng-show="showProjectListLink">
       Need to open a project?
       <a ng-click="showProjectsListForm()">
         Project List
       </a>
-      </span>
+      </div>
+      <div ng-show="showImportPostmanProjectLink">
+      Import a Collection from Postman
+      <a ng-click="showImportPostmanProjectForm()">
+        Import from Postman
+      </a>
+      </div>
+
       <div ng-show="isConnectedToInternet">
         Not what you are looking for?
         <a ng-click="logout()">
