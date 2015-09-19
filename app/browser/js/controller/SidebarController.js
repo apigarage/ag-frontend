@@ -89,6 +89,7 @@ angular.module('app')
       var newModal = $modal({
         show: false,
         template: "html/prompt.html",
+        animation: false,
         backdrop: true,
         title: "Rename Collection",
         content: JSON.stringify({
@@ -144,6 +145,7 @@ angular.module('app')
       var newModal = $modal({
         show: false,
         template: "html/prompt.html",
+        animation: false,
         backdrop: true,
         title: "Delete Collection",
         content: JSON.stringify({
@@ -213,6 +215,7 @@ angular.module('app')
       var newModal = $modal({
         show: false,
         template: "html/prompt.html",
+        animation: false,
         backdrop: true,
         title: "Rename Item",
         content: JSON.stringify({
@@ -274,6 +277,7 @@ angular.module('app')
       var newModal = $modal({
         show: false,
         template: "html/prompt.html",
+        animation: false,
         backdrop: true,
         title: "Delete Item",
         content: JSON.stringify({

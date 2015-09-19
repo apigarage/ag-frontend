@@ -81,7 +81,8 @@ angular.module('app')
       };
 
       /*
-      d
+      * @id: project id
+      * @data: object fields and values
       */
       Project.remove = function(id){
         var options = {
@@ -90,6 +91,13 @@ angular.module('app')
         };
         return ApiRequest.send(options);
       };
+
+      //
+      // ****************************************************************
+      //  * Project Management (with collections, items, and environments)
+      //  * Uses $rootScope.currentProject to do the operations
+      //  ****************************************************************
+      //
 
       /*
       * @id: retrieves the project, and sets it to currentProject on rootScope
@@ -115,13 +123,13 @@ angular.module('app')
         $rootScope.$broadcast('loadPerformRequest', {});
       }
 
-      //
-      // ****************************************************************
-      //  * Project Management (with collections, items, and environments)
-      //  * Uses $rootScope.currentProject to do the operations
-      //  ****************************************************************
-      //
-
+      Project.updateProjectName = function(name){
+        var data = {name: name};
+        return Project.update($rootScope.currentProject.id, data)
+          .then(function(data){
+            $rootScope.currentProject.name = name;
+          });
+      };
 
       //
       // ****************************************************************

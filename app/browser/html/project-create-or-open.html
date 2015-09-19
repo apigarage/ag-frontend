@@ -4,7 +4,7 @@
 
     <div ng-show="showOpenProject">
       <form class="authentication-form" >
-        <p>Select a project to open</p>
+        <h4>Select a project to open</h4>
         <div class="list-group" ng-model="projects.selectedProject">
           <a ng-click="openProject(project.id)" class="list-group-item"
             ng-repeat="project in projects" >
@@ -30,7 +30,7 @@
 
     <div ng-show="showCreateProject">
       <form class="authentication-form" id="createProject">
-        <p>Create New Project</p>
+        <h4>Create New Project</h4>
         <input id="projectName" type="name" class="form-control "
           ng-class="{'input-lg': true}"
           placeholder="Enter Project Name"
@@ -38,7 +38,6 @@
           <p class="authentication-validation" ng-if="createProjectError">
             {{createProjectErrorMessage}}
           </p>
-        <p>Project Description</p>
         <textarea id="projectDescription"rows="4" class="form-control"
           name="description"
           form="createProject"

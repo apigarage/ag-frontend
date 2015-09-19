@@ -32,6 +32,7 @@ angular.module('app').controller('EnvironmentsCtrl', [
     var newModal = $modal({
       show: false,
       template: "html/prompt.html",
+      animation: false,
       backdrop: true,
       title: "Delete Environment",
       content: JSON.stringify({
@@ -62,7 +63,12 @@ angular.module('app').controller('EnvironmentsCtrl', [
       })
     });
     newModal.$scope.success = function(){
-      return Projects.deleteEnvironment(environment);
+      return Projects.deleteEnvironment(environment)
+        .then(function(){
+          if(environment.id === $rootScope.currentEnvironment.id){
+            delete $rootScope.currentEnvironment;
+          }
+        })
     };
 
     newModal.$scope.cancel = function(){ return $q.resolve(); };
@@ -87,6 +93,7 @@ angular.module('app').controller('EnvironmentsCtrl', [
     var newModal = $modal({
       show: false,
       template: "html/prompt.html",
+      animation: false,
       backdrop: true,
       title: "Delete Variable",
       content: JSON.stringify({

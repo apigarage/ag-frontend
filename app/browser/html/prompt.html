@@ -19,7 +19,7 @@
             <span class="modal-validation has-error form-group-sm"
               data-ng-show="selectItemErrorMessage" > - Select one item
             </span>
-            <div class="editor-titles" name="dropdownPrompt" data-ng-show="promptProperty.showDropdown">
+            <div class="editor-titles modal-prompt-label" name="dropdownPrompt" data-ng-show="promptProperty.showDropdown">
               <h2 bs-dropdown data-template="dropdown-selection" id="dropdown-selection">
                 <button ng-hide="promptProperty.dropdownSelectedItem.name">
                   Select Category
@@ -60,7 +60,7 @@
               data-ng-show="promptControllerForm.inputPromptA.$dirty && promptControllerForm.inputPromptA.$error.required">
               {{ promptControllerForm.inputPromptA.$error.required && promptControllerForm.inputPromptA.$dirty ? "- Can't be empty" : "" }}
             </span>
-            <input name="inputPromptA" type="text" class="form-control modal-form"
+            <input name="inputPromptA" type="text" class="form-control modal-form modal-prompt-label"
               placeholder="{{promptProperty.placeHolderInputTextA}}"
               data-ng-show="promptProperty.showInputPromptA"
               ng-required="promptProperty.requiredInputPromptA" data-ng-model="promptProperty.inputPromptTextA"
@@ -75,7 +75,7 @@
               {{ promptControllerForm.inputPrompt.$error.required && promptControllerForm.inputPrompt.$dirty ? "- Can't be empty" : "" }}
             </span>
 
-            <input name="inputPrompt" type="text" class="form-control modal-form"
+            <input name="inputPrompt" type="text" class="form-control modal-form modal-prompt-label"
               placeholder="{{promptProperty.placeHolderInputText}}"
               data-ng-show="promptProperty.showInputPrompt"
               ng-required="promptProperty.requiredInputPrompt" data-ng-model="promptProperty.inputPromptText"/>
@@ -89,7 +89,7 @@
               {{ promptControllerForm.inputEmailPrompt.$error.pattern ? "Invalid email address" : "" }}
               {{ promptControllerForm.inputEmailPrompt.$error.required && promptControllerForm.inputEmailPrompt.$dirty ? "Can't be empty" : "" }}
             </span>
-            <input name="inputEmailPrompt" type="text" class="form-control modal-form"
+            <input name="inputEmailPrompt" type="text" class="form-control modal-form modal-prompt-label"
               placeholder="{{promptProperty.placeHolderInputEmailText}}"
               data-ng-show="promptProperty.showInputEmailPrompt"
               ng-pattern="/^(([^&lt;&gt;()[\]\.,;:\s@\&quot;]+(\.[^&lt;&gt;()[\]\.,;:\s@\&quot;]+)*)|(\&quot;.+\&quot;))@(([^&lt;&gt;()[\]\.,;:\s@\&quot;]+\.)+[^&lt;&gt;()[\]\.,;:\s@\&quot;]{2,})$/i"
@@ -98,7 +98,7 @@
 
             <!-- General Validation STARTS -->
             <span class="modal-validation" ng-class="promptProperty.promptIsError ? 'has-error' : 'has-success'"
-              ng-if="promptProperty.promptMessage" />
+              ng-if="promptProperty.promptMessage">
               {{promptProperty.promptMessageText}}
             </span>
             <!-- General Validation ENDS -->

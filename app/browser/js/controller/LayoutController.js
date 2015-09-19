@@ -55,6 +55,54 @@ angular.module('app').controller('LayoutCtrl', [
     Projects.loadProjectToRootScope($rootScope.currentProjectId);
   };
 
+  $scope.renameProject = function(){
+    return showProjectRenameModal();
+  }
+
+  function showProjectRenameModal(){
+    var deferred = $q.defer();
+
+    var newModal = $modal({
+      show: false,
+      template: "html/prompt.html",
+      animation: false,
+      backdrop: true,
+      title: "Rename Project",
+      content: JSON.stringify({
+        'hideModalOnSubmit': true,
+
+        // submit button properties
+        'showSubmitButton' : true,
+        'disbledSubmitButton' : false,
+        'submitButtonText' : 'Rename',
+
+        // discard button properties
+        'showDiscardButton' : true,
+        'disbleDiscardButton' : false,
+        'discardButtonText' : 'Cancel',
+
+        // input prompt properties
+        'showInputPrompt' : true,
+        'requiredInputPrompt' : true,
+        'placeHolderInputText': 'New Project Name',
+        'labelInputText': 'Project Name',
+        'inputPromptText': $rootScope.currentProject.name,
+
+        // input email prompt properties
+        'showInputEmailPrompt' : false,
+        'requiredInputEmailPrompt': false,
+      })
+
+    });
+    newModal.$scope.deferred = deferred;
+    newModal.$scope.success = function(data){
+      return Projects.updateProjectName(data.name);
+    };
+    newModal.$scope.cancel = function(error){ return $q.resolve(); };
+    newModal.$promise.then( newModal.show );
+    return $q.promise;
+  }
+
   $scope.toggleHistory = function(){
     $scope.layout.historyMaximized = !$scope.layout.historyMaximized;
   };
@@ -71,6 +119,7 @@ angular.module('app').controller('LayoutCtrl', [
     var newModal = $modal({
       show: false,
       template: "html/prompt.html",
+      animation: false,
       backdrop: true,
       title: "Share Project",
       content: JSON.stringify({

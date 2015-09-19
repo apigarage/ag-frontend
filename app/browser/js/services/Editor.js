@@ -119,6 +119,7 @@ angular.module('app')
         return {
           show: false,
           template: "html/prompt.html",
+          animation: false,
           backdrop: true,
           title: "Save New Request",
           content: JSON.stringify({
@@ -192,6 +193,7 @@ angular.module('app')
         return {
           show: false,
           template: "html/prompt.html",
+          animation: false,
           backdrop: true,
           title: "Confirm Save Changes",
           content: JSON.stringify({
