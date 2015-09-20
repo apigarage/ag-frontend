@@ -65,7 +65,7 @@ angular.module('app').controller('EnvironmentsCtrl', [
     newModal.$scope.success = function(){
       return Projects.deleteEnvironment(environment)
         .then(function(){
-          if(environment.id === $rootScope.currentEnvironment.id){
+          if($rootScope.currentEnvironment && environment.id === $rootScope.currentEnvironment.id){
             delete $rootScope.currentEnvironment;
           }
         })
