@@ -237,7 +237,6 @@ angular.module('app').controller('EditorCtrl', [
         data: $scope.endpoint.requestBody,
         timeout: deferedAbort.promise,
       };
-      History.setHistoryItem(options);
       options = RequestUtility.buildRequest(options, $rootScope.currentEnvironment);
       options.transformResponse = function(data){return data;};
       $rootScope.$broadcast('updateHistory');
@@ -255,6 +254,7 @@ angular.module('app').controller('EditorCtrl', [
         $scope.response.headers = JSON.parse(JSON.stringify($scope.response.headers()));
         $scope.setResponsePreviewType($scope.currentResponsePreviewTab);
         showRequestHideCancelButtons();
+        History.setHistoryItem(options);
       });
 
       $scope.requestPromise = requestPromise;
