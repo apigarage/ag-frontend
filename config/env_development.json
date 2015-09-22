@@ -1,10 +1,11 @@
 {
   "name": "development",
   "description": "Add here any environment specific stuff you like.",
-  "url": "http://localhost:3000/",
+  "url": "http://staging.apigarage.com/",
   "api": "api/",
   "client_id": "id_z7y3e0902uNtMxO07Z6q",
   "client_secret": "secret_44207Z6q1Lq5e6me0902",
   "database_name": "dev-apigarage",
+  "access_token_key": "accessToken_development",
   "syncTime": 1000
 }

@@ -20,6 +20,10 @@
     tmpDir = projectDir.dir('./tmp', { empty: true });
     releasesDir = projectDir.dir('./releases');
     manifest = projectDir.read('app/package.json', 'json');
+    if( utils.getEnvName() == 'staging' ){
+       manifest.name = 'stag-' + manifest.name;
+       manifest.productName = 'stag-' + manifest.productName;
+    }
     readyAppDir = tmpDir.cwd(manifest.name);
 
     return Q(); // jshint ignore:line
@@ -50,7 +54,7 @@
       'icon': projectDir.path('resources/windows/icon.ico'),
       'version-string': {
         'ProductName': manifest.productName,
-        'FileDescription': manifest.description,
+        'FileDescription': manifest.productName,
       }
     }, function (err) {
       if (!err) {
@@ -74,7 +78,7 @@
       dest: releasesDir.path(finalPackageName),
       icon: readyAppDir.path('icon.ico'),
       setupIcon: projectDir.path('resources/windows/setup-icon.ico'),
-      banner: projectDir.path('resources/windows/setup-banner.bmp'),
+      banner: projectDir.path('resources/windows/setup-banner-crop.bmp'),
     });
     tmpDir.write('installer.nsi', installScript);
 

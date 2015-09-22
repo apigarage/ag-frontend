@@ -1,0 +1,4 @@
+<div class="response-body-parsed" ng-init="responseBodyExpanded = true">
+  <span class="fa fa-spinner fa-pulse response-loading" ng-hide="response.data"></span>
+  <div ui-ace="responseBodyEditorOptionsParsed" ng-model="responsePreviewTypeContent" ng-if="response.data" ng-show="responseBodyExpanded"></div>
+</div>

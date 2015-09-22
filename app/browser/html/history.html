@@ -1,0 +1,34 @@
+  <div class="history noselect" ng-class="{expanded: layout.sidebarExpanded, maximized: layout.historyMaximized}"
+       ng-controller="HistoryCtrl">
+
+    <!-- <h1 ng-click="toggleHistory()" bs-tooltip data-title="{{'OSX' ? '&#8984;H' : 'Ctrl+H'}}"> -->
+    <h1 ng-click="toggleHistory()">
+      <span class="fa" ng-class="layout.historyMaximized ? 'fa-minus-square-o' : 'fa-plus-square-o'"></span>
+      REQUEST HISTORY
+    </h1>
+    <div class="history-latest-request" ng-hide="layout.historyMaximized">
+      Last request:
+      <span class="request-time hidden-xs">{{lastRequest.time | date:'yyyy-MM-dd h:mm:ssa'}}</span>
+      <a>
+        <span class="request-type" ng-click="loadPerformRequest(lastRequest.time, false)">{{lastRequest.method}}</span>
+      </a>
+      <a ng-click="loadPerformRequest(lastRequest.time, true)">{{lastRequest.url}}</a>
+    </div>
+
+    <!-- <a class="history-expand-icon" ng-click="toggleHistory()" bs-tooltip data-title="{{'OSX' ? '&#8984;H' : 'Ctrl+H'}}"> -->
+    <a class="history-expand-icon" ng-click="toggleHistory()">
+      {{ layout.historyMaximized ? 'Collapse' : 'Expand' }}
+      <span class="fa" ng-class="layout.historyMaximized ? 'fa-times-circle' : 'fa-external-link'"></span>
+    </a>
+
+    <ul class="list-unstyled">
+      <li class="request-url" ng-repeat="time in historyTimeStamps">
+        <span class="request-time">{{time | date:'yyyy-MM-dd h:mm:ssa'}}</span>
+        <a>
+          <span class="request-type" ng-click="loadPerformRequest(time, false)">{{recentRequests[time].method}}</span>
+        </a>
+        <a ng-click="loadPerformRequest(time, true)">{{recentRequests[time].url}}</a>
+      </li>
+    </ul>
+
+  </div>

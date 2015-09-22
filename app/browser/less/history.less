@@ -1,0 +1,124 @@
+// ============================================================================
+// History
+// ============================================================================
+.history {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 4px 8px;
+  background: #FEFEFE;
+
+  // 3D Look
+  border-top: 1px solid #DDD;
+  box-shadow: 0 0 4px rgba(0,0,0,0.125);
+  z-index: 102;
+
+  h1 {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    display: inline-block;
+    margin: 0;
+    font-size: 12px;
+    font-family: @font-family-sans-serif;
+    font-weight: bold;
+    color: #AAA;
+    cursor: pointer;
+    &:hover {
+      color: @brand-primary;
+    }
+
+    transition: top 0.25s, left 0.25s, font-size 0.25s;
+  }
+
+  ul {
+    overflow: auto;
+    position: absolute;
+    top: 40px;
+    left: 15px;
+    right: 5px;
+    bottom: 0;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .request-time {
+    display: inline-block;
+    font-size: 12px;
+    color: #888;
+    width: 125px;
+
+    transition: font-size 0.25s;
+  }
+  .request-type {
+    display: inline-block;
+    font-size: 12px;
+    text-transform: uppercase;
+    width: 60px;
+
+    transition: font-size 0.25s;
+    text-decoration: inherit;
+  }
+  .request-url {
+    font-size: 14px;
+
+    display: block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+
+    transition: font-size 0.25s;
+  }
+
+  transition: margin 0.25s, padding 0.25s, top 0.25s; // Margin is needed for responsive collapse
+  &.maximized {
+    top: -250px;
+    padding: 15px;
+
+    h1 {
+      top: 13px;
+      left: 15px;
+      font-size: 15px;
+    }
+
+    .history-expand-icon {
+      top: 10px;
+      right: 15px;
+      font-size: 14px;
+    }
+  }
+}
+.history-latest-request {
+  position: absolute;
+  top: 6px;
+  left: 150px;
+  right: 80px;
+
+  .request-time {
+    width: auto;
+    margin: 0 5px;
+  }
+  .request-type {
+    width: auto;
+    margin: 0 5px;
+  }
+
+  font-size: 13px;
+
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.history-expand-icon {
+  position: absolute;
+  top: 7px;
+  right: 15px;
+  font-size: 12px;
+  color: #888;
+  text-decoration: none !important;
+
+  transition: top 0.25s, right 0.25s;
+}

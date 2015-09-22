@@ -4,30 +4,56 @@
     <img class="authentication-logo" src="img/api-garage-logo-large.png" />
 
     <form class="authentication-form" ng-submit="submit()">
-      <input type="name"      class="form-control authentication-name"      ng-class="{'input-lg': authentication.type == 'existing'}" placeholder="Name" ng-if="authentication.type == 'register'" />
-      <p class="authentication-validation" ng-if="authentication.error && authentication.type == 'register'">
-        Dummy validation, submit again to enter
+      <p class="authentication-validation" ng-if="forgotPassword">
+        Your password is reset. Please login with your latest password to continue.
       </p>
-      <input type="email"     class="form-control authentication-email"     ng-class="{'input-lg': authentication.type == 'existing'}" placeholder="Email Address" />
-      <p class="authentication-validation" ng-if="authentication.error">
-        Dummy validation, submit again to enter
+      <input type="name" class="form-control authentication-name"
+        ng-class="{'input-lg': authType == LOGIN}"
+        placeholder="Name" ng-if="authType == SIGNUP"
+        ng-model="credentials.name" />
+      <p class="authentication-validation"
+        ng-if="nameError && authType == SIGNUP">
+        {{nameErrorMessage}}
       </p>
-      <input type="password"  class="form-control authentication-password"  ng-class="{'input-lg': authentication.type == 'existing'}" placeholder="Password" />
-      <p class="authentication-validation" ng-if="authentication.error">
-        Dummy validation, submit again to enter
+
+      <input type="name" class="form-control authentication-email"
+        ng-class="{'input-lg': authType == LOGIN}"
+        placeholder="Email Address"
+        ng-model="credentials.email" />
+      <p class="authentication-validation" ng-if="emailError">
+        {{emailErrorMessage}}
       </p>
-      <button type="submit" class="btn btn-primary btn-block btn-lg">
-        {{ authentication.type == "existing" ? "Sign in" : "Register" }}
+      <input type="password" class="form-control authentication-password"
+        ng-class="{'input-lg': authType == LOGIN}"
+        placeholder="Password"
+        ng-model="credentials.password"/>
+      <p class="authentication-validation" ng-if="passwordError">
+        {{passwordErrorMessage}}
+      </p>
+
+      <p class="authentication-validation"
+        ng-if="genericLoginErrorMessage && authType == LOGIN">
+        {{genericLoginErrorMessage}}
+      </p>
+
+      <p class="authentication-validation"
+        ng-if="genericSignupErrorMessage && authType == SIGNUP">
+        {{genericSignupErrorMessage}}
+      </p>
+
+      <button type="submit" class="btn btn-primary btn-block btn-lg"
+      ladda="loading" data-style="expand-right">
+        {{ authType == LOGIN ? "Sign in" : "Register" }}
       </button>
-      <p class="authentication-forgot-link" ng-if="authentication.type == 'existing'">
-        <a>Forgot password?</a>
+      <p class="authentication-forgot-link" ng-if="authType == LOGIN">
+        <a ui-sref="forgotpassword">Forgot password?</a>
       </p>
     </form>
 
     <div class="authentication-toggle">
-      {{ authentication.type == "existing" ? "Don't have an account?" : "Already have an account?" }}
-      <a href="#" ng-click="toggleAuthenticationType()">
-        {{ authenticaiton.type == "existing" ? "Sign in" : "Create an account" }}
+      {{ authType === SIGNUP ? "Already have an account?" : "Don't have an account?" }}
+      <a ng-click="toggleAuthenticationType()">
+        {{ authType === SIGNUP ? "Sign in" : "Create an account" }}
       </a>
       </span>
     </div>

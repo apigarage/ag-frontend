@@ -45,8 +45,6 @@
     });
   };
   gulp.task('copy', ['clean'], copyTask);
-  gulp.task('copy-watch', copyTask);
-
 
   // var transpileTask = function () {
   //   return gulp.src(paths.jsCodeToTranspile)
@@ -78,6 +76,18 @@
   gulp.task('finalize', ['clean'], function () {
     var manifest = srcDir.read('package.json', 'json');
     switch (utils.getEnvName()) {
+      case 'staging':
+        // Add "dev" suffix to name, so Electron will write all
+        // data like cookies and localStorage into separate place.
+        manifest.name += '-staging';
+        manifest.productName += ' staging';
+        break;
+      case 'test':
+        // Add "dev" suffix to name, so Electron will write all
+        // data like cookies and localStorage into separate place.
+        manifest.name += '-test';
+        manifest.productName += 'Test';
+        break;
       case 'development':
         // Add "dev" suffix to name, so Electron will write all
         // data like cookies and localStorage into separate place.
@@ -102,8 +112,14 @@
 
   gulp.task('watch', function () {
     // gulp.watch(paths.jsCodeToTranspile, ['transpile-watch']);
-    gulp.watch(paths.toWatch, ['copy-watch']);
     gulp.watch('app/**/*.less', ['less-watch']);
+    gulp.watch(paths.toWatch, function(obj){
+      if(obj.type === 'changed'){
+        gulp.src( obj.path, { "base": "./app/"})
+          .pipe(gulp.dest('./build/'));
+        console.log( new Date().toJSON() + ' - ' + obj.path + ' updated.' );
+      }
+    });
   });
 
 

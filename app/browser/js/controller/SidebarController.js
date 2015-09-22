@@ -1,84 +1,338 @@
-angular.module('app').controller('SidebarCtrl', [
+'use strict';
+
+angular.module('app')
+
+.controller('SidebarCtrl', [
   '$scope',
-  function ($scope){
+  '$rootScope',
+  '$window',
+  '$modal',
+  '$q',
+  'lodash',
+  'Projects',
+  function ($scope, $rootScope, $window, $modal, $q, _, Projects){
 
-  $scope.endpointGroups = [
-    {
-      name: 'Albums',
-      endpoints: [
-        'Get an Album',
-        'Get Several Albums',
-        'Get an Album\'s Tracks'
-      ]
-    },
-    {
-      name: 'Artists',
-      endpoints: [
-        'Get an Artist',
-        'Get Several Artists',
-        'Get an Artist\'s Tracks',
-        'Get an Artist\'s Top Tracks',
-        'Get an Artist\'s Related Artists'
-      ]
-    },
-    {
-      name: 'Tracks',
-      endpoints: [
-        'Get a Track',
-        'Get Several Tracks',
-        'Search',
-        'Search for an Item'
-      ]
-    },
-    {
-      name: 'Playlists',
-      endpoints: [
-        'Get a List of a User\'s Playlists',
-        'Get a Playlist',
-        'Get a Playlist\'s Tracks',
-        'Create a Playlist',
-        'Add Tracks to a Playlist',
-        'Remove Tracks from a Playlist',
-        'Reorder or replace a Playlist\'s Track Master',
-        'Change a Playlist\'s Details'
-      ]
-    },
-    {
-      name: 'User Profiles',
-      endpoints: [
-        'Get a User\'s Profile',
-        'Get Current User\'s Profile'
-      ]
-    },
-    {
-      name: 'User Library',
-      endpoints: [
-        'Get Current User\'s Saved Tracks',
-        'Check Current User\'s Saved Tracks',
-        'Save Tracks for Current User',
-        'Remove Tracks for Current User'
-      ]
-    },
-    {
-      name: 'Browse',
-      endpoints: [
-        'Get a List of New Releases',
-        'Get a List of Featured Playlists',
-        'Get a List of Browse Categories',
-        'Get a Single Browse Category',
-        'Get a Category\'s playlists'
-      ]
-    },
-    {
-      name: 'Follow',
-      endpoints: [
-        'Check if Current User Follows Artists or Users',
-        'Follow Artists or Users',
-        'Unfollow Artists or Users',
-        'Check if Users Follow a Playlist',
-        'Unfollow a Playlist'
-      ]
+    var copyOfCollection = {};
+    $scope.searchResultsCollection = null;
+    $scope.search = "";
+
+    // Braodcast Receiver to update the sidebar contents.
+    // This is leverged by any Services that modifies the Project Colleciton
+    $scope.$on('updateSideBar', function(event) {
+      $scope.searchResultsCollection = null;
+      if( _.isEmpty($rootScope.currentProject) ) return;
+      copyOfCollection = angular.copy($rootScope.currentProject.collections);
+      $scope.searchResultsCollection = angular.copy($rootScope.currentProject.collections);
+
+      if(!_.isEmpty($scope.search)){
+        $scope.searchFilter($scope.search);
+      }
+    });
+
+    $scope.selectItem = function(item, collection){
+      // These assignments are used for loading the endpoint in the editor
+      if(item.uuid !== $rootScope.currentItem.uuid ){
+        $rootScope.$broadcast('loadPerformRequest', item);
+      }
+    };
+
+    $scope.searchFilter = function (search){
+      var temporaryCopy ={};
+      // if we use collectionOfCopy in the forEach it does some wonky things.
+      angular.copy(copyOfCollection, temporaryCopy);
+      if(_.isEmpty(search)){
+        angular.copy(temporaryCopy, $scope.searchResultsCollection);
+        return;
+      }
+      $scope.searchResultsCollection = {};
+      _.forEach(temporaryCopy, function(collection) {
+        var foundCollection = isFound(collection.name,search);
+        var foundItemUUID = [];
+        if(!_.isUndefined(collection.items)){
+          _.forEach(collection.items, function(item, key) {
+            if(isFound(item.name,search)){
+              foundItemUUID.push(item.uuid);
+              foundCollection = true;
+            }
+          });
+        }
+        // rebuild collection with found items
+        if(foundCollection){
+          $scope.searchResultsCollection[collection.id] = collection;
+          $scope.searchResultsCollection[collection.id].items = {};
+          if(!_.isEmpty(foundItemUUID)){
+            _.forEach(foundItemUUID, function(uuid) {
+              $scope.searchResultsCollection[collection.id].items[uuid] =
+              copyOfCollection[collection.id].items[uuid];
+            });
+          }
+        }
+      });
+      $scope.expandGroup = true;
+    };
+
+    function isFound(name, search){
+      var result = -1;
+      try {
+        result = name.toLowerCase().search(search.toLowerCase());
+      } catch (e) {
+        result = 0;
+      }
+      return (result > -1);
     }
-  ];
 
-}]);
+    $scope.newRequest = function(){
+      $rootScope.$broadcast('loadPerformRequest', {});
+    };
+
+    $scope.openRenameCollectionModal = function(currentCollection){
+      var newModal = $modal({
+        show: false,
+        template: "html/prompt.html",
+        animation: false,
+        backdrop: true,
+        title: "Rename Collection",
+        content: JSON.stringify({
+          // modal window properties
+          'disableCloseButton': false,
+          'promptMessage': false,
+          'promptMessageText': '',
+          'promptIsError': false,
+          'hideModalOnSubmit': true,
+
+          // submit button properties
+          'showSubmitButton' : true,
+          'disbledSubmitButton' : false,
+          'submitButtonText' : 'Rename',
+
+          // discard button properties
+          'showDiscardButton' : true,
+          'disbleDiscardButton' : false,
+          'discardButtonText' : 'Cancel',
+
+          // input prompt properties
+          'showInputPrompt' : true,
+          'requiredInputPrompt' : true,
+          'placeHolderInputText': 'New Collection Name',
+          'labelInputText': 'Collection Name',
+          'inputPromptText': currentCollection.name,
+
+          // input email prompt properties
+          'showInputEmailPrompt' : false,
+          'requiredInputEmailPrompt': false,
+        })
+
+      });
+      newModal.$scope.success = function(data){
+        return $scope.saveCategory(currentCollection,data).then(function(response){
+          return;
+        });
+      };
+      newModal.$scope.cancel = function(error){ return $q.resolve(); };
+      newModal.$promise.then( newModal.show );
+      return newModal;
+    };
+
+    $scope.saveCategory = function(currentCollection,data){
+      return Projects.updateCollection(currentCollection, data)
+        .then(function(response){
+          // TODO: Error handling
+          return;
+        });
+    };
+
+    $scope.openDeleteCollectionModal = function(currentCollection){
+      var newModal = $modal({
+        show: false,
+        template: "html/prompt.html",
+        animation: false,
+        backdrop: true,
+        title: "Delete Collection",
+        content: JSON.stringify({
+          // modal window properties
+          'disableCloseButton': false,
+          'promptMessage': true,
+          'promptMessageText': currentCollection.name,
+          'promptIsError': true,
+          'hideModalOnSubmit': true,
+
+          // submit button properties
+          'showSubmitButton' : true,
+          'disbledSubmitButton' : false,
+          'submitButtonText' : 'Confirm',
+
+          // discard button properties
+          'showDiscardButton' : true,
+          'disbleDiscardButton' : false,
+          'discardButtonText' : 'Cancel',
+
+          // input prompt properties
+          'showInputPrompt' : false,
+          'requiredInputPrompt' : false,
+
+          // input email prompt properties
+          'showInputEmailPrompt' : false,
+          'requiredInputEmailPrompt': false,
+        })
+
+      });
+      newModal.$scope.success = function(){
+        return $scope.deleteCategory(currentCollection)
+        .then(function(response){
+          // TODO: Error handling
+          return response;
+        });
+      };
+      newModal.$scope.cancel = function(error){ return $q.resolve(); };
+      newModal.$promise.then( newModal.show );
+      return newModal;
+    };
+
+    $scope.deleteCategory = function(currentCollection){
+      return Projects.removeCollection(currentCollection)
+        .then(function(response){
+          // TODO: Error handling
+          // check to see if  currentCollction is selected collection
+          if($rootScope.currentCollection){
+            if($rootScope.currentCollection.id == currentCollection.id){
+              $rootScope.$broadcast('loadPerformRequest', {});
+            }
+          }
+          return response;
+        });
+    };
+
+    $scope.copyItem = function(currentItem){
+      currentItem.name = currentItem.name + " - Copy";
+      return Projects.addItemToCollection(currentItem.collection_id, currentItem)
+        .then(function(response){
+          // TODO: Error handling
+          return;
+        });
+    };
+
+    $scope.openRenameItemModal = function(currentItem){
+      var newModal = $modal({
+        show: false,
+        template: "html/prompt.html",
+        animation: false,
+        backdrop: true,
+        title: "Rename Item",
+        content: JSON.stringify({
+          // modal window properties
+          'disableCloseButton': false,
+          'promptMessage': false,
+          'promptMessageText': '',
+          'promptIsError': false,
+          'hideModalOnSubmit': true,
+
+          // submit button properties
+          'showSubmitButton' : true,
+          'disbledSubmitButton' : false,
+          'submitButtonText' : 'Rename',
+
+          // discard button properties
+          'showDiscardButton' : true,
+          'disbleDiscardButton' : false,
+          'discardButtonText' : 'Cancel',
+
+          // input prompt properties
+          'showInputPrompt' : true,
+          'requiredInputPrompt' : true,
+          'placeHolderInputText': 'New Item Name',
+          'labelInputText': 'Item Name',
+          'inputPromptText': currentItem.name,
+
+          // input email prompt properties
+          'showInputEmailPrompt' : false,
+          'requiredInputEmailPrompt': false,
+        })
+
+      });
+      newModal.$scope.success = function(data){
+        currentItem.name = data.name;
+        return $scope.saveItemName(currentItem).then(function(response){
+          return;
+        });
+      };
+      newModal.$scope.cancel = function(error){ return $q.resolve(); };
+      newModal.$promise.then( newModal.show );
+      return newModal;
+    };
+
+    $scope.saveItemName = function(currentItem){
+      return Projects.updateItemInCollection(currentItem.collection_id, currentItem)
+        .then(function(response){
+          if($rootScope.currentItem){
+            if($rootScope.currentItem.uuid == currentItem.uuid){
+              $rootScope.$broadcast('loadPerformRequest', currentItem);
+            }
+          }
+          // TODO: Error handling
+          return;
+        });
+    };
+
+    $scope.openDeleteItemModal = function(currentCollection, currentItem){
+      var newModal = $modal({
+        show: false,
+        template: "html/prompt.html",
+        animation: false,
+        backdrop: true,
+        title: "Delete Item",
+        content: JSON.stringify({
+          // modal window properties
+          'disableCloseButton': false,
+          'promptMessage': true,
+          'promptMessageText': currentItem.name,
+          'promptIsError': true,
+          'hideModalOnSubmit': true,
+
+          // submit button properties
+          'showSubmitButton' : true,
+          'disbledSubmitButton' : false,
+          'submitButtonText' : 'Confirm',
+
+          // discard button properties
+          'showDiscardButton' : true,
+          'disbleDiscardButton' : false,
+          'discardButtonText' : 'Cancel',
+
+          // input prompt properties
+          'showInputPrompt' : false,
+          'requiredInputPrompt' : false,
+
+          // input email prompt properties
+          'showInputEmailPrompt' : false,
+          'requiredInputEmailPrompt': false,
+        })
+
+      });
+      newModal.$scope.success = function(){
+        return $scope.deleteItem(currentCollection, currentItem)
+        .then(function(response){
+          // TODO: Error handling
+          return response;
+        });
+      };
+      newModal.$scope.cancel = function(error){ return $q.resolve(); };
+      newModal.$promise.then( newModal.show );
+      return newModal;
+    };
+
+    $scope.deleteItem = function(currentCollection, currentItem){
+      return Projects.removeItemFromCollection(currentCollection.id, currentItem.uuid)
+        .then(function(response){
+          // TODO: Error handling
+          // If currentItem is selected and the item being
+          // deleted is the same clear editor
+          if($rootScope.currentItem){
+            if($rootScope.currentItem.uuid == currentItem.uuid){
+              $rootScope.$broadcast('loadPerformRequest', {});
+            }
+          }
+          return response;
+        });
+    };
+  }
+]);

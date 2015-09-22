@@ -203,12 +203,20 @@ jasmineRequire.HtmlReporter = function(j$) {
         for (var i = 0; i < resultsTree.children.length; i++) {
           var resultNode = resultsTree.children[i];
           if (resultNode.type == 'suite') {
-            var suiteListNode = createDom('ul', {className: 'suite', id: 'suite-' + resultNode.result.id},
-              createDom('li', {className: 'suite-detail'},
-                createDom('a', {href: specHref(resultNode.result)}, resultNode.result.description)
-              )
-            );
-
+            var suiteListNode = null;
+            if(i === 0){
+              suiteListNode = createDom('ul', {className: 'suite', id: 'suite-' + resultNode.result.id},
+                createDom('li', {className: 'suite-head-detail'},
+                  createDom('a', {href: specHref(resultNode.result)}, resultNode.result.description)
+                )
+              );
+            } else {
+              suiteListNode = createDom('ul', {className: 'suite', id: 'suite-' + resultNode.result.id},
+                createDom('li', {className: 'suite-detail'},
+                  createDom('a', {href: specHref(resultNode.result)}, resultNode.result.description)
+                )
+              );
+            }
             summaryList(resultNode, suiteListNode);
             domParent.appendChild(suiteListNode);
           }

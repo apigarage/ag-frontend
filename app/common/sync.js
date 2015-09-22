@@ -14,7 +14,7 @@
       running = true;
       var d = new Date().toJSON();
       wm.sendToAllWindows('last-synced-at', d);
-      console.log('Syncing Again ... ' + d );
+      // console.log('Syncing Again ... ' + d );
       // ipc.send('last-synced-at', d);
       // ALL THE SYNCING GOES HERE.
       // UPDATE THE VIEW OBJECT.

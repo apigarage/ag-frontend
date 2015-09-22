@@ -1,271 +1,427 @@
 angular.module('app').controller('EditorCtrl', [
+  'lodash',
   '$scope',
-  '$timeout',
+  '$rootScope',
+  '$window',
+  '$filter',
+  '$http',
+  '$sce',
   '$modal',
-  function ($scope, $timeout, $modal){
+  '$q',
+  '$focus',
+  'RequestUtility',
+  'History',
+  'Collections',
+  'Projects',
+  'Editor',
+  function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q,
+    $focus, RequestUtility, History, Collections, Projects, Editor){
 
-  // ----------------------------
-  // Temporary MOCK Endpoint Use Case
-  $scope.endpoint = {
-    category: "Albums",
-    name: "Get an Artist's Tracks",
-    environment: 'production',
-    requestMethod: 'GET',
-    requestHeaders: [
-      { key: "Content-Type", value: "application/json" },
-      { key: "language", value: "EN" }
-    ],
-    requestBody: '{\n    "amount": "32.32",\n    "status": true\n}'
-  };
-  $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
-  $scope.environments = ['local', 'staging', 'production'];
-  $scope.response = null;
-  $scope.responsePreviewTypes = ['Parsed', 'Raw', 'Preview'];
-  $scope.responsePreviewType = ['Parsed'];
+    // Private Functions
 
-  $scope.setEnvironment = function(environment)
-    {
-      $scope.endpoint.environment = environment;
+    function showRequestHideCancelButtons(){
+      $scope.performRequestButton = true;
+      $scope.cancelRequestButton = false;
+    }
+
+    function showCancelHideRequestButtons(){
+      $scope.performRequestButton = false;
+      $scope.cancelRequestButton = true;
+    }
+
+    function setDefaultEndpoint(){
+      $scope.endpoint = {
+        requestUrl: "",
+        name: "",
+        requestMethod: 'GET',
+        requestHeaders: [
+          { key: "Content-Type", value: "application/json" }
+        ],
+        requestBody:  ''
+      };
+
+      $scope.collection = {
+        name: 'Uncategorized (Select a Category)'
+      };
+    }
+
+    function resetResponse(){
+      $scope.response = null;
+    }
+
+    function loadRequest(item, loadOnly){
+      if(_.isUndefined(loadOnly)) loadOnly = true;
+
+      $scope.loadRequestToScope(item);
+
+      if(!loadOnly){
+        $scope.performRequest();
+      }
+
+      return $q.resolve();
+    }
+
+    function init(){
+      $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
+
+      $scope.responsePreviewTab = [
+        {
+          title: 'Raw',
+          url: 'html/editor-response-raw.html'
+        }, {
+          title: 'Parsed',
+          url: 'html/editor-response-parsed.html'
+        // }, {
+        //   title: 'Preview',
+        //   url: 'html/editor-response-preview.html'
+        }
+      ];
+      $scope.currentResponsePreviewTab = {
+        title: 'Raw',
+        url: 'html/editor-response-raw.html'
+      };
+      $scope.responsePreviewTypeContent = null;
+
+      // TEMPORARY FLAG TO DISABLE THE SEARCH BOX IN THE RESPONSE PANEL
+      // (note there is an extra padding created in the .response-heading
+      // div to make room for the search box)
+      $scope.RESPONSE_SEARCH_FLAG = false;
+
+      $scope.isDeleteButtonDisabled = true;
+      resetResponse();
+      showRequestHideCancelButtons();
+      setDefaultEndpoint();
+    }
+
+    // END - Private Functions
+
+    $scope.requestChanged = function(){
+      Editor.setEndpoint( $scope.endpoint );
+      if(!$scope.requestChangedFlag){
+        $scope.requestChangedFlag = true;
+      }
     };
-  $scope.manageEnvironments = function()
-    {
+
+    // THIS LOGIC SHOULD NOT EXIST HERE. IT's PART OF SIDEBAR.
+    // $scope.copyCurrentRequest = function(){
+    //   // This should never happen. If it happens, just in case, the current
+    //   // request is its own copy.
+    //   if(!$scope.endpoint.uuid) return;
+    //
+    //   var newItem = $scope.endpoint;
+    //   newItem.uuid = undefined;
+    //   newItem.name = newItem.name + ' Copy';
+    //
+    //   newItem = $scope.buildRequestOutOfScope();
+    //   return Projects.addItemToCollection($rootScope.currentCollection.id, newItem)
+    //     .then(function(item){
+    //       $rootScope.currentItem = item;
+    //       $rootScope.$broadcast('loadPerformRequest', item);
+    //     });
+    // };
+
+    // THIS LOGIC SHOULD NOT EXIST HERE. IT's PART OF SIDEBAR.
+    // $scope.changeCollection = function(collection){
+    //   var oldCollectionId = $rootScope.currentCollection.id;
+    //   var newCollectionId = collection.id;
+    //
+    //   $rootScope.currentCollection = collection;
+    //   if($scope.endpoint.uuid){
+    //     return Projects.setNewCollectionForItem(oldCollectionId, newCollectionId, $scope.endpoint.uuid)
+    //       .then(function(data){
+    //         console.log('Request Updated Successfully');
+    //         // Some Sort of notification would be handy.
+    //       });
+    //   }
+    // };
+
+    $scope.openDeleteItemModal = function(){
+      var newModal = $modal({
+        show: false,
+        template: "html/prompt.html",
+        animation: false,
+        backdrop: true,
+        title: "Delete Item",
+        content: JSON.stringify({
+          // modal window properties
+          'disableCloseButton': false,
+          'promptMessage': true,
+          'promptMessageText': $rootScope.currentItem.name,
+          'promptIsError': true,
+          'hideModalOnSubmit': true,
+
+          // submit button properties
+          'showSubmitButton' : true,
+          'disbledSubmitButton' : false,
+          'submitButtonText' : 'Confirm',
+
+          // discard button properties
+          'showDiscardButton' : true,
+          'disbleDiscardButton' : false,
+          'discardButtonText' : 'Cancel',
+
+          // input prompt properties
+          'showInputPrompt' : false,
+          'requiredInputPrompt' : false,
+
+          // input email prompt properties
+          'showInputEmailPrompt' : false,
+          'requiredInputEmailPrompt': false,
+        })
+
+      });
+      newModal.$scope.success = $scope.deleteItem;
+      newModal.$scope.cancel = function(error){ return $q.resolve(); };
+      newModal.$promise.then( newModal.show );
+      return newModal;
+    };
+
+    $scope.deleteItem = function(){
+      return Projects.removeItemFromCollection($rootScope.currentCollection.id, $rootScope.currentItem.uuid)
+        .then(function(response){
+          // TODO: Error handling
+          $scope.endpoint = {};
+          return response;
+        });
+    };
+
+    $scope.isEmptyEnvironment = function(){
+      return _.isEmpty($rootScope.currentProject.environments.public) &&
+        _.isEmpty($rootScope.currentProject.environments.private);
+    };
+
+    $scope.setEnvironment = function(environment){
+      $rootScope.currentEnvironment = environment;
+    };
+
+    $scope.manageEnvironments = function(){
       var myModal = $modal({
         show: false,
         template: "html/environments.html",
+        animation: false,
         backdrop: true
       });
 
       myModal.$scope.environments  = $scope.environments;
       myModal.$promise.then( myModal.show );
     };
-  $scope.setRequestMethod = function(method)
-    {
+
+    $scope.setRequestMethod = function(method){
       $scope.endpoint.requestMethod = method;
     };
-  $scope.addRequestHeader = function()
-    {
-      $scope.endpoint.requestHeaders.push({});
+
+    $scope.addRequestHeader = function(){
+      if(!_.isArray($scope.endpoint.requestHeaders)) {
+        $scope.endpoint.requestHeaders = [];
+      }
+      if(!_.isEmpty(_.last($scope.endpoint.requestHeaders)) ||
+        _.isEmpty($scope.endpoint.requestHeaders)){
+        $scope.endpoint.requestHeaders.push({});
+      }
     };
-  $scope.deleteRequestHeader = function(header)
-    {
+
+    $scope.deleteRequestHeader = function(header){
       var position = $scope.endpoint.requestHeaders.indexOf( header );
       $scope.endpoint.requestHeaders.splice(position, 1);
     };
 
-  // ----------------------------
-  // Temporary MOCK Responses
-  var randomRequestIndex = 1;
-  //$scope.response = sampleResponses[1];
-  $scope.performRequest = function()
-    {
-      $scope.response = "loading";
+    $scope.performRequest = function(){
+      if( _.isEmpty($scope.endpoint.requestUrl) ) return;
+      resetResponse();
+      showCancelHideRequestButtons();
+      var deferedAbort = $q.defer();
+      var options = {
+        method: $scope.endpoint.requestMethod,
+        url: $scope.endpoint.requestUrl,
+        headers: $scope.endpoint.requestHeaders,
+        data: $scope.endpoint.requestBody,
+        timeout: deferedAbort.promise,
+      };
+      options = RequestUtility.buildRequest(options, $rootScope.currentEnvironment);
+      options.transformResponse = function(data){return data;};
+      $rootScope.$broadcast('updateHistory');
+      var requestPromise = $http(options).then(function(response){
+        $scope.response = response;
+      })
+      .catch(function(errorResponse){
+        $scope.response = errorResponse;
+        if(errorResponse.status === 0){
+          $scope.response.statusText = 'Unreachable';
+        }
+      })
+      .finally(function(){
+        // Workaround: newType Error that appears when parsing headers root casue unknown
+        $scope.response.headers = JSON.parse(JSON.stringify($scope.response.headers()));
+        $scope.setResponsePreviewType($scope.currentResponsePreviewTab);
+        showRequestHideCancelButtons();
+        History.setHistoryItem(options);
+      });
 
-      // Randomly return one of the sample responses (declared at the bottom of the page)
-      $timeout(function(){  // Emulate async
-        $scope.response = sampleResponses[randomRequestIndex % 3];
-        randomRequestIndex++;
-      }, 500);
+      $scope.requestPromise = requestPromise;
+      $scope.requestPromise.abort = function() {
+        deferedAbort.resolve();
+        showRequestHideCancelButtons();
+      };
+
+      requestPromise.finally(function(){
+        requestPromise.abort = angular.noop;
+        deferedAbort = request = requestPromise = null;
+      });
+
+      return requestPromise;
     };
-  $scope.getResponseCodeClass = function(responseCode)
-    {
-      if( !responseCode )
+
+    $scope.getResponseCodeClass = function(responseCode){
+      if( responseCode === undefined )
         return 'fa-spinner fa-pulse';
-      else if( responseCode >= 500 )
+      else if( responseCode === 0 || responseCode >= 500 )
         return 'fa-circle icon-danger';
       else if( responseCode >= 400 )
         return 'fa-circle icon-warning';
       else
         return 'fa-circle icon-success';
     };
-  $scope.setResponsePreviewType = function(previewType)
-    {
-      $scope.responsePreviewType = previewType;
+
+    // Sets Response Preview Type Tab
+    // Requires an JSON object with title type and url
+    // and assigns response data accoringly.
+    $scope.setResponsePreviewType = function(previewType){
+      $scope.responsePreviewTypeContent = null;
+      $scope.currentResponsePreviewTab = previewType;
+
+      if( previewType.title == "Raw" ){
+        $scope.responsePreviewTypeContent = $scope.response.data;
+      }
+      else if ( previewType.title == "Parsed" ){
+        try{
+          $scope.responsePreviewTypeContent = $filter('json')( JSON.parse($scope.response.data ) );
+        }
+        catch(error){
+          console.log("Invalid JSON " + error.stack);
+          // Will send data as is
+          $scope.responsePreviewTypeContent = $scope.response.data;
+        }
+      }
+      else if  ( previewType.title == "Preview" ){
+        // Loading in the iframe it sandboxes the html by default
+        $scope.responsePreviewTypeContent = $sce.trustAsHtml($scope.response.data);
+      }
+
     };
 
-  $scope.requestBodyEditorOptions = {
-    showGutter: false,
-    theme: 'kuroir',
-    mode: 'json',
-    onLoad: function(editor){
-      editor.setShowPrintMargin(false);
-      editor.setHighlightActiveLine(false);
-      editor.setDisplayIndentGuides(false);
-      editor.setOptions({maxLines: Infinity});  // Auto adjust height!
-      editor.$blockScrolling = Infinity; // Disable warning
-    }
-  };
+    $scope.requestBodyEditorOptions = {
+      showGutter: false,
+      theme: 'kuroir',
+      mode: 'json',
+      onLoad: function(editor){
+        editor.setShowPrintMargin(false);
+        editor.setHighlightActiveLine(false);
+        editor.setDisplayIndentGuides(false);
+        editor.setOptions({maxLines: Infinity});  // Auto adjust height!
+        editor.$blockScrolling = Infinity; // Disable warning
+      }
+    };
 
-  $scope.responseBodyEditorOptions = {
-    showGutter: false,
-    theme: 'kuroir',
-    mode: 'json',
-    onLoad: function(editor){
-      editor.setShowPrintMargin(false);
-      editor.setHighlightActiveLine(false);
-      editor.setDisplayIndentGuides(false);
-      editor.setOptions({maxLines: Infinity});  // Auto adjust height!
-      editor.$blockScrolling = Infinity; // Disable warning
-      editor.setReadOnly(true);
-    }
-  };
+    $scope.responseBodyEditorOptions = {
+      showGutter: false,
+      theme: 'kuroir',
+      mode: 'json',
+      onLoad: function(editor){
+        editor.setShowPrintMargin(false);
+        editor.setHighlightActiveLine(false);
+        editor.setDisplayIndentGuides(false);
+        editor.setOptions({maxLines: Infinity});  // Auto adjust height!
+        editor.$blockScrolling = Infinity; // Disable warning
+        editor.setReadOnly(true);
+      }
+    };
 
-}]);
+    $scope.responseBodyEditorOptionsRaw = {
+      useWrapMode : false,
+      showGutter: false,
+      theme: 'kuroir',
+      mode: 'text',
+      onLoad: function(editor){
+        editor.setShowPrintMargin(false);
+        editor.setHighlightActiveLine(false);
+        editor.setDisplayIndentGuides(false);
+        editor.setOptions({maxLines: Infinity});  // Auto adjust height!
+        editor.$blockScrolling = Infinity; // Disable warning
+        editor.setReadOnly(true);
+      }
+    };
 
+    $scope.responseBodyEditorOptionsParsed = {
+      useWrapMode : true,
+      showGutter: false,
+      theme: 'kuroir',
+      mode: 'json',
+      onLoad: function(editor){
+        editor.setShowPrintMargin(false);
+        editor.setHighlightActiveLine(false);
+        editor.setDisplayIndentGuides(false);
+        editor.setOptions({maxLines: Infinity});  // Auto adjust height!
+        editor.$blockScrolling = Infinity; // Disable warning
+        editor.setReadOnly(true);
+      }
+    };
 
+    $scope.$on('loadPerformRequest', function(event, item, loadOnly, done) {
 
+      return Editor.confirmSave()
+        .then(function(response){
+          if(response){
+            return Editor.saveOrUpdate( false );
+          }
+        })
+        .finally(function(){
+          $rootScope.currentItem = item;
+          $rootScope.currentCollection = $rootScope.currentProject.collections[item.collection_id];
 
-      // ----------------------------
-      // Temporary MOCK Responses
-      var sampleResponses = [
-        {
-          size: 128.1,
-          time: 0.217,
-          code: 404,
-          status: 'Not Found'
-        },
-        {
-          size: 59.2,
-          time: 1.432,
-          code: 200,
-          status: 'OK',
-          headers: {
-            'Access-Control-Allow-Origin': true,
-            'Date': 'Tue, 14 Jul 2015 20:30:28 GMT'
-          },
-          body: '{\n  "name": "Anson Kao",\n  "favourite-pet": "Doggiees!!!",\n  "points": 9001\n}'
-        },
-        {
-          size: 1.9,
-          time: 3.395,
-          code: 500,
-          status: 'Internal Server Error',
-          headers: {
-            'cache-control': 'no-cache, no-store, must-revalidate',
-            'content-type': 'text/html; charset=UTF-8'
-          },
-          body: '<!DOCTYPE html>' +
-'<html lang="en">' +
-'<head>' +
-  '<meta http-equiv="content-type" content="text/html; charset=utf-8">' +
-  '<meta name="robots" content="NONE,NOARCHIVE">' +
-  '<title>TypeError at /api/v1/organization/1235</title>' +
-  '<style type="text/css">' +
-    'html * { padding:0; margin:0; }' +
-    'body * { padding:10px 20px; }' +
-    'body * * { padding:0; }' +
-    'body { font:small sans-serif; }' +
-    'body>div { border-bottom:1px solid #ddd; }' +
-    'h1 { font-weight:normal; }' +
-    'h2 { margin-bottom:.8em; }' +
-    'h2 span { font-size:80%; color:#666; font-weight:normal; }' +
-    'h3 { margin:1em 0 .5em 0; }' +
-    'h4 { margin:0 0 .5em 0; font-weight: normal; }' +
-    'code, pre { font-size: 100%; white-space: pre-wrap; }' +
-    'table { border:1px solid #ccc; border-collapse: collapse; width:100%; background:white; }' +
-    'tbody td, tbody th { vertical-align:top; padding:2px 3px; }' +
-    'thead th { padding:1px 6px 1px 3px; background:#fefefe; text-align:left; font-weight:normal; font-size:11px; border:1px solid #ddd; }' +
-    'tbody th { width:12em; text-align:right; color:#666; padding-right:.5em; }' +
-    'table.vars { margin:5px 0 2px 40px; }' +
-    'table.vars td, table.req td { font-family:monospace; }' +
-    'table td.code { width:100%; }' +
-    'table td.code pre { overflow:hidden; }' +
-    'table.source th { color:#666; }' +
-    'table.source td { font-family:monospace; white-space:pre; border-bottom:1px solid #eee; }' +
-    'ul.traceback { list-style-type:none; color: #222; }' +
-    'ul.traceback li.frame { padding-bottom:1em; color:#666; }' +
-    'ul.traceback li.user { background-color:#e0e0e0; color:#000 }' +
-    'div.context { padding:10px 0; overflow:hidden; }' +
-    'div.context ol { padding-left:30px; margin:0 10px; list-style-position: inside; }' +
-    'div.context ol li { font-family:monospace; white-space:pre; color:#777; cursor:pointer; }' +
-    'div.context ol li pre { display:inline; }' +
-    'div.context ol.context-line li { color:#505050; background-color:#dfdfdf; }' +
-    'div.context ol.context-line li span { position:absolute; right:32px; }' +
-    '.user div.context ol.context-line li { background-color:#bbb; color:#000; }' +
-    '.user div.context ol li { color:#666; }' +
-    'div.commands { margin-left: 40px; }' +
-    'div.commands a { color:#555; text-decoration:none; }' +
-    '.user div.commands a { color: black; }' +
-    '#summary { background: #ffc; }' +
-    '#summary h2 { font-weight: normal; color: #666; }' +
-    '#explanation { background:#eee; }' +
-    '#template, #template-not-exist { background:#f6f6f6; }' +
-    '#template-not-exist ul { margin: 0 0 0 20px; }' +
-    '#unicode-hint { background:#eee; }' +
-    '#traceback { background:#eee; }' +
-    '#requestinfo { background:#f6f6f6; padding-left:120px; }' +
-    '#summary table { border:none; background:transparent; }' +
-    '#requestinfo h2, #requestinfo h3 { position:relative; margin-left:-100px; }' +
-    '#requestinfo h3 { margin-bottom:-1em; }' +
-    '.error { background: #ffc; }' +
-    '.specific { color:#cc3300; font-weight:bold; }' +
-    'h2 span.commands { font-size:.7em;}' +
-    'span.commands a:link {color:#5E5694;}' +
-    'pre.exception_value { font-family: sans-serif; color: #666; font-size: 1.5em; margin: 10px 0 10px 0; }' +
-  '</style> ' +
-'</head>' +
-'<body>' +
-'<div id="summary">' +
-  '<h1>TypeError at /api/v1/organization/1235</h1>' +
-  '<pre class="exception_value">&#39;NoneType&#39; object has no attribute &#39;__getitem__&#39;</pre>' +
-  '<table class="meta">' +
+          Editor.resetRequestChangedFlag();
+          $scope.requestChangedFlag = false;
+          return loadRequest(item, loadOnly)
+            .then(function(){
+              if(done) done();
+            });
+        });
 
-    '<tr>' +
-      '<th>Request Method:</th>' +
-      '<td>GET</td>' +
-    '</tr>' +
-    '<tr>' +
-      '<th>Request URL:</th>' +
-      '<td>http://52.7.249.229:8000/api/v1/organization/1235</td>' +
-    '</tr>' +
-
-    '<tr>' +
-      '<th>Django Version:</th>' +
-      '<td>1.7.7</td>' +
-    '</tr>' +
-
-    '<tr>' +
-      '<th>Exception Type:</th>' +
-      '<td>TypeError</td>' +
-    '</tr>' +
+    });
 
 
-    '<tr>' +
-      '<th>Exception Value:</th>' +
-      '<td><pre>&#39;NoneType&#39; object has no attribute &#39;__getitem__&#39;</pre></td>' +
-    '</tr>' +
 
+    /*
+     * Sets the scope variables based on the request
+     * @item = request item to be loaded.
+     */
+    $scope.loadRequestToScope = function(item){
+      // TODO - Check for any previous changes. if any changes are made to the
+      // previous request, ask if the user wants to save it.
 
-    '<tr>' +
-      '<th>Exception Location:</th>' +
-      '<td>/home/ubuntu/qoi_django/server/restapp/views.py in get, line 807</td>' +
-    '</tr>' +
+      item.method = _.find( $scope.requestMethods, function(data){ return data === item.method; });
+      $scope.endpoint = Editor.loadAndGetEndpoint(item);
 
-    '<tr>' +
-      '<th>Python Executable:</th>' +
-      '<td>/usr/bin/python</td>' +
-    '</tr>' +
-    '<tr>' +
-      '<th>Python Version:</th>' +
-      '<td>2.7.6</td>' +
-    '</tr>' +
-    '<tr>' +
-      '<th>Python Path:</th>' +
-      '<td><pre>[&#39;/home/ubuntu/qoi_django/server&#39;,' +
- '&#39;/usr/lib/python2.7&#39;,' +
- '&#39;/usr/lib/python2.7/plat-x86_64-linux-gnu&#39;,' +
- '&#39;/usr/lib/python2.7/lib-tk&#39;,' +
- '&#39;/usr/lib/python2.7/lib-old&#39;,' +
- '&#39;/usr/lib/python2.7/lib-dynload&#39;,' +
- '&#39;/usr/local/lib/python2.7/dist-packages&#39;,' +
- '&#39;/usr/lib/python2.7/dist-packages&#39;]</pre></td>' +
-    '</tr>' +
-    '<tr>' +
-      '<th>Server time:</th>' +
-      '<td>Tue, 14 Jul 2015 20:43:56 +0000</td>' +
-    '</tr>' +
-  '</table>' +
-'</div>' +
-'</body>' +
-'</html>'
-        },
-      ];
+      resetResponse();
+
+      if(_.isEqual($scope.endpoint.uuid,"") || _.isUndefined($scope.endpoint.uuid)){
+        $scope.isDeleteButtonDisabled = true;
+      }else{
+        $scope.isDeleteButtonDisabled = false;
+      }
+      // Collection needs to be set
+    };
+
+    /*
+     * Saves the request from scope to DB.
+     */
+    $scope.saveCurrentRequest = function(){
+      return Editor.saveOrUpdate().then(function(){
+        // Rest Endpoint Flags and Editor Controller button to be disabled
+        Editor.resetRequestChangedFlag();
+        $scope.requestChangedFlag = false;
+      });
+    };
+
+    init();
+
+  }]);

@@ -4,6 +4,8 @@
 @import "../bower_components/bootstrap-additions/dist/bootstrap-additions.css";
 @import "../bower_components/angular-motion/dist/angular-motion.css";
 @import "../bower_components/ladda/dist/ladda-themeless.min.css";
+
+@import "layout.less";
 @import "authentication.less";
 @import "font.less";
 @import "button.less";
@@ -11,12 +13,14 @@
 @import "dropdown.less";
 @import "modal.less";
 @import "sidebar.less";
+@import "history.less";
 @import "editor.less";
 @import "environment.less";
 
 @brand-primary:         #774400;  // Construction Brown  #774400
 @brand-secondary:       #FFCC33;  // Construction Yellow #FFCC33
-@link-color:            #BB7700;  // Warmer shade
+@link-color:            #BB7700;  // Warmer Shade
+@lighter-yellow:         #FFEEAA;  // Lighter Share
 
 @border-radius-base:    3px;
 @border-radius-large:   3px;
@@ -24,184 +28,4 @@
 @tooltip-opacity:       1.0;
 @tooltip-bg:            rgba(0,0,0,0.5);
 
-html,
-body {
-  overflow: hidden;
-  height: 100%;
-}
-
 @panel-heading-padding: 10px;
-
-// ============================================================================
-// Layout Rows
-// ============================================================================
-@layout-header-height: 50px;
-@layout-footer-height: 0px;
-.layout-row-header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: @layout-header-height;
-
-  // 3D Look
-  background: @brand-secondary;
-  box-shadow: 0 0 4px rgba(0,0,0,0.25);
-  z-index: 20;
-  color: @brand-primary;
-}
-.layout-row-body {
-  position: absolute;
-  top: @layout-header-height;
-  left: 0;
-  right: 0;
-  bottom: @layout-footer-height;
-  background: #FFF;
-}
-
-// ============================================================================
-// Layout Columns
-// ============================================================================
-@layout-sidebar-width: 250px;
-.layout-column-sidebar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: @layout-sidebar-width;
-  z-index: 10;
-  transition: margin 0.25s;
-}
-.layout-column-content {
-  position: absolute;
-  top: 0;
-  left: @layout-sidebar-width;
-  right: 0;
-  bottom: 0;
-  transition: left 0.25s;
-}
-
-// ============================================================================
-// Project Box
-// ============================================================================
-.project-box {
-  display: inline-block;
-  position: relative;
-  outline: none !important;
-  border: 0;
-  border-right: 1px solid darken(@brand-primary, 10%);
-  border-bottom: 1px solid darken(@brand-primary, 12%);
-  padding: 10px 15px !important;  // Override the .header-item padding, make room for the larger font in the h1
-  background: @brand-primary;
-  color: @brand-secondary;
-
-  &:focus,
-  &:hover {
-    background: darken( @brand-primary, 5%);
-  }
-
-  h1 {
-    margin: 0 10px 0 0;
-    line-height: 29px;  // 50px - 2 * 10px = 30px, less 1px for the border! (without that 1px gap, will get overflow on hover!)
-    vertical-align: middle;
-    font-size: 18px;
-    font-weight: 500;
-
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    text-align: left;
-  }
-  .caret {
-    position: absolute;
-    right: 15px;
-    top: 22px;
-  }
-}
-
-// ============================================================================
-// Header
-// ============================================================================
-.header {
-  border-bottom: 1px solid darken(@brand-secondary, 15%);
-  padding-left: 25px;
-  transition: left 0.25s, padding 0.25s;
-}
-.header-item {
-  float: left;
-  display: inline-block;
-  position: relative;
-  border: 0;
-  padding: 15px;
-  background: none;
-  line-height: 19px;  // 50px - 2 * 15px = 20px, less 1px for the border! (without that 1px gap, will get overflow on hover!)
-
-  &:focus,
-  &:hover {
-    background: darken( @brand-secondary, 5%);
-    border-bottom: 1px solid darken(@brand-secondary, 15%);
-  }
-  outline: none !important;
-
-  &.active {
-    font-weight: bold;
-    &:after {
-      content: "";
-      display: block;
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: -1px;
-      border-top: 5px solid @brand-primary;
-    }
-  }
-}
-.header-sidebar-toggle {
-  position: absolute;
-  top: 8px;
-  left: 10px;
-  opacity: 0;
-  transition: opacity 0.25s;
-}
-
-// ============================================================================
-// Responsive Sidebar Collapse
-// ============================================================================
-@screen-sm: 800px;
-@media (max-width: @screen-xs-max) {
-  .layout-column-sidebar {
-    margin-left: -@layout-sidebar-width;
-
-    &.expanded {
-      margin-left: 0;
-      z-index: 100;
-    }
-  }
-  .layout-column-content {
-    left: 0;
-  }
-  .header {
-    padding-left: 60px;
-  }
-  .header-sidebar-toggle {
-    opacity: 1;
-  }
-  .sidebar-expand-overlay {
-    position: absolute;
-    top: -1000px;
-    left: -1000px;
-    background: rgba(255,255,255,0.75);
-    z-index: 99;
-
-    opacity: 0;
-    transition: opacity 0.25s;
-    &.active {
-      display: block;
-      opacity: 1;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-    }
-  }
-}

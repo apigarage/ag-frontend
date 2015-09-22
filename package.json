@@ -24,7 +24,8 @@
     "run-sequence": "^1.1.1",
     "tree-kill": "^0.1.1",
     "vinyl-map": "^1.0.1",
-    "yargs": "^3.13.0"
+    "yargs": "^3.13.0",
+    "lodash": "^3.10.0"
   },
   "optionalDependencies": {
     "appdmg": "^0.3.2",
@@ -34,7 +35,8 @@
     "postinstall": "node ./tasks/app_npm_install",
     "app-install": "node ./tasks/app_npm_install",
     "build": "./node_modules/.bin/gulp build",
-    "release": "./node_modules/.bin/gulp release --env=production",
+    "release-staging": "./node_modules/.bin/gulp release --env=staging",
+    "release-production": "./node_modules/.bin/gulp release --env=production",
     "start": "node ./tasks/start",
     "test": "node ./tasks/start --env=test"
   }

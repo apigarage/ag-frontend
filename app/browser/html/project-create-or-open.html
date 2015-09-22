@@ -1,0 +1,92 @@
+<div class="authentication-wrapper">
+  <div class="authentication" ng-controller="ProjectCreateOrOpenCtrl">
+    <img class="authentication-logo" src="img/api-garage-logo-large.png" />
+
+    <div ng-show="showOpenProject">
+      <form class="authentication-form" >
+        <h4>Select a project to open</h4>
+        <div class="list-group" ng-model="projects.selectedProject">
+          <a ng-click="openProject(project.id)" class="list-group-item"
+            ng-repeat="project in projects" >
+            <h4 class="list-group-item-heading">{{project.name}}</h4>
+            <!-- <p class="list-group-item-text">{{project.description}}</p> -->
+          </a>
+        </div>
+      </form>
+    </div>
+
+    <div ng-show="showImportPostmanProject">
+      <form class="authentication-form" id="importFromPostman">
+        <p>Import From Postman</p>
+        <div class="form-control list-group" >
+           <input type="file" nv-file-select uploader="uploader"/><br/>
+        </div>
+        <button ng-click="importFromPostman()" class="btn btn-primary btn-block btn-lg"
+          ladda="loading" data-style="expand-right">
+          Import
+        </button>
+      </form>
+    </div>
+
+    <div ng-show="showCreateProject">
+      <form class="authentication-form" id="createProject">
+        <h4>Create New Project</h4>
+        <input id="projectName" type="name" class="form-control "
+          ng-class="{'input-lg': true}"
+          placeholder="Enter Project Name"
+          ng-model="createProject.projectName"/>
+          <p class="authentication-validation" ng-if="createProjectError">
+            {{createProjectErrorMessage}}
+          </p>
+        <textarea id="projectDescription"rows="4" class="form-control"
+          name="description"
+          form="createProject"
+          placeholder="Enter Project Description"
+          ng-model="createProject.projectDescription"></textarea>
+        <button ng-click="createProject()" class="btn btn-primary btn-block btn-lg"
+          ladda="loading" data-style="expand-right">
+          Create
+        </button>
+      </form>
+    </div>
+    <div class="authentication-toggle">
+      <div ng-show="showProjectCreateLink">
+      Need to create a new project?
+      <a ng-click="showCreateProjectForm()">
+        Create Project
+      </a>
+      </div>
+      <div ng-show="showProjectListLink">
+      Need to open a project?
+      <a ng-click="showProjectsListForm()">
+        Project List
+      </a>
+      </div>
+      <div ng-show="showImportPostmanProjectLink">
+      Import a Collection from Postman
+      <a ng-click="showImportPostmanProjectForm()">
+        Import from Postman
+      </a>
+      </div>
+
+      <div ng-show="isConnectedToInternet">
+        Not what you are looking for?
+        <a ng-click="logout()">
+          Try logging back in.
+        </a>
+      </div>
+    </div>
+
+    <div>
+      <div ng-hide="isConnectedToInternet">
+        <p> &nbsp; </p>
+        <p>API Garage was unable to connect to the internet.</p>
+        <p>
+          The application does not work offline, yet. Sorry for any inconvenience.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+</div>

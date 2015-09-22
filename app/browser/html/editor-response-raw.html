@@ -1,0 +1,28 @@
+<span class="fa fa-spinner fa-pulse response-loading" ng-hide="response.data"></span>
+
+<div class="response-headers" ng-if="response.headers">
+  <h4 class="response-headers-title editor-panel-subsection" ng-click="responseHeadersExpanded = !responseHeadersExpanded">
+    <a>
+      <span class="fa fa-lg" ng-class="responseHeadersExpanded ? 'fa-caret-down' : 'fa-caret-right'"></span>
+      Response headers
+    </a>
+  </h4>
+  <table class="request-headers-table response-header enable-select" ng-show="responseHeadersExpanded">
+    <div ng-repeat="(key, value) in response.headers">
+      <tr class="request-header" ng-repeat="(key, value) in response.headers">
+        <th><div class="response-header-key">{{key}}</div></th><td class="request-header-spacer">:</td>
+        <td><div class="response-header-value">{{value}}</div></td>
+      </tr>
+    </div>
+  </table>
+</div>
+
+<div class="response-body-raw" ng-if="response.data" ng-init="responseBodyExpanded = true">
+  <h4 class="response-y-title editor-panel-subsection" ng-click="responseBodyExpanded = !responseBodyExpanded">
+    <a>
+      <span class="fa fa-lg" ng-class="responseBodyExpanded ? 'fa-caret-down' : 'fa-caret-right'"></span>
+      Response body
+    </a>
+  </h4>
+  <div ui-ace="responseBodyEditorOptionsRaw" ng-model="responsePreviewTypeContent" ng-show="responseBodyExpanded"></div>
+</div>

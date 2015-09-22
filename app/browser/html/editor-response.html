@@ -3,7 +3,7 @@
 
         <h3 class="editor-panel-heading-title">Response</h3>
 
-        <div class="response-heading enable-select" ng-switch="response">
+        <div class="response-heading enable-select" ng-class="response && RESPONSE_SEARCH_FLAG ? 'active' : null" ng-switch="response">
           <div ng-switch-when="null">
             No requests have been made.
           </div>
@@ -11,59 +11,46 @@
             Waiting for response...
           </div>
           <div ng-switch-default>
-            <strong>
-              <span class="fa" ng-class="getResponseCodeClass(response.code)"></span>
-              {{response.code + ' ' + response.status}}
-            </strong>
-            <span class="hidden-xs hidden-sm">
-              &mdash;
-              <strong>{{response.size | number: 1}} kilobytes</strong>
-              received in
-              <strong>{{response.time | number: 3}} seconds</strong>.
-            </span>
-            <span class="visible-xs-inline visible-sm-inline">
-              &mdash;
-              {{response.size | number: 1}} kB,
-              {{response.time | number: 2}} s
-            </span>
+            <div ng-hide="response.status">
+              <strong>
+                <span class="fa" ng-class="getResponseCodeClass(response.status)"></span>
+                URL Unreachable
+              </strong>
+            </div>
+            <div ng-show="response.status">
+              <strong>
+                <span class="fa" ng-class="getResponseCodeClass(response.status)"></span>
+                {{response.status}}
+                <span class="hidden-xs hidden-sm">
+                  {{response.statusText}}
+                </span>
+              </strong>
+              <span class="hidden-xs hidden-sm hidden-md">
+                &mdash;
+                <strong >{{ response.data.length / 1024 | number: 2 }} kilobytes</strong>
+                <!-- received in
+                <strong>{{response.time}} seconds</strong>. -->
+              </span>
+              <span class="visible-xs-inline visible-sm-inline visible-md-inline">
+                &mdash;
+                {{ response.data.length / 1024 | number: 2 }} kB<!--,
+                {{ response.time | number: 2 }} s -->
+              </span>
+            </div>
           </div>
         </div>
 
+        <input type="text" class="form-control response-search"
+               placeholder="Search..." ng-model="search"
+               ng-show="response && RESPONSE_SEARCH_FLAG" />
+
         <ul class="response-tab-group" ng-show="response">
-          <li class="response-tab-item" ng-class="{'active': responsePreviewType == previewType}"
-              ng-repeat="previewType in responsePreviewTypes" ng-click="setResponsePreviewType(previewType)">
-            <a href="">{{previewType}}</a>
+          <li class="response-tab-item" ng-class="{'active': currentResponsePreviewTab.title == previewType.title}"
+              ng-repeat="previewType in responsePreviewTab" ng-click="setResponsePreviewType(previewType)">
+            <a>{{previewType.title}}</a>
           </li>
         </ul>
-
       </div>
-      <div class="panel-body editor-panel-body" ng-if="response" ng-switch="response">
-
-
-        <div class="response-headers" ng-if="response.headers">
-          <h4 class="response-headers-title editor-panel-subsection" ng-click="responseHeadersExpanded = !responseHeadersExpanded">
-            <a href="#">
-              <span class="fa fa-lg" ng-class="responseHeadersExpanded ? 'fa-caret-down' : 'fa-caret-right'"></span>
-              Response headers
-            </a>
-          </h4>
-          <table class="request-headers-table response-header enable-select" ng-show="responseHeadersExpanded">
-            <tr class="request-header" ng-repeat="(key, value) in response.headers">
-              <th><div class="response-header-key  ">{{key  }}</div></th><td class="request-header-spacer">:</td>
-              <td><div class="response-header-value">{{value}}</div></td>
-            </tr>
-          </table>
-        </div>
-
-        <div class="response-body" ng-if="response.body" ng-init="responseBodyExpanded = true">
-          <h4 class="response-body-title editor-panel-subsection" ng-click="responseBodyExpanded = !responseBodyExpanded">
-            <a href="#">
-              <span class="fa fa-lg" ng-class="responseBodyExpanded ? 'fa-caret-down' : 'fa-caret-right'"></span>
-              Response body
-            </a>
-          </h4>
-          <div ui-ace="responseBodyEditorOptions" ng-model="response.body" ng-show="responseBodyExpanded"></div>
-        </div>
-
+      <div class="panel-body editor-panel-body" ng-if="response" ng-include="response.statusText == 'Unreachable' ? 'html/editor-response-unreachable.html' : currentResponsePreviewTab.url">
       </div>
     </div>

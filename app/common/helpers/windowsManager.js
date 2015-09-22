@@ -27,7 +27,7 @@
       w.maximize();
     }
 
-    if (env.name === 'development') {
+    if (env.name === 'development' || env.name === 'staging') {
       devHelper.setDevMenu();
       w.openDevTools();
     }
