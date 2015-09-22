@@ -47,11 +47,6 @@ describe('Controller: SideBar', function() {
       $scope.$apply();
     });
 
-    afterEach(function(){
-      $rootScope.currentProject = {};
-      $rootScope.currentProject.collections = {};
-    });
-
     it('will find values on project refresh', function(){
       $scope.$apply();
       var result;
@@ -117,6 +112,7 @@ describe('Controller: SideBar', function() {
 
   describe('selectItem', function(){
     beforeEach(function(){
+      $rootScope.currentItem = {};
       $rootScope.currentProject = {};
       $rootScope.currentProject.collections = {};
       collection = {
@@ -126,10 +122,6 @@ describe('Controller: SideBar', function() {
         uuid: 'uuid-uuid-uuid-uuid-1',
         collection_id: '2'
       };
-    });
-    afterEach(function(){
-      $rootScope.currentProject = {};
-      $rootScope.currentProject.collections = {};
     });
 
     describe('When only item value is set', function(){
@@ -143,17 +135,7 @@ describe('Controller: SideBar', function() {
         expect($rootScope.currentCollection).not.toBeDefined();
       });
     });
-    describe('When all the values are set', function(){
-      beforeEach(function(){
-        $scope.selectItem(item, collection);
-      });
 
-      it('it will set correct values', function(){
-        $scope.$apply();
-        expect($rootScope.currentItem.id).toEqual(item.id);
-        expect($rootScope.currentCollection.id).toEqual(collection.id);
-      });
-    });
   });
 
   describe('openDeleteItemModal', function(){
@@ -209,16 +191,18 @@ describe('Controller: SideBar', function() {
 
       createItemsStub = ItemsFixtures.getStub('deleteItemId');
       HttpBackendBuilder.build(createItemsStub.request, createItemsStub.response);
+
+      spyOn($rootScope, '$broadcast').and.callThrough();
     });
 
     it('will delete item.collection_id on the server and locally.', function(){
-      $rootScope.currentCollection = CollectionsFixtures.get('collectionWithTwoItems');
+      var collection = $rootScope.currentCollection = CollectionsFixtures.get('collectionWithTwoItems');
       $rootScope.currentItem = item;
       expect($rootScope.currentItem.uuid).toBeDefined();
-      $scope.deleteItem($rootScope.currentCollection, $rootScope.currentItem).then(function(){
-        expect($rootScope.currentItem.uuid).toBeUndefined();
-      });
+      $scope.deleteItem(collection, item);
       $httpBackend.flush();
+      expect($rootScope.currentProject.collections[collection.id].items[item.uuid]).toBeUndefined();
+      expect($rootScope.$broadcast).toHaveBeenCalled();
     });
   });
 
@@ -230,7 +214,7 @@ describe('Controller: SideBar', function() {
       HttpBackendBuilder.build(createCollectionsStub.request, createCollectionsStub.response);
       //$rootScope.currentCollection = CollectionsFixtures.get('collectionWithNoItemsZero');
       collection = CollectionsFixtures.get('collectionWithNoItemsZero');
-      $rootScope.currentProject = {collections: collection };
+      $rootScope.currentProject = {collections: [collection] };
     });
     it('will delete collection_id on the server and locally.', function(){
       $scope.deleteCategory(collection).then(function(){
@@ -250,7 +234,7 @@ describe('Controller: SideBar', function() {
 
     it('will save name of collection on the server and locally.', function(){
       $rootScope.currentProject = project;
-      $rootScope.currentProject.collections[collection.id] = {collection};
+      $rootScope.currentProject.collections[collection.id] = collection;
       $scope.saveCategory(collection,{"name":"newCollectionName"}).then(function(){
         expect($rootScope.currentProject.collections[collection.id].name).toBe("newCollectionName");
       });

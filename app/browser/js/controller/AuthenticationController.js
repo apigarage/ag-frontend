@@ -129,7 +129,7 @@ angular.module('app').controller('AuthenticationCtrl', [
     Auth.setForgotPassword(false);
     $scope.loading = true;
     if ($scope.SIGNUP == $scope.authType){
-      return $scope.signup().then(function(data){
+      return $scope.signup().then(function(){
         $scope.loading = false;
       });
     }else{

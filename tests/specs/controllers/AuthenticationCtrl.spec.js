@@ -80,8 +80,8 @@ describe('Controller: Authentication', function() {
   });
   describe('Submit', function(){
     beforeEach(function(){
-      spyOn($scope, 'signup').and.returnValue($scope.SIGNUP);
-      spyOn($scope, 'login').and.returnValue($scope.LOGIN);
+      spyOn($scope, 'signup').and.returnValue($q.resolve(true));
+      spyOn($scope, 'login').and.returnValue($q.resolve(true));
     });
 
     describe('When authType is Signup', function(){
@@ -90,8 +90,9 @@ describe('Controller: Authentication', function() {
       });
 
       it('will make the signup call', function(){
-        var returnValue = $scope.submit();
-        expect(returnValue).toBe($scope.SIGNUP);
+        $scope.submit().then(function(){ // the data is returned from the spy.
+          expect($scope.loading).toBe(false);
+        });
       });
     });
 
@@ -101,8 +102,9 @@ describe('Controller: Authentication', function() {
       });
 
       it('will make the login call', function(){
-        var returnValue = $scope.submit();
-        expect(returnValue).toBe($scope.LOGIN);
+        $scope.submit().then(function(){ // the data is returned from the spy.
+          expect($scope.loading).toBe(false);
+        });
       });
     });
   });

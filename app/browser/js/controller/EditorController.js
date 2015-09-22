@@ -366,6 +366,7 @@ angular.module('app').controller('EditorCtrl', [
       }
     };
 
+    // For empty item, set item to {}
     $scope.$on('loadPerformRequest', function(event, item, loadOnly, done) {
 
       return Editor.confirmSave()
@@ -375,7 +376,9 @@ angular.module('app').controller('EditorCtrl', [
           }
         })
         .finally(function(){
+          // the way we are using it, item will always be an object.
           $rootScope.currentItem = item;
+          // if collection does not exist, it will be set to undefined.
           $rootScope.currentCollection = $rootScope.currentProject.collections[item.collection_id];
 
           Editor.resetRequestChangedFlag();
