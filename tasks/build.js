@@ -82,12 +82,6 @@
         manifest.name += '-staging';
         manifest.productName += ' staging';
         break;
-      case 'test':
-        // Add "dev" suffix to name, so Electron will write all
-        // data like cookies and localStorage into separate place.
-        manifest.name += '-test';
-        manifest.productName += 'Test';
-        break;
       case 'development':
         // Add "dev" suffix to name, so Electron will write all
         // data like cookies and localStorage into separate place.
