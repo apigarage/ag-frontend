@@ -5,6 +5,11 @@ We will be the best platform for APIs.
 
 Testing Strategies
 ==================
+Some Guidelines (and Rules)
+---------------------------
+# Editor Controller MUST be fully tested. It's the core piece of the company, and cannot be broken.
+# Feel free to not write unit test, if the feature is isolated, and does not have complex logic. For example: Item Rename. Item delete. If any team member has strong position in favor of writing tes
+
 General CRUD
 ------------
 It's generally a three step process.
