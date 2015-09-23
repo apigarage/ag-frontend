@@ -12,7 +12,14 @@ angular.module('app')
         "name": "Item 1",
         "description": "This is a perfectly fine item.",
         'uuid': 'uuid-uuid-uuid-uuid-1',
-        "collection_id":'3'
+        "collection_id":'3',
+        'url': 'https://abx.xyz',
+        'method': 'POST',
+        'headers': {
+          'key1': 'value1',
+          'key2': 'value2'
+        },
+        'data': 'some data to be sent'
         // other fields will be added, as required.
       },
       "item2":{

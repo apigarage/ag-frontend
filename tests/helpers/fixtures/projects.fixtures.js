@@ -3,13 +3,16 @@ angular.module('app')
 
 .factory('ProjectsFixtures', [
   '$httpBackend',
+  '$rootScope',
   'Config',
+  'Projects',
   'ItemsFixtures',
   'CollectionsFixtures',
   'ProjectKeysFixtures',
   'EnvironmentsFixtures',
-  function($httpBackend, Config, ItemsFixtures, CollectionsFixtures,
-    ProjectKeysFixtures, EnvironmentsFixtures){
+  'HttpBackendBuilder',
+  function($httpBackend, $rootScope, Config, Projects, ItemsFixtures,
+    CollectionsFixtures, ProjectKeysFixtures, EnvironmentsFixtures, HttpBackendBuilder){
     var projects = {};
 
     projects.get = function(key){
@@ -233,5 +236,22 @@ angular.module('app')
         }
       }
     };
+
+
+    projects.helpers = {};
+    // This project has two collections. Each with at least one items.
+    projects.helpers.getCurrentlyLoadedProject = function(){
+      var project = projects.get('projectWithTwoCollectionNoItems');
+      $rootScope.currentProject = project;
+
+      var createStub = projects.getStub('retrieveProjectWithTwoCollectionNoItems');
+      HttpBackendBuilder.build(createStub.request, createStub.response);
+
+      Projects.loadProjectToRootScope(project.id);
+
+      $httpBackend.flush();
+      return project;
+    };
+
     return projects;
   }]);
