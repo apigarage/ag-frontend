@@ -29,7 +29,7 @@ angular.module('app')
       }
     });
 
-    $scope.selectItem = function(item, collection){
+    $scope.selectItem = function(item){
       // These assignments are used for loading the endpoint in the editor
       if(item.uuid !== $rootScope.currentItem.uuid ){
         $rootScope.$broadcast('loadPerformRequest', item);
@@ -326,10 +326,8 @@ angular.module('app')
           // TODO: Error handling
           // If currentItem is selected and the item being
           // deleted is the same clear editor
-          if($rootScope.currentItem){
-            if($rootScope.currentItem.uuid == currentItem.uuid){
-              $rootScope.$broadcast('loadPerformRequest', {});
-            }
+          if($rootScope.currentItem && $rootScope.currentItem.uuid == currentItem.uuid){
+            $rootScope.$broadcast('loadPerformRequest', {});
           }
           return response;
         });

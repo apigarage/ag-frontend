@@ -102,25 +102,7 @@ angular.module('app').controller('EditorCtrl', [
       }
     };
 
-    // THIS LOGIC SHOULD NOT EXIST HERE. IT's PART OF SIDEBAR.
-    // $scope.copyCurrentRequest = function(){
-    //   // This should never happen. If it happens, just in case, the current
-    //   // request is its own copy.
-    //   if(!$scope.endpoint.uuid) return;
-    //
-    //   var newItem = $scope.endpoint;
-    //   newItem.uuid = undefined;
-    //   newItem.name = newItem.name + ' Copy';
-    //
-    //   newItem = $scope.buildRequestOutOfScope();
-    //   return Projects.addItemToCollection($rootScope.currentCollection.id, newItem)
-    //     .then(function(item){
-    //       $rootScope.currentItem = item;
-    //       $rootScope.$broadcast('loadPerformRequest', item);
-    //     });
-    // };
-
-    // THIS LOGIC SHOULD NOT EXIST HERE. IT's PART OF SIDEBAR.
+    // THIS LOGIC SHOULD NOT EXIST HERE. IT WILL BECOME PART OF SIDEBAR.
     // $scope.changeCollection = function(collection){
     //   var oldCollectionId = $rootScope.currentCollection.id;
     //   var newCollectionId = collection.id;
@@ -366,8 +348,11 @@ angular.module('app').controller('EditorCtrl', [
       }
     };
 
-    $scope.$on('loadPerformRequest', function(event, item, loadOnly, done) {
+    // For empty item, set item to {}
+    $scope.$on('loadPerformRequest', loadPerformRequest);
+    $scope.loadPerformRequest = loadPerformRequest; // this line helps with testing.
 
+    function loadPerformRequest(event, item, loadOnly, done){
       return Editor.confirmSave()
         .then(function(response){
           if(response){
@@ -375,7 +360,10 @@ angular.module('app').controller('EditorCtrl', [
           }
         })
         .finally(function(){
+
+          // the way we are using it, item will always be an object.
           $rootScope.currentItem = item;
+          // if collection does not exist, it will be set to undefined.
           $rootScope.currentCollection = $rootScope.currentProject.collections[item.collection_id];
 
           Editor.resetRequestChangedFlag();
@@ -386,10 +374,7 @@ angular.module('app').controller('EditorCtrl', [
             });
         });
 
-    });
-
-
-
+    }
     /*
      * Sets the scope variables based on the request
      * @item = request item to be loaded.

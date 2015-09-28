@@ -118,8 +118,6 @@ angular.module('app')
       };
 
       function resetProjectValuesFromRootScope(){
-        $rootScope.currentCollection = undefined;
-        $rootScope.currentItem = undefined;
         $rootScope.$broadcast('loadPerformRequest', {});
       }
 
