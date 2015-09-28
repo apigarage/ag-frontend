@@ -33,6 +33,20 @@ describe('Controller: HeaderController', function() {
     $rootScope.$apply();
   });
 
+  describe('able to set status', function(){
+    it('Application is online', function(){
+      $scope.setConnectionStatus(true);
+      expect($scope.online).toEqual(true);
+      expect($scope.connectionStatus).toBe("");
+    });
+
+    it('Application is offline', function(){
+      $scope.setConnectionStatus(false);
+      expect($scope.online).toEqual(false);
+      expect($scope.connectionStatus).toBe("Offline");
+    });
+  });
+
   describe('Logout', function(){
     describe('When user tries to logout', function(){
       it('localStorage is cleared()', function(){

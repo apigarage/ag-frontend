@@ -804,6 +804,26 @@ describe('Controller: EditController', function() {
 
   });
 
+  describe('able to save as', function(){
+
+    beforeEach(function(){
+      currenProject = ProjectsFixtures.helpers.getCurrentlyLoadedProject();
+      $rootScope.currentCollection = $rootScope.currentProject.collections[3];
+      $rootScope.currentItem = item = $rootScope.currentCollection.items['uuid-uuid-uuid-uuid-1'];
+
+      createItemsStub = ItemsFixtures.getStub('createItemWithFullDetails');
+      HttpBackendBuilder.build(createItemsStub.request, createItemsStub.response);
+    });
+
+    it('will save as new item on the server and locally.', function(){
+      $scope.saveAsNewCurrentRequest().then(function(response){
+        expect($scope.requestChangedFlag).toBe(false);
+      });
+      //$httpBackend.flush();
+    });
+
+  });
+
   // TODO - CONVERT THIS INTO EDITOR SERVICE TEST
   // describe('saveCurrentRequest', function(){
   //   beforeEach(function(){

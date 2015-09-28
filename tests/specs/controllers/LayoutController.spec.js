@@ -101,18 +101,6 @@ describe('Controller: LayoutController', function() {
         expect($scope.layout.historyMaximized).toEqual(false);
       });
 
-      it('Application is online', function(){
-        $scope.setConnectionStatus(true);
-        expect($scope.online).toEqual(true);
-        expect($scope.connectionStatus).toBe("");
-      });
-
-      it('Application is offline', function(){
-        $scope.setConnectionStatus(false);
-        expect($scope.online).toEqual(false);
-        expect($scope.connectionStatus).toBe("Offline");
-      });
-
       describe('When Sidebar is toggled', function(){
         it('and when the toggleSidebar value is true, it will be false',function(){
           $scope.layout.sidebarExpanded = false;

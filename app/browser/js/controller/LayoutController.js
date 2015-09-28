@@ -2,21 +2,17 @@ angular.module('app').controller('LayoutCtrl', [
   '$scope',
   '$rootScope',
   '$modal',
-  '$window',
   '$q',
   '$state',
   'lodash',
   'Projects',
-  function ($scope, $rootScope, $modal, $window, $q, $state, _, Projects ){
+  function ($scope, $rootScope, $modal, $q, $state, _, Projects ){
 
   function init(){
     $scope.layout = {
       sidebarExpanded: false,
       historyMaximized: false
     };
-    $scope.online = $window.navigator.onLine;
-    $scope.setConnectionStatus($scope.online);
-
     if( isNaN($rootScope.currentProjectId) ){
       $state.go('projectcreateoropen');
       return $q.resolve();
@@ -25,16 +21,6 @@ angular.module('app').controller('LayoutCtrl', [
     return Projects.loadProjectToRootScope($rootScope.currentProjectId);
   }
 
-  $window.addEventListener("online", function () {
-      $scope.setConnectionStatus(true);
-      $rootScope.$digest();
-  }, true);
-
-  $window.addEventListener("offline", function () {
-      $scope.setConnectionStatus(false);
-      $rootScope.$digest();
-  }, true);
-
   $scope.switchProject = function(){
     // Reset Current Proejct to undefined when switching between projects
     $rootScope.$broadcast('loadPerformRequest', {}, true, function(){
@@ -42,13 +28,6 @@ angular.module('app').controller('LayoutCtrl', [
       $state.go('projectcreateoropen');
     });
 
-  };
-  $scope.setConnectionStatus = function (online){
-      $scope.online = online;
-      $scope.connectionStatus = "Offline";
-      if($scope.online){
-        $scope.connectionStatus = "";
-      }
   };
 
   $scope.refreshProject = function(){
