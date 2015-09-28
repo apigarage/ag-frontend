@@ -295,6 +295,7 @@ angular.module('app').controller('EditorCtrl', [
       showGutter: false,
       theme: 'kuroir',
       mode: 'json',
+      fontFamily: 'monospace',
       onLoad: function(editor){
         editor.setShowPrintMargin(false);
         editor.setHighlightActiveLine(false);
@@ -308,6 +309,7 @@ angular.module('app').controller('EditorCtrl', [
       showGutter: false,
       theme: 'kuroir',
       mode: 'json',
+      fontFamily: 'monospace',
       onLoad: function(editor){
         editor.setShowPrintMargin(false);
         editor.setHighlightActiveLine(false);
@@ -323,6 +325,7 @@ angular.module('app').controller('EditorCtrl', [
       showGutter: false,
       theme: 'kuroir',
       mode: 'text',
+      fontFamily: 'monospace',
       onLoad: function(editor){
         editor.setShowPrintMargin(false);
         editor.setHighlightActiveLine(false);
@@ -338,6 +341,7 @@ angular.module('app').controller('EditorCtrl', [
       showGutter: false,
       theme: 'kuroir',
       mode: 'json',
+      fontFamily: 'monospace',
       onLoad: function(editor){
         editor.setShowPrintMargin(false);
         editor.setHighlightActiveLine(false);
@@ -400,6 +404,16 @@ angular.module('app').controller('EditorCtrl', [
      * Saves the request from scope to DB.
      */
     $scope.saveCurrentRequest = function(){
+      return Editor.saveOrUpdate().then(function(){
+        // Rest Endpoint Flags and Editor Controller button to be disabled
+        Editor.resetRequestChangedFlag();
+        $scope.requestChangedFlag = false;
+      });
+    };
+
+    $scope.saveAsNewCurrentRequest = function(){
+      // Set current enpoint uuid to be undefined to create new save instance
+      $scope.endpoint.uuid = undefined;
       return Editor.saveOrUpdate().then(function(){
         // Rest Endpoint Flags and Editor Controller button to be disabled
         Editor.resetRequestChangedFlag();
