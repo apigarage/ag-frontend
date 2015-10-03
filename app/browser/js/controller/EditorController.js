@@ -77,8 +77,8 @@ angular.module('app').controller('EditorCtrl', [
         }
       ];
       $scope.currentResponsePreviewTab = {
-        title: 'Raw',
-        url: 'html/editor-response-raw.html'
+        title: 'Parsed',
+        url: 'html/editor-response-parsed.html'
       };
       $scope.responsePreviewTypeContent = null;
 

@@ -68,6 +68,36 @@ angular.module('app')
         return ApiRequest.send(options, false);
       };
 
+      Project.shareProjectUsers = function(id){
+        var option = 'users';
+        var options = {
+          'method': 'GET',
+          'url': Config.url + Config.api + endpoint + '/' + id + '/' + option
+        };
+        return ApiRequest.send(options, false);
+      };
+
+      // Pass in data user id
+      Project.shareProjectUsersUpdate = function(id, userId, data){
+        var option = 'users';
+        var options = {
+          'method': 'PUT',
+          'url': Config.url + Config.api + endpoint + '/' + id + '/' + option + '/' + userId ,
+          'data': data
+        };
+        return ApiRequest.send(options, false);
+      };
+
+      // Pass in data user id
+      Project.shareProjectRemoveUser = function(id, userId, data){
+        var option = 'users';
+        var options = {
+          'method': 'DELETE',
+          'url': Config.url + Config.api + endpoint + '/' + id + '/' + option + '/' + userId ,
+          'data': data
+        };
+        return ApiRequest.send(options, false);
+      };
       /*
       * @data: object fields and values
       */

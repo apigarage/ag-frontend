@@ -64,12 +64,17 @@ angular.module('app')
       $http.defaults.headers.common = {};
       return $http(options)
         .then(function(res) {
+          setCurrentUserEmail(credentials.email);
           return setAccessToken(res.data.access_token);
         })
         .catch(function(res) {
           $window.console.log( res );
           return false;
         });
+    };
+
+    var setCurrentUserEmail = function setCurrentUserEmail(email){
+      $window.localStorage.setItem("currentUserEmail", email);
     };
 
     var setForgotPassword = function(status){
@@ -82,6 +87,7 @@ angular.module('app')
       login: login, // login the user
       logout: logout, // logout the user
       forgotPasswordNotify : forgotPasswordNotify,
-      setForgotPassword : setForgotPassword
+      setForgotPassword : setForgotPassword,
+      setCurrentUserEmail : setCurrentUserEmail
     };
   }]);
