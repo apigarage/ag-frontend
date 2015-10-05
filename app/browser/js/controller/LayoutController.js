@@ -94,62 +94,19 @@ angular.module('app').controller('LayoutCtrl', [
     require('shell').openExternal(link);
   };
 
-  $scope.openShareProjectModal = function(){
-    var newModal = $modal({
+  $scope.openProjectSharedModal = function(){
+    var projectShareModal = $modal({
       show: false,
-      template: "html/prompt.html",
+      template: 'html/project-share-modal.html',
+      title: 'Project Share',
       animation: false,
-      backdrop: true,
-      title: "Share Project",
-      content: JSON.stringify({
-        // modal window properties
-        'disableCloseButton': false,
-        'promptMessage': false,
-        'promptMessageText': 'Share Project to : ',
-        'promptIsError': false,
-        'hideModalOnSubmit': false,
-
-        // submit button properties
-        'showSubmitButton' : true,
-        'disbledSubmitButton' : false,
-        'submitButtonText' : 'Share',
-
-        // discard button properties
-        'showDiscardButton' : true,
-        'disbleDiscardButton' : false,
-        'discardButtonText' : 'Cancel',
-
-        // input prompt properties
-        'showInputPrompt' : false,
-        'requiredInputPrompt' : false,
-        'placeHolderInputText': '',
-        'labelInputText': '',
-
-        // input email prompt properties
-        'showInputEmailPrompt' : true,
-        'requiredInputEmailPrompt': true,
-        'placeHolderInputEmailText': 'Email Address',
-        'labelInputEmailText': 'Share Project to Email'
-      })
-
+      backdrop: true
     });
-    newModal.$scope.success = $scope.shareProject;
-    newModal.$scope.cancel = function(error){ return $q.resolve(); };
-    newModal.$promise.then( newModal.show );
-    return newModal;
+    projectShareModal.$scope.projectShare  = $scope.projectShare;
+    projectShareModal.$promise.then( projectShareModal.show );
+    return projectShareModal;
   };
-
-  $scope.shareProject = function(data){
-    return Projects.shareProject($rootScope.currentProject.id, data)
-      .then(function(response){
-        if (_.isEqual(response.status, 200)){
-          return "Shared Project: " + data.email;
-        }else{
-          return "Failed to Share Project: ";
-        }
-      });
-  };
-
+  
   init();
 
 }]);

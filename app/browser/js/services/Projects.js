@@ -59,15 +59,6 @@ angular.module('app')
         return ApiRequest.send(options);
       };
 
-      Project.shareProject = function(id, data){
-        var options = {
-          'method': 'PUT',
-          'url': Config.url + Config.api + endpoint + '/' + id,
-          'data': data
-        };
-        return ApiRequest.send(options, false);
-      };
-
       /*
       * @data: object fields and values
       */
