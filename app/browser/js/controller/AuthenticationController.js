@@ -130,10 +130,12 @@ angular.module('app').controller('AuthenticationCtrl', [
     $scope.loading = true;
     if ($scope.SIGNUP == $scope.authType){
       return $scope.signup().then(function(){
+      }).finally(function(){
         $scope.loading = false;
       });
     }else{
       return $scope.login().then(function(){
+      }).finally(function(){
         $scope.loading = false;
       });
     }
