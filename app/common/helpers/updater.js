@@ -16,6 +16,9 @@
   var updateUrl = 'http://0.0.0.0:8081/package.json';
   var updateCheckInterval = 60 * 60 * 1000 ;
 
+  var x = app.getPath('exe');
+  console.log('username', x);
+  app.quit();
 
   module.exports.init = function(){
     console.log('Initializing Updater');
@@ -57,8 +60,14 @@
               console.log('Update is available.');
               return downloadUpdate(response.body.latestAsar, true)
                 .then(function(destination){
-                  applyUpdate(destination);
-                  console.log("I M HERE");
+                  return applyUpdate(destination);
+                })
+                .then(function(){
+                  console.log('update is applied');
+                })
+                .catch(function(error){
+                  console.log('Update was not applied.');
+                  console.log(error);
                 });
             }
           }
@@ -107,8 +116,10 @@
     console.log('Applying Update');
 
     var deferred = q.defer();
+    var destinationFile = '/Applications/stag-API Garage.app/Contents/Resources/app.asar';
 
-    var cmd = 'cp ' + srcAsarFile + ' .';
+    var cmd = 'cp ' + srcAsarFile + ' \'' + destinationFile + '\'';
+
 
     // jetpack.copy(srcAsarFile, './somefile.asar'); // fs-jetpack does not support asar files.
     // That's we have to move the asar file using mv command.
@@ -120,4 +131,6 @@
     return deferred.promise;
 
     // TODO : Emit (restart required)
+  };
+
 })();
