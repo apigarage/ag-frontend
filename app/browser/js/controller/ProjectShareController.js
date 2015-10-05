@@ -16,11 +16,11 @@ angular.module('app').controller('ProjectShareCtrl', [
         {"value": "0","label":"<i class=\"fa fa-user\"></i> User"}
         ];
       $scope.currentUserEmail = localStorage.getItem("currentUserEmail");
-      shareProjectUsers();
+      getProjectUsers();
     }
 
-    function shareProjectUsers(){
-      return ProjectsUser.shareProjectUsers($rootScope.currentProject.id).then(function(response){
+    function getProjectUsers(){
+      return ProjectsUser.getProjectUsers($rootScope.currentProject.id).then(function(response){
         $scope.projectShare.users = response.data;
         angular.forEach($scope.projectShare.users, function(value, key){
           if(value.email==$scope.currentUserEmail){
@@ -43,9 +43,9 @@ angular.module('app').controller('ProjectShareCtrl', [
         });
     };
 
-    $scope.shareProject = function(formController){
+    $scope.addProjectUser = function(formController){
       var data = { "email" : formController.email };
-      return ProjectsUser.shareProject($rootScope.currentProject.id, data)
+      return ProjectsUser.addProjectUser($rootScope.currentProject.id, data)
         .then(function(response){
           if (_.isEqual(response.status, 200)){
             return shareProjectUsers();
@@ -61,7 +61,7 @@ angular.module('app').controller('ProjectShareCtrl', [
         var data = { "email" : user.email };
         return ProjectsUser.removeProjectUser($rootScope.currentProject.id, user.id, data)
           .then(function(response){
-            return shareProjectUsers();
+            return getProjectUsers();
           });
       };
 

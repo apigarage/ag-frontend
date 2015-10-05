@@ -9,7 +9,7 @@ angular.module('app')
 
     /* @id: project id
        @data: email data */
-    ProjectsUser.shareProject = function(id, data){
+    ProjectsUser.addProjectUser = function(id, data){
       var options = {
         'method': 'PUT',
         'url': Config.url + Config.api + endpoint + '/' + id,
@@ -19,7 +19,7 @@ angular.module('app')
     };
 
     /* @id: project id */
-    ProjectsUser.shareProjectUsers = function(id){
+    ProjectsUser.getProjectUsers = function(id){
       var option = 'users';
       var options = {
         'method': 'GET',
