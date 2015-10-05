@@ -6,6 +6,7 @@
   var semver = require('semver');
   var http = require('http');
   var fs = require('fs');
+  var childProcess = require('child_process');
 
   var config = require('../../vendor/electron_boilerplate/env_config');
   var request = require('./request');
@@ -32,13 +33,13 @@
     var d = new Date().toJSON();
     console.log('Running updater at : ', d);
 
-    return module.exports.checkForUpdates()
+    return checkForUpdates()
       .finally(function(){
         running = false;
       });
   }
 
-  module.exports.checkForUpdates = function(){
+  var checkForUpdates = module.exports.checkForUpdates = function(){
       try{
         console.log('Checking for updates online.');
 
@@ -54,7 +55,11 @@
 
             if(updateAvailable){
               console.log('Update is available.');
-              return module.exports.downloadUpdate(response.body.latestAsar, true);
+              return downloadUpdate(response.body.latestAsar, true)
+                .then(function(destination){
+                  applyUpdate(destination);
+                  console.log("I M HERE");
+                });
             }
           }
 
@@ -70,12 +75,12 @@
       }
   };
 
-  module.exports.downloadUpdate = function(downloadUrl, updateRightAway){
+  var downloadUpdate = module.exports.downloadUpdate = function(downloadUrl, updateRightAway){
 
     var deferred = q.defer();
 
     console.log('os.tmpdir()  ', os.tmpdir());
-    var destination = os.tmpdir() + '/apigarage.update';
+    var destination = os.tmpdir() + '/apigarage'; // Changing the file name.
     console.log('will be saving the update at ', destination);
 
     var file = fs.createWriteStream(destination);
@@ -85,7 +90,9 @@
       response.pipe(file);
       file.on('finish', function(){
         console.log('Finished downloading the update.');
-        file.close(deferred.resolve);
+        file.close(function(){
+          return deferred.resolve(destination);
+        });
         // TODO - Emit Update Downloaded
       });
     }).on('error', function(err){
@@ -96,8 +103,21 @@
     return deferred.promise;
   };
 
-  module.exports.applyUpdate = function(){
-    // replace app.asar with the updated app.asar
-  };
+  var applyUpdate = module.exports.applyUpdate = function(srcAsarFile){
+    console.log('Applying Update');
 
+    var deferred = q.defer();
+
+    var cmd = 'cp ' + srcAsarFile + ' .';
+
+    // jetpack.copy(srcAsarFile, './somefile.asar'); // fs-jetpack does not support asar files.
+    // That's we have to move the asar file using mv command.
+    childProcess.exec(cmd, function(error, stdout, stderr){
+        if( error ) return deferred.reject(error);
+        else deferred.resolve();
+    });
+
+    return deferred.promise;
+
+    // TODO : Emit (restart required)
 })();
