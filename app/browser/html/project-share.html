@@ -1,60 +1,60 @@
+<form name="projectShareForm" class="panel-heading editor-panel-heading ng-pristine ng-valid " >
+    <h3 class="editor-panel-heading-title">Share</h3>
 
-            <form name="projectShareForm" class="panel-heading editor-panel-heading ng-pristine ng-valid " >
+    <div class="input-group col-md-8">
+      <input type="text" class="form-control ng-pristine ng-untouched ng-valid"
+      ng-model="projectShareForm.email" placeholder="Enter Email Address"
+      ng-pattern="/^(([^&lt;&gt;()[\]\.,;:\s@\&quot;]+(\.[^&lt;&gt;()[\]\.,;:\s@\&quot;]+)*)|(\&quot;.+\&quot;))@(([^&lt;&gt;()[\]\.,;:\s@\&quot;]+\.)+[^&lt;&gt;()[\]\.,;:\s@\&quot;]{2,})$/i"
+      ng-required="true"
+      ng-disabled="isDisabled()"
+      >
 
-                <h3 class="editor-panel-heading-title">Share</h3>
+      <div class="input-group-btn">
+        <!--
+        <button type="button" class="btn btn-default"
+        ng-model="privilegeSelect" data-html="1"
+        ng-disabled="isDisabled()"
+        bs-options="icon.value as icon.label for icon in icons"
+        bs-select>
+          User Access <span class="caret"></span>
+        </button> -->
+        <button class="btn btn-primary project-share-btn" type="submit" ng-click="shareProject(projectShareForm)"
+        ng-disabled="projectShareForm.$invalid || projectShareForm.$pristine || projectShareForm.$error.required"
+        data-title="<span class='visible-xs-inline visible-sm-inline'>Share Project (</span>
+                <span class='visible-xs-inline visible-sm-inline'>)</span>">
+          <span class="fa fa-share-square"></span>
+          <span class="hidden-xs hidden-sm">
+            Share Project
+          </span>
+        </button>
+      </div>
+    </div>
+</form>
 
-                <div class="input-group col-md-8">
-                  <input type="text" class="form-control ng-pristine ng-untouched ng-valid"
-                  ng-model="projectShareForm.email" placeholder="Enter Email Address"
-                  ng-pattern="/^(([^&lt;&gt;()[\]\.,;:\s@\&quot;]+(\.[^&lt;&gt;()[\]\.,;:\s@\&quot;]+)*)|(\&quot;.+\&quot;))@(([^&lt;&gt;()[\]\.,;:\s@\&quot;]+\.)+[^&lt;&gt;()[\]\.,;:\s@\&quot;]{2,})$/i"
-                  ng-required="true"
-                  ng-disabled="isDisabled()"
-                  >
+<span ng-show="showInviteSent">Sent Invite to <code>{{invitedEmailAddress}}</code>
+  <button type="button" ng-click="showInviteSent = !showInviteSent"><span>&times;</span></button>
+</span>
 
+<div class="modal-project-share-list">
+  <ul class="list-group">
 
-                  <div class="input-group-btn">
-
-                    <button type="button" class="btn btn-default"
-                    ng-model="privilegeSelect" data-html="1"
-                    ng-disabled="isDisabled()"
-                    bs-options="icon.value as icon.label for icon in icons"
-                    bs-select>
-                      User Access <span class="caret"></span>
-                    </button>
-                    <button class="btn btn-primary project-share-btn" type="submit" ng-click="shareProject(projectShareForm)"
-                    ng-disabled="projectShareForm.$invalid || projectShareForm.$pristine || projectShareForm.$error.required"
-                    data-title="<span class='visible-xs-inline visible-sm-inline'>Share Project (</span>
-                            <span class='visible-xs-inline visible-sm-inline'>)</span>">
-                      <span class="fa fa-share-square"></span>
-                      <span class="hidden-xs hidden-sm">
-                        Share Project
-                      </span>
-                    </button>
-                  </div>
-                </div>
-
-              </form>
-
-              <div class="modal-project-share-list">
-                <ul class="list-group">
-                  <li class="list-group-item project-share-list" ng-repeat="user in projectShare.users"
-                  ng-model="user">{{user.name}} - {{user.email}}
-                    <span class="pull-right">
-                      <button type="button" class="btn btn-default"
-                      ng-disabled="isDisabled() || user.email == currentUserEmail"
-                      ng-model="user.permission_id" data-html="1"
-                      bs-options="icon.value as icon.label for icon in icons"
-                      bs-select ng-change="updatePermission(user.id, user.permission_id)">
-                        User Access <span class="caret"></span>
-                      </button>
-                      <button class="btn btn-danger"
-                      ng-disabled="isDisabled() || user.email == currentUserEmail"
-                      ng-click="shareProjectRemoveUser(user)">
-                        <span class="fa fa-ban"></span>
-                        Remove
-                      </button>
-                    </span>
-                  </li>
-
-                </ul>
-              </div>
+    <li class="list-group-item project-share-list" ng-repeat="user in projectShare.users"
+    ng-model="user">{{user.name}} - {{user.email}} -- {{user.permission_id}}
+      <span class="pull-right">
+        <button type="button" class="btn btn-default"
+        ng-disabled="isDisabled() || user.email == currentUserEmail"
+        ng-model="user.permission_id" data-html="1"
+        bs-options="icon.value as icon.label for icon in icons"
+        bs-select ng-change="updatePermission(user.id, user.permission_id)">
+          User Access <span class="caret"></span>
+        </button>
+        <button class="btn btn-danger"
+        ng-disabled="isDisabled() || user.email == currentUserEmail"
+        ng-click="shareProjectRemoveUser(user)">
+          <span class="fa fa-ban"></span>
+          Remove
+        </button>
+      </span>
+    </li>
+  </ul>
+</div>

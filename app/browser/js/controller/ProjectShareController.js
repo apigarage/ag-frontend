@@ -3,8 +3,8 @@ angular.module('app').controller('ProjectShareCtrl', [
   '$rootScope',
   '$q',
   'lodash',
-  'Projects',
-  function ($scope, $rootScope, $q, _, Projects){
+  'ProjectsUser',
+  function ($scope, $rootScope, $q, _, ProjectsUser){
     $scope.projectShare = {};
     $scope.currentUserPrivilege = "1";
 
@@ -20,7 +20,7 @@ angular.module('app').controller('ProjectShareCtrl', [
     }
 
     function shareProjectUsers(){
-      return Projects.shareProjectUsers($rootScope.currentProject.id).then(function(response){
+      return ProjectsUser.shareProjectUsers($rootScope.currentProject.id).then(function(response){
         $scope.projectShare.users = response.data;
         angular.forEach($scope.projectShare.users, function(value, key){
           if(value.email==$scope.currentUserEmail){
@@ -36,29 +36,30 @@ angular.module('app').controller('ProjectShareCtrl', [
     };
 
     $scope.updatePermission = function(userId, permission){
-      var data = {"permission_id": permission};
+      var data = { "permission_id" : permission };
       console.log(data);
-      return Projects.shareProjectUsersUpdate($rootScope.currentProject.id, userId, permission)
+      return ProjectsUser.updateProjectUserPermission($rootScope.currentProject.id, userId, data)
         .then(function(response){
-          console.log(response);
         });
     };
 
     $scope.shareProject = function(formController){
       var data = { "email" : formController.email };
-      return Projects.shareProject($rootScope.currentProject.id, data)
+      return ProjectsUser.shareProject($rootScope.currentProject.id, data)
         .then(function(response){
           if (_.isEqual(response.status, 200)){
             return shareProjectUsers();
-          }else{
-            return "Failed to Share Project: ";
+          }else if(_.isEqual(response.status, 404)){
+            $scope.invitedEmailAddress = formController.email;
+            $scope.showInviteSent = true;
+            formController.email = "";
           }
         });
       };
 
       $scope.shareProjectRemoveUser = function(user){
         var data = { "email" : user.email };
-        return Projects.shareProjectRemoveUser($rootScope.currentProject.id, user.id, data)
+        return ProjectsUser.removeProjectUser($rootScope.currentProject.id, user.id, data)
           .then(function(response){
             return shareProjectUsers();
           });
