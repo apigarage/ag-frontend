@@ -39,7 +39,7 @@
   <ul class="list-group">
 
     <li class="list-group-item project-share-list" ng-repeat="user in projectShare.users"
-    ng-model="user">{{user.name}} - {{user.email}} -- {{user.permission_id}}
+    ng-model="user">{{user.name}} - {{user.email}}
       <span class="pull-right">
         <button type="button" class="btn btn-default"
         ng-disabled="isDisabled() || user.email == currentUserEmail"
