@@ -42,14 +42,14 @@ angular.module('app')
         }
       }
 
-      var setHistoryItem = function(currentCallOptions){
-        delete currentCallOptions.timeout;
-        verifyHistoryItem(currentCallOptions);
+      var setHistoryItem = function(currentHistoryItem){
+        delete currentHistoryItem.timeout;
+        verifyHistoryItem(currentHistoryItem);
         trimHistory();
         var currentTime = _.now();
         _historyTimeStamps.push(currentTime);
         localStorage.setItem('historyTimeStamps', JSON.stringify(_historyTimeStamps));
-        localStorage.setItem(currentTime, JSON.stringify(currentCallOptions));
+        localStorage.setItem(currentTime, JSON.stringify(currentHistoryItem));
         var historyItem = getHistoryItem(currentTime);
       };
 

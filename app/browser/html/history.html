@@ -24,10 +24,16 @@
     <ul class="list-unstyled">
       <li class="request-url" ng-repeat="time in historyTimeStamps">
         <span class="request-time">{{time | date:'yyyy-MM-dd h:mm:ssa'}}</span>
+        <span class="request-type" ng-click="loadPerformRequest(time, false)">
         <a>
-          <span class="request-type" ng-click="loadPerformRequest(time, false)">{{recentRequests[time].method}}</span>
+          {{recentRequests[time].method}}
         </a>
-        <a ng-click="loadPerformRequest(time, true)">{{recentRequests[time].url}}</a>
+        </span>
+        <a class="request-url-value" ng-click="loadPerformRequest(time, true)">{{recentRequests[time].url}}</a>
+        <span>
+          <span class="request-status">{{recentRequests[time].status}}</span>
+          <span class="request-status-text">{{recentRequests[time].statusText}}</span>
+        </span>
       </li>
     </ul>
 

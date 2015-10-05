@@ -236,6 +236,8 @@ angular.module('app').controller('EditorCtrl', [
         $scope.response.headers = JSON.parse(JSON.stringify($scope.response.headers()));
         $scope.setResponsePreviewType($scope.currentResponsePreviewTab);
         showRequestHideCancelButtons();
+        options.status = $scope.response.status;
+        options.statusText = $scope.response.statusText;
         History.setHistoryItem(options);
       });
 
