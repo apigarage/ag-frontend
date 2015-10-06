@@ -7,5 +7,7 @@
   "client_secret": "secret_44207Z6q1Lq5e6me0902",
   "database_name": "dev-apigarage",
   "access_token_key": "accessToken_development",
+  "update_url": "http://0.0.0.0:8081/package.json",
+  "update_check_interval": 60000,
   "syncTime": 1000
 }

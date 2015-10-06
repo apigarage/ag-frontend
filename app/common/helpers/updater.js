@@ -5,20 +5,16 @@
   var q = require('q');
   var semver = require('semver');
   var http = require('http');
-  var fs = require('fs');
+  var fs = require('original-fs');
   var childProcess = require('child_process');
 
-  var config = require('../../vendor/electron_boilerplate/env_config');
+  var Config = require('../../vendor/electron_boilerplate/env_config');
   var request = require('./request');
 
   var running = false;
 
-  var updateUrl = 'http://0.0.0.0:8081/package.json';
-  var updateCheckInterval = 60 * 60 * 1000 ;
-
-  var x = app.getPath('exe');
-  console.log('username', x);
-  app.quit();
+  var updateUrl = Config.update_url;
+  var updateCheckInterval = Config.update_check_interval;
 
   module.exports.init = function(){
     console.log('Initializing Updater');
