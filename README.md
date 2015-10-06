@@ -22,6 +22,8 @@ Production
 ** to build and upload app-[v.v.v].asar file in Rackspace --> CloudFiles --> production --> Updates.
 ** to bump the package file and deploy it to production npm file.
 
+Note: Checkout https://developer.rackspace.com/docs/cloud-files/getting-started/?lang=node.js#more-information for Rackspace Cloud Files
+
 Deploying the Full App Flow:
 ----------------------------
 TBD
