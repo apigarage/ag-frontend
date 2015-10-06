@@ -26,6 +26,10 @@ angular.module('app')
         Editor.requestChanged = false;
       };
 
+      Editor.setRequestChangedFlag = function(value){
+        Editor.requestChanged = value;
+      };
+
       Editor.setEndpoint = function(updatedEndpoint){
         endpoint = updatedEndpoint;
         if( !Editor.requestChanged ) Editor.requestChanged = true;

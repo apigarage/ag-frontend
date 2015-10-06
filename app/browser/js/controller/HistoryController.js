@@ -24,6 +24,17 @@ angular.module('app').controller('HistoryCtrl', [
 
   $scope.loadPerformRequest = function (historyTimeStamp, loadOnly){
     var historyItem = History.getHistoryItem(historyTimeStamp);
+    // if it is an existing collection get the information
+    if(historyItem.uuid){
+      if($rootScope.currentProject.collections[historyItem.collection_id].items[historyItem.uuid] &&
+        $rootScope.currentProject.collections[historyItem.collection_id]){
+        $rootScope.currentItem = $rootScope.currentProject.collections[historyItem.collection_id].items[historyItem.uuid];
+        $rootScope.currentCollection = $rootScope.currentProject.collections[historyItem.collection_id];
+      }else{
+        historyItem.itemExists = false;
+      }
+      historyItem.requestChangedFlag = true;
+    }
     $rootScope.$broadcast('loadPerformRequest',historyItem, loadOnly);
   };
 

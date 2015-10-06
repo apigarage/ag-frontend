@@ -221,7 +221,7 @@ angular.module('app').controller('EditorCtrl', [
       };
       options = RequestUtility.buildRequest(options, $rootScope.currentEnvironment);
       options.transformResponse = function(data){return data;};
-      $rootScope.$broadcast('updateHistory');
+
       var requestPromise = $http(options).then(function(response){
         $scope.response = response;
       })
@@ -236,9 +236,17 @@ angular.module('app').controller('EditorCtrl', [
         $scope.response.headers = JSON.parse(JSON.stringify($scope.response.headers()));
         $scope.setResponsePreviewType($scope.currentResponsePreviewTab);
         showRequestHideCancelButtons();
+        // build the History object
         options.status = $scope.response.status;
         options.statusText = $scope.response.statusText;
+        // include current item collection id and uuid to be added to history item
+        if($rootScope.currentItem){
+          options.collection_id = $rootScope.currentItem.collection_id;
+          options.uuid = $rootScope.currentItem.uuid;
+          options.name = $rootScope.currentItem.name;
+        }
         History.setHistoryItem(options);
+        $rootScope.$broadcast('updateHistory');
       });
 
       $scope.requestPromise = requestPromise;
@@ -369,11 +377,21 @@ angular.module('app').controller('EditorCtrl', [
 
           // the way we are using it, item will always be an object.
           $rootScope.currentItem = item;
-          // if collection does not exist, it will be set to undefined.
-          $rootScope.currentCollection = $rootScope.currentProject.collections[item.collection_id];
 
-          Editor.resetRequestChangedFlag();
-          $scope.requestChangedFlag = false;
+          // if item request is from history set changed flag to true
+          if(item.requestChangedFlag){
+            // if the history item doesn't exist anymore in the project
+            if(!item.existInProject){
+              item.uuid = undefined;
+            }
+            Editor.setRequestChangedFlag(true);
+            $scope.requestChangedFlag = true;
+          }else{
+            // if collection does not exist, it will be set to undefined.
+            $rootScope.currentCollection = $rootScope.currentProject.collections[item.collection_id];
+            Editor.resetRequestChangedFlag();
+            $scope.requestChangedFlag = false;
+          }
           return loadRequest(item, loadOnly)
             .then(function(){
               if(done) done();
