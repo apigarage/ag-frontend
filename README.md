@@ -3,12 +3,35 @@ API Garage
 ============
 We will be the best platform for APIs.
 
+Proposed Deployment Flow
+========================
+
+Deploying the Update Flow:
+--------------------------
+Staging:
+* Run `npm run release-staging --update --bump=major/minor/features` to build and view app-[v.v.v].asar file in your release folder.
+
+* Run `npm run release-staging --deploy --bump=major/minor/features`
+** to build and upload app-[v.v.v].asar file in Rackspace --> CloudFiles --> Staging --> Updates.
+** to bump the package file and deploy it to staging npm file.
+
+Production
+* Run `npm run release-production --update --bump=major/minor/features` to build and view app-[v.v.v].asar file in your release folder.
+
+* Run `npm run release-production --deploy --bump=major/minor/features`
+** to build and upload app-[v.v.v].asar file in Rackspace --> CloudFiles --> production --> Updates.
+** to bump the package file and deploy it to production npm file.
+
+Deploying the Full App Flow:
+----------------------------
+TBD
+
 Testing Strategies
 ==================
 Some Guidelines (and Rules)
 ---------------------------
-# Editor Controller MUST be fully tested. It's the core piece of the company, and cannot be broken.
-# Feel free to not write unit test, if the feature is isolated, and does not have complex logic. For example: Item Rename. Item delete. If any team member has strong position in favor of writing tes
+* Editor Controller MUST be fully tested. It's the core piece of the company, and cannot be broken.
+* Feel free to not write unit test, if the feature is isolated, and does not have complex logic. For example: Item Rename. Item delete. If any team member has strong position in favor of writing tes
 
 General CRUD
 ------------
