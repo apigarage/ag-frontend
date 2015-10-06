@@ -769,6 +769,34 @@ describe('Controller: EditController', function() {
           expect($scope.cancelRequestButton).toBe(false);
         });
       });
+
+      describe('When making a call from history', function(){
+        beforeEach(function(){
+          // load a project with items
+
+
+          //item.requestChangedFlag = true;
+        });
+        it('loads non-existing item', function(){
+          // create item with no uuid
+          // needs to add from History
+          //console.log($rootScope.currentProject);
+          $rootScope.currentProject = ProjectsFixtures.get('historyProject');
+          item = $rootScope.currentProject.collections[0].items[1];
+          $scope.loadPerformRequest(null, item);
+          $rootScope.$apply();
+          expect($scope.endpoint.uuid).toEqual(undefined);
+
+        });
+        xit('load existing item', function(){
+          $rootScope.currentProject = ProjectsFixtures.get('historyProject');
+          item = ItemsFixtures.get('itemForHistory');
+          console.log($rootScope.currentProject);
+          $scope.loadPerformRequest(null, item);
+          $rootScope.$apply();
+          expect($scope.endpoint.uuid).toEqual(item.uuid);
+        });
+      });
     });
   });
 

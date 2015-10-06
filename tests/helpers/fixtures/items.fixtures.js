@@ -80,7 +80,33 @@ angular.module('app')
       "itemForSearch":{
         'name': 'Grape',
         'uuid': 'uuid-5'
-      }
+      },
+      "itemForHistory":{
+        'name': 'item with id',
+        'uuid': 0,
+        'collection_id' : 0,
+        'url': 'https://abx.xyz',
+        'method': 'POST',
+        'headers': {
+          'key1': 'value1',
+          'key2': 'value2'
+        },
+        'data': 'some data to be sent',
+        'requestChangedFlag': true,
+        'existInProject' : true
+      },
+      "itemForHistoryNoID":{
+        'name': 'item with no id',
+        'url': 'https://abx.xyz',
+        'method': 'POST',
+        'headers': {
+          'key1': 'value1',
+          'key2': 'value2'
+        },
+        'data': 'some data to be sent',
+        'requestChangedFlag': true,
+        'existInProject' : false
+      },
     };
 
     items.get = function(key){

@@ -1,5 +1,5 @@
     <div class="panel panel-default editor-panel">
-      <form class="panel-heading editor-panel-heading">
+      <form name="makeRequestForm" class="panel-heading editor-panel-heading">
 
         <h3 class="editor-panel-heading-title">Request</h3>
 
@@ -22,7 +22,9 @@
           </div><!-- /btn-group -->
           <input type="text" class="form-control"
             ng-model="endpoint.requestUrl" placeholder="Add a URL..."
-            ng-change="requestChanged()">
+            ng-change="requestChanged()"
+            ng-required="true"
+            >
           <div class="input-group-btn">
             <button class="btn btn-default project-environment" type="button"
                     bs-dropdown data-template="environmentSelect"
@@ -73,16 +75,18 @@
             <button class="btn btn-primary" type="submit" ng-click="performRequest()"
                     ng-show="performRequestButton"
                     data-title="<span class='visible-xs-inline visible-sm-inline'>Make Request (</span>
-                    <span class='visible-xs-inline visible-sm-inline'>)</span>">
-              <span class="fa fa-download"></span>
-              <span class="hidden-xs hidden-sm">
+                    <span class='visible-xs-inline visible-sm-inline'>)</span>"
+                    ladda="loading"
+                    ng-disabled="makeRequestForm.$invalid"
+                    >
+              <span class="fa fa-download ladda-label"></span>
+              <span class="hidden-xs hidden-sm ladda-label">
                 Make request
               </span>
             </button>
             <button class="btn btn-primary" type="submit" ng-click="requestPromise.abort()"
                     ng-show="cancelRequestButton"
-                    bs-tooltip data-html="1"  data-placement="bottom"
-                    data-title="<span class='visible-xs-inline visible-sm-inline'>Cancel Request (</span>
+                    data-title="<span class='visible-xs-inline visible-sm-inline'>Cancel Request(</span>
                     <!-- {{'OSX' ? '&#8984;ESC' : 'Ctrl+ESC'}} -->
                     <span class='visible-xs-inline visible-sm-inline'>)</span>">
               <span class="fa fa-ban"></span>

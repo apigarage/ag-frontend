@@ -22,9 +22,10 @@ angular.module('app').controller('LayoutCtrl', [
   }
 
   $scope.switchProject = function(){
-    // Reset Current Proejct to undefined when switching between projects
+    // Reset Current Project to undefined when switching between projects
     $rootScope.$broadcast('loadPerformRequest', {}, true, function(){
       $rootScope.currentProjectId = undefined;
+      $rootScope.currentEnvironment = undefined;
       $state.go('projectcreateoropen');
     });
 
@@ -106,7 +107,7 @@ angular.module('app').controller('LayoutCtrl', [
     projectShareModal.$promise.then( projectShareModal.show );
     return projectShareModal;
   };
-  
+
   init();
 
 }]);

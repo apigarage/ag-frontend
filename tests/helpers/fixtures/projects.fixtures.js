@@ -93,6 +93,13 @@ angular.module('app')
         ]
         // TODO - Environments TO BE ADDED
       },
+      "historyProject":{
+        "id": "1",
+        "name": "History Project",
+        "collections":[
+          CollectionsFixtures.get('historyCollection'),
+        ]
+      },
     };
 
     projects.list = {

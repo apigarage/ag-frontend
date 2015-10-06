@@ -25,7 +25,6 @@ angular.module('app').controller('EditorCtrl', [
     }
 
     function showCancelHideRequestButtons(){
-      $scope.performRequestButton = false;
       $scope.cancelRequestButton = true;
     }
 
@@ -208,6 +207,7 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     $scope.performRequest = function(){
+      $scope.loading = true;
       if( _.isEmpty($scope.endpoint.requestUrl) ) return;
       resetResponse();
       showCancelHideRequestButtons();
@@ -236,6 +236,7 @@ angular.module('app').controller('EditorCtrl', [
         $scope.response.headers = JSON.parse(JSON.stringify($scope.response.headers()));
         $scope.setResponsePreviewType($scope.currentResponsePreviewTab);
         showRequestHideCancelButtons();
+
         // build the History object
         options.status = $scope.response.status;
         options.statusText = $scope.response.statusText;
@@ -247,6 +248,7 @@ angular.module('app').controller('EditorCtrl', [
         }
         History.setHistoryItem(options);
         $rootScope.$broadcast('updateHistory');
+        $scope.loading = false;
       });
 
       $scope.requestPromise = requestPromise;
@@ -380,10 +382,18 @@ angular.module('app').controller('EditorCtrl', [
 
           // if item request is from history set changed flag to true
           if(item.requestChangedFlag){
-            // if the history item doesn't exist anymore in the project
-            if(!item.existInProject){
+            // if the history item doesn't exist anymore in the project just load it in the editor
+            if( ! $rootScope.currentProject.collections[item.collection_id] ) item.existsInProject = false;
+            if( item.existsInProject && ! $rootScope.currentProject.collections[item.collection_id].items[item.uuid] ) item.existsInProject = false;
+
+            if( ! item.existsInProject ){
               item.uuid = undefined;
+            }else{
+              // select the existing item
+              $rootScope.currentItem = $rootScope.currentProject.collections[item.collection_id].items[item.uuid];
+              $rootScope.currentCollection = $rootScope.currentProject.collections[item.collection_id];
             }
+
             Editor.setRequestChangedFlag(true);
             $scope.requestChangedFlag = true;
           }else{
