@@ -30,8 +30,9 @@ angular.module('app').controller('HistoryCtrl', [
         $rootScope.currentProject.collections[historyItem.collection_id]){
         $rootScope.currentItem = $rootScope.currentProject.collections[historyItem.collection_id].items[historyItem.uuid];
         $rootScope.currentCollection = $rootScope.currentProject.collections[historyItem.collection_id];
+        historyItem.existInProject = true;
       }else{
-        historyItem.itemExists = false;
+        historyItem.existInProject = false;
       }
       historyItem.requestChangedFlag = true;
     }
