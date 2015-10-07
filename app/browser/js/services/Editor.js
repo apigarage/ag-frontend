@@ -93,7 +93,7 @@ angular.module('app')
                   // Let's do that.
                   if(loadAfterSaving) {
                     Editor.resetRequestChangedFlag();
-                    $rootScope.$broadcast('loadPerformRequest', data);
+                    $rootScope.$broadcast('loadPerformRequest', data, true, "EditorService");
                   }
                 });
             });
@@ -255,6 +255,8 @@ angular.module('app')
         } else {
           newEndpoint.requestBody = "";
         }
+        
+        newEndpoint.collection_id = item.collection_id;
         newEndpoint.uuid = _.isEmpty(item.uuid) ? undefined : item.uuid;
         newEndpoint.requestHeaders = RequestUtility.getHeaders(item.headers, 'array');
 

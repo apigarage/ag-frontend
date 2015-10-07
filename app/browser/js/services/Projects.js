@@ -109,7 +109,7 @@ angular.module('app')
       };
 
       function resetProjectValuesFromRootScope(){
-        $rootScope.$broadcast('loadPerformRequest', {});
+        $rootScope.$broadcast('loadPerformRequest', {}, true, "ProjectsService");
       }
 
       Project.updateProjectName = function(name){

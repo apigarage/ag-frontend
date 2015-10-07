@@ -25,11 +25,7 @@ angular.module('app').controller('HistoryCtrl', [
   $scope.loadPerformRequest = function (historyTimeStamp, loadOnly){
     var historyItem = History.getHistoryItem(historyTimeStamp);
     // if it is an existing collection get the information
-    if(historyItem.uuid){
-      historyItem.requestChangedFlag = true;
-      historyItem.existsInProject = true;
-    }
-    $rootScope.$broadcast('loadPerformRequest',historyItem, loadOnly);
+    $rootScope.$broadcast('loadPerformRequest',historyItem, loadOnly, "HistoryCtrl");
   };
 
   $scope.$on('updateHistory', function(event, data) {

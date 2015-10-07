@@ -23,7 +23,7 @@ angular.module('app').controller('LayoutCtrl', [
 
   $scope.switchProject = function(){
     // Reset Current Project to undefined when switching between projects
-    $rootScope.$broadcast('loadPerformRequest', {}, true, function(){
+    $rootScope.$broadcast('loadPerformRequest', {}, true, "LayoutCtrl", function(){
       $rootScope.currentProjectId = undefined;
       $rootScope.currentEnvironment = undefined;
       $state.go('projectcreateoropen');

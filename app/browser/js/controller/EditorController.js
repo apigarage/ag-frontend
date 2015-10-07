@@ -241,11 +241,10 @@ angular.module('app').controller('EditorCtrl', [
         options.status = $scope.response.status;
         options.statusText = $scope.response.statusText;
         // include current item collection id and uuid to be added to history item
-        if($rootScope.currentItem){
-          options.collection_id = $rootScope.currentItem.collection_id;
-          options.uuid = $rootScope.currentItem.uuid;
-          options.name = $rootScope.currentItem.name;
-        }
+        options.collection_id = $scope.endpoint.collection_id ? $scope.endpoint.collection_id : undefined;
+        options.uuid = $scope.endpoint.uuid ? $scope.endpoint.uuid : undefined;
+        options.name = $scope.endpoint.name ? $scope.endpoint.name : undefined;
+
         History.setHistoryItem(options);
         $rootScope.$broadcast('updateHistory');
         $scope.loading = false;
@@ -368,7 +367,7 @@ angular.module('app').controller('EditorCtrl', [
     $scope.$on('loadPerformRequest', loadPerformRequest);
     $scope.loadPerformRequest = loadPerformRequest; // this line helps with testing.
 
-    function loadPerformRequest(event, item, loadOnly, done){
+    function loadPerformRequest(event, item, loadOnly, source, done){
       return Editor.confirmSave()
         .then(function(response){
           if(response){
@@ -381,7 +380,8 @@ angular.module('app').controller('EditorCtrl', [
           $rootScope.currentItem = item;
 
           // if item request is from history set changed flag to true
-          if(item.requestChangedFlag){
+          if(_.isEqual(source,"HistoryCtrl")){
+            item.existsInProject = true;
             // if the history item doesn't exist anymore in the project just load it in the editor
             if( ! $rootScope.currentProject.collections[item.collection_id] ) item.existsInProject = false;
             if( item.existsInProject && ! $rootScope.currentProject.collections[item.collection_id].items[item.uuid] ) item.existsInProject = false;
