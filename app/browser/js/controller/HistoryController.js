@@ -24,7 +24,8 @@ angular.module('app').controller('HistoryCtrl', [
 
   $scope.loadPerformRequest = function (historyTimeStamp, loadOnly){
     var historyItem = History.getHistoryItem(historyTimeStamp);
-    $rootScope.$broadcast('loadPerformRequest',historyItem, loadOnly);
+    // if it is an existing collection get the information
+    $rootScope.$broadcast('loadPerformRequest',historyItem, loadOnly, "HistoryCtrl");
   };
 
   $scope.$on('updateHistory', function(event, data) {

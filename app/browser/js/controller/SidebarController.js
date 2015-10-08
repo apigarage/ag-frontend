@@ -32,7 +32,7 @@ angular.module('app')
     $scope.selectItem = function(item){
       // These assignments are used for loading the endpoint in the editor
       if(item.uuid !== $rootScope.currentItem.uuid ){
-        $rootScope.$broadcast('loadPerformRequest', item);
+        $rootScope.$broadcast('loadPerformRequest', item, true, "SidebarCtrl");
       }
     };
 
@@ -82,7 +82,7 @@ angular.module('app')
     }
 
     $scope.newRequest = function(){
-      $rootScope.$broadcast('loadPerformRequest', {});
+      $rootScope.$broadcast('loadPerformRequest', {}, true, "SidebarCtrl");
     };
 
     $scope.openRenameCollectionModal = function(currentCollection){
@@ -195,7 +195,7 @@ angular.module('app')
           // check to see if  currentCollction is selected collection
           if($rootScope.currentCollection){
             if($rootScope.currentCollection.id == currentCollection.id){
-              $rootScope.$broadcast('loadPerformRequest', {});
+              $rootScope.$broadcast('loadPerformRequest', {}, true, "SidebarCtrl");
             }
           }
           return response;
@@ -265,7 +265,7 @@ angular.module('app')
         .then(function(response){
           if($rootScope.currentItem){
             if($rootScope.currentItem.uuid == currentItem.uuid){
-              $rootScope.$broadcast('loadPerformRequest', currentItem);
+              $rootScope.$broadcast('loadPerformRequest', currentItem, true, "SidebarCtrl");
             }
           }
           // TODO: Error handling
@@ -327,7 +327,7 @@ angular.module('app')
           // If currentItem is selected and the item being
           // deleted is the same clear editor
           if($rootScope.currentItem && $rootScope.currentItem.uuid == currentItem.uuid){
-            $rootScope.$broadcast('loadPerformRequest', {});
+            $rootScope.$broadcast('loadPerformRequest', {}, true, "SidebarCtrl");
           }
           return response;
         });

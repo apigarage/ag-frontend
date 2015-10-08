@@ -25,7 +25,6 @@ angular.module('app').controller('EditorCtrl', [
     }
 
     function showCancelHideRequestButtons(){
-      $scope.performRequestButton = false;
       $scope.cancelRequestButton = true;
     }
 
@@ -208,6 +207,7 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     $scope.performRequest = function(){
+      $scope.loading = true;
       if( _.isEmpty($scope.endpoint.requestUrl) ) return;
       resetResponse();
       showCancelHideRequestButtons();
@@ -221,7 +221,7 @@ angular.module('app').controller('EditorCtrl', [
       };
       options = RequestUtility.buildRequest(options, $rootScope.currentEnvironment);
       options.transformResponse = function(data){return data;};
-      $rootScope.$broadcast('updateHistory');
+
       var requestPromise = $http(options).then(function(response){
         $scope.response = response;
       })
@@ -236,7 +236,18 @@ angular.module('app').controller('EditorCtrl', [
         $scope.response.headers = JSON.parse(JSON.stringify($scope.response.headers()));
         $scope.setResponsePreviewType($scope.currentResponsePreviewTab);
         showRequestHideCancelButtons();
+
+        // build the History object
+        options.status = $scope.response.status;
+        options.statusText = $scope.response.statusText;
+        // include current item collection id and uuid to be added to history item
+        options.collection_id = $scope.endpoint.collection_id ? $scope.endpoint.collection_id : undefined;
+        options.uuid = $scope.endpoint.uuid ? $scope.endpoint.uuid : undefined;
+        options.name = $scope.endpoint.name ? $scope.endpoint.name : undefined;
+
         History.setHistoryItem(options);
+        $rootScope.$broadcast('updateHistory');
+        $scope.loading = false;
       });
 
       $scope.requestPromise = requestPromise;
@@ -356,7 +367,7 @@ angular.module('app').controller('EditorCtrl', [
     $scope.$on('loadPerformRequest', loadPerformRequest);
     $scope.loadPerformRequest = loadPerformRequest; // this line helps with testing.
 
-    function loadPerformRequest(event, item, loadOnly, done){
+    function loadPerformRequest(event, item, loadOnly, source, done){
       return Editor.confirmSave()
         .then(function(response){
           if(response){
@@ -367,11 +378,30 @@ angular.module('app').controller('EditorCtrl', [
 
           // the way we are using it, item will always be an object.
           $rootScope.currentItem = item;
-          // if collection does not exist, it will be set to undefined.
-          $rootScope.currentCollection = $rootScope.currentProject.collections[item.collection_id];
 
-          Editor.resetRequestChangedFlag();
-          $scope.requestChangedFlag = false;
+          // if item request is from history set changed flag to true
+          if(_.isEqual(source,"HistoryCtrl")){
+            item.existsInProject = true;
+            // if the history item doesn't exist anymore in the project just load it in the editor
+            if( ! $rootScope.currentProject.collections[item.collection_id] ) item.existsInProject = false;
+            if( item.existsInProject && ! $rootScope.currentProject.collections[item.collection_id].items[item.uuid] ) item.existsInProject = false;
+
+            if( ! item.existsInProject ){
+              item.uuid = undefined;
+            }else{
+              // select the existing item
+              $rootScope.currentItem = $rootScope.currentProject.collections[item.collection_id].items[item.uuid];
+              $rootScope.currentCollection = $rootScope.currentProject.collections[item.collection_id];
+            }
+
+            Editor.setRequestChangedFlag(true);
+            $scope.requestChangedFlag = true;
+          }else{
+            // if collection does not exist, it will be set to undefined.
+            $rootScope.currentCollection = $rootScope.currentProject.collections[item.collection_id];
+            Editor.resetRequestChangedFlag();
+            $scope.requestChangedFlag = false;
+          }
           return loadRequest(item, loadOnly)
             .then(function(){
               if(done) done();

@@ -88,6 +88,15 @@ angular.module('app')
           ItemsFixtures.get('item2'),
           ItemsFixtures.get('itemForSearch')
         ]
+      },
+      "historyCollection":{
+        "id": 1,
+        "name": "History",
+        items : [
+          ItemsFixtures.get('itemForHistory'),
+          ItemsFixtures.get('itemForHistoryNoID'),
+          ItemsFixtures.get('item2')
+        ]
       }
     };
 
