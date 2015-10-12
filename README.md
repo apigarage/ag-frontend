@@ -8,21 +8,14 @@ Proposed Deployment Flow
 
 Deploying the Update Flow:
 --------------------------
-Staging:
-* Run `npm run release-staging --update --bump=major/minor/features` to build and view app-[v.v.v].asar file in your release folder.
+Run `gulp release_update --env=[env] --bump=[bump]` where possible `env` is `development|staging|production` and possible `bump` is `major|minor|patch`
 
-* Run `npm run release-staging --deploy --bump=major/minor/features`
-** to build and upload app-[v.v.v].asar file in Rackspace --> CloudFiles --> Staging --> Updates.
-** to bump the package file and deploy it to staging npm file.
+* Copies everything to `build` folder
+* Downloads the latest manifest file as mentioned in package.json
+* Bumps up the version number based on the `bump`
+* Creates app-[major.minor.patch].asar and uploads file on Rackspace->CloudFiles->containers->builds->`env`->updates
+* If `env==production`, update the version number on Rackspace->CloudFiles->containers->builds->manifest.json
 
-Production
-* Run `npm run release-production --update --bump=major/minor/features` to build and view app-[v.v.v].asar file in your release folder.
-
-* Run `npm run release-production --deploy --bump=major/minor/features`
-** to build and upload app-[v.v.v].asar file in Rackspace --> CloudFiles --> production --> Updates.
-** to bump the package file and deploy it to production npm file.
-
-Note: Checkout https://developer.rackspace.com/docs/cloud-files/getting-started/?lang=node.js#more-information for Rackspace Cloud Files
 
 Deploying the Full App Flow:
 ----------------------------
