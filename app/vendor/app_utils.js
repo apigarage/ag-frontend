@@ -1,4 +1,5 @@
 var os = require('os');
+var argv = require('yargs').argv;
 
 // This function is a copy of apigarage-electron-client/tasks/utils.js
 // We made it inside the app folder so that this function can be used by the application.
@@ -12,4 +13,8 @@ module.exports.os = function () {
       return 'windows';
   }
   return 'unsupported';
+};
+
+module.exports.getEnvName = function () {
+  return argv.env || 'development';
 };

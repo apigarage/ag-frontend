@@ -3,6 +3,7 @@
   'use strict';
 
   var Q = require('q');
+  var os = require('os');
   var gulpUtil = require('gulp-util');
   var jetpack = require('fs-jetpack');
   var asar = require('asar');
@@ -71,11 +72,13 @@
 
     var appdmg = require('appdmg');
     var dmgName = manifest.name + '_' + manifest.version + '.dmg';
+    var installationPath = os.homedir() + "/Applications";
 
     // Prepare appdmg config
     var dmgManifest = projectDir.read('resources/osx/appdmg.json');
     dmgManifest = utils.replace(dmgManifest, {
       productName: manifest.productName,
+      installationPath: installationPath,
       appPath: finalAppDir.path(),
       dmgIcon: projectDir.path("resources/osx/dmg-icon.icns"),
       dmgBackground: projectDir.path("resources/osx/dmg-background.png")

@@ -10,11 +10,15 @@
 
   var Config = require('../../vendor/electron_boilerplate/env_config');
   var request = require('./request');
+  var utils = require('../../vendor/app_utils.js');
 
   var running = false;
 
-  var updateUrl = Config.update_url;
+  var updateUrl = Config.manifest_file_url;
   var updateCheckInterval = Config.update_check_interval;
+
+  console.log('updateUrl', updateUrl);
+  console.log('updateCheckInterval', updateCheckInterval);
 
   module.exports.init = function(){
     console.log('Initializing Updater');
@@ -23,6 +27,12 @@
   };
 
   function start(){
+    console.log(utils.os());
+    if(utils.os() !== 'osx' ){
+      console.log('Auto Updates are only supported for osx and you are running ' + utils.os());
+      return;
+    }
+
     if(running){
       console.log('updater is running already.');
       return;
@@ -39,45 +49,45 @@
   }
 
   var checkForUpdates = module.exports.checkForUpdates = function(){
-      try{
-        console.log('Checking for updates online.');
+    console.log('Checking for updates online.');
+    try{
+      var options = {
+        url: updateUrl,
+        method: 'get'
+      };
+      return request.send(options).then(function(response){
+        if(!response) throw new Error('Having issues with getting manifest file.');
+        if(!response.raw_body) throw new Error('Having issues with getting manifest file raw body.');
 
-        var options = {
-          url: updateUrl,
-          method: 'get'
-        };
-        return request.send(options).then(function(response){
-          if(response && response.body && response.body.latestVersion ){
-            console.log('Latest online version is: ', response.body.latestVersion);
-            console.log('Current app version is: ', app.getVersion());
-            var updateAvailable =  semver.lt(app.getVersion(), response.body.latestVersion);
+        var remoteManifestJSON = JSON.parse(response.raw_body);
+        console.log('Latest online version is: ', remoteManifestJSON.version);
+        console.log('Current app version is: ', app.getVersion());
 
-            if(updateAvailable){
-              console.log('Update is available.');
-              return downloadUpdate(response.body.latestAsar, true)
-                .then(function(destination){
-                  return applyUpdate(destination);
-                })
-                .then(function(){
-                  console.log('update is applied');
-                })
-                .catch(function(error){
-                  console.log('Update was not applied.');
-                  console.log(error);
-                });
-            }
-          }
+        if(semver.lt(app.getVersion(), remoteManifestJSON.version)){
+          console.log('Update is available.');
 
-          console.log('Already running at the latest version');
-        }).catch(function(err){
-          console.log(err);
-        });
-      }
-      catch(err){
+          return downloadUpdate(remoteManifestJSON[app_utils.getEnvName()].updates.linkToLatest, true)
+          .then(function(destination){
+            return applyUpdate(destination);
+          })
+          .then(function(){
+            console.log('update is applied');
+          })
+          .catch(function(error){
+            console.log('Update was not applied.');
+            console.log(error);
+          });
+        }
+
+        console.log('Already running at the latest version');
+      }).catch(function(err){
         console.log(err);
-        console.log('Checking for updates failed...');
-        return q.resolve();
-      }
+      });
+    } catch(err) {
+      console.log(err);
+      console.log('Checking for updates failed...');
+      return q.resolve();
+    }
   };
 
   var downloadUpdate = module.exports.downloadUpdate = function(downloadUrl, updateRightAway){
@@ -112,10 +122,11 @@
     console.log('Applying Update');
 
     var deferred = q.defer();
-    var destinationFile = '/Applications/stag-API Garage.app/Contents/Resources/app.asar';
+    var app_name = 'API Garage.app';
+    if( utils.getEnvName() === 'staging' ) app_name = 'stag-' + app_name;
+    var destinationFile = os.homedir() + '/Applications/'+ app_name +'/Contents/Resources/app.asar';
 
     var cmd = 'cp ' + srcAsarFile + ' \'' + destinationFile + '\'';
-
 
     // jetpack.copy(srcAsarFile, './somefile.asar'); // fs-jetpack does not support asar files.
     // That's we have to move the asar file using mv command.

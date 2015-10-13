@@ -15,7 +15,6 @@
 
   var request = require('../app/common/helpers/request.js');
   var localPackageJSON = require('../package.json');
-  var localBuildPackageJSON = require('../build/package.json');
 
   var releaseForOs = {
     osx: require('./release_osx'),
@@ -25,7 +24,7 @@
 
   function loadRemotePackageJSON(){
     var remoteUrl = null;
-    remoteUrl = localPackageJSON.manifestFileUrl;
+    remoteUrl = localPackageJSON.manifestServerURL + localPackageJSON.manifestFileUrl;
 
     if(!remoteUrl) {
       // console.log('remote package.json URL is not provided');
@@ -52,14 +51,30 @@
    * packageJSON = { .:., .:., version: _____,  .:. }
    * place = 'major' | 'minor' | 'feature'
    */
-  function bumpVersion(packageJSON){
-    var currentVersion = packageJSON.version;
+  function bumpVersion(currentVersion){
+
+    var deferred = q.defer();
+
+    // GET NEW VERSION
     console.log('Current Version IS ', currentVersion);
     var bump = argv.bump ? argv.bump : 'patch'; // major, minor, patch
     var newVersion = semver.inc(currentVersion, bump);
     console.log('New Version IS ', newVersion);
-    packageJSON.version = newVersion;
-    return packageJSON;
+    if(!newVersion) {
+      console.log('Cannot build the new version.');
+      process.abort();
+    }
+
+    // TODO - UPDATE build/package.json FILE WITH LATEST VERSION
+    var buildPackageFileName = '../build/package.json';
+    var localBuildPackageJSON = require(buildPackageFileName);
+    localBuildPackageJSON.version = newVersion;
+    fs.writeFile('build/package.json', JSON.stringify(localBuildPackageJSON), function (err) {
+      if (err) deferred.reject(err);
+      deferred.resolve(newVersion);
+    });
+
+    return deferred.promise;
   }
 
   /*
@@ -111,7 +126,6 @@
   }
 
   function uploadFileToRackspace(container, remoteFileLocation, localFileLocation){
-
     var deferred = q.defer();
 
     var client = getRackspaceClient();
@@ -146,6 +160,7 @@
    */
 
   gulp.task('release_update', ['build'], function () {
+  // gulp.task('release_update', function () {
     var remoteManifestJSON = null;
     var newVersionNumber = null;
     var newFileName = null;
@@ -167,31 +182,43 @@
 
       // console.log('remoteManifestJSON', remoteManifestJSON);
       // bump-up-the-version (major release, minor release, features/bugs)
-      return bumpVersion(remoteManifestJSON);
-    }).then(function(updatedManifestJSON){
+      return bumpVersion(remoteManifestJSON.version);
+    }).then(function(newVersion){
 
-      remoteManifestJSON = updatedManifestJSON;
-      newVersionNumber = remoteManifestJSON.version;
-
+      newVersionNumber = newVersion;
       newFileName = 'app-' +  newVersionNumber + '.asar';
 
+      console.log('New build filename is ', newFileName);
       // Convert "build folder" into app-[v.v.v].asar
       return buildAsar(newFileName);
     }).then(function(localFileLocation){
       var remoteFileLocation = env + '/updates/' + newFileName;
 
+      console.log('uploading the file to', remoteFileLocation);
       // Upload the file to rackspace updates folder
       return uploadFileToRackspace('builds', remoteFileLocation, localFileLocation);
     }).then(function(){
-      if(env == 'production'){
-        var remoteFileLocation = 'manifest.json';
-        // console.log('Updating Production Manifest ', JSON.stringify(remoteManifestJSON));
-        // Upload the file to rackspace updates folder
-        return uploadStringToRackspace('builds', remoteFileLocation, JSON.stringify(remoteManifestJSON));
+
+      // Upload the file to rackspace updates folder
+      var remoteFileLocation = 'manifest.json';
+
+      // Update the download url for the latest update asar file
+      // remoteManifestJSON.
+
+      var latestVersionUrl
+        = localPackageJSON.manifestServerURL + env + '/updates/' + newFileName;
+      remoteManifestJSON[env].updates.linkToLatest = latestVersionUrl;
+
+      if(env === 'production'){
+        // If production, then update the version number.
+        remoteManifestJSON.version = newVersionNumber;
       }
+
+      console.log('Uploading the remote manifest.json', remoteManifestJSON);
+
+      return uploadStringToRackspace('builds', remoteFileLocation, JSON.stringify(remoteManifestJSON));
     });
 
-    // 5. Update the remote package file
   });
 
 })();
