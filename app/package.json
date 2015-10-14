@@ -7,7 +7,7 @@
   "author": "Chinmay Patel<cpatel@apigarage.com>",
   "main": "bootstrap.js",
   "config": {
-    "target": "development"
+    "target": "release"
   },
   "dependencies": {
     "fs-jetpack": "^0.6.5",
@@ -17,6 +17,7 @@
     "nedb": "^1.1.2",
     "semver": "^5.0.3",
     "unirest": "^0.4.2",
-    "yargs": "^3.13.0"
+    "yargs": "^3.13.0",
+    "http-server": "^0.8.5"
   }
 }

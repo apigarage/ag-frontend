@@ -18,10 +18,10 @@ angular.module('app').controller('EditorCtrl', [
   'Activities',
   'Analytics',
   'Items',
+  'ipc',
   function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q,
     $focus, $timeout, RequestUtility, History, Collections, Projects, Editor,
-    Activities, Analytics, Items){
-    // ========================================================================
+    Activities, Analytics, Items, ipc){
     // Private Functions
     // ========================================================================
 
@@ -107,6 +107,39 @@ angular.module('app').controller('EditorCtrl', [
     // ========================================================================
     // Public Functions
     // ========================================================================
+
+
+
+    $scope.startMockServer = function(port){
+
+      //Lets require/import the HTTP module
+      // send port number
+      console.log("port", port);
+      console.log(ipc.sendSync('start-server', 'node'));
+
+    };
+
+    $scope.stopMockServer = function(){
+
+      //Lets require/import the HTTP module
+
+      console.log(ipc.sendSync('stop-server', 'node'));
+
+
+    };
+
+
+    ipc.on('server-request', function(request) {
+      console.log('request', request);
+    });
+
+    ipc.on('server-response', function(response) {
+      console.log('response', response);
+    });
+
+    ipc.on('server-started', function(port) {
+      console.log('server-started', port);
+    });
 
     $scope.requestChanged = function(){
       Editor.setEndpoint( $scope.endpoint );

@@ -9,11 +9,25 @@
   var env = require('../vendor/electron_boilerplate/env_config');
   var wm = require('../common/helpers/windowsManager.js');
   var utils = require('../vendor/app_utils.js');
-
   var ipc = require('ipc');
+  var serverManager = require('../common/helpers/serverManager.js');
 
   module.exports.init = function(){
+
+    ipc.on('start-server', function(event, arg) {
+      console.log("START",arg);
+      event.returnValue = 'start';
+      serverManager.createServer(9090);
+    });
+
+    ipc.on('stop-server', function(event, arg) {
+      console.log("STOP",arg);
+      event.returnValue = 'stop';
+      serverManager.stopServer();
+    });
+
     app.on('ready', function () {
+
       var mainWindow = wm.createWindow({
         'width': 1000,
         'height': 800,
