@@ -6,6 +6,7 @@
   var Menu = require('menu');
   var MenuItem = require('menu-item');
   var utils = require('../vendor/app_utils.js');
+  var BrowserWindow = require('browser-window');
 
   module.exports.init = function(){
 
@@ -18,9 +19,9 @@
       });
       mainWindow.loadUrl("file://" + __dirname + "/index.html");
 
+      var template = [];
       if(utils.os() === 'osx'){
-
-        var template = [{
+        template.push({
           label: 'API Garage',
           submenu: [
             {
@@ -106,8 +107,7 @@
               selector: 'arrangeInFront:'
             },
           ]
-        }];
-
+        });
 
         if (env.name === 'staging' || env.name === 'development') {
           template.push({
@@ -126,10 +126,30 @@
             ]
           });
         }
-
-        var menu = Menu.buildFromTemplate(template);
-        Menu.setApplicationMenu(menu);
       }
+
+      template.push({
+        label: 'About',
+        submenu: [
+          {
+            label: 'Version',
+            click: function() {
+              var aboutWindowParams = {
+                'width': 370,
+                'height': 320,
+                'title': 'About',
+                'auto-hide-menu-bar': true,
+                'resizable': false
+              };
+              var aboutWindow = new BrowserWindow(aboutWindowParams);
+              aboutWindow.loadUrl("file://" + __dirname + "/about.html");
+           }
+          }
+        ]
+      });
+
+      var menu = Menu.buildFromTemplate(template);
+      Menu.setApplicationMenu(menu);
     });
 
     app.on('window-all-closed', function () {
