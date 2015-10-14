@@ -13,7 +13,6 @@
 
   var utils = require('./utils');
 
-  var request = require('../app/common/helpers/request.js');
   var localPackageJSON = require('../package.json');
 
   var releaseForOs = {
@@ -23,28 +22,7 @@
   };
 
   function loadRemotePackageJSON(){
-    var remoteUrl = null;
-    remoteUrl = localPackageJSON.manifestServerURL + localPackageJSON.manifestFileUrl;
-
-    if(!remoteUrl) {
-      // console.log('remote package.json URL is not provided');
-      process.abort();
-    }
-
-    var options = {
-      url: remoteUrl,
-      method: 'get'
-    };
-
-    return request.send(options)
-      .then(function(response){
-        return JSON.parse(response.raw_body);
-      })
-      .catch(function(err){
-        console.log('unable to retrieve remote package file.');
-        console.log(err);
-        process.abort();
-      });
+    return utils.getRemoteManifest();
   }
 
   /*
@@ -52,18 +30,10 @@
    * place = 'major' | 'minor' | 'feature'
    */
   function bumpVersion(currentVersion){
-
     var deferred = q.defer();
 
     // GET NEW VERSION
-    console.log('Current Version IS ', currentVersion);
-    var bump = argv.bump ? argv.bump : 'patch'; // major, minor, patch
-    var newVersion = semver.inc(currentVersion, bump);
-    console.log('New Version IS ', newVersion);
-    if(!newVersion) {
-      console.log('Cannot build the new version.');
-      process.abort();
-    }
+    var newVersion = utils.getNextVersion( currentVersion, argv.bump );
 
     // TODO - UPDATE build/package.json FILE WITH LATEST VERSION
     var buildPackageFileName = '../build/package.json';
