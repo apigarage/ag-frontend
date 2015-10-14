@@ -7,7 +7,7 @@
   "author": "Chinmay Patel<cpatel@apigarage.com>",
   "main": "bootstrap.js",
   "config": {
-    "target": "release"
+    "target": "development"
   },
   "dependencies": {
     "fs-jetpack": "^0.6.5",
