@@ -13,13 +13,11 @@
   var serverManager = require('../common/helpers/serverManager.js');
 
   module.exports.init = function(){
-
     ipc.on('start-server', function(event, arg) {
       console.log("START",arg);
       event.returnValue = 'start';
       serverManager.createServer(9090);
     });
-
     ipc.on('stop-server', function(event, arg) {
       console.log("STOP",arg);
       event.returnValue = 'stop';
