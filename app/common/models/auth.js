@@ -27,7 +27,7 @@
   module.exports.getAccessToken = function(){
     return readAccessTokenFromDB()
       .then(function(accessTokenDocs){
-        console.log('READING FROM DB' + JSON.stringify(accessTokenDocs));
+        //console.log('READING FROM DB' + JSON.stringify(accessTokenDocs));
         if(accessTokenDocs.length !== 1) return null;
         return accessTokenDocs[0].value;
       });
@@ -62,19 +62,19 @@
       .then(function(res){
         // Assuming that login worked.
         // TODO - VALIDATION and ERROR HANDLING.
-        console.log(res.raw_body);
-        console.log('about to parse');
+        //console.log(res.raw_body);
+        //console.log('about to parse');
         var accessToken = JSON.parse(res.raw_body);
-        console.log('just parsed you');
-        console.log(accessToken);
+        //console.log('just parsed you');
+        //console.log(accessToken);
         return insertAccessTokenToDB(accessToken.access_token);
       })
       .then(function(newDoc){
-        console.log(newDoc);
+        //console.log(newDoc);
         return newDoc.value;
       })
       .catch(function(err){
-        console.log(err);
+        //console.log(err);
       });
   };
 
@@ -95,15 +95,15 @@
   //   if(credentials){
   //     return request.send({})
   //       .then(function(response){
-  //         // console.log(response);
+  //         // //console.log(response);
   //       })
   //       .then(function(){
-  //         // console.log(response);
+  //         // //console.log(response);
   //         app.quit();
   //       })
   //       .catch(function(err){
-  //         console.log('errrr');
-  //         console.log(err);
+  //         //console.log('errrr');
+  //         //console.log(err);
   //       });
   //   }
   //   else{

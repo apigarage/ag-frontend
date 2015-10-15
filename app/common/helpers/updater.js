@@ -17,30 +17,30 @@
   var updateUrl = Config.manifest_file_url;
   var updateCheckInterval = Config.update_check_interval;
 
-  console.log('updateUrl', updateUrl);
-  console.log('updateCheckInterval', updateCheckInterval);
+  //console.log('updateUrl', updateUrl);
+  //console.log('updateCheckInterval', updateCheckInterval);
 
   module.exports.init = function(){
-    console.log('Initializing Updater');
+    //console.log('Initializing Updater');
     start();
     setInterval(start, updateCheckInterval);
   };
 
   function start(){
-    console.log(utils.os());
+    //console.log(utils.os());
     if(utils.os() !== 'osx' ){
-      console.log('Auto Updates are only supported for osx and you are running ' + utils.os());
+      //console.log('Auto Updates are only supported for osx and you are running ' + utils.os());
       return;
     }
 
     if(running){
-      console.log('updater is running already.');
+      //console.log('updater is running already.');
       return;
     }
 
     running = true;
     var d = new Date().toJSON();
-    console.log('Running updater at : ', d);
+    //console.log('Running updater at : ', d);
 
     return checkForUpdates()
       .finally(function(){
@@ -49,7 +49,7 @@
   }
 
   var checkForUpdates = module.exports.checkForUpdates = function(){
-    console.log('Checking for updates online.');
+    //console.log('Checking for updates online.');
     try{
       var options = {
         url: updateUrl,
@@ -60,32 +60,32 @@
         if(!response.raw_body) throw new Error('Having issues with getting manifest file raw body.');
 
         var remoteManifestJSON = JSON.parse(response.raw_body);
-        console.log('Latest online version is: ', remoteManifestJSON.version);
-        console.log('Current app version is: ', app.getVersion());
+        //console.log('Latest online version is: ', remoteManifestJSON.version);
+        //console.log('Current app version is: ', app.getVersion());
 
         if(semver.lt(app.getVersion(), remoteManifestJSON.version)){
-          console.log('Update is available.');
+          //console.log('Update is available.');
 
           return downloadUpdate(remoteManifestJSON[app_utils.getEnvName()].updates.linkToLatest, true)
           .then(function(destination){
             return applyUpdate(destination);
           })
           .then(function(){
-            console.log('update is applied');
+            //console.log('update is applied');
           })
           .catch(function(error){
-            console.log('Update was not applied.');
-            console.log(error);
+            //console.log('Update was not applied.');
+            //console.log(error);
           });
         }
 
-        console.log('Already running at the latest version');
+        //console.log('Already running at the latest version');
       }).catch(function(err){
-        console.log(err);
+        //console.log(err);
       });
     } catch(err) {
-      console.log(err);
-      console.log('Checking for updates failed...');
+      //console.log(err);
+      //console.log('Checking for updates failed...');
       return q.resolve();
     }
   };
@@ -94,17 +94,17 @@
 
     var deferred = q.defer();
 
-    console.log('os.tmpdir()  ', os.tmpdir());
+    //console.log('os.tmpdir()  ', os.tmpdir());
     var destination = os.tmpdir() + '/apigarage'; // Changing the file name.
-    console.log('will be saving the update at ', destination);
+    //console.log('will be saving the update at ', destination);
 
     var file = fs.createWriteStream(destination);
-    console.log('Downloading the update from ', downloadUrl);
+    //console.log('Downloading the update from ', downloadUrl);
 
     var request = http.get(downloadUrl, function(response){
       response.pipe(file);
       file.on('finish', function(){
-        console.log('Finished downloading the update.');
+        //console.log('Finished downloading the update.');
         file.close(function(){
           return deferred.resolve(destination);
         });
@@ -119,7 +119,7 @@
   };
 
   var applyUpdate = module.exports.applyUpdate = function(srcAsarFile){
-    console.log('Applying Update');
+    //console.log('Applying Update');
 
     var deferred = q.defer();
     var app_name = 'API Garage.app';

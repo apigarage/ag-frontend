@@ -21,8 +21,8 @@
       try{
         input = JSON.parse(input);
       } catch(e){
-        console.log('Could not convert "' + input + '" into an object.');
-        console.log(e);
+        //console.log('Could not convert "' + input + '" into an object.');
+        //console.log(e);
         input = [];
       }
       // if it's an array, input is in the right state.
