@@ -27,8 +27,9 @@
     // Get the latest version
     // This code needs to be tested on Ubuntu.
     return utils.getRemoteManifest().then(function(remoteManifestJSON){
-      console.log(remoteManifestJSON);
       manifest.version = utils.getNextVersion(remoteManifestJSON.version, argv.bump);
+      return utils.saveStringToFile(__dirname + '/../build/package.json', JSON.stringify(manifest));
+    }).then(function(){
 
       packName = manifest.name + '_' + manifest.version;
       if( utils.getEnvName() == 'staging' ){

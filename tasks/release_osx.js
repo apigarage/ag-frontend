@@ -25,9 +25,9 @@
 
     // Get the latest version
     return utils.getRemoteManifest().then(function(remoteManifestJSON){
-      console.log(remoteManifestJSON);
       manifest.version = utils.getNextVersion(remoteManifestJSON.version, argv.bump);
-
+      return utils.saveStringToFile(__dirname + '/../build/package.json', JSON.stringify(manifest));
+    }).then(function(){
       // Update the app name according to the environment
       if( utils.getEnvName() == 'staging' ){
         manifest.name = 'stag-' + manifest.name;

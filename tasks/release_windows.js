@@ -23,9 +23,10 @@
     manifest = projectDir.read('app/package.json', 'json');
 
     return utils.getRemoteManifest().then(function(remoteManifestJSON){
-      console.log(remoteManifestJSON);
       manifest.version = utils.getNextVersion(remoteManifestJSON.version, argv.bump);
-
+      return utils.saveStringToFile(__dirname + '/../build/package.json', JSON.stringify(manifest));
+    }).then(function(){
+      
       if( utils.getEnvName() == 'staging' ){
         manifest.name = 'stag-' + manifest.name;
         manifest.productName = 'stag-' + manifest.productName;

@@ -4,6 +4,8 @@
 
   var argv = require('yargs').argv;
   var os = require('os');
+  var q = require('q');
+  var fs = require('fs');
   var jetpack = require('fs-jetpack');
   var semver = require('semver');
   var localPackageJSON = require('../package.json');
@@ -62,6 +64,16 @@
       process.abort();
     }
     return newVersion;
+  };
+
+  module.exports.saveStringToFile = function(file, data){
+    var deferred = q.defer();
+    fs.writeFile(file, data, function (err) {
+
+      if (err) return q.reject(err);
+      return q.resolve(true);
+    });
+    return q.promise;
   };
 
   module.exports.getElectronVersion = function () {
