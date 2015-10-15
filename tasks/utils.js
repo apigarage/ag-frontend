@@ -36,7 +36,7 @@
   };
 
   module.exports.getRemoteManifest = function(){
-    var remoteUrl = localPackageJSON.manifestServerURL + localPackageJSON.manifestFileUrl;
+    var remoteUrl = localPackageJSON.manifestServerURL + '/' + argv.env + localPackageJSON.manifestFileUrl;
     if(!remoteUrl) { process.abort(); }
 
     var options = {

@@ -169,23 +169,16 @@
       return uploadFileToRackspace('builds', remoteFileLocation, localFileLocation);
     }).then(function(){
 
-      // Upload the file to rackspace updates folder
-      var remoteFileLocation = 'manifest.json';
-
       // Update the download url for the latest update asar file
-      // remoteManifestJSON.
+      var latestVersionUrl = localPackageJSON.manifestServerURL + env + '/updates/' + newFileName;
+      remoteManifestJSON.updates.linkToLatest = latestVersionUrl;
 
-      var latestVersionUrl
-        = localPackageJSON.manifestServerURL + env + '/updates/' + newFileName;
-      remoteManifestJSON[env].updates.linkToLatest = latestVersionUrl;
+      // Update the version number
+      remoteManifestJSON.version = newVersionNumber;
 
-      if(env === 'production'){
-        // If production, then update the version number.
-        remoteManifestJSON.version = newVersionNumber;
-      }
-
+      // Upload the file to rackspace updates folder
       console.log('Uploading the remote manifest.json', remoteManifestJSON);
-
+      var remoteFileLocation = env + '/manifest.json';
       return uploadStringToRackspace('builds', remoteFileLocation, JSON.stringify(remoteManifestJSON));
     });
 

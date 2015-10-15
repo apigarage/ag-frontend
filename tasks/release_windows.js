@@ -26,10 +26,10 @@
       manifest.version = utils.getNextVersion(remoteManifestJSON.version, argv.bump);
       return utils.saveStringToFile(__dirname + '/../build/package.json', JSON.stringify(manifest));
     }).then(function(){
-      
+
       if( utils.getEnvName() == 'staging' ){
-        manifest.name = 'stag-' + manifest.name;
-        manifest.productName = 'stag-' + manifest.productName;
+        manifest.name = 'staging-' + manifest.name;
+        manifest.productName = 'staging-' + manifest.productName;
       }
       readyAppDir = tmpDir.cwd(manifest.name);
     });

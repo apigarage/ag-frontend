@@ -1,5 +1,5 @@
 {
-  "name": "Staging",
+  "name": "staging",
   "description": "Add here any environment specific stuff you like.",
   "url": "http://staging.apigarage.com/",
   "api": "api/",
@@ -7,7 +7,7 @@
   "client_secret": "secret_44207Z6q1Lq5e6me0902",
   "database_name": "staging-apigarage",
   "access_token_key": "accessToken_staging",
-  "manifest_file_url": "http://c5b30fedbe0ad3f844a3-e7c0887ca29a9f7347c07a7af5610ad3.r83.cf5.rackcdn.com/manifest.json",
+  "manifest_file_url": "http://c5b30fedbe0ad3f844a3-e7c0887ca29a9f7347c07a7af5610ad3.r83.cf5.rackcdn.com/staging/manifest.json",
   "update_check_interval": 60000,
   "syncTime": 10000
 }

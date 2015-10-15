@@ -22,16 +22,18 @@
     releasesDir = projectDir.dir('./releases');
     manifest = projectDir.read('app/package.json', 'json');
 
-
     // Get the latest version
     return utils.getRemoteManifest().then(function(remoteManifestJSON){
-      manifest.version = utils.getNextVersion(remoteManifestJSON.version, argv.bump);
+      // If version is provided in the command line, use that.
+      if( argv.version ) manifest.version = argv.version;
+      // Otherwise, get it from remote manifest file.
+      else manifest.version = utils.getNextVersion(remoteManifestJSON.version, argv.bump);
       return utils.saveStringToFile(__dirname + '/../build/package.json', JSON.stringify(manifest));
     }).then(function(){
       // Update the app name according to the environment
       if( utils.getEnvName() == 'staging' ){
-        manifest.name = 'stag-' + manifest.name;
-        manifest.productName = 'stag-' + manifest.productName;
+        manifest.name = 'staging-' + manifest.name;
+        manifest.productName = 'staging-' + manifest.productName;
       }
       finalAppDir = tmpDir.cwd(manifest.productName + '.app');
     });
