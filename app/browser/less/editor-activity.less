@@ -1,0 +1,70 @@
+.endpoint-activity {
+  margin: 32px 25px 25px;
+  padding: 0;
+
+  li {
+    list-style: none;
+    position: relative;
+    padding-left: 40px;
+    min-height: 25px;
+    @spacing: 30px;
+    margin-bottom: @spacing;
+
+    // Flow chart vertical line
+    &:before {
+      position: absolute;
+      display: block;
+      content: '';
+      background: #CCC;
+    }
+
+    // Flow chart vertical line
+    &:before {
+      top: -@spacing/2;
+      bottom: -@spacing/2;
+      left: 15px;
+      width: 1px;
+    }
+    &:first-child {
+      &:before {
+        top: 16px;
+      }
+    }
+    &:last-child {
+      &:before {
+        height: 16px;
+      }
+    }
+  }
+}
+.activity-icon {
+  position: absolute;
+  top: -6px;
+  left: -1px;
+  display: inline-block;
+  border: 1px solid #CCC;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  padding: 5px;
+  text-align: center;
+  background: #EEE;
+  margin-right: 10px;
+}
+.activity-flagged {
+  border-color: #F55;
+  color: #FEE;
+  background: #F55;
+}
+.activity-resolved {
+  border-color: #000;
+  color: #FFF;
+  background: #000;
+}
+.activity-comment {
+  padding-top: 8px;
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}

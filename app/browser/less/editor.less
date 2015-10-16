@@ -3,7 +3,7 @@
 // ============================================================================
 .editor {
   padding: 0;
-  background: #FBFBFB;
+  background: #FFF;
   overflow: auto;
 
   // Watermark
@@ -63,11 +63,16 @@
   margin-bottom: -1px;
 
   a {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
     color: @text-color !important;
   }
-  li:not(.active) a:focus {
-    background: inherit !important;
-    border-color: transparent !important;
+  li:not(.active) {
+    a:hover,
+    a:focus {
+      background: inherit !important;
+      border-color: transparent !important;
+    }
   }
 }
 .editor-actions {

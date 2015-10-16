@@ -17,7 +17,9 @@ angular.module('app').controller('EditorCtrl', [
   function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q,
     $focus, RequestUtility, History, Collections, Projects, Editor){
 
+    // ========================================================================
     // Private Functions
+    // ========================================================================
 
     function showRequestHideCancelButtons(){
       $scope.performRequestButton = true;
@@ -61,6 +63,10 @@ angular.module('app').controller('EditorCtrl', [
     }
 
     function init(){
+      $scope.endpointNav = {
+        tab: "Editor"
+      };
+
       $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
 
       $scope.responsePreviewTab = [
@@ -92,7 +98,9 @@ angular.module('app').controller('EditorCtrl', [
       setDefaultEndpoint();
     }
 
-    // END - Private Functions
+    // ========================================================================
+    // Public Functions
+    // ========================================================================
 
     $scope.requestChanged = function(){
       Editor.setEndpoint( $scope.endpoint );
