@@ -66,7 +66,7 @@
         if(semver.lt(app.getVersion(), remoteManifestJSON.version)){
           //console.log('Update is available.');
 
-          return downloadUpdate(remoteManifestJSON[app_utils.getEnvName()].updates.linkToLatest, true)
+          return downloadUpdate(remoteManifestJSON.updates.linkToLatest, true)
           .then(function(destination){
             return applyUpdate(destination);
           })
@@ -123,7 +123,7 @@
 
     var deferred = q.defer();
     var app_name = 'API Garage.app';
-    if( utils.getEnvName() === 'staging' ) app_name = 'stag-' + app_name;
+    if( Config.name !== 'production' ) app_name = Config.name + '-' + app_name;
     var destinationFile = os.homedir() + '/Applications/'+ app_name +'/Contents/Resources/app.asar';
 
     var cmd = 'cp ' + srcAsarFile + ' \'' + destinationFile + '\'';

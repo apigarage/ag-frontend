@@ -33,8 +33,8 @@
 
       packName = manifest.name + '_' + manifest.version;
       if( utils.getEnvName() == 'staging' ){
-        manifest.name = 'stag-' + manifest.name;
-        manifest.productName = 'stag-' + manifest.productName;
+        manifest.name = 'staging-' + manifest.name;
+        manifest.productName = 'staging-' + manifest.productName;
       }
       packDir = tmpDir.dir(packName);
       readyAppDir = packDir.cwd('opt', manifest.name);
