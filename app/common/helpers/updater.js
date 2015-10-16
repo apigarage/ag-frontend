@@ -122,9 +122,7 @@
     //console.log('Applying Update');
 
     var deferred = q.defer();
-    var app_name = 'API Garage.app';
-    if( Config.name !== 'production' ) app_name = Config.name + '-' + app_name;
-    var destinationFile = os.homedir() + '/Applications/'+ app_name +'/Contents/Resources/app.asar';
+    var destinationFile = utils.getAppAsarDirectoryPath() + '/app.update';
 
     var cmd = 'cp ' + srcAsarFile + ' \'' + destinationFile + '\'';
 
