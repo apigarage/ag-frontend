@@ -48,7 +48,7 @@ angular.module('app').controller('ProjectShareCtrl', [
       return ProjectsUser.addProjectUser($rootScope.currentProject.id, data)
         .then(function(response){
           if (_.isEqual(response.status, 200)){
-            return shareProjectUsers();
+            return getProjectUsers();
           }else if(_.isEqual(response.status, 404)){
             $scope.invitedEmailAddress = formController.email;
             $scope.showInviteSent = true;

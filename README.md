@@ -19,7 +19,7 @@ Run `gulp release_update --env=[env] --bump=[bump]` where possible `env` is `dev
 
 Deploying the Full App Flow:
 ----------------------------
-Run `gulp release --env=[env] --bump=[bump] --version=[major.minor.patch]` where possible `env` is `development|staging|production` and possible `bump` is `major|minor|patch`. If `version` is provided, it is used for building the installer (new version).
+Run `gulp release --env=[env] --bump=[bump] --version=[major.minor.patch]` where possible `env` is `development|staging|production` and possible `bump|version` is `major|minor|patch`. If `version` is `major.minor.patch`provided, it is used for building the installer (new version).
 
 * Downloads the latest manifest file as mentioned in package.json
 * Bumps up the version number based on the `bump`
