@@ -1,12 +1,14 @@
 (function(){
   'use strict';
-  var wm = require('../common/helpers/windowsManager.js');
   var app = require('app');
-  var env = require('../vendor/electron_boilerplate/env_config');
+  var originalFs = require('original-fs');
   var Menu = require('menu');
   var MenuItem = require('menu-item');
-  var utils = require('../vendor/app_utils.js');
   var BrowserWindow = require('browser-window');
+
+  var env = require('../vendor/electron_boilerplate/env_config');
+  var wm = require('../common/helpers/windowsManager.js');
+  var utils = require('../vendor/app_utils.js');
 
   module.exports.init = function(){
 
@@ -143,7 +145,7 @@
               };
               var aboutWindow = new BrowserWindow(aboutWindowParams);
               aboutWindow.loadUrl("file://" + __dirname + "/about.html");
-           }
+            }
           }
         ]
       });
@@ -153,7 +155,25 @@
     });
 
     app.on('window-all-closed', function () {
-      app.quit();
+      if(utils.os() === 'osx'){
+        var asarFileDirectoryPath = utils.getAppAsarDirectoryPath();
+        var updatePath = asarFileDirectoryPath + '/app.update';
+
+        // Step 1: Check if apigarage.update is available in the Resources folder
+        return utils.doesFileExists(updatePath)
+          .then(function(){
+            // Step 2: Rename apigarage.update to app.asar
+            return utils.renameFile(updatePath, asarFileDirectoryPath + '/app.asar');
+          })
+          .catch(function(err){
+            console.log(err);
+          })
+          .finally(function(){
+            app.quit();
+          });
+      } else {
+        app.quit();
+      }
     });
 
     require('../common/start.js')();

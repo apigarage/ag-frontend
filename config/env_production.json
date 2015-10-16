@@ -8,6 +8,6 @@
   "database_name": "prod-apigarage",
   "access_token_key": "accessToken",
   "manifest_file_url": "http://c5b30fedbe0ad3f844a3-e7c0887ca29a9f7347c07a7af5610ad3.r83.cf5.rackcdn.com/production/manifest.json",
-  "update_check_interval": 60000,
+  "update_check_interval": 21600000,
   "syncTime": 10000
 }
