@@ -13,7 +13,7 @@
   </li>
   <li>
     <div class="activity-icon">
-      <span class="fa fa-fw fa-comment-o"></span>
+      <span class="fa fa-fw fa-comment-o fa-flip-horizontal"></span>
     </div>
     <div class="activity-content">
       <strong>Anson Kao</strong>
@@ -21,7 +21,7 @@
         commented
         yesterday
       </span>
-      <div class="activity-comment">
+      <div class="activity-comment enable-select">
         <p>
           WOOO! First! 1337
         </p>
@@ -30,7 +30,7 @@
   </li>
   <li>
     <div class="activity-icon">
-      <span class="fa fa-fw fa-comment-o"></span>
+      <span class="fa fa-fw fa-comment-o fa-flip-horizontal"></span>
     </div>
     <div class="activity-content">
       <strong>Chinmay Patel</strong>
@@ -38,7 +38,7 @@
         commented
         3 hours ago
       </span>
-      <div class="activity-comment">
+      <div class="activity-comment enable-select">
         <p>
           Further, setting normalize to true is defined using the
           phrasing "when the buffer atttribute is set", which implies
@@ -55,7 +55,7 @@
   </li>
   <li>
     <div class="activity-icon">
-      <span class="fa fa-fw fa-comment-o"></span>
+      <span class="fa fa-fw fa-comment-o fa-flip-horizontal"></span>
     </div>
     <div class="activity-content">
       <strong>Zad Marbella</strong>
@@ -63,7 +63,7 @@
         commented
         2 hours ago
       </span>
-      <div class="activity-comment">
+      <div class="activity-comment enable-select">
         <p>
           What the hell was that??
         </p>
@@ -84,10 +84,11 @@
     <div class="activity-content">
       <strong>Anson Kao</strong>
       <span class="text-muted">
-        flagged this endpoint
+        marked this endpoint as
+        <span class="label activity-flagged">FLAGGED</span>
         45 minutes ago
       </span>
-      <div class="activity-comment">
+      <div class="activity-comment enable-select">
         <p>
           Guys, should API Garage have likes? Might be too low of a priority for now.
         </p>
@@ -96,7 +97,7 @@
   </li> 
   <li>
     <div class="activity-icon">
-      <span class="fa fa-fw fa-comment-o"></span>
+      <span class="fa fa-fw fa-comment-o fa-flip-horizontal"></span>
     </div>
     <div class="activity-content">
       <strong>Zad Marbella</strong>
@@ -104,7 +105,7 @@
         commented
         15 minutes ago
       </span>
-      <div class="activity-comment">
+      <div class="activity-comment enable-select">
         <p>
           I'm still trying to figure out WHAT THE HELL WAS THAT?!
         </p>
@@ -118,14 +119,31 @@
     <div class="activity-content">
       <strong>Anson Kao</strong>
       <span class="text-muted">
-        resolved this endpoint
-        just now
+        marked this endpoint as
+        <span class="label activity-resolved">RESOLVED</span>
+        a few seconds ago
       </span>
     </div>
   </li>   
   <li>
     <div class="activity-icon">
-      <span class="fa fa-fw fa-commenting-o"></span>
+      <span class="fa fa-fw fa-pencil"></span>
+    </div>
+    <div class="activity-content">
+      <strong>Anson Kao</strong>
+      <span class="text-muted">
+        renamed this endpoint
+        just now
+      </span>
+      <div class="activity-comment enable-select">
+        <code class="text-warning">&minus; Retrieve a list of users</code>
+        <code class="text-success">&plus; Get Logged-in Users</code>
+      </div>
+    </div>
+  </li>
+  <li>
+    <div class="activity-icon">
+      <span class="fa fa-fw fa-commenting-o fa-flip-horizontal"></span>
     </div>
     <div class="activity-content">
       <strong>Anson Kao</strong>
@@ -142,6 +160,7 @@
             Comment
           </button>
           <button type="submit" class="btn btn-primary">
+            <span class="fa fa-fw fa-flag"></span>
             Flag with comment
           </button>
         </p>

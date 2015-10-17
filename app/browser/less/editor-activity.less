@@ -48,7 +48,7 @@
   height: 32px;
   padding: 5px;
   text-align: center;
-  background: #EEE;
+  background: #DDD;
   margin-right: 10px;
 }
 .activity-flagged {
@@ -61,8 +61,22 @@
   color: #FFF;
   background: #000;
 }
+.activity-content {
+  .label {
+    font-weight: normal;
+    font-size: 13px;
+    vertical-align: baseline;
+    padding: 2px 5px;
+  }  
+}
 .activity-comment {
   padding-top: 8px;
+
+  code {
+    display: block;
+    background: none;
+    padding: 0;
+  }
 
   p:last-child {
     margin-bottom: 0;
