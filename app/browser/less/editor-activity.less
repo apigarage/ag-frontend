@@ -1,3 +1,7 @@
+.badge {
+  padding: 3px 6px;
+}
+
 .endpoint-activity {
   margin: 32px 25px 25px;
   padding: 0;
@@ -52,10 +56,10 @@
 }
 .activity-icon {
   position: absolute;
-  top: -6px;
+  top: 0; // -6px lines up nicely when .activity-content is plain text
   left: -1px;
   display: inline-block;
-  border: 1px solid #BBB;
+  border: 1px solid transparent;
   border-radius: 50%;
   width: 32px;
   height: 32px;
@@ -79,6 +83,29 @@
   background: #000;
 }
 .activity-content {
+  position: relative;
+  border: 1px solid #CCC;
+  border-radius: 5px;
+  padding: 6px 9px;
+  background-color: #F8F8F8;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: -13px;
+    border: 6px solid transparent;
+    border-right: 6px solid #CCC;    
+  }
+  &:after {
+    content: "";
+    position: absolute;
+    left: -12px;
+    top: 10px;
+    border: 6px solid transparent;
+    border-right: 6px solid #F8F8F8;    
+  }
+
   .label {
     font-weight: normal;
     font-size: 13px;
@@ -86,8 +113,31 @@
     padding: 2px 5px;
   }
 }
+.activity-content-collapsed {
+  border: none;
+  background-color: transparent;
+  font-size: 16px;
+  color: #AAA;
+
+  &:before,
+  &:after {
+    display: none;
+  }
+
+  a {
+    text-decoration: none !important;
+
+    strong {
+      padding-left: 10px;
+    }
+  }
+}
 .activity-comment {
-  padding-top: 8px;
+  border-top: 1px solid #CCC;
+  margin: 7px -9px -6px;
+  padding: 6px 9px;
+  background-color: #FFF;
+  border-radius: 0 0 5px 5px;
 
   code {
     display: block;
@@ -97,5 +147,12 @@
 
   p:last-child {
     margin-bottom: 0;
+  }
+}
+.activity-comment-form {
+  padding: 9px;
+
+  textarea {
+    resize: vertical;
   }
 }
