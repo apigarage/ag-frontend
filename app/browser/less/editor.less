@@ -22,20 +22,25 @@
   padding: 0 10px 10px 25px;
 
   h1 {
+    font-size: 20px;
     margin: 0;
+
     input {
       font-size: 24px;
       font-weight: 500;
-      min-width: 200px;
+      min-width: 10px;
       max-width: 100%;
       padding: @padding-base-vertical @padding-base-horizontal; // Keep the padding so pu-elastic-input doesn't flicker
       margin-left: -@padding-base-horizontal;                   // Makeup for the padding space with negative margin for left alignment
       background: transparent;
+      text-overflow: ellipsis;
+
 
       &:focus {
         font-size: 24px;
         height: 50px;
         margin-left: 0;
+        display: inline-block;
       }
     }
   }
@@ -73,6 +78,14 @@
       border-color: transparent !important;
     }
   }
+}
+.editor-status {
+  position: relative;
+  top: -5px;
+  font-size: 11px;
+  text-transform: uppercase;
+  padding-bottom: 2px;
+  margin-right: 2px;
 }
 .editor-actions {
   float: right;

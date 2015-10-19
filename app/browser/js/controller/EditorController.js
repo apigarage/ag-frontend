@@ -8,6 +8,7 @@ angular.module('app').controller('EditorCtrl', [
   '$sce',
   '$modal',
   '$q',
+  '$timeout',
   '$focus',
   'RequestUtility',
   'History',
@@ -15,7 +16,7 @@ angular.module('app').controller('EditorCtrl', [
   'Projects',
   'Editor',
   function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q,
-    $focus, RequestUtility, History, Collections, Projects, Editor){
+    $timeout, $focus, RequestUtility, History, Collections, Projects, Editor){
 
     // ========================================================================
     // Private Functions
@@ -457,6 +458,20 @@ angular.module('app').controller('EditorCtrl', [
         Editor.resetRequestChangedFlag();
         $scope.requestChangedFlag = false;
       });
+    };
+
+    $scope.showCommentForm = function(){
+      var delay = 0;
+      if( $scope.endpointNav.tab != 'Activity' )
+      {
+        $scope.endpointNav.tab = 'Activity';
+        delay = 200;
+      }
+
+      // Let the tab change sink in for a bit before sliding down.
+      $timeout(function(){
+        angular.element('.editor').scrollTopAnimated(1000000,2000,function(t){return t*t*t*t;});
+      }, delay);
     };
 
     init();

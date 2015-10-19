@@ -1,12 +1,12 @@
 //@btn-font-weight: 500;
 
-@btn-default-color:              #888;
-@btn-default-bg:                 #EEE;
-@btn-default-border:             #CCC;
+@btn-default-color:              #555;
+@btn-default-bg:                 #DDD;
+@btn-default-border:             #AAA;
 
 @btn-primary-color:              @brand-secondary;
 @btn-primary-bg:                 @brand-primary;
-@btn-primary-border:             darken(@brand-primary, 5%);
+@btn-primary-border:             darken(@brand-primary, 20%);
 
 @btn-success-color:              darken(@btn-success-bg, 30%);
 @btn-success-border:             darken(@btn-success-bg, 30%);
@@ -23,6 +23,14 @@
 .btn {
   //box-shadow: inset 0 7px 1px -6px rgba(255,255,255,0.25), 0 2px 6px -3px rgba(0,0,0,0.125);
   outline: none !important;
+}
+
+.btn-default {
+  &:disabled,
+  &.disabled {
+    border-color: #BBB;
+    color: #BBB;
+  }
 }
 
 .btn-link {
