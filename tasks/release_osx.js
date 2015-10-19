@@ -3,10 +3,12 @@
   'use strict';
 
   var Q = require('q');
+  var os = require('os');
   var gulpUtil = require('gulp-util');
   var jetpack = require('fs-jetpack');
   var asar = require('asar');
   var utils = require('./utils');
+  var argv = require('yargs').argv;
 
   var projectDir;
   var releasesDir;
@@ -19,13 +21,23 @@
     tmpDir = projectDir.dir('./tmp', { empty: true });
     releasesDir = projectDir.dir('./releases');
     manifest = projectDir.read('app/package.json', 'json');
-    if( utils.getEnvName() == 'staging' ){
-       manifest.name = 'stag-' + manifest.name;
-       manifest.productName = 'stag-' + manifest.productName;
-    }
-    finalAppDir = tmpDir.cwd(manifest.productName + '.app');
 
-    return Q(); // jshint ignore:line
+    // Get the latest version
+    return utils.getRemoteManifest().then(function(remoteManifestJSON){
+      // If version is provided in the command line, use that.
+      if( argv.version ) manifest.version = argv.version;
+      // Otherwise, get it from remote manifest file.
+      else manifest.version = utils.getNextVersion(remoteManifestJSON.version, argv.bump);
+      return utils.saveStringToFile(__dirname + '/../build/package.json', JSON.stringify(manifest));
+    }).then(function(){
+      // Update the app name according to the environment
+      if( utils.getEnvName() == 'staging' ){
+        manifest.name = 'staging-' + manifest.name;
+        manifest.productName = 'staging-' + manifest.productName;
+      }
+      finalAppDir = tmpDir.cwd(manifest.productName + '.app');
+    });
+
   };
 
   var copyRuntime = function () {
@@ -71,11 +83,13 @@
 
     var appdmg = require('appdmg');
     var dmgName = manifest.name + '_' + manifest.version + '.dmg';
+    var installationPath = os.homedir() + "/Applications";
 
     // Prepare appdmg config
     var dmgManifest = projectDir.read('resources/osx/appdmg.json');
     dmgManifest = utils.replace(dmgManifest, {
       productName: manifest.productName,
+      installationPath: installationPath,
       appPath: finalAppDir.path(),
       dmgIcon: projectDir.path("resources/osx/dmg-icon.icns"),
       dmgBackground: projectDir.path("resources/osx/dmg-background.png")

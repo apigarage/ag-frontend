@@ -8,6 +8,7 @@
   var jetpack = require('fs-jetpack');
   var asar = require('asar');
   var utils = require('./utils');
+  var argv = require('yargs').argv;
 
   var projectDir;
   var releasesDir;
@@ -22,15 +23,27 @@
     tmpDir = projectDir.dir('./tmp', { empty: true });
     releasesDir = projectDir.dir('./releases');
     manifest = projectDir.read('app/package.json', 'json');
-    packName = manifest.name + '_' + manifest.version;
-    if( utils.getEnvName() == 'staging' ){
-       manifest.name = 'stag-' + manifest.name;
-       manifest.productName = 'stag-' + manifest.productName;
-    }
-    packDir = tmpDir.dir(packName);
-    readyAppDir = packDir.cwd('opt', manifest.name);
 
-    return Q(); // jshint ignore:line
+    // Get the latest version
+    // This code needs to be tested on Ubuntu.
+    return utils.getRemoteManifest().then(function(remoteManifestJSON){
+      // If version is provided in the command line, use that.
+      if( argv.version ) manifest.version = argv.version;
+      // Otherwise, get it from remote manifest file.
+      else manifest.version = utils.getNextVersion(remoteManifestJSON.version, argv.bump);
+      return utils.saveStringToFile(__dirname + '/../build/package.json', JSON.stringify(manifest));
+    }).then(function(){
+
+      packName = manifest.name + '_' + manifest.version;
+      console.log('environment is ', utils.getEnvName());
+      if( utils.getEnvName() == 'staging' ){
+        manifest.name = 'staging-' + manifest.name;
+        manifest.productName = 'staging-' + manifest.productName;
+      }
+      packDir = tmpDir.dir(packName);
+      readyAppDir = packDir.cwd('opt', manifest.name);
+    });
+
   };
 
   var copyRuntime = function () {

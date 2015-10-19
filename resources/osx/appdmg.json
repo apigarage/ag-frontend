@@ -4,7 +4,7 @@
   "background": "{{dmgBackground}}",
   "icon-size": 128,
   "contents": [
-    { "x": 410, "y": 220, "type": "link", "path": "/Applications" },
+    { "x": 410, "y": 220, "type": "link", "path": "{{installationPath}}" },
     { "x": 130, "y": 220, "type": "file", "path": "{{appPath}}" }
   ]
 }

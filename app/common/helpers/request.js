@@ -17,7 +17,7 @@ Examples of options:
     var deferred = q.defer();
 
     var request = setOptions(options);
-    request.end(function(response){
+    request.complete(function(response){
       deferred.resolve(response);
     });
     return deferred.promise;

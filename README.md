@@ -3,12 +3,34 @@ API Garage
 ============
 We will be the best platform for APIs.
 
+Proposed Deployment Flow
+========================
+
+Deploying the Update Flow:
+--------------------------
+Run `gulp release_update --env=[env] --bump=[bump]` where possible `env` is `development|staging|production` and possible `bump` is `major|minor|patch`
+
+* Copies everything to `build` folder
+* Downloads the latest manifest file as mentioned in package.json
+* Bumps up the version number based on the `bump`
+* Creates app-[major.minor.patch].asar and uploads file on Rackspace->CloudFiles->containers->builds->`env`->updates
+* If `env==production`, update the version number on Rackspace->CloudFiles->containers->builds->manifest.json
+
+
+Deploying the Full App Flow:
+----------------------------
+Run `gulp release --env=[env] --bump=[bump] --version=[major.minor.patch]` where possible `env` is `development|staging|production` and possible `bump|version` is `major|minor|patch`. If `version` is `major.minor.patch`provided, it is used for building the installer (new version).
+
+* Downloads the latest manifest file as mentioned in package.json
+* Bumps up the version number based on the `bump`
+* Creates the installer
+
 Testing Strategies
 ==================
 Some Guidelines (and Rules)
 ---------------------------
-# Editor Controller MUST be fully tested. It's the core piece of the company, and cannot be broken.
-# Feel free to not write unit test, if the feature is isolated, and does not have complex logic. For example: Item Rename. Item delete. If any team member has strong position in favor of writing tes
+* Editor Controller MUST be fully tested. It's the core piece of the company, and cannot be broken.
+* Feel free to not write unit test, if the feature is isolated, and does not have complex logic. For example: Item Rename. Item delete. If any team member has strong position in favor of writing tes
 
 General CRUD
 ------------
