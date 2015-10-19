@@ -12,6 +12,7 @@
     'angular-ladda',              // Loading disabled + spinner icon for buttons
     'puElasticInput',             // Input element grows as you type (grep codebase for pu-elastic-input)
     'AGContentEditable',          // Content Editable Directive
+    'AGEndpointActivity',         // Editor Activity flagged/resolved/comments
     'ngLodash',                   // Javascript Utility Library (very similar to underscore)
     'angularFileUpload',          // File Upload
     'duScroll'                    // Smooth scrolling to targets
