@@ -8,6 +8,7 @@ angular.module('app').controller('EditorCtrl', [
   '$sce',
   '$modal',
   '$q',
+  '$timeout',
   '$focus',
   'RequestUtility',
   'History',
@@ -15,9 +16,11 @@ angular.module('app').controller('EditorCtrl', [
   'Projects',
   'Editor',
   function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q,
-    $focus, RequestUtility, History, Collections, Projects, Editor){
+    $timeout, $focus, RequestUtility, History, Collections, Projects, Editor){
 
+    // ========================================================================
     // Private Functions
+    // ========================================================================
 
     function showRequestHideCancelButtons(){
       $scope.performRequestButton = true;
@@ -61,6 +64,10 @@ angular.module('app').controller('EditorCtrl', [
     }
 
     function init(){
+      $scope.endpointNav = {
+        tab: "Editor"
+      };
+
       $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
 
       $scope.responsePreviewTab = [
@@ -92,7 +99,9 @@ angular.module('app').controller('EditorCtrl', [
       setDefaultEndpoint();
     }
 
-    // END - Private Functions
+    // ========================================================================
+    // Public Functions
+    // ========================================================================
 
     $scope.requestChanged = function(){
       Editor.setEndpoint( $scope.endpoint );
@@ -449,6 +458,20 @@ angular.module('app').controller('EditorCtrl', [
         Editor.resetRequestChangedFlag();
         $scope.requestChangedFlag = false;
       });
+    };
+
+    $scope.showCommentForm = function(){
+      var delay = 0;
+      if( $scope.endpointNav.tab != 'Activity' )
+      {
+        $scope.endpointNav.tab = 'Activity';
+        delay = 200;
+      }
+
+      // Let the tab change sink in for a bit before sliding down.
+      $timeout(function(){
+        angular.element('.editor').scrollTopAnimated(1000000,2000,function(t){return t*t*t*t;});
+      }, delay);
     };
 
     init();

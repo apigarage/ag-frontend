@@ -1,0 +1,72 @@
+<li>
+  <div class="activity-icon" ng-class="iconBadge">
+    <span class="fa fa-fw" ng-class="iconClasses"></span>
+  </div>
+  <div class="activity-content" ng-if="!collapsed">
+    <span class="activity-menu fa fa-chevron-down"
+          bs-dropdown data-placement="bottom-right" data-container=".editor" data-template="activity-menu"
+          ng-if="showMenu">
+    </span>
+    <script type="text/ng-template" id="activity-menu">
+      <ul class="dropdown-menu">
+        <li>
+          <a ng-click="saveCurrentRequest()">
+            <span class="fa fa-fw fa-pencil"></span>
+            Edit
+          </a>
+        </li>
+        <li>
+          <a ng-click="saveAsNewCurrentRequest()">
+            <span class="fa fa-fw fa-trash-o"></span>
+            Delete
+          </a>
+        </li>
+      </ul>
+    </script>
+    <strong>{{editorActivityUser}}</strong>
+    <span class="text-muted">
+      <span ng-bind-html="verb"></span>
+      <span ng-bind-html="editorActivityTime"></span>
+    </span>
+    <div class="activity-comment"
+         ng-class="editorActivityType == 'form' ? 'activity-comment-form' : 'enable-select'"
+         ng-if="hasTransclusion || editorActivityType == 'form'">
+      <div ng-if="editorActivityType != 'form'" ng-transclude></div>
+      <div ng-if="editorActivityType == 'form'">
+        <p>
+          <textarea class="form-control"
+                    ng-model="newComment"
+                    placeholder="Write a comment..."></textarea>
+        </p>
+        <p class="text-right">
+          <button type="submit" class="btn btn-default"
+                  ng-click="endpoint.flag = !endpoint.flag;">
+            <span class="fa fa-fw" ng-class="endpoint.flag ? 'fa-check' : 'fa-flag-o'"></span>
+            {{ endpoint.flag ? 'Resolve' : 'Flag' }} {{ newComment ? 'with comment' : '' }}
+          </button>
+          <button type="submit" class="btn btn-primary">
+            Comment
+          </button>
+        </p>
+      </div>
+      <!--
+      <p>
+        <span class="text-muted">
+          3 likes
+        </span>
+        &middot;
+        <a href="">Like</a>
+      </p>
+      -->
+    </div>
+  </div>
+  <div class="activity-content activity-content-collapsed" ng-if="collapsed">
+    <a href="">
+      {{editorActivityNumCollapsed}} more items have been collapsed.
+      <strong>
+        <span class="fa fa-plus-square"></span>
+        EXPAND
+      </strong>
+    </a>
+  </div>
+</li>
