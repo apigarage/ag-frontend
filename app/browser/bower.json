@@ -32,7 +32,8 @@
     "angular-motion": "0.4.2",
     "ng-lodash": "~0.2.3",
     "angular-mocks":"1.4.3",
-    "angular-file-upload": "2.1.4"
+    "angular-file-upload": "2.1.4",
+    "angulartics-mixpanel": "0.1.1"
   },
   "resolutions": {
     "jquery": "2.1.4",

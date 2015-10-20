@@ -14,8 +14,9 @@ angular.module('app').controller('EditorCtrl', [
   'Collections',
   'Projects',
   'Editor',
+  'Analytics',
   function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q,
-    $focus, RequestUtility, History, Collections, Projects, Editor){
+    $focus, RequestUtility, History, Collections, Projects, Editor, Analytics){
 
     // Private Functions
 
@@ -48,13 +49,13 @@ angular.module('app').controller('EditorCtrl', [
       $scope.response = null;
     }
 
-    function loadRequest(item, loadOnly){
+    function loadRequest(item, loadOnly, source){
       if(_.isUndefined(loadOnly)) loadOnly = true;
 
       $scope.loadRequestToScope(item);
 
       if(!loadOnly){
-        $scope.performRequest();
+        $scope.performRequest(source);
       }
 
       return $q.resolve();
@@ -172,6 +173,12 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     $scope.setEnvironment = function(environment){
+      // Analytics track environment used private v. shared
+      Analytics.eventTrack('Set Environment',
+        { 'from': 'EditorCtrl',
+          'private': environment.private
+        }
+      );
       $rootScope.currentEnvironment = environment;
     };
 
@@ -206,7 +213,10 @@ angular.module('app').controller('EditorCtrl', [
       $scope.endpoint.requestHeaders.splice(position, 1);
     };
 
-    $scope.performRequest = function(){
+    $scope.performRequest = function(from){
+      // Number of requests made
+      Analytics.eventTrack('Make Request', {'from': from});
+
       $scope.loading = true;
       if( _.isEmpty($scope.endpoint.requestUrl) ) return;
       resetResponse();
@@ -402,7 +412,7 @@ angular.module('app').controller('EditorCtrl', [
             Editor.resetRequestChangedFlag();
             $scope.requestChangedFlag = false;
           }
-          return loadRequest(item, loadOnly)
+          return loadRequest(item, loadOnly, source)
             .then(function(){
               if(done) done();
             });
@@ -434,6 +444,8 @@ angular.module('app').controller('EditorCtrl', [
      * Saves the request from scope to DB.
      */
     $scope.saveCurrentRequest = function(){
+      // times "save" is used
+      Analytics.eventTrack('Save Request', {'from': 'EditorCtrl'});
       return Editor.saveOrUpdate().then(function(){
         // Rest Endpoint Flags and Editor Controller button to be disabled
         Editor.resetRequestChangedFlag();
@@ -442,6 +454,8 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     $scope.saveAsNewCurrentRequest = function(){
+      // times "save as" is used
+      Analytics.eventTrack('Save As New Request', {'from': 'EditorCtrl'});
       // Set current enpoint uuid to be undefined to create new save instance
       $scope.endpoint.uuid = undefined;
       return Editor.saveOrUpdate().then(function(){

@@ -13,11 +13,32 @@
     'puElasticInput',             // Input element grows as you type (grep codebase for pu-elastic-input)
     'AGContentEditable',          // Content Editable Directive
     'ngLodash',                    // Javascript Utility Library (very similar to underscore)
-    'angularFileUpload'
+    'angularFileUpload',
+    'angulartics',
+    'angulartics.mixpanel'  
   ]);
 
-  app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$compileProvider', '$filterProvider', '$provide', '$tooltipProvider', '$dropdownProvider',
-  function ($stateProvider,   $urlRouterProvider,   $controllerProvider,   $compileProvider,   $filterProvider,   $provide,   $tooltipProvider,   $dropdownProvider) {
+  app.config(['$stateProvider',
+    '$urlRouterProvider',
+    '$controllerProvider',
+    '$compileProvider',
+    '$filterProvider',
+    '$provide',
+    '$tooltipProvider',
+    '$dropdownProvider',
+    '$analyticsProvider',
+  function ($stateProvider,
+    $urlRouterProvider,
+    $controllerProvider,
+    $compileProvider,
+    $filterProvider,
+    $provide,
+    $tooltipProvider,
+    $dropdownProvider,
+    $analyticsProvider) {
+
+    console.log('$analyticsProvider',$analyticsProvider);
+    $analyticsProvider.virtualPageviews(false);
 
     var defaultView = '/authentication';
 

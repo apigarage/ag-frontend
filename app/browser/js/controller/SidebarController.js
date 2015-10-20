@@ -10,7 +10,8 @@ angular.module('app')
   '$q',
   'lodash',
   'Projects',
-  function ($scope, $rootScope, $window, $modal, $q, _, Projects){
+  'Analytics',
+  function ($scope, $rootScope, $window, $modal, $q, _, Projects, Analytics){
 
     var copyOfCollection = {};
     $scope.searchResultsCollection = null;
@@ -193,6 +194,10 @@ angular.module('app')
         .then(function(response){
           // TODO: Error handling
           // check to see if  currentCollction is selected collection
+
+          // time a collection is deleted
+          Analytics.eventTrack('Delete Collection', {'from': 'SidebarCtrl'});
+
           if($rootScope.currentCollection){
             if($rootScope.currentCollection.id == currentCollection.id){
               $rootScope.$broadcast('loadPerformRequest', {}, true, "SidebarCtrl");
@@ -326,6 +331,10 @@ angular.module('app')
           // TODO: Error handling
           // If currentItem is selected and the item being
           // deleted is the same clear editor
+
+          // time a request is deleted
+          Analytics.eventTrack('Delete Request', {'from': 'SidebarCtrl'});
+          
           if($rootScope.currentItem && $rootScope.currentItem.uuid == currentItem.uuid){
             $rootScope.$broadcast('loadPerformRequest', {}, true, "SidebarCtrl");
           }
