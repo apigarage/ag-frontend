@@ -101,7 +101,7 @@
           <a href="" ng-click="endpointNav.tab = 'Activity'">
             <span class="fa fa-comments"></span>
             Activity
-            <span class="badge">36</span>
+            <!-- <span class="badge">36</span> -->
           </a>
         </li>
       </ul>
@@ -115,5 +115,6 @@
     -->
     <div ng-include="'html/editor-request.html'"  ng-show="endpointNav.tab == 'Editor'"></div>
     <div ng-include="'html/editor-response.html'" ng-show="endpointNav.tab == 'Editor'"></div>
-    <div ng-include="'html/editor-activity.html'" ng-show="endpointNav.tab == 'Activity'"></div>
+    <!-- <div ng-include="'html/editor-activity.html'" ng-show="endpointNav.tab == 'Activity'"></div> -->
+    <editor-activities ng-show="endpointNav.tab == 'Activity'"></editor-activities>
   </div>

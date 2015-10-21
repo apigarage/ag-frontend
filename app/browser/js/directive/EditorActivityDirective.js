@@ -57,7 +57,7 @@ angular.module('AGEndpointActivity', [])
           break;
         case "form":
           $scope.iconClasses = 'fa-commenting-o fa-flip-horizontal';
-          $scope.verb = "&middot; New comment"
+          $scope.verb = "&middot; New comment";
           break;
       }
 
