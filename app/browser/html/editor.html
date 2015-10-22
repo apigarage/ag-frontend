@@ -116,5 +116,6 @@
     <div ng-include="'html/editor-request.html'"  ng-show="endpointNav.tab == 'Editor'"></div>
     <div ng-include="'html/editor-response.html'" ng-show="endpointNav.tab == 'Editor'"></div>
     <!-- <div ng-include="'html/editor-activity.html'" ng-show="endpointNav.tab == 'Activity'"></div> -->
-    <editor-activities ng-show="endpointNav.tab == 'Activity'"></editor-activities>
+    <editor-activities parent-type="item" parent-id="endpoint.uuid"
+      ng-show="endpoint.uuid && endpointNav.tab == 'Activity'" />
   </div>
