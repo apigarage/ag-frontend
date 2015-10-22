@@ -12,10 +12,10 @@
     'angular-ladda',              // Loading disabled + spinner icon for buttons
     'puElasticInput',             // Input element grows as you type (grep codebase for pu-elastic-input)
     'AGContentEditable',          // Content Editable Directive
-    'ngLodash',                    // Javascript Utility Library (very similar to underscore)
-    'angularFileUpload',
-    'angulartics',
-    'angulartics.mixpanel'  
+    'ngLodash',                   // Javascript Utility Library (very similar to underscore)
+    'angularFileUpload',          // Angular file uploader
+    'angulartics',                // Angular Analytics
+    'angulartics.mixpanel'        // Angular Analytics Mixpanel plugin
   ]);
 
   app.config(['$stateProvider',
@@ -36,8 +36,8 @@
     $tooltipProvider,
     $dropdownProvider,
     $analyticsProvider) {
-
-    console.log('$analyticsProvider',$analyticsProvider);
+      
+    // Analytics prevent virtual page tracking
     $analyticsProvider.virtualPageviews(false);
 
     var defaultView = '/authentication';

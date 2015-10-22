@@ -6,10 +6,46 @@ angular.module('app')
     function($injector, Config){
 
     var $analytics = $injector.get('$analytics');
+    var ipc = $injector.get('ipc');
+    var startSessionTime;
+    var stopSessionTime;
+    var sessionOver;
+
+    ipc.on('stop-session',function(){
+      stopSessionTimer();
+      sessionOver = true;
+    });
+
+    ipc.on('start-session',function(){
+      startSessionTimer();
+    });
+
+
+    function startSessionTimer(){
+      if (Config.name == "production"){
+        if(sessionOver === undefined || sessionOver){
+          startSessionTime = Date.now();
+          sessionOver = false;
+        }
+      }else{
+        console.log('startTime', Date.now());
+      }
+    }
+
+    function stopSessionTimer(){
+      stopSessionTime = Date.now() - startSessionTime ;
+      if (Config.name == "production"){
+        $analytics.eventTrack("Session", {'$duration': stopSessionTime});
+      }else{
+        ipc.send('stop-session-timer');
+        console.log('stopTime', Date.now());
+      }
+    }
 
     // identify user
     var setUserID = function(userID){
       if (Config.name == "production"){
+        console.log('analytics', 'production');
         $analytics.setUsername(userID);
         $analytics.setUserProperties({ '$id' : userID });
       }else{
@@ -40,9 +76,19 @@ angular.module('app')
       }
     };
 
+    var startSession = function(){
+      startSessionTimer();
+    }
+
+    var stopSession = function(){
+      stopSessionTimer();
+    }
+
     return{
       setUserID : setUserID,
       pageTrack : pageTrack,
-      eventTrack : eventTrack
+      eventTrack : eventTrack,
+      startSession : startSession,
+      stopSession : stopSession
     };
   }]);

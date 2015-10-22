@@ -10,8 +10,9 @@
   var wm = require('../common/helpers/windowsManager.js');
   var utils = require('../vendor/app_utils.js');
 
-  module.exports.init = function(){
+  var ipc = require('ipc');
 
+  module.exports.init = function(){
     app.on('ready', function () {
       var mainWindow = wm.createWindow({
         'width': 1000,
@@ -128,6 +129,7 @@
             ]
           });
         }
+
       }
 
       template.push({
@@ -152,6 +154,38 @@
 
       var menu = Menu.buildFromTemplate(template);
       Menu.setApplicationMenu(menu);
+
+      // Analytics Session Management Start
+      var sessionTimer;
+      var timeout;
+      var sessionOver = false;
+
+      if (env.name === 'production') {
+        timeout = 1000 * 60 * 30;
+      }else{
+        timeout = 5000;
+      }
+
+      mainWindow.on('blur', function(){
+        sessionTimer = setTimeout(function(){
+          sessionOver = true;
+        }, timeout);
+      });
+
+      mainWindow.on('focus', function(){
+        clearTimeout(sessionTimer);
+        if(sessionOver) {
+          wm.sendToAllWindows('start-session');
+          sessionOver = false;
+        }
+      });
+
+      mainWindow.on('close', function(){
+        clearTimeout(sessionTimer);
+        wm.sendToAllWindows('stop-session');
+      });
+      // Analytics Session Management End
+
     });
 
     app.on('window-all-closed', function () {
@@ -178,4 +212,5 @@
 
     require('../common/start.js')();
   };
+
 })();

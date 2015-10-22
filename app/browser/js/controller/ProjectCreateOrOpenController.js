@@ -9,7 +9,10 @@ angular.module('app').controller('ProjectCreateOrOpenCtrl', [
   'Projects',
   'PostmanImport',
   'Auth',
-  function ($scope, $rootScope, $modal, $q, $state, $window, _, Projects, PostmanImport, Auth){
+  'Analytics',
+  'Users',
+  function ($scope, $rootScope, $modal, $q, $state, $window, _, Projects,
+    PostmanImport, Auth, Analytics, Users){
 
   function init(){
     $scope.showCreateProject = false;
@@ -27,6 +30,7 @@ angular.module('app').controller('ProjectCreateOrOpenCtrl', [
     // TODO: handling of unauthorized or connection issues
     // as discussed this should be covered in the ApiRequest
     // portion of the code
+
     return Projects.getAll()
       .then(function(projects){
         if(_.isEmpty(projects)){
@@ -41,6 +45,12 @@ angular.module('app').controller('ProjectCreateOrOpenCtrl', [
           $scope.showProjectListLink = false;
           $scope.showImportPostmanProject = false;
         }
+        // Analytics identify USER
+        Users.getCurrentUserInformation().then(function(user){
+          Analytics.setUserID(user.id);
+        });
+        // Analytics start user session
+        Analytics.startSession();
       });
   }
 
