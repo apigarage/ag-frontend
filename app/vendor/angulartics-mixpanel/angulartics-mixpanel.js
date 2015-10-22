@@ -62,7 +62,7 @@ angular.module('angulartics.mixpanel', ['angulartics'])
       mixpanel.time_event(event_name);
     };
   });
-  // APIGARAGE_CUSTOM_CODE ED
+  // APIGARAGE_CUSTOM_CODE END
 
 }]);
 
