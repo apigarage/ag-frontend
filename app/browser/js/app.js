@@ -12,11 +12,13 @@
     'angular-ladda',              // Loading disabled + spinner icon for buttons
     'puElasticInput',             // Input element grows as you type (grep codebase for pu-elastic-input)
     'AGContentEditable',          // Content Editable Directive
-    'duScroll',                    // Smooth scrolling to targets
+    'AGEndpointActivity',         // Editor Activity flagged/resolved/comments
     'ngLodash',                   // Javascript Utility Library (very similar to underscore)
     'angularFileUpload',          // Angular file uploader
+    'duScroll',                   // Smooth scrolling to targets
     'angulartics',                // Angular Analytics
     'angulartics.mixpanel'        // Angular Analytics Mixpanel plugin
+
   ]);
 
   app.config(['$stateProvider',

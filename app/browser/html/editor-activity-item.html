@@ -10,13 +10,13 @@
     <script type="text/ng-template" id="activity-menu">
       <ul class="dropdown-menu">
         <li>
-          <a ng-click="saveCurrentRequest()">
+          <a ng-click="editComment()">
             <span class="fa fa-fw fa-pencil"></span>
             Edit
           </a>
         </li>
         <li>
-          <a ng-click="saveAsNewCurrentRequest()">
+          <a ng-click="deleteComment()">
             <span class="fa fa-fw fa-trash-o"></span>
             Delete
           </a>
@@ -28,27 +28,35 @@
       <span ng-bind-html="verb"></span>
       <span ng-bind-html="editorActivityTime"></span>
     </span>
+
     <div class="activity-comment"
          ng-class="editorActivityType == 'form' ? 'activity-comment-form' : 'enable-select'"
          ng-if="hasTransclusion || editorActivityType == 'form'">
-      <div ng-if="editorActivityType != 'form'" ng-transclude></div>
-      <div ng-if="editorActivityType == 'form'">
-        <p>
-          <textarea class="form-control"
-                    ng-model="newComment"
-                    placeholder="Write a comment..."></textarea>
-        </p>
-        <p class="text-right">
-          <button type="submit" class="btn btn-default"
-                  ng-click="endpoint.flag = !endpoint.flag;">
-            <span class="fa fa-fw" ng-class="endpoint.flag ? 'fa-check' : 'fa-flag-o'"></span>
-            {{ endpoint.flag ? 'Resolve' : 'Flag' }} {{ newComment ? 'with comment' : '' }}
-          </button>
-          <button type="submit" class="btn btn-primary">
-            Comment
-          </button>
-        </p>
-      </div>
+      <form name="commentForm">
+
+        <div ng-if="editorActivityType != 'form'" ng-transclude></div>
+        <div ng-if="editorActivityType == 'form'">
+          <p>
+            <textarea name="commentDescription"
+                      class="form-control"
+                      data-ng-model="commentDescription"
+                      placeholder="Write a comment...">
+            </textarea>
+
+          </p>
+          <p class="text-right">
+            <button name="CommentFlag"
+                    type="submit" class="btn btn-default"
+                    ng-click="endpoint.flag = !endpoint.flag; commentForm.isResolved = endpoint.flag;">
+              <span class="fa fa-fw" ng-class="endpoint.flag ? 'fa-check' : 'fa-flag-o'"></span>
+              {{ endpoint.flag ? 'Resolve' : 'Flag' }} {{ CommentDescription ? 'with comment' : '' }}
+            </button>
+            <button type="submit" class="btn btn-primary" ng-click="submitComment(commentForm, editorActivityEndpoint)">
+              Comment
+            </button>
+          </p>
+        </div>
+      </form>
       <!--
       <p>
         <span class="text-muted">

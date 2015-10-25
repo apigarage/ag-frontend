@@ -9,6 +9,7 @@ angular.module('app').controller('EditorCtrl', [
   '$modal',
   '$q',
   '$focus',
+  '$timeout',
   'RequestUtility',
   'History',
   'Collections',
@@ -17,8 +18,8 @@ angular.module('app').controller('EditorCtrl', [
   'Activities',
   'Analytics',
   function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q,
-    $focus, RequestUtility, History, Collections, Projects, Editor, Activities,
-    Analytics){
+    $focus, $timeout, RequestUtility, History, Collections, Projects, Editor,
+    Activities, Analytics){
     // ========================================================================
     // Private Functions
     // ========================================================================

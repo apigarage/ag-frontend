@@ -48,6 +48,8 @@ angular.module('app').controller('ProjectCreateOrOpenCtrl', [
         // Analytics identify USER
         Users.getCurrentUserInformation().then(function(user){
           Analytics.setUserID(user.id);
+          // store current user to localStorage
+          localStorage.setItem("currentUser", JSON.stringify(user));
         });
         // Analytics start user session
         Analytics.startSession();

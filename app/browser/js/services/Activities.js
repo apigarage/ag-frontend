@@ -9,22 +9,36 @@ angular.module('app')
     'lodash',
     'ApiRequest',
     'Config',
-    'Items',
-    function($rootScope, $q, _, ApiRequest, Config, Items){
+    function($rootScope, $q, _, ApiRequest, Config){
 
       var itemsEndpoint = 'items/';
       var activitiesEndpoint = 'activities';
 
       var Activity = {};
+
       /*
-      * @params: key value pair of params
+      * Activities - read comments related to an item
+      * @item_id: uuid of the item
       */
-      Activity.getAll = function(item_id, params){
+      Activity.getAll = function(item_id){
+        // {{server-url}}/api/items/{{local-endpoint-uuid}}/activities
         var url = Config.url + Config.api + itemsEndpoint + item_id + '/' + activitiesEndpoint;
-        if(params) url += '?' + $.param(params) // jshint ignore:line
+        //if(params) url += '?' + $.param(params) // jshint ignore:line
         var options = {
           'method': 'GET',
           'url': url
+        };
+        return ApiRequest.send(options);
+      };
+
+      /*
+      * @data: object fields and values
+      */
+      Activity.create = function(item_id, data){
+        var options = {
+          'method': 'POST',
+          'url': Config.url + Config.api + itemsEndpoint + item_id + '/' + activitiesEndpoint,
+          'data': data
         };
         return ApiRequest.send(options);
       };
@@ -57,17 +71,7 @@ angular.module('app')
         return ApiRequest.send(options);
       };
 
-      /*
-      * @data: object fields and values
-      */
-      Activity.create = function(item_id, data){
-        var options = {
-          'method': 'POST',
-          'url': Config.url + Config.api + itemsEndpoint + item_id + '/' + activitiesEndpoint,
-          'data': data
-        };
-        return ApiRequest.send(options);
-      };
+
 
       /*
       * @id: project id

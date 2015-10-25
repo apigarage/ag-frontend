@@ -9,7 +9,7 @@ angular.module('AGEndpointActivity', [])
 // 5. liEditorActivity = "edit"     -> Edit Endpoint
 // 6. liEditorActivity = "collapse" -> Collapsed items
 // 7. liEditorActivity = "form"     -> Form for typing new Comments
-.directive('editorActivityItem', [function () {
+.directive('editorActivityItem', ['Activities', '$rootScope', function (activities, $rootScope) {
   return {
     restrict: 'EA',
     templateUrl: 'html/editor-activity-item.html',
@@ -21,9 +21,10 @@ angular.module('AGEndpointActivity', [])
       editorActivityTime: "=",
       editorActivityUser: "=",
       editorActivityUid: "=",
-      editorActivityEndpoint: '=endpoint'
+      editorActivityEndpoint: "="
     },
     link: function ($scope, $elem, $attr, $ctrl, $transclude) {
+      console.log('endpoint',$scope.editorActivityEndpoint);
       switch( $scope.editorActivityType )
       {
         case "create":
@@ -58,6 +59,7 @@ angular.module('AGEndpointActivity', [])
         case "form":
           $scope.iconClasses = 'fa-commenting-o fa-flip-horizontal';
           $scope.verb = "&middot; New comment";
+          $scope.endpoint = $scope.editorActivityEndpoint;
           break;
       }
 
@@ -66,6 +68,56 @@ angular.module('AGEndpointActivity', [])
           $scope.hasTransclusion = true;
         }
       });
+
+      $scope.submitComment = function(commentForm, uuid){
+        if(commentForm.isResolved === undefined) commentForm.isResolved = false;
+
+        var description;
+        if(commentForm.commentDescription.$modelValue === undefined)
+        {
+          description = '';
+        }else{
+          description = commentForm.commentDescription.$modelValue;
+        }
+
+        var data;
+        if(!commentForm.isResolved){
+          data = {
+            'type' : 'flag',
+            'description' : description
+          };
+        }else{
+          data = {
+            'type' : 'resolve',
+            'description' : description
+          };
+
+        }
+
+        console.log('create a comment', uuid, data);
+        return activities.create(uuid, data).then(function(item){
+          // handle error?
+        }).finally(function(data){
+          $rootScope.$broadcast('loadActivities');
+        });
+      };
+
+      $scope.editComment = function(data){
+        console.log('scope', $scope);
+        // hide edit option
+        $scope.showMenu = false;
+        $scope.editorActivityType = "form";
+
+        // Need a way to cancel an Edit
+
+        console.log('editComment', data);
+      };
+
+      $scope.deleteComment = function(data){
+        // Need a prompt confirmation
+        console.log('deleteComment', data);
+      };
+
     }
-  }
+  };
 }]);

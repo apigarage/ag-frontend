@@ -18,6 +18,7 @@ angular.module('app')
                         return data;
                       });
     };
+    
     var getCurrentUserInformation = function(){
       var option = 'users';
       var options = {

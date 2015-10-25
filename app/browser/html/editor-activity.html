@@ -1,12 +1,17 @@
-<code>{{parentId}}</code>
 
+<!-- activity types: create, comment, flag, resolve, edit, form -->
 <ul class="endpoint-activity" >
-  <li editor-activity-item
-      editor-activity-type="'create'"
-      editor-activity-time="'October 6th, 2015'"
-      editor-activity-user="'Anson Kao'">
+
+  <li editor-activity-item ng-repeat="endpoint in activities"
+      editor-activity-type="endpoint.activity_type.name"
+      editor-activity-time="endpoint.created_at"
+      editor-activity-user="endpoint.user_id == user.id ? user.name : user.id"
+      editor-activity-endpoint="endpoint">
+      <p >
+        {{endpoint.description}}
+      </p>
   </li>
-  <li editor-activity-item
+  <!-- <li editor-activity-item
       editor-activity-type="'comment'"
       editor-activity-time="'yesterday'"
       editor-activity-user="'Anson Kao'">
@@ -69,10 +74,12 @@
       editor-activity-user="'Anson Kao'">
     <code class="text-warning">TITLE: &minus; Retrieve a list of users</code>
     <code class="text-success">TITLE: &plus; Get Logged-in Users</code>
-  </li>
+  </li> -->
+
+  <!-- Comment Form -->
   <li editor-activity-item
       editor-activity-type="'form'"
-      editor-activity-user="'Anson Kao'"
-      editor-activity-endpoint="endpoint">
+      editor-activity-user="user.name"
+      editor-activity-endpoint="parentId">
   </li>
 </ul>
