@@ -4,7 +4,8 @@ angular.module('app').controller('HeaderCtrl', [
   '$state',
   '$window',
   'Auth',
-  function ($scope, $rootScope, $state, $window, Auth){
+  'Analytics',
+  function ($scope, $rootScope, $state, $window, Auth, Analytics){
 
   function init(){
     $scope.online = $window.navigator.onLine;
@@ -13,6 +14,8 @@ angular.module('app').controller('HeaderCtrl', [
 
   $scope.logout = function() {
     Auth.logout();
+    // Analytics start user session
+    Analytics.stopSession();
     $state.go('authentication');
   };
 

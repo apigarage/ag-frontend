@@ -5,6 +5,10 @@
   <title>API Garage</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
   <link rel="stylesheet" href="css/app.css" type="text/css" />
+  <!-- start Mixpanel --><script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
+  for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f)}})(document,window.mixpanel||[]);
+  mixpanel.init("15ce5cae07ace7826d748e05705aa2bd");</script><!-- end Mixpanel -->
+
 </head>
 <body class="h-full disable-select">
   <div class="app" id="app" ui-view></div>
@@ -13,6 +17,7 @@
     window.$ = window.jQuery = require('./bower_components/jquery/dist/jquery.js');
   </script>
   <script src="../vendor/electron_boilerplate/env_config.js"></script>
+
   <script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
@@ -29,6 +34,8 @@
   <script src="bower_components/ng-lodash/build/ng-lodash.min.js"></script>
   <script src="bower_components/angular-elastic-input/dist/angular-elastic-input.js"></script>
   <script src="bower_components/angular-scroll/angular-scroll.js"></script>
+  <script src="bower_components/angulartics/dist/angulartics.min.js"></script>
+  <script src="bower_components/angulartics-mixpanel/dist/angulartics-mixpanel.min.js"></script>
   <script src="../common/helpers/requestUtility.js"></script>
   <script src="js/app.js"></script>
   <script src="js/controller/AuthenticationController.js"></script>
@@ -62,6 +69,8 @@
   <script src="js/services/Editor.js"></script>
   <script src="js/services/PostmanImport.js"></script>
   <script src="js/services/ProjectUser.js"></script>
+  <script src="js/services/Analytics.js"></script>
+  <script src="js/services/Ipc.js"></script>
   <script src="js/directive/ContentEditable.js"></script>
   <script src="js/directive/UpdateModelOnEnter.js"></script>
   <script src="js/directive/ProjectShareDirective.js"></script>

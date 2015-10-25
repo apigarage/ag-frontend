@@ -3,7 +3,8 @@ angular.module('app').controller('HistoryCtrl', [
   '$scope',
   '$rootScope',
   'History',
-  function (_, $scope, $rootScope, History){
+  'Analytics',
+  function (_, $scope, $rootScope, History, Analytics){
   $scope.recentRequest = {};
   $scope.historyTimeStamps = [];
   $scope.lastRequest = {};
@@ -24,7 +25,14 @@ angular.module('app').controller('HistoryCtrl', [
 
   $scope.loadPerformRequest = function (historyTimeStamp, loadOnly){
     var historyItem = History.getHistoryItem(historyTimeStamp);
-    // if it is an existing collection get the information
+
+    // times history is re/loaded
+    Analytics.eventTrack('History Load',
+      { 'from' : 'HistoryCtrl',
+        'performRequest' : !loadOnly
+      }
+    );
+    
     $rootScope.$broadcast('loadPerformRequest',historyItem, loadOnly, "HistoryCtrl");
   };
 

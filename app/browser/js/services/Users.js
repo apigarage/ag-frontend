@@ -18,8 +18,18 @@ angular.module('app')
                         return data;
                       });
     };
+    var getCurrentUserInformation = function(){
+      var option = 'users';
+      var options = {
+        'method': 'GET',
+        'url': Config.url + Config.api + 'me'
+      };
+      return ApiRequest.send(options, true);
+    };
+
     return{
-      create:create
+      create : create,
+      getCurrentUserInformation : getCurrentUserInformation
     };
 
   }]);

@@ -6,7 +6,8 @@ angular.module('app').controller('LayoutCtrl', [
   '$state',
   'lodash',
   'Projects',
-  function ($scope, $rootScope, $modal, $q, $state, _, Projects ){
+  'Analytics',
+  function ($scope, $rootScope, $modal, $q, $state, _, Projects, Analytics){
 
   function init(){
     $scope.layout = {
@@ -23,8 +24,10 @@ angular.module('app').controller('LayoutCtrl', [
 
   $scope.switchProject = function(){
     // Reset Current Project to undefined when switching between projects
+    Analytics.eventTrack('Switch Project', {'from': 'LayoutCtrl'});
     $rootScope.$broadcast('loadPerformRequest', {}, true, "LayoutCtrl", function(){
       $rootScope.currentProjectId = undefined;
+      $rootScope.currentProject = undefined;
       $rootScope.currentEnvironment = undefined;
       $state.go('projectcreateoropen');
     });
@@ -37,7 +40,7 @@ angular.module('app').controller('LayoutCtrl', [
 
   $scope.renameProject = function(){
     return showProjectRenameModal();
-  }
+  };
 
   function showProjectRenameModal(){
     var deferred = $q.defer();
