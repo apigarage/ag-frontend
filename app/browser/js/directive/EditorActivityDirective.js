@@ -34,18 +34,21 @@ angular.module('AGEndpointActivity', [])
           break;
         case "comment":
           $scope.iconClasses = 'fa-comment-o fa-flip-horizontal';
+          // TODO: UAC Don't show the menu if it isn't the correct user
           $scope.showMenu = true;
           $scope.verb = 'commented';
           break;
         case "flag":
           $scope.iconClasses = 'fa-flag';
           $scope.iconBadge = 'activity-flagged';
+          // TODO: UAC Don't show the menu if it isn't the correct user
           $scope.showMenu = true;
           $scope.verb = 'marked this endpoint as <span class="label activity-flagged">FLAGGED</span>';
           break;
         case "resolve":
           $scope.iconClasses = 'fa-check';
           $scope.iconBadge = 'activity-resolved';
+          // TODO: UAC Don't show the menu if it isn't the correct user
           $scope.showMenu = true;
           $scope.verb = 'marked this endpoint as <span class="label activity-resolved">RESOLVED</span>';
           break;
@@ -106,8 +109,9 @@ angular.module('AGEndpointActivity', [])
             });
         }else{
           console.log('parentid', $scope.editorActivityParentid);
+          // TODO: Update editprActivityParentID item FLAG
           return activities.create($scope.editorActivityParentid, data).then(function(item){
-            // handle error?
+            // handle error? 
           }).finally(function(data){
             $rootScope.$broadcast('loadActivities');
           });

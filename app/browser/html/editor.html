@@ -58,7 +58,7 @@
           </button>
           <button class="btn btn-default"
                   ng-disabled="!currentItem.uuid"
-                  ng-click="endpoint.flag = !endpoint.flag">
+                  ng-click="endpoint.flag = !endpoint.flag; addCommentFlag()">
             <span class="fa" ng-class="endpoint.flag ? 'fa-check' : 'fa-flag-o'"></span>
             <span class="hidden-xs hidden-sm">{{ endpoint.flag ? 'Resolve' : 'Flag' }}</span>
           </button>

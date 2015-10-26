@@ -66,6 +66,7 @@ angular.module('app').controller('EditorCtrl', [
     }
 
     function init(){
+
       $scope.endpointNav = {
         tab: "Editor"
       };
@@ -439,7 +440,7 @@ angular.module('app').controller('EditorCtrl', [
 
       item.method = _.find( $scope.requestMethods, function(data){ return data === item.method; });
       $scope.endpoint = Editor.loadAndGetEndpoint(item);
-
+      console.log('endpoint', $scope.endpoint);
       resetResponse();
 
       if(_.isEqual($scope.endpoint.uuid,"") || _.isUndefined($scope.endpoint.uuid)){
@@ -489,6 +490,29 @@ angular.module('app').controller('EditorCtrl', [
       }, delay);
     };
 
+
+    $scope.addCommentFlag = function(){
+      var data;
+      var delay = 0;
+      if($scope.endpoint.flag){
+        data = {
+          'type' : 'flag'
+        };
+      }else{
+        data = {
+          'type' : 'resolve'
+        };
+      }
+      console.log('endpoint', $scope.endpoint.flag);
+      console.log('commentData', data);
+
+      // Activities.create($scope.endpoint.uuid, data).then(function(item){
+      //   $rootScope.$broadcast('loadActivities');
+      //   $scope.showCommentForm();
+      });
+
+
+    };
     init();
 
   }]);
