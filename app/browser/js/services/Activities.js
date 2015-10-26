@@ -60,7 +60,6 @@ angular.module('app')
       * @data: object fields and values
       */
       Activity.update = function(item_id, id, data){
-
         var options = {
           'method': 'PATCH',
           'url': Config.url + Config.api + itemsEndpoint + item_id +
@@ -82,17 +81,7 @@ angular.module('app')
           'url': Config.url + Config.api + itemsEndpoint + item_id +
             '/' + activitiesEndpoint + '/' + id,
         };
-        return ApiRequest.send(options)
-          .then(function(data){
-            var envs = $rootScope.currentProject.environments;
-
-            if( envs && envs.public && envs.public[id] )
-              delete envs.public[id];
-
-            if( envs && envs.private && envs.private[id] )
-              delete envs.private[id];
-
-          });
+        return ApiRequest.send(options);
       };
 
 

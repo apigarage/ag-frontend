@@ -1,12 +1,12 @@
 
 <!-- activity types: create, comment, flag, resolve, edit, form -->
 <ul class="endpoint-activity" >
-
   <li editor-activity-item ng-repeat="endpoint in activities"
       editor-activity-type="endpoint.activity_type.name"
       editor-activity-time="endpoint.created_at"
       editor-activity-user="endpoint.user_id == user.id ? user.name : user.id"
-      editor-activity-endpoint="endpoint">
+      editor-activity-endpoint="endpoint"
+      editor-activity-parentid="parentId">
       <p >
         {{endpoint.description}}
       </p>
@@ -80,6 +80,6 @@
   <li editor-activity-item
       editor-activity-type="'form'"
       editor-activity-user="user.name"
-      editor-activity-endpoint="parentId">
+      editor-activity-parentid="parentId">
   </li>
 </ul>

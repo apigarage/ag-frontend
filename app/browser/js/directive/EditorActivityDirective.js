@@ -21,10 +21,11 @@ angular.module('AGEndpointActivity', [])
       editorActivityTime: "=",
       editorActivityUser: "=",
       editorActivityUid: "=",
-      editorActivityEndpoint: "="
+      editorActivityEndpoint: "=",
+      editorActivityParentid: "="
     },
     link: function ($scope, $elem, $attr, $ctrl, $transclude) {
-      console.log('endpoint',$scope.editorActivityEndpoint);
+      console.log($scope);
       switch( $scope.editorActivityType )
       {
         case "create":
@@ -69,8 +70,8 @@ angular.module('AGEndpointActivity', [])
         }
       });
 
-      $scope.submitComment = function(commentForm, uuid){
-        if(commentForm.isResolved === undefined) commentForm.isResolved = false;
+      $scope.submitComment = function(commentForm, currentEndpoint){
+
 
         var description;
         if(commentForm.commentDescription.$modelValue === undefined)
@@ -81,41 +82,65 @@ angular.module('AGEndpointActivity', [])
         }
 
         var data;
-        if(!commentForm.isResolved){
-          data = {
-            'type' : 'flag',
-            'description' : description
-          };
-        }else{
+        if(commentForm.isResolved){
           data = {
             'type' : 'resolve',
             'description' : description
           };
-
+        }else{
+          data = {
+            'type' : 'flag',
+            'description' : description
+          };
         }
 
-        console.log('create a comment', uuid, data);
-        return activities.create(uuid, data).then(function(item){
-          // handle error?
-        }).finally(function(data){
-          $rootScope.$broadcast('loadActivities');
-        });
+        console.log('create a comment', currentEndpoint, data);
+        if(commentForm.edit.$modelValue){
+          console.log('parentid', $scope.editorActivityParentid);
+
+          return activities.update($scope.editorActivityParentid, currentEndpoint.uuid, data)
+            .then(function(item){
+              //handle error
+            }).finally(function(data){
+              $rootScope.$broadcast('loadActivities');
+            });
+        }else{
+          console.log('parentid', $scope.editorActivityParentid);
+          return activities.create($scope.editorActivityParentid, data).then(function(item){
+            // handle error?
+          }).finally(function(data){
+            $rootScope.$broadcast('loadActivities');
+          });
+        }
       };
 
       $scope.editComment = function(data){
-        console.log('scope', $scope);
+        console.log('data', data);
+
         // hide edit option
+
         $scope.showMenu = false;
+        // TODO: hide flag resolve button
+
         $scope.editorActivityType = "form";
+        $scope.commentDescription = data.description;
+        $scope.commentEdit = true;
 
         // Need a way to cancel an Edit
-
-        console.log('editComment', data);
+        // No way to flag an edited comment
+        console.log('$scope.editorActivityEndpoint.uuid', $scope.editorActivityEndpoint.uuid);
       };
 
-      $scope.deleteComment = function(data){
+      $scope.deleteComment = function(currentEndpoint){
         // Need a prompt confirmation
-        console.log('deleteComment', data);
+        console.log('currentComment.uuid',$scope.editorActivityEndpoint.uuid);
+
+        return activities.remove($scope.editorActivityParentid, currentEndpoint.uuid)
+          .then(function(item){
+            //handle error
+          }).finally(function(data){
+            $rootScope.$broadcast('loadActivities');
+          });
       };
 
     }
