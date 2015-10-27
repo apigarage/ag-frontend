@@ -9,24 +9,27 @@ angular.module('AGEndpointActivity', [])
 // 5. liEditorActivity = "edit"     -> Edit Endpoint
 // 6. liEditorActivity = "collapse" -> Collapsed items
 // 7. liEditorActivity = "form"     -> Form for typing new Comments
-.directive('editorActivityItem', ['Activities', '$rootScope', function (activities, $rootScope) {
+.directive('agEditorActivityItem', ['Activities', '$rootScope', function (activities, $rootScope) {
   return {
     restrict: 'EA',
     templateUrl: 'html/editor-activity-item.html',
     replace: true,
     transclude: true,
     scope: {
-      editorActivityType: "=",
-      editorActivityNumCollapsed: "=",
-      editorActivityTime: "=",
-      editorActivityUser: "=",
-      editorActivityUid: "=",
-      editorActivityEndpoint: "=",
-      editorActivityParentid: "="
+      agEditorActivityType: "=",
+      agEditorActivityNumCollapsed: "=",
+      agEditorActivityTime: "=",
+      agEditorActivityUser: "=",
+      agEditorActivityUid: "=",
+      agEditorActivityEndpoint: "=",
+      agEditorActivityParentid: "=",
+      agEditorActivityFlag: "=",
+      agEditorActivityFlagStatus: "&",
     },
     link: function ($scope, $elem, $attr, $ctrl, $transclude) {
-      console.log($scope);
-      switch( $scope.editorActivityType )
+      //console.log($scope);
+
+      switch( $scope.agEditorActivityType )
       {
         case "create":
           $scope.iconClasses = 'fa-file-o';
@@ -61,9 +64,11 @@ angular.module('AGEndpointActivity', [])
           $scope.collapsed = true;
           break;
         case "form":
+          console.log('form');
           $scope.iconClasses = 'fa-commenting-o fa-flip-horizontal';
           $scope.verb = "&middot; New comment";
           $scope.endpoint = $scope.editorActivityEndpoint;
+          $scope.commentDescription = "";
           break;
       }
 
@@ -73,8 +78,46 @@ angular.module('AGEndpointActivity', [])
         }
       });
 
-      $scope.submitComment = function(commentForm, currentEndpoint){
+      // submit flagged comment
+      $scope.submitFlaggedComment = function(commentForm, currentEndpoint, currentEndpointFlag){
+        var description;
+        if(commentForm.commentDescription.$modelValue === undefined)
+        {
+          description = '';
+        }else{
+          description = commentForm.commentDescription.$modelValue;
+        }
 
+        if(currentEndpointFlag){
+          data = {
+            'type' : 'flag',
+            'description' : description
+          };
+          //$scope.agEditorActivityFlag = false;
+        }else{
+          data = {
+            'type' : 'resolve',
+            'description' : description
+          };
+          //$scope.agEditorActivityFlag = true;
+        }
+
+        console.log('create a comment', currentEndpoint, data);
+
+        // return activities.create($scope.editorActivityParentid, data).then(function(item){
+        //   // handle error?
+        // }).finally(function(data){
+        //   commentForm.$setPristine();
+        //   $scope.commentDescription = "";
+        //   $rootScope.$broadcast('loadActivities');
+        // });
+      };
+
+      $scope.updateFlag = function(status){
+        $scope.agEditorActivityFlagStatus({'status':status});
+      };
+
+      $scope.submitComment = function(commentForm, currentEndpoint){
 
         var description;
         if(commentForm.commentDescription.$modelValue === undefined)
@@ -84,23 +127,11 @@ angular.module('AGEndpointActivity', [])
           description = commentForm.commentDescription.$modelValue;
         }
 
-        var data;
-        if(commentForm.isResolved){
-          data = {
-            'type' : 'resolve',
-            'description' : description
-          };
-        }else{
-          data = {
-            'type' : 'flag',
-            'description' : description
-          };
-        }
-
-        console.log('create a comment', currentEndpoint, data);
         if(commentForm.edit.$modelValue){
           console.log('parentid', $scope.editorActivityParentid);
-
+          data = {
+            'description' : description
+          };
           return activities.update($scope.editorActivityParentid, currentEndpoint.uuid, data)
             .then(function(item){
               //handle error
@@ -110,9 +141,15 @@ angular.module('AGEndpointActivity', [])
         }else{
           console.log('parentid', $scope.editorActivityParentid);
           // TODO: Update editprActivityParentID item FLAG
+          data = {
+            'type' : 'comment',
+            'description' : description
+          };
           return activities.create($scope.editorActivityParentid, data).then(function(item){
-            // handle error? 
+            // handle error?
           }).finally(function(data){
+            commentForm.$setPristine();
+            $scope.commentDescription = "";
             $rootScope.$broadcast('loadActivities');
           });
         }
@@ -143,6 +180,7 @@ angular.module('AGEndpointActivity', [])
           .then(function(item){
             //handle error
           }).finally(function(data){
+
             $rootScope.$broadcast('loadActivities');
           });
       };

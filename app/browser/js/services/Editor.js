@@ -57,6 +57,7 @@ angular.module('app')
         var deferred = $q.defer();
 
         var endpointForDB = buildRequestOutOfScope();
+        console.log('endpointForDB', endpointForDB);
 
         if( _.isEmpty(endpointForDB.uuid) ){
           // CREATE REQUEST
@@ -235,6 +236,7 @@ angular.module('app')
         item.data = endpoint.requestBody;
         item.uuid = endpoint.uuid;
         item.headers = RequestUtility.getHeaders(endpoint.requestHeaders, 'object');
+        item.flagged = endpoint.flag;
 
         return item;
       }
@@ -247,6 +249,8 @@ angular.module('app')
 
         // If method not found, set it to default method 'GET'
         newEndpoint.requestMethod  = item.method ? item.method : 'GET';
+        // Flagged or resolved
+        newEndpoint.flag = item.flagged == 1 ? true : false ;
 
         if( newEndpoint.requestMethod !== 'GET' && _.isObject(item.data)){
           newEndpoint.requestBody = JSON.stringify(item.data);
@@ -255,7 +259,7 @@ angular.module('app')
         } else {
           newEndpoint.requestBody = "";
         }
-        
+
         newEndpoint.collection_id = item.collection_id;
         newEndpoint.uuid = _.isEmpty(item.uuid) ? undefined : item.uuid;
         newEndpoint.requestHeaders = RequestUtility.getHeaders(item.headers, 'array');

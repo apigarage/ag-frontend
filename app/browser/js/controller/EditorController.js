@@ -17,9 +17,10 @@ angular.module('app').controller('EditorCtrl', [
   'Editor',
   'Activities',
   'Analytics',
+  'Items',
   function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q,
     $focus, $timeout, RequestUtility, History, Collections, Projects, Editor,
-    Activities, Analytics){
+    Activities, Analytics, Items){
     // ========================================================================
     // Private Functions
     // ========================================================================
@@ -492,27 +493,54 @@ angular.module('app').controller('EditorCtrl', [
 
 
     $scope.addCommentFlag = function(){
+      $scope.requestChangedFlag = true;
       var data;
       var delay = 0;
+      var itemData;
       if($scope.endpoint.flag){
         data = {
           'type' : 'flag'
+        };
+        itemData = {
+          'flagged' : true
         };
       }else{
         data = {
           'type' : 'resolve'
         };
+        itemData = {
+          'flagged' : false
+        };
       }
-      console.log('endpoint', $scope.endpoint.flag);
-      console.log('commentData', data);
-
-      // Activities.create($scope.endpoint.uuid, data).then(function(item){
-      //   $rootScope.$broadcast('loadActivities');
-      //   $scope.showCommentForm();
-      });
-
-
+      console.log('data', data);
+      console.log('item', data);
+      // Items.update($scope.endpoint.uuid, itemData)
+      //   .then(function(item){
+      //     // update current project item flagged value
+      //     $rootScope.currentProject.collections[item.collection_id].items[item.uuid].flagged = item.flaggged;
+      //     Activities.create($scope.endpoint.uuid, data).then(function(){
+      //       // navigate to comments and show Flagged comment
+      //       $rootScope.$broadcast('loadActivities');
+      //       $scope.showCommentForm();
+      //     });
+      //   });
     };
+
+
+    $scope.updateItemFlag = function (status){
+      console.log("updateFlag", status);
+      // Items.update($scope.endpoint.uuid, itemData)
+      //   .then(function(item){
+      //     // update current project item flagged value
+      //     $rootScope.currentProject.collections[item.collection_id].items[item.uuid].flagged = item.flaggged;
+      //     Activities.create($scope.endpoint.uuid, data).then(function(){
+      //       // navigate to comments and show Flagged comment
+      //       $rootScope.$broadcast('loadActivities');
+      //       $scope.showCommentForm();
+      //     });
+      //   });
+    }
+
     init();
 
   }]);

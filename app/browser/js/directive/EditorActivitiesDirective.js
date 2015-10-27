@@ -5,8 +5,11 @@ directive("editorActivities", [function() {
     templateUrl: 'html/editor-activity.html',
     controller: 'EditorActivitiesCtrl',
     scope: {
-      parentType : "=",
-      parentId : "="
+      agParentType : "=",
+      agParentId : "=",
+      agParentFlag : "=",
+      agParentUpdateFlag : "&",
+      agParentEndpoint  : "="
     }
   };
 }]);

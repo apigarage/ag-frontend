@@ -1,12 +1,12 @@
 
 <!-- activity types: create, comment, flag, resolve, edit, form -->
 <ul class="endpoint-activity" >
-  <li editor-activity-item ng-repeat="endpoint in activities"
-      editor-activity-type="endpoint.activity_type.name"
-      editor-activity-time="endpoint.created_at"
-      editor-activity-user="endpoint.user_id == user.id ? user.name : user.id"
-      editor-activity-endpoint="endpoint"
-      editor-activity-parentid="parentId">
+  <li ag-editor-activity-item ng-repeat="endpoint in activities"
+      ag-editor-activity-type="endpoint.activity_type.name"
+      ag-editor-activity-time="endpoint.created_at"
+      ag-editor-activity-user="endpoint.user_id == user.id ? user.name : user.id"
+      ag-editor-activity-endpoint="endpoint"
+      ag-editor-activity-parentid="agParentId">
       <p >
         {{endpoint.description}}
       </p>
@@ -77,9 +77,15 @@
   </li> -->
 
   <!-- Comment Form -->
-  <li editor-activity-item
-      editor-activity-type="'form'"
-      editor-activity-user="user.name"
-      editor-activity-parentid="parentId">
+
+  <code>agParentFlag : {{agParentFlag}}</code>
+  <li ag-editor-activity-item
+      ag-editor-activity-type="'form'"
+      ag-editor-activity-parentid="agParentId"
+      ag-editor-activity-user="user.name"
+      ag-editor-activity-flag="agParentFlag"
+      ag-editor-activity-flag-status="updateFlag(status)"
+      ag-editor-activity-endpoint="agParentEndpoint"
+      >
   </li>
 </ul>
