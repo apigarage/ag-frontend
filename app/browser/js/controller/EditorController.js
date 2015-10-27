@@ -514,32 +514,33 @@ angular.module('app').controller('EditorCtrl', [
       }
       console.log('data', data);
       console.log('item', data);
-      // Items.update($scope.endpoint.uuid, itemData)
-      //   .then(function(item){
-      //     // update current project item flagged value
-      //     $rootScope.currentProject.collections[item.collection_id].items[item.uuid].flagged = item.flaggged;
-      //     Activities.create($scope.endpoint.uuid, data).then(function(){
-      //       // navigate to comments and show Flagged comment
-      //       $rootScope.$broadcast('loadActivities');
-      //       $scope.showCommentForm();
-      //     });
-      //   });
-    };
 
+      // Update the item
+      Items.update($scope.endpoint.uuid, itemData)
+        .then(function(item){
+          // Update current project item flagged value
+          //$rootScope.currentProject.collections[item.collection_id].items[item.uuid].flagged = item.flaggged;
+
+          // Create a flag post
+          Activities.create($scope.endpoint.uuid, data).then(function(){
+            // Reload posts
+            $rootScope.$broadcast('loadActivities');
+            // Update the flag for the buttons
+            $scope.updateItemFlag(item.flagged);
+            // Scroll to the form
+            $scope.showCommentForm();
+          });
+        });
+
+    };
 
     $scope.updateItemFlag = function (status){
       console.log("updateFlag", status);
-      // Items.update($scope.endpoint.uuid, itemData)
-      //   .then(function(item){
-      //     // update current project item flagged value
-      //     $rootScope.currentProject.collections[item.collection_id].items[item.uuid].flagged = item.flaggged;
-      //     Activities.create($scope.endpoint.uuid, data).then(function(){
-      //       // navigate to comments and show Flagged comment
-      //       $rootScope.$broadcast('loadActivities');
-      //       $scope.showCommentForm();
-      //     });
-      //   });
-    }
+      $scope.endpoint.flag = status;
+      // Update current project item flagged value
+      $rootScope.currentProject.collections[$scope.endpoint.collection_id].items[$scope.endpoint.uuid].flagged = status;
+
+    };
 
     init();
 

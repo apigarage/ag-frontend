@@ -9,7 +9,8 @@ angular.module('AGEndpointActivity', [])
 // 5. liEditorActivity = "edit"     -> Edit Endpoint
 // 6. liEditorActivity = "collapse" -> Collapsed items
 // 7. liEditorActivity = "form"     -> Form for typing new Comments
-.directive('agEditorActivityItem', ['Activities', '$rootScope', function (activities, $rootScope) {
+.directive('agEditorActivityItem', ['Activities', '$rootScope', '$window',
+  function (activities, $rootScope, $window) {
   return {
     restrict: 'EA',
     templateUrl: 'html/editor-activity-item.html',
@@ -27,8 +28,12 @@ angular.module('AGEndpointActivity', [])
       agEditorActivityFlagStatus: "&",
     },
     link: function ($scope, $elem, $attr, $ctrl, $transclude) {
-      //console.log($scope);
 
+      // Get current user
+      var localStorage = $window.localStorage;
+      $scope.user = JSON.parse(localStorage.getItem("currentUser"));
+
+      // Build item activities
       switch( $scope.agEditorActivityType )
       {
         case "create":
@@ -37,22 +42,19 @@ angular.module('AGEndpointActivity', [])
           break;
         case "comment":
           $scope.iconClasses = 'fa-comment-o fa-flip-horizontal';
-          // TODO: UAC Don't show the menu if it isn't the correct user
-          $scope.showMenu = true;
+          $scope.showMenu = showMenu();
           $scope.verb = 'commented';
           break;
         case "flag":
           $scope.iconClasses = 'fa-flag';
           $scope.iconBadge = 'activity-flagged';
-          // TODO: UAC Don't show the menu if it isn't the correct user
-          $scope.showMenu = true;
+          $scope.showMenu = showMenu();
           $scope.verb = 'marked this endpoint as <span class="label activity-flagged">FLAGGED</span>';
           break;
         case "resolve":
           $scope.iconClasses = 'fa-check';
           $scope.iconBadge = 'activity-resolved';
-          // TODO: UAC Don't show the menu if it isn't the correct user
-          $scope.showMenu = true;
+          $scope.showMenu = showMenu();
           $scope.verb = 'marked this endpoint as <span class="label activity-resolved">RESOLVED</span>';
           break;
         case "edit":
@@ -78,6 +80,10 @@ angular.module('AGEndpointActivity', [])
         }
       });
 
+      function showMenu(){
+        return $scope.agEditorActivityEndpoint.user.id == $scope.user.id
+      };
+
       // submit flagged comment
       $scope.submitFlaggedComment = function(commentForm, currentEndpoint, currentEndpointFlag){
         var description;
@@ -93,28 +99,28 @@ angular.module('AGEndpointActivity', [])
             'type' : 'flag',
             'description' : description
           };
-          //$scope.agEditorActivityFlag = false;
         }else{
           data = {
             'type' : 'resolve',
             'description' : description
           };
-          //$scope.agEditorActivityFlag = true;
         }
 
-        console.log('create a comment', currentEndpoint, data);
-
-        // return activities.create($scope.editorActivityParentid, data).then(function(item){
-        //   // handle error?
-        // }).finally(function(data){
-        //   commentForm.$setPristine();
-        //   $scope.commentDescription = "";
-        //   $rootScope.$broadcast('loadActivities');
-        // });
+        return activities.create($scope.agEditorActivityParentid, data).then(function(item){
+          // TODO: handle error if any
+          // Update current project item flagged value
+          $scope.updateFlag(currentEndpointFlag);
+        }).finally(function(data){
+          // Refresh Comment Form
+          commentForm.$setPristine();
+          $scope.commentDescription = "";
+          $rootScope.$broadcast('loadActivities');
+        });
       };
 
       $scope.updateFlag = function(status){
         $scope.agEditorActivityFlagStatus({'status':status});
+        $scope.agEditorActivityFlag = status;
       };
 
       $scope.submitComment = function(commentForm, currentEndpoint){
@@ -128,26 +134,29 @@ angular.module('AGEndpointActivity', [])
         }
 
         if(commentForm.edit.$modelValue){
-          console.log('parentid', $scope.editorActivityParentid);
+          // Update Comment
           data = {
             'description' : description
           };
-          return activities.update($scope.editorActivityParentid, currentEndpoint.uuid, data)
+
+          return activities.update($scope.agEditorActivityParentid, currentEndpoint.uuid, data)
             .then(function(item){
-              //handle error
+              // TODO: handle errors if any
             }).finally(function(data){
               $rootScope.$broadcast('loadActivities');
             });
+
         }else{
-          console.log('parentid', $scope.editorActivityParentid);
+          // Create Comment
           // TODO: Update editprActivityParentID item FLAG
           data = {
             'type' : 'comment',
             'description' : description
           };
-          return activities.create($scope.editorActivityParentid, data).then(function(item){
-            // handle error?
+          return activities.create($scope.agEditorActivityParentid, data).then(function(item){
+            // TODO: handle errors if any
           }).finally(function(data){
+            // Clear Form
             commentForm.$setPristine();
             $scope.commentDescription = "";
             $rootScope.$broadcast('loadActivities');
@@ -155,32 +164,22 @@ angular.module('AGEndpointActivity', [])
         }
       };
 
-      $scope.editComment = function(data){
-        console.log('data', data);
-
-        // hide edit option
-
+      $scope.editComment = function(){
+        // Load form
         $scope.showMenu = false;
-        // TODO: hide flag resolve button
-
-        $scope.editorActivityType = "form";
+        $scope.agEditorActivityType = "form";
         $scope.commentDescription = data.description;
         $scope.commentEdit = true;
-
-        // Need a way to cancel an Edit
+        // No way to cancel an Edit
         // No way to flag an edited comment
-        console.log('$scope.editorActivityEndpoint.uuid', $scope.editorActivityEndpoint.uuid);
       };
 
       $scope.deleteComment = function(currentEndpoint){
-        // Need a prompt confirmation
-        console.log('currentComment.uuid',$scope.editorActivityEndpoint.uuid);
-
-        return activities.remove($scope.editorActivityParentid, currentEndpoint.uuid)
+        return activities.remove($scope.agEditorActivityParentid, currentEndpoint.uuid)
           .then(function(item){
-            //handle error
+            // TODO: handle errors if any
           }).finally(function(data){
-
+            // Reload comments
             $rootScope.$broadcast('loadActivities');
           });
       };

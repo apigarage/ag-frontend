@@ -10,7 +10,7 @@
     <script type="text/ng-template" id="activity-menu">
       <ul class="dropdown-menu">
         <li>
-          <a ng-click="editComment(agEditorActivityEndpoint)">
+          <a ng-click="editComment()">
             <span class="fa fa-fw fa-pencil"></span>
             Edit
           </a>
@@ -23,10 +23,10 @@
         </li>
       </ul>
     </script>
-    <strong>{{editorActivityUser}}</strong>
+    <strong>{{agEditorActivityUser}}</strong>
     <span class="text-muted">
       <span ng-bind-html="verb"></span>
-      <span ng-bind-html="editorActivityTime"></span>
+      <span ng-bind-html="agEditorActivityTime"></span>
     </span>
 
     <div class="activity-comment"
@@ -39,7 +39,7 @@
           <p>
             <textarea name="commentDescription"
                       class="form-control"
-                      data-ng-model="commentDescription"
+                      ng-model="commentDescription"
                       placeholder="Write a comment...">
             </textarea>
 
@@ -48,13 +48,13 @@
             <code>agEditorActivityFlag : {{agEditorActivityFlag}}</code>
             <button name="CommentFlag"
                     type="submit" class="btn btn-default"
-                    ng-click="agEditorActivityFlag  = !agEditorActivityFlag;
-                      updateFlag(true)"
+                    ng-click="agEditorActivityFlag = !agEditorActivityFlag;
+                      submitFlaggedComment(commentForm, agEditorActivityEndpoint, agEditorActivityFlag)"
                     ng-show="!commentEdit">
               <span class="fa fa-fw" ng-class="agEditorActivityFlag ? 'fa-check' : 'fa-flag-o'"></span>
               {{ agEditorActivityFlag ? 'Resolve' : 'Flag' }} {{ commentDescription ? 'with comment' : '' }}
             </button>
-            <button type="submit" class="btn btn-primary" ng-click="submitComment(commentForm, editorActivityEndpoint)">
+            <button type="submit" class="btn btn-primary" ng-click="submitComment(commentForm, agEditorActivityEndpoint)">
               {{ commentEdit ? 'Update' : 'Comment' }}
             </button>
           </p>

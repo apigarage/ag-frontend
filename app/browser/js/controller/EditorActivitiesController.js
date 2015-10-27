@@ -13,6 +13,7 @@ angular.module('app').controller('EditorActivitiesCtrl', [
 
       $scope.updateFlag = function(status){
         $scope.agParentUpdateFlag({'status':status});
+        $scope.agParentFlag = status;
       };
 
       Users.getCurrentUserInformation().then(function(user){
