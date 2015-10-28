@@ -250,8 +250,9 @@ angular.module('app')
         // If method not found, set it to default method 'GET'
         newEndpoint.requestMethod  = item.method ? item.method : 'GET';
         // Flagged or resolved
+        console.log('item.flagged', item.flagged);
         newEndpoint.flag = item.flagged == 1 ? true : false ;
-
+        console.log('newEndpoint.flag', newEndpoint.flag);
         if( newEndpoint.requestMethod !== 'GET' && _.isObject(item.data)){
           newEndpoint.requestBody = JSON.stringify(item.data);
         } else if(newEndpoint.requestMethod !== 'GET' && item.data){

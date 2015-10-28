@@ -9,8 +9,8 @@ angular.module('AGEndpointActivity', [])
 // 5. liEditorActivity = "edit"     -> Edit Endpoint
 // 6. liEditorActivity = "collapse" -> Collapsed items
 // 7. liEditorActivity = "form"     -> Form for typing new Comments
-.directive('agEditorActivityItem', ['Activities', '$rootScope', '$window',
-  function (activities, $rootScope, $window) {
+.directive('agEditorActivityItem', ['Activities', 'Items', '$rootScope', '$window', '$q',
+  function (activities, Items, $rootScope, $window, $q) {
   return {
     restrict: 'EA',
     templateUrl: 'html/editor-activity-item.html',
@@ -85,6 +85,9 @@ angular.module('AGEndpointActivity', [])
       function submitComment(comment){
         return activities.create($scope.agEditorActivityParentid, comment)
           .then(function(comment){
+
+            console.log('comment', comment);
+            $q.resolve(comment);
             // TODO: handle error if any
           });
       }
@@ -108,9 +111,17 @@ angular.module('AGEndpointActivity', [])
         comment.description = commentForm.description;
         return submitComment(comment)
           .then(function(data){
-            $scope.updateFlag(currentEndpointFlag);
-            clearForm(commentForm);
-            $rootScope.$broadcast('loadActivities');
+            var itemData = {
+              'flagged' : currentEndpointFlag
+            };
+            // Update Item
+            Items.update($scope.agEditorActivityParentid, itemData)
+              .then(function(comment){
+                $scope.updateFlag(currentEndpointFlag);
+                clearForm(commentForm);
+                $rootScope.$broadcast('loadActivities');
+              });
+
           });
       };
 

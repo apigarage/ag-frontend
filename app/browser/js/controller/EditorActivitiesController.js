@@ -25,6 +25,7 @@ angular.module('app').controller('EditorActivitiesCtrl', [
       $scope.$watch('agParentId',function(){
         // set to loading
         // get all Actitivies from the Item
+        $scope.agParentFlag = status;
         loadActivities();
       });
 

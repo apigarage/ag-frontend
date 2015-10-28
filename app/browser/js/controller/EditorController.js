@@ -36,6 +36,7 @@ angular.module('app').controller('EditorCtrl', [
 
     function setDefaultEndpoint(){
       $scope.endpoint = {
+        flag: false,
         requestUrl: "",
         name: "",
         requestMethod: 'GET',
@@ -174,7 +175,8 @@ angular.module('app').controller('EditorCtrl', [
       return Projects.removeItemFromCollection($rootScope.currentCollection.id, $rootScope.currentItem.uuid)
         .then(function(response){
           // TODO: Error handling
-          $scope.endpoint = {};
+          //$scope.endpoint = {};
+          setDefaultEndpoint();
           return response;
         });
     };
@@ -516,13 +518,13 @@ angular.module('app').controller('EditorCtrl', [
       console.log('item', data);
 
       // Update the item
-      Items.update($scope.endpoint.uuid, itemData)
+      return Items.update($scope.endpoint.uuid, itemData)
         .then(function(item){
           // Update current project item flagged value
           //$rootScope.currentProject.collections[item.collection_id].items[item.uuid].flagged = item.flaggged;
-
+          console.log('updateItem', item);
           // Create a flag post
-          Activities.create($scope.endpoint.uuid, data).then(function(){
+          return Activities.create($scope.endpoint.uuid, data).then(function(){
             // Reload posts
             $rootScope.$broadcast('loadActivities');
             // Update the flag for the buttons
@@ -546,6 +548,7 @@ angular.module('app').controller('EditorCtrl', [
       console.log("item",$rootScope.currentProject.
         collections[$scope.endpoint.collection_id].
         items[$scope.endpoint.uuid]);
+
     };
 
     init();
