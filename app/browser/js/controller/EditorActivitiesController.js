@@ -12,6 +12,7 @@ angular.module('app').controller('EditorActivitiesCtrl', [
       //$scope.agParentUpdateFlag({'bla':true});
 
       $scope.updateFlag = function(status){
+        console.log("ActivitiesController", status);
         $scope.agParentUpdateFlag({'status':status});
         $scope.agParentFlag = status;
       };

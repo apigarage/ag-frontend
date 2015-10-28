@@ -1,13 +1,14 @@
 
 <!-- activity types: create, comment, flag, resolve, edit, form -->
 <ul class="endpoint-activity" >
-  <li ag-editor-activity-item ng-repeat="endpoint in activities"
+  <li ag-editor-activity-item
       ag-editor-activity-type="endpoint.activity_type.name"
       ag-editor-activity-time="endpoint.created_at"
       ag-editor-activity-user="endpoint.user_id == user.id ? user.name : user.id"
       ag-editor-activity-endpoint="endpoint"
-      ag-editor-activity-parentid="agParentId">
-      <p >
+      ag-editor-activity-parentid="agParentId"
+      ng-repeat="endpoint in activities">
+      <p>
         {{endpoint.description}}
       </p>
   </li>

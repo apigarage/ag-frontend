@@ -535,11 +535,17 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     $scope.updateItemFlag = function (status){
-      console.log("updateFlag", status);
+      console.log("EditorController", status);
       $scope.endpoint.flag = status;
-      // Update current project item flagged value
-      $rootScope.currentProject.collections[$scope.endpoint.collection_id].items[$scope.endpoint.uuid].flagged = status;
 
+      // Update current project item flagged value
+      $rootScope.currentProject.
+        collections[$scope.endpoint.collection_id].
+        items[$scope.endpoint.uuid].flagged = status ? "0" : "1";
+      //$rootScope.$broadcast('updateSideBar');
+      console.log("item",$rootScope.currentProject.
+        collections[$scope.endpoint.collection_id].
+        items[$scope.endpoint.uuid]);
     };
 
     init();

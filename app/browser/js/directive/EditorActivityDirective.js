@@ -69,8 +69,6 @@ angular.module('AGEndpointActivity', [])
           console.log('form');
           $scope.iconClasses = 'fa-commenting-o fa-flip-horizontal';
           $scope.verb = "&middot; New comment";
-          $scope.endpoint = $scope.editorActivityEndpoint;
-          $scope.commentDescription = "";
           break;
       }
 
@@ -81,97 +79,73 @@ angular.module('AGEndpointActivity', [])
       });
 
       function showMenu(){
-        return $scope.agEditorActivityEndpoint.user.id == $scope.user.id
-      };
+        return ($scope.agEditorActivityEndpoint.user.id == $scope.user.id);
+      }
 
-      // submit flagged comment
-      $scope.submitFlaggedComment = function(commentForm, currentEndpoint, currentEndpointFlag){
-        var description;
-        if(commentForm.commentDescription.$modelValue === undefined)
-        {
-          description = '';
-        }else{
-          description = commentForm.commentDescription.$modelValue;
-        }
+      function submitComment(comment){
+        return activities.create($scope.agEditorActivityParentid, comment)
+          .then(function(comment){
+            // TODO: handle error if any
+          });
+      }
 
-        if(currentEndpointFlag){
-          data = {
-            'type' : 'flag',
-            'description' : description
-          };
-        }else{
-          data = {
-            'type' : 'resolve',
-            'description' : description
-          };
-        }
-
-        return activities.create($scope.agEditorActivityParentid, data).then(function(item){
-          // TODO: handle error if any
-          // Update current project item flagged value
-          $scope.updateFlag(currentEndpointFlag);
-        }).finally(function(data){
-          // Refresh Comment Form
-          commentForm.$setPristine();
-          $scope.commentDescription = "";
-          $rootScope.$broadcast('loadActivities');
-        });
-      };
+      function clearForm(commentForm){
+        commentForm.$setPristine();
+        commentForm.description = "";
+      }
 
       $scope.updateFlag = function(status){
+        console.log("ActivityStatus", status);
         $scope.agEditorActivityFlagStatus({'status':status});
         $scope.agEditorActivityFlag = status;
       };
 
+      // Submit flagged comment
+      $scope.submitFlaggedComment = function(commentForm, currentEndpointFlag){
+        var comment = {};
+        // Create Flag/Resolve Comment add description
+        comment.type = currentEndpointFlag ? 'flag' : 'resolve';
+        comment.description = commentForm.description;
+        return submitComment(comment)
+          .then(function(data){
+            $scope.updateFlag(currentEndpointFlag);
+            clearForm(commentForm);
+            $rootScope.$broadcast('loadActivities');
+          });
+      };
+
       $scope.submitComment = function(commentForm, currentEndpoint){
+        var comment = {
+          'description' : commentForm.description
+        };
 
-        var description;
-        if(commentForm.commentDescription.$modelValue === undefined)
-        {
-          description = '';
-        }else{
-          description = commentForm.commentDescription.$modelValue;
-        }
-
-        if(commentForm.edit.$modelValue){
-          // Update Comment
-          data = {
-            'description' : description
-          };
-
-          return activities.update($scope.agEditorActivityParentid, currentEndpoint.uuid, data)
+        if(commentForm.edit){
+          // Edit Comment
+          return activities.update($scope.agEditorActivityParentid, currentEndpoint.uuid, comment)
             .then(function(item){
               // TODO: handle errors if any
             }).finally(function(data){
+              // Reload comments
               $rootScope.$broadcast('loadActivities');
             });
 
         }else{
           // Create Comment
-          // TODO: Update editprActivityParentID item FLAG
-          data = {
-            'type' : 'comment',
-            'description' : description
-          };
-          return activities.create($scope.agEditorActivityParentid, data).then(function(item){
-            // TODO: handle errors if any
-          }).finally(function(data){
-            // Clear Form
-            commentForm.$setPristine();
-            $scope.commentDescription = "";
+          comment.type = 'comment';
+          return submitComment(comment)
+          .then(function(data){
+            clearForm(commentForm);
             $rootScope.$broadcast('loadActivities');
           });
         }
       };
 
-      $scope.editComment = function(){
-        // Load form
+      $scope.editComment = function(agEditorActivityEndpoint){
+        // Load Edit Comment Form
         $scope.showMenu = false;
         $scope.agEditorActivityType = "form";
-        $scope.commentDescription = data.description;
-        $scope.commentEdit = true;
-        // No way to cancel an Edit
-        // No way to flag an edited comment
+        $scope.commentForm.description = agEditorActivityEndpoint.description;
+        $scope.commentForm.edit = true;
       };
 
       $scope.deleteComment = function(currentEndpoint){
