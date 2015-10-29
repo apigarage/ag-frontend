@@ -36,7 +36,7 @@ angular.module('app').controller('EditorCtrl', [
 
     function setDefaultEndpoint(){
       $scope.endpoint = {
-        flag: false,
+        flagged: false,
         requestUrl: "",
         name: "",
         requestMethod: 'GET',
@@ -443,7 +443,7 @@ angular.module('app').controller('EditorCtrl', [
 
       item.method = _.find( $scope.requestMethods, function(data){ return data === item.method; });
       $scope.endpoint = Editor.loadAndGetEndpoint(item);
-      console.log('endpoint', $scope.endpoint);
+      console.log('endpoint -- by chinmay and Zad', JSON.stringify($scope.endpoint));
       resetResponse();
 
       if(_.isEqual($scope.endpoint.uuid,"") || _.isUndefined($scope.endpoint.uuid)){
@@ -495,11 +495,12 @@ angular.module('app').controller('EditorCtrl', [
 
 
     $scope.addCommentFlag = function(){
+      $scope.endpoint.flagged = ! $scope.endpoint.flagged;
       $scope.requestChangedFlag = true;
       var data;
       var delay = 0;
       var itemData;
-      if($scope.endpoint.flag){
+      if($scope.endpoint.flagged){
         data = {
           'type' : 'flag'
         };
@@ -521,7 +522,7 @@ angular.module('app').controller('EditorCtrl', [
       return Items.update($scope.endpoint.uuid, itemData)
         .then(function(item){
           // Update current project item flagged value
-          //$rootScope.currentProject.collections[item.collection_id].items[item.uuid].flagged = item.flaggged;
+          //$rootScope.currentProject.collections[item.collection_id].items[item.uuid].flagged = item.flagged;
           console.log('updateItem', item);
           // Create a flag post
           return Activities.create($scope.endpoint.uuid, data).then(function(){
@@ -538,7 +539,7 @@ angular.module('app').controller('EditorCtrl', [
 
     $scope.updateItemFlag = function (status){
       console.log("EditorController", status);
-      $scope.endpoint.flag = status;
+      $scope.endpoint.flagged = status;
 
       // Update current project item flagged value
       $rootScope.currentProject.
@@ -550,6 +551,10 @@ angular.module('app').controller('EditorCtrl', [
         items[$scope.endpoint.uuid]);
 
     };
+
+    $scope.$watch('endpoint.flagged', function(data){
+
+    });
 
     init();
 

@@ -14,7 +14,7 @@ angular.module('app').controller('EditorActivitiesCtrl', [
       $scope.updateFlag = function(status){
         console.log("ActivitiesController", status);
         $scope.agParentUpdateFlag({'status':status});
-        $scope.agParentFlag = status;
+        // $scope.endpoint.flagged = status;
       };
 
       Users.getCurrentUserInformation().then(function(user){
@@ -22,10 +22,11 @@ angular.module('app').controller('EditorActivitiesCtrl', [
       });
 
       // Pass item uuid from Editor Controller to this controller using Directive.
-      $scope.$watch('agParentId',function(){
+      $scope.$watch('agParentEndpoint.uuid',function(){
         // set to loading
         // get all Actitivies from the Item
-        $scope.agParentFlag = status;
+        // $scope.endpoint.flagged = status;
+        console.log('agParentEndpoint');
         loadActivities();
       });
 
@@ -36,9 +37,9 @@ angular.module('app').controller('EditorActivitiesCtrl', [
       });
 
       function loadActivities(){
-        if($scope.agParentId !== undefined){
-          console.log('parentId', $scope.agParentId);
-          Activities.getAll($scope.agParentId).then(function(activities){
+        if($scope.agParentEndpoint.uuid !== undefined){
+          console.log('agParentEndpoint uuid', $scope.agParentEndpoint.uuid);
+          Activities.getAll($scope.agParentEndpoint.uuid).then(function(activities){
             // pass the each item data forward to editor-activity-item
             if(activities.status == 500){
               console.log('Whoops! There was an error.');

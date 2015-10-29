@@ -48,7 +48,6 @@
           <span class="fa fa-fw fa-files-o"></span>
           <span class="hidden-xs hidden-sm">Make a copy</span>
         </button> -->
-        <code>endpoint.flag : {{endpoint}}</code>
         <div class="btn-group">
           <button class="btn btn-default"
                   ng-click="showCommentForm()"
@@ -58,9 +57,9 @@
           </button>
           <button class="btn btn-default"
                   ng-disabled="!currentItem.uuid"
-                  ng-click="endpoint.flag = !endpoint.flag; addCommentFlag()">
-            <span class="fa" ng-class="endpoint.flag ? 'fa-check' : 'fa-flag-o'"></span>
-            <span class="hidden-xs hidden-sm">{{ endpoint.flag ? 'Resolve' : 'Flag' }}</span>
+                  ng-click="addCommentFlag()">
+            <span class="fa" ng-class="endpoint.flagged ? 'fa-check' : 'fa-flag-o'"></span>
+            <span class="hidden-xs hidden-sm">{{ endpoint.flagged ? 'Resolve' : 'Flag' }}</span>
           </button>
         </div>
 
@@ -84,7 +83,7 @@
                  placeholder="Untitled Request" pu-elastic-input
                  ng-model="endpoint.name"
                  ng-change="requestChanged()"/>
-          <span class="editor-status label activity-flagged" ng-show="endpoint.flag">
+          <span class="editor-status label activity-flagged" ng-show="endpoint.flagged">
             Flagged
           </span>
         </h1>
@@ -117,11 +116,8 @@
     <div ng-include="'html/editor-response.html'" ng-show="endpointNav.tab == 'Editor'"></div>
     <!-- <div ng-include="'html/editor-activity.html'" ng-show="endpointNav.tab == 'Activity'"></div> -->
 
-    <code>endpoint.flag : {{endpoint.flag}}</code>
     <editor-activities
       ag-parent-type="item"
-      ag-parent-id="endpoint.uuid"
-      ag-parent-flag="endpoint.flag"
       ag-parent-update-flag="updateItemFlag(status)"
       ag-parent-endpoint="endpoint"
       ng-show="endpoint.uuid && endpointNav.tab == 'Activity'" />

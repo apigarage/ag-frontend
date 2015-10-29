@@ -6,8 +6,6 @@ directive("editorActivities", [function() {
     controller: 'EditorActivitiesCtrl',
     scope: {
       agParentType : "=",
-      agParentId : "=",
-      agParentFlag : "=",
       agParentUpdateFlag : "&",
       agParentEndpoint  : "="
     }

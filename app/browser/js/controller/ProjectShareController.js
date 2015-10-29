@@ -4,7 +4,8 @@ angular.module('app').controller('ProjectShareCtrl', [
   '$q',
   'lodash',
   'ProjectsUser',
-  function ($scope, $rootScope, $q, _, ProjectsUser){
+  'Analytics',
+  function ($scope, $rootScope, $q, _, ProjectsUser, Analytics){
     $scope.projectShare = {};
     $scope.currentUserPrivilege = "1";
 

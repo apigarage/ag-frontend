@@ -14,13 +14,13 @@
       <script type="text/ng-template" id="activity-menu">
         <ul class="dropdown-menu">
           <li>
-            <a ng-click="editComment(agEditorActivityEndpoint)">
+            <a ng-click="editComment(agActivity)">
               <span class="fa fa-fw fa-pencil"></span>
               Edit
             </a>
           </li>
           <li>
-            <a ng-click="deleteComment(agEditorActivityEndpoint)">
+            <a ng-click="deleteComment(agActivity)">
               <span class="fa fa-fw fa-trash-o"></span>
               Delete
             </a>
@@ -28,25 +28,25 @@
         </ul>
       </script>
 
-      <strong>{{agEditorActivityUser}}</strong>
+      <strong>{{agActivity.user.name}}</strong>
 
       <span class="text-muted">
         <span ng-bind-html="verb"></span>
-        <span ng-bind-html="agEditorActivityTime"></span>
+        <span ng-bind-html="agActivity.created_at"></span>
       </span>
 
       <div class="activity-comment"
-         ng-class="agEditorActivityType == 'form' ? 'activity-comment-form' : 'enable-select'"
-         ng-if="hasTransclusion || agEditorActivityType == 'form'">
+         ng-class="agActivity.type == 'form' ? 'activity-comment-form' : 'enable-select'"
+         ng-if="hasTransclusion || agActivity.type == 'form'">
 
         <input type="hidden" name="commentForm.edit"
           data-ng-model="commentForm.edit"
           value="commentForm.edit">
 
-        <div ng-if="agEditorActivityType != 'form'" ng-transclude>
+        <div ng-if="agActivity.type != 'form'" ng-transclude>
         </div>
 
-        <div ng-if="agEditorActivityType == 'form'">
+        <div ng-if="agActivity.type == 'form'">
           <p>
             <textarea name="commentDescription"
                       class="form-control"
@@ -54,19 +54,17 @@
                       placeholder="Write a comment...">
             </textarea>
           </p>
-
           <p class="text-right">
-            <code>agEditorActivityFlag : {{agEditorActivityFlag}}</code>
             <button name="CommentFlag"
                     type="submit" class="btn btn-default"
                     ng-click="agEditorActivityFlag = !agEditorActivityFlag;
                       submitFlaggedComment(commentForm, agEditorActivityFlag)"
                     ng-show="!commentForm.edit">
 
-              <span class="fa fa-fw" ng-class="agEditorActivityFlag ? 'fa-check' : 'fa-flag-o'"></span>
-              {{ agEditorActivityFlag ? 'Resolve' : 'Flag' }} {{ commentForm.description ? 'with comment' : '' }}
+              <span class="fa fa-fw" ng-class="agEndpoint.flagged ? 'fa-check' : 'fa-flag-o'"></span>
+              {{ agEndpoint.flagged ? 'Resolve' : 'Flag' }} {{ commentForm.description ? 'with comment' : '' }}
             </button>
-            <button type="submit" class="btn btn-primary" ng-click="submitComment(commentForm, agEditorActivityEndpoint, commentDescription)">
+            <button type="submit" class="btn btn-primary" ng-click="submitComment(commentForm, agActivity, commentDescription)">
               {{ commentForm.edit ? 'Update' : 'Comment' }}
             </button>
           </p>

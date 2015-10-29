@@ -236,10 +236,11 @@ angular.module('app')
         item.data = endpoint.requestBody;
         item.uuid = endpoint.uuid;
         item.headers = RequestUtility.getHeaders(endpoint.requestHeaders, 'object');
-        item.flagged = endpoint.flag;
+        item.flagged = endpoint.flagged;
 
         return item;
       }
+
 
       function buildRequestForScope(item){
         var newEndpoint = {};
@@ -251,8 +252,8 @@ angular.module('app')
         newEndpoint.requestMethod  = item.method ? item.method : 'GET';
         // Flagged or resolved
         console.log('item.flagged', item.flagged);
-        newEndpoint.flag = item.flagged == 1 ? true : false ;
-        console.log('newEndpoint.flag', newEndpoint.flag);
+        newEndpoint.flagged = ( item.flagged == 1 ? true : false );
+        console.log('newEndpoint.flagged', newEndpoint.flagged);
         if( newEndpoint.requestMethod !== 'GET' && _.isObject(item.data)){
           newEndpoint.requestBody = JSON.stringify(item.data);
         } else if(newEndpoint.requestMethod !== 'GET' && item.data){

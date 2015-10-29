@@ -17,59 +17,62 @@ angular.module('AGEndpointActivity', [])
     replace: true,
     transclude: true,
     scope: {
-      agEditorActivityType: "=",
-      agEditorActivityNumCollapsed: "=",
-      agEditorActivityTime: "=",
-      agEditorActivityUser: "=",
-      agEditorActivityUid: "=",
-      agEditorActivityEndpoint: "=",
-      agEditorActivityParentid: "=",
-      agEditorActivityFlag: "=",
-      agEditorActivityFlagStatus: "&",
+      agActivityNumCollapsed: "=",
+      agActivity: "=",
+      agEndpoint: "=",
+      agActivityForm:"@",
+      agActivityFlagStatus: "&",
     },
     link: function ($scope, $elem, $attr, $ctrl, $transclude) {
 
+      console.log("WORKING ON THE FORM");
       // Get current user
       var localStorage = $window.localStorage;
       $scope.user = JSON.parse(localStorage.getItem("currentUser"));
 
       // Build item activities
-      switch( $scope.agEditorActivityType )
-      {
-        case "create":
-          $scope.iconClasses = 'fa-file-o';
-          $scope.verb = 'created this endpoint';
-          break;
-        case "comment":
-          $scope.iconClasses = 'fa-comment-o fa-flip-horizontal';
-          $scope.showMenu = showMenu();
-          $scope.verb = 'commented';
-          break;
-        case "flag":
-          $scope.iconClasses = 'fa-flag';
-          $scope.iconBadge = 'activity-flagged';
-          $scope.showMenu = showMenu();
-          $scope.verb = 'marked this endpoint as <span class="label activity-flagged">FLAGGED</span>';
-          break;
-        case "resolve":
-          $scope.iconClasses = 'fa-check';
-          $scope.iconBadge = 'activity-resolved';
-          $scope.showMenu = showMenu();
-          $scope.verb = 'marked this endpoint as <span class="label activity-resolved">RESOLVED</span>';
-          break;
-        case "edit":
-          $scope.iconClasses = 'fa-pencil';
-          $scope.verb = 'edited this endpoint';
-          break;
-        case "collapse":
-          $scope.iconClasses = 'fa-ellipsis-v';
-          $scope.collapsed = true;
-          break;
-        case "form":
-          console.log('form');
-          $scope.iconClasses = 'fa-commenting-o fa-flip-horizontal';
-          $scope.verb = "&middot; New comment";
-          break;
+      // Get current user
+      if( $scope.agActivity && $scope.agActivity.activity_type &&
+        $scope.agActivity.activity_type.name ){
+          switch($scope.agActivity.activity_type.name)
+          {
+            case "create":
+              $scope.iconClasses = 'fa-file-o';
+              $scope.verb = 'created this endpoint';
+            break;
+            case "comment":
+              $scope.iconClasses = 'fa-comment-o fa-flip-horizontal';
+              $scope.showMenu = showMenu();
+              $scope.verb = 'commented';
+            break;
+            case "flag":
+              $scope.iconClasses = 'fa-flag';
+              $scope.iconBadge = 'activity-flagged';
+              $scope.showMenu = showMenu();
+              $scope.verb = 'marked this endpoint as <span class="label activity-flagged">FLAGGED</span>';
+            break;
+            case "resolve":
+              $scope.iconClasses = 'fa-check';
+              $scope.iconBadge = 'activity-resolved';
+              $scope.showMenu = showMenu();
+              $scope.verb = 'marked this endpoint as <span class="label activity-resolved">RESOLVED</span>';
+            break;
+            case "edit":
+              $scope.iconClasses = 'fa-pencil';
+              $scope.verb = 'edited this endpoint';
+            break;
+            case "collapse":
+              $scope.iconClasses = 'fa-ellipsis-v';
+              $scope.collapsed = true;
+            break;
+          }
+      } else {
+        console.log('form');
+        $scope.iconClasses = 'fa-commenting-o fa-flip-horizontal';
+        $scope.agActivity = {
+          type: 'form'
+        };
+        $scope.verb = "&middot; New comment";
       }
 
       $transclude(function(clone){
@@ -79,7 +82,7 @@ angular.module('AGEndpointActivity', [])
       });
 
       function showMenu(){
-        return ($scope.agEditorActivityEndpoint.user.id == $scope.user.id);
+        return ($scope.agActivity.user.id == $scope.user.id);
       }
 
       function submitComment(comment){
@@ -104,20 +107,20 @@ angular.module('AGEndpointActivity', [])
       };
 
       // Submit flagged comment
-      $scope.submitFlaggedComment = function(commentForm, currentEndpointFlag){
+      $scope.submitFlaggedComment = function(commentForm, currentActivityFlag){
         var comment = {};
         // Create Flag/Resolve Comment add description
-        comment.type = currentEndpointFlag ? 'flag' : 'resolve';
+        comment.type = currentActivityFlag ? 'flag' : 'resolve';
         comment.description = commentForm.description;
         return submitComment(comment)
           .then(function(data){
             var itemData = {
-              'flagged' : currentEndpointFlag
+              'flagged' : currentActivityFlag
             };
             // Update Item
             Items.update($scope.agEditorActivityParentid, itemData)
               .then(function(comment){
-                $scope.updateFlag(currentEndpointFlag);
+                $scope.updateFlag(currentActivityFlag);
                 clearForm(commentForm);
                 $rootScope.$broadcast('loadActivities');
               });
@@ -125,14 +128,14 @@ angular.module('AGEndpointActivity', [])
           });
       };
 
-      $scope.submitComment = function(commentForm, currentEndpoint){
+      $scope.submitComment = function(commentForm, currentActivity){
         var comment = {
           'description' : commentForm.description
         };
 
         if(commentForm.edit){
           // Edit Comment
-          return activities.update($scope.agEditorActivityParentid, currentEndpoint.uuid, comment)
+          return activities.update($scope.agEndpoint.uuid, currentActivity.uuid, comment)
             .then(function(item){
               // TODO: handle errors if any
             }).finally(function(data){
@@ -159,8 +162,8 @@ angular.module('AGEndpointActivity', [])
         $scope.commentForm.edit = true;
       };
 
-      $scope.deleteComment = function(currentEndpoint){
-        return activities.remove($scope.agEditorActivityParentid, currentEndpoint.uuid)
+      $scope.deleteComment = function(currentActivity){
+        return activities.remove($scope.agEditorActivityParentid, currentActivity.uuid)
           .then(function(item){
             // TODO: handle errors if any
           }).finally(function(data){
