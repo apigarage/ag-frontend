@@ -57,7 +57,6 @@ angular.module('app')
         var deferred = $q.defer();
 
         var endpointForDB = buildRequestOutOfScope();
-        console.log('endpointForDB', endpointForDB);
 
         if( _.isEmpty(endpointForDB.uuid) ){
           // CREATE REQUEST
@@ -251,9 +250,7 @@ angular.module('app')
         // If method not found, set it to default method 'GET'
         newEndpoint.requestMethod  = item.method ? item.method : 'GET';
         // Flagged or resolved
-        console.log('item.flagged', item.flagged);
         newEndpoint.flagged = ( item.flagged == 1 ? true : false );
-        console.log('newEndpoint.flagged', newEndpoint.flagged);
         if( newEndpoint.requestMethod !== 'GET' && _.isObject(item.data)){
           newEndpoint.requestBody = JSON.stringify(item.data);
         } else if(newEndpoint.requestMethod !== 'GET' && item.data){

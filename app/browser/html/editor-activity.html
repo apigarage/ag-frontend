@@ -1,9 +1,10 @@
 
 <!-- activity types: create, comment, flag, resolve, edit, form -->
-<ul class="endpoint-activity" >
+<ul class="endpoint-activity" ag-activities-update="updateActivities(activityItem, action)">
   <li ag-editor-activity-item
       ag-activity="activity"
       ag-endpoint="agParentEndpoint"
+      ag-activities-update="updateActivities(activityItem, action)"
       ng-repeat="activity in activities">
       <p>
         {{activity.description}}
@@ -78,6 +79,7 @@
   <li ag-editor-activity-item
       ag-endpoint="agParentEndpoint"
       ag-activity-flag-status="updateFlag(status)"
+      ag-activities-update="updateActivities(activityItem, action)"
       >
   </li>
 </ul>

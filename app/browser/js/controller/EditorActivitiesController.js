@@ -1,44 +1,57 @@
 angular.module('app').controller('EditorActivitiesCtrl', [
-  'lodash',
   '$scope',
   'Activities',
   'Users',
   function (
-    _,
     $scope,
     Activities,
     Users){
 
-      //$scope.agParentUpdateFlag({'bla':true});
-
       $scope.updateFlag = function(status){
-        console.log("ActivitiesController", status);
         $scope.agParentUpdateFlag({'status':status});
-        // $scope.endpoint.flagged = status;
+      };
+
+      $scope.updateActivities = function(activityItem, action){
+
+        switch (action) {
+          case "update":
+            for(i=0; i < $scope.activities.length; i++){
+              if($scope.activities[i].uuid == activityItem.uuid){
+                $scope.activities[i].description = activityItem.description;
+                continue;
+              }
+            }
+            break;
+          case "remove":
+            for(i=0; i < $scope.activities.length; i++){
+              if($scope.activities[i].uuid == activityItem.uuid){
+                $scope.activities.splice(i, 1);
+                continue;
+              }
+            }
+            break;
+          default: // Add to end of list assumes that it is in order
+            if($scope.activities !== undefined){
+              $scope.activities.push(activityItem);
+            }
+        }
       };
 
       Users.getCurrentUserInformation().then(function(user){
         $scope.user = user;
       });
 
-      // Pass item uuid from Editor Controller to this controller using Directive.
-      $scope.$watch('agParentEndpoint.uuid',function(){
-        // set to loading
-        // get all Actitivies from the Item
-        // $scope.endpoint.flagged = status;
-        console.log('agParentEndpoint');
-        loadActivities();
+      $scope.$watch('agParentActivityItem',function(){
+        $scope.updateActivities($scope.agParentActivityItem);
       });
-
-
-      $scope.$on('loadActivities', function(event){
-        //console.log('loadActivities', event);
+      // When Endpoint changes load comments
+      $scope.$watch('agParentEndpoint.uuid',function(){
         loadActivities();
       });
 
       function loadActivities(){
+        $scope.activities = [];
         if($scope.agParentEndpoint.uuid !== undefined){
-          console.log('agParentEndpoint uuid', $scope.agParentEndpoint.uuid);
           Activities.getAll($scope.agParentEndpoint.uuid).then(function(activities){
             // pass the each item data forward to editor-activity-item
             if(activities.status == 500){
@@ -47,11 +60,9 @@ angular.module('app').controller('EditorActivitiesCtrl', [
               // get all activities
               // print it back on screen
               $scope.activities = activities;
-              //console.log('activities', $scope.activities);
             }
 
           });
-
         }
       }
 

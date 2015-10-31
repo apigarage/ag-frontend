@@ -7,7 +7,9 @@ directive("editorActivities", [function() {
     scope: {
       agParentType : "=",
       agParentUpdateFlag : "&",
-      agParentEndpoint  : "="
+      agParentUpdateActivities : "&",
+      agParentEndpoint  : "=",
+      agParentActivityItem : "="
     }
   };
 }]);

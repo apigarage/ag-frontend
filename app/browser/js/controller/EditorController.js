@@ -443,7 +443,6 @@ angular.module('app').controller('EditorCtrl', [
 
       item.method = _.find( $scope.requestMethods, function(data){ return data === item.method; });
       $scope.endpoint = Editor.loadAndGetEndpoint(item);
-      console.log('endpoint -- by chinmay and Zad', JSON.stringify($scope.endpoint));
       resetResponse();
 
       if(_.isEqual($scope.endpoint.uuid,"") || _.isUndefined($scope.endpoint.uuid)){
@@ -515,19 +514,17 @@ angular.module('app').controller('EditorCtrl', [
           'flagged' : false
         };
       }
-      console.log('data', data);
-      console.log('item', data);
-
+      
       // Update the item
       return Items.update($scope.endpoint.uuid, itemData)
         .then(function(item){
           // Update current project item flagged value
-          //$rootScope.currentProject.collections[item.collection_id].items[item.uuid].flagged = item.flagged;
-          console.log('updateItem', item);
           // Create a flag post
-          return Activities.create($scope.endpoint.uuid, data).then(function(){
+          return Activities.create($scope.endpoint.uuid, data)
+            .then(function(activityItem){
             // Reload posts
-            $rootScope.$broadcast('loadActivities');
+            //$rootScope.$broadcast('loadActivities');
+            $scope.updateActivities(activityItem);
             // Update the flag for the buttons
             $scope.updateItemFlag(item.flagged);
             // Scroll to the form
@@ -537,24 +534,20 @@ angular.module('app').controller('EditorCtrl', [
 
     };
 
-    $scope.updateItemFlag = function (status){
-      console.log("EditorController", status);
-      $scope.endpoint.flagged = status;
+    $scope.updateActivities = function(activityItem, action){
+      $scope.activityItem = activityItem;
+      $scope.action = action;
+    };
 
+    $scope.updateItemFlag = function (status){
+      $scope.endpoint.flagged = status;
       // Update current project item flagged value
       $rootScope.currentProject.
         collections[$scope.endpoint.collection_id].
-        items[$scope.endpoint.uuid].flagged = status ? "0" : "1";
-      //$rootScope.$broadcast('updateSideBar');
-      console.log("item",$rootScope.currentProject.
-        collections[$scope.endpoint.collection_id].
-        items[$scope.endpoint.uuid]);
+        items[$scope.endpoint.uuid].flagged = status ? "1" : "0";
+      $rootScope.$broadcast('updateSideBar');
 
     };
-
-    $scope.$watch('endpoint.flagged', function(data){
-
-    });
 
     init();
 

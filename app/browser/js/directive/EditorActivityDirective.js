@@ -9,8 +9,8 @@ angular.module('AGEndpointActivity', [])
 // 5. liEditorActivity = "edit"     -> Edit Endpoint
 // 6. liEditorActivity = "collapse" -> Collapsed items
 // 7. liEditorActivity = "form"     -> Form for typing new Comments
-.directive('agEditorActivityItem', ['Activities', 'Items', '$rootScope', '$window', '$q',
-  function (activities, Items, $rootScope, $window, $q) {
+.directive('agEditorActivityItem', ['Activities', 'Items', '$rootScope', '$window',
+  function (activities, Items, $rootScope, $window) {
   return {
     restrict: 'EA',
     templateUrl: 'html/editor-activity-item.html',
@@ -22,76 +22,72 @@ angular.module('AGEndpointActivity', [])
       agEndpoint: "=",
       agActivityForm:"@",
       agActivityFlagStatus: "&",
+      agActivitiesUpdate: "&"
     },
     link: function ($scope, $elem, $attr, $ctrl, $transclude) {
 
-      console.log("WORKING ON THE FORM");
       // Get current user
       var localStorage = $window.localStorage;
       $scope.user = JSON.parse(localStorage.getItem("currentUser"));
 
       // Build item activities
       // Get current user
-      if( $scope.agActivity && $scope.agActivity.activity_type &&
-        $scope.agActivity.activity_type.name ){
-          switch($scope.agActivity.activity_type.name)
-          {
-            case "create":
-              $scope.iconClasses = 'fa-file-o';
-              $scope.verb = 'created this endpoint';
-            break;
-            case "comment":
-              $scope.iconClasses = 'fa-comment-o fa-flip-horizontal';
-              $scope.showMenu = showMenu();
-              $scope.verb = 'commented';
-            break;
-            case "flag":
-              $scope.iconClasses = 'fa-flag';
-              $scope.iconBadge = 'activity-flagged';
-              $scope.showMenu = showMenu();
-              $scope.verb = 'marked this endpoint as <span class="label activity-flagged">FLAGGED</span>';
-            break;
-            case "resolve":
-              $scope.iconClasses = 'fa-check';
-              $scope.iconBadge = 'activity-resolved';
-              $scope.showMenu = showMenu();
-              $scope.verb = 'marked this endpoint as <span class="label activity-resolved">RESOLVED</span>';
-            break;
-            case "edit":
-              $scope.iconClasses = 'fa-pencil';
-              $scope.verb = 'edited this endpoint';
-            break;
-            case "collapse":
-              $scope.iconClasses = 'fa-ellipsis-v';
-              $scope.collapsed = true;
-            break;
+      if( $scope.agActivity &&
+          $scope.agActivity.activity_type &&
+          $scope.agActivity.activity_type.name ){
+
+            switch($scope.agActivity.activity_type.name)
+            {
+              case "create":
+                $scope.iconClasses = 'fa-file-o';
+                $scope.verb = 'created this endpoint';
+              break;
+              case "comment":
+                $scope.iconClasses = 'fa-comment-o fa-flip-horizontal';
+                $scope.showMenu = showMenu();
+                $scope.verb = 'commented';
+              break;
+              case "flag":
+                $scope.iconClasses = 'fa-flag';
+                $scope.iconBadge = 'activity-flagged';
+                $scope.showMenu = showMenu();
+                $scope.verb = 'marked this endpoint as <span class="label activity-flagged">FLAGGED</span>';
+              break;
+              case "resolve":
+                $scope.iconClasses = 'fa-check';
+                $scope.iconBadge = 'activity-resolved';
+                $scope.showMenu = showMenu();
+                $scope.verb = 'marked this endpoint as <span class="label activity-resolved">RESOLVED</span>';
+              break;
+              case "edit":
+                $scope.iconClasses = 'fa-pencil';
+                $scope.verb = 'edited this endpoint';
+              break;
+              case "collapse":
+                $scope.iconClasses = 'fa-ellipsis-v';
+                $scope.collapsed = true;
+              break;
           }
+
       } else {
-        console.log('form');
+
         $scope.iconClasses = 'fa-commenting-o fa-flip-horizontal';
         $scope.agActivity = {
           type: 'form'
         };
         $scope.verb = "&middot; New comment";
-      }
 
-      $transclude(function(clone){
-        if(clone && clone.length > 1 ){
-          $scope.hasTransclusion = true;
-        }
-      });
+      }
 
       function showMenu(){
         return ($scope.agActivity.user.id == $scope.user.id);
       }
 
       function submitComment(comment){
-        return activities.create($scope.agEditorActivityParentid, comment)
+        return activities.create($scope.agEndpoint.uuid, comment)
           .then(function(comment){
-
-            console.log('comment', comment);
-            $q.resolve(comment);
             // TODO: handle error if any
+            $scope.updateActivities(comment, 'add');
           });
       }
 
@@ -101,28 +97,38 @@ angular.module('AGEndpointActivity', [])
       }
 
       $scope.updateFlag = function(status){
-        console.log("ActivityStatus", status);
-        $scope.agEditorActivityFlagStatus({'status':status});
-        $scope.agEditorActivityFlag = status;
+        $scope.agActivityFlagStatus({'status':status});
+        $scope.agEndpoint.flagged = status;
+      };
+
+      $scope.updateActivities = function(activityItem, action){
+        $scope.agActivitiesUpdate(
+          { 'activityItem' : activityItem,
+            'action': action
+          });
       };
 
       // Submit flagged comment
-      $scope.submitFlaggedComment = function(commentForm, currentActivityFlag){
+      $scope.submitFlaggedComment = function(commentForm){
+        // Toggle Flagged Endpoint
+        var flagged = !$scope.agEndpoint.flagged;
+
         var comment = {};
         // Create Flag/Resolve Comment add description
-        comment.type = currentActivityFlag ? 'flag' : 'resolve';
+        comment.type = flagged ? 'flag' : 'resolve';
         comment.description = commentForm.description;
         return submitComment(comment)
           .then(function(data){
+
             var itemData = {
-              'flagged' : currentActivityFlag
+              'flagged' : flagged
             };
+
             // Update Item
-            Items.update($scope.agEditorActivityParentid, itemData)
+            Items.update($scope.agEndpoint.uuid, itemData)
               .then(function(comment){
-                $scope.updateFlag(currentActivityFlag);
+                $scope.updateFlag(flagged);
                 clearForm(commentForm);
-                $rootScope.$broadcast('loadActivities');
               });
 
           });
@@ -138,9 +144,11 @@ angular.module('AGEndpointActivity', [])
           return activities.update($scope.agEndpoint.uuid, currentActivity.uuid, comment)
             .then(function(item){
               // TODO: handle errors if any
-            }).finally(function(data){
-              // Reload comments
-              $rootScope.$broadcast('loadActivities');
+              // update comment
+              $scope.updateActivities(item, 'update');
+              // Reload comment box
+              $scope.showMenu = true;
+              $scope.agActivity.type = item.activity_type.name;
             });
 
         }else{
@@ -149,26 +157,23 @@ angular.module('AGEndpointActivity', [])
           return submitComment(comment)
           .then(function(data){
             clearForm(commentForm);
-            $rootScope.$broadcast('loadActivities');
           });
         }
       };
 
-      $scope.editComment = function(agEditorActivityEndpoint){
+      $scope.editComment = function(){
         // Load Edit Comment Form
         $scope.showMenu = false;
-        $scope.agEditorActivityType = "form";
-        $scope.commentForm.description = agEditorActivityEndpoint.description;
+        $scope.agActivity.type = "form";
+        $scope.commentForm.description = $scope.agActivity.description;
         $scope.commentForm.edit = true;
       };
 
-      $scope.deleteComment = function(currentActivity){
-        return activities.remove($scope.agEditorActivityParentid, currentActivity.uuid)
+      $scope.deleteComment = function(){
+        return activities.remove($scope.agEndpoint.uuid, $scope.agActivity.uuid)
           .then(function(item){
             // TODO: handle errors if any
-          }).finally(function(data){
-            // Reload comments
-            $rootScope.$broadcast('loadActivities');
+            $scope.updateActivities({ 'uuid':$scope.agActivity.uuid}, 'remove');
           });
       };
 
