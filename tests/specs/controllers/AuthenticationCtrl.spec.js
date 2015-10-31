@@ -16,11 +16,11 @@ describe('Controller: Authentication', function() {
     $q = $injector.get('$q');
     $window = $injector.get('$window');
     $httpBackend = $injector.get('$httpBackend');
-
-
     HttpBackendBuilder = $injector.get('HttpBackendBuilder');
     Config = $injector.get('Config');
     UsersFixtures = $injector.get('UsersFixtures');
+    UsersFixtures.spyOnCurrentUser();
+
     AuthFixtures = $injector.get('AuthFixtures');
 
     $scope = $rootScope.$new();
