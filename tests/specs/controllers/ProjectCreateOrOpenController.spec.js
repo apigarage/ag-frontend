@@ -14,6 +14,8 @@ describe('Controller: ProjectCreateOrOpenController', function() {
     $httpBackend = $injector.get('$httpBackend');
     HttpBackendBuilder = $injector.get('HttpBackendBuilder');
     ProjectsFixtures = $injector.get('ProjectsFixtures');
+    UsersFixtures = $injector.get('UsersFixtures');
+    UsersFixtures.spyOnCurrentUser();
     $httpBackend.when('GET',/.*html.*/).respond(200, '');
   }));
 
