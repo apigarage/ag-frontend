@@ -1,8 +1,10 @@
 angular.module('app')
 .factory('UsersFixtures', [
   '$httpBackend',
+  '$q',
+  'Users',
   'Config',
-  function($httpBackend, Config){
+  function($httpBackend, $q, Users, Config){
   var users = {};
   users.data = {
     userWithExistingEmail : { // NOT USED.
@@ -74,5 +76,16 @@ angular.module('app')
       }
     }
   };
+
+  users.spyOnCurrentUser = function(){
+    spyOn(Users, 'getCurrentUserInformation').and.callFake(function(){
+      return $q.resolve({
+        id: 999999999,
+        name: 'test-name',
+        email: 'email@email.com'
+      });
+    });
+  };
+
   return users;
 }]);
