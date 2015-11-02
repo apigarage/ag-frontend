@@ -52,7 +52,7 @@ angular.module('app').controller('EditorActivitiesCtrl', [
       function loadActivities(){
         $scope.activities = [];
         if($scope.agParentEndpoint.uuid !== undefined){
-          Activities.getAll($scope.agParentEndpoint.uuid).then(function(activities){
+          return Activities.getAll($scope.agParentEndpoint.uuid).then(function(activities){
             // pass the each item data forward to editor-activity-item
             if(activities.status == 500){
               console.log('Whoops! There was an error.');
@@ -61,7 +61,6 @@ angular.module('app').controller('EditorActivitiesCtrl', [
               // print it back on screen
               $scope.activities = activities;
             }
-
           });
         }
       }
