@@ -4,7 +4,8 @@ angular.module('app').controller('ProjectShareCtrl', [
   '$q',
   'lodash',
   'ProjectsUser',
-  function ($scope, $rootScope, $q, _, ProjectsUser){
+  'Analytics',
+  function ($scope, $rootScope, $q, _, ProjectsUser, Analytics){
     $scope.projectShare = {};
     $scope.currentUserPrivilege = "1";
 
@@ -48,8 +49,20 @@ angular.module('app').controller('ProjectShareCtrl', [
       return ProjectsUser.addProjectUser($rootScope.currentProject.id, data)
         .then(function(response){
           if (_.isEqual(response.status, 200)){
+            //  times clicked on shared
+            Analytics.eventTrack('Share Project',
+              { 'from' : 'ProjectShareCtrl',
+                'existingUser' : true
+              }
+            );
             return getProjectUsers();
           }else if(_.isEqual(response.status, 404)){
+            //  times clicked on shared
+            Analytics.eventTrack('Share Project',
+              { 'from' : 'ProjectShareCtrl',
+                'existingUser' : false
+              }
+            );
             $scope.invitedEmailAddress = formController.email;
             $scope.showInviteSent = true;
             formController.email = "";

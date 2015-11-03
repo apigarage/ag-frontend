@@ -7,7 +7,8 @@ angular.module('app').controller('AuthenticationCtrl', [
   'Auth',
   'Projects',
   'Users',
-  function ($scope, $rootScope, $state, $q, _, Auth, Projects, Users){
+  'Analytics',
+  function ($scope, $rootScope, $state, $q, _, Auth, Projects, Users, Analytics){
 
   function init(){
     $scope.credentials = {};
@@ -71,6 +72,12 @@ angular.module('app').controller('AuthenticationCtrl', [
     return Auth.login($scope.credentials)
       .then(function(loggedIn){
         if(loggedIn){
+
+          // Analytics identify USER
+          Users.getCurrentUserInformation().then(function(user){
+            Analytics.setUserID(user.id);
+          });
+
           $state.go('projectcreateoropen');
         }
         else{
@@ -101,6 +108,10 @@ angular.module('app').controller('AuthenticationCtrl', [
           return Auth.login(userData)
             .then(function(loggedIn){
               if(loggedIn){
+                // Analytics identify USER
+                Users.getCurrentUserInformation().then(function(user){
+                  Analytics.setUserID(user.id);
+                });
                 $state.go('projectcreateoropen');
               } else {
                 $scope.genericSignupErrorMessage =

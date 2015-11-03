@@ -9,15 +9,21 @@ angular.module('app').controller('EditorCtrl', [
   '$modal',
   '$q',
   '$focus',
+  '$timeout',
   'RequestUtility',
   'History',
   'Collections',
   'Projects',
   'Editor',
+  'Activities',
+  'Analytics',
+  'Items',
   function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q,
-    $focus, RequestUtility, History, Collections, Projects, Editor){
-
+    $focus, $timeout, RequestUtility, History, Collections, Projects, Editor,
+    Activities, Analytics, Items){
+    // ========================================================================
     // Private Functions
+    // ========================================================================
 
     function showRequestHideCancelButtons(){
       $scope.performRequestButton = true;
@@ -30,6 +36,7 @@ angular.module('app').controller('EditorCtrl', [
 
     function setDefaultEndpoint(){
       $scope.endpoint = {
+        flagged: false,
         requestUrl: "",
         name: "",
         requestMethod: 'GET',
@@ -48,19 +55,24 @@ angular.module('app').controller('EditorCtrl', [
       $scope.response = null;
     }
 
-    function loadRequest(item, loadOnly){
+    function loadRequest(item, loadOnly, source){
       if(_.isUndefined(loadOnly)) loadOnly = true;
 
       $scope.loadRequestToScope(item);
 
       if(!loadOnly){
-        $scope.performRequest();
+        $scope.performRequest(source);
       }
 
       return $q.resolve();
     }
 
     function init(){
+
+      $scope.endpointNav = {
+        tab: "Editor"
+      };
+
       $scope.requestMethods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH'];
 
       $scope.responsePreviewTab = [
@@ -92,7 +104,9 @@ angular.module('app').controller('EditorCtrl', [
       setDefaultEndpoint();
     }
 
-    // END - Private Functions
+    // ========================================================================
+    // Public Functions
+    // ========================================================================
 
     $scope.requestChanged = function(){
       Editor.setEndpoint( $scope.endpoint );
@@ -161,7 +175,8 @@ angular.module('app').controller('EditorCtrl', [
       return Projects.removeItemFromCollection($rootScope.currentCollection.id, $rootScope.currentItem.uuid)
         .then(function(response){
           // TODO: Error handling
-          $scope.endpoint = {};
+          //$scope.endpoint = {};
+          setDefaultEndpoint();
           return response;
         });
     };
@@ -172,6 +187,12 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     $scope.setEnvironment = function(environment){
+      // Analytics track environment used private v. shared
+      Analytics.eventTrack('Set Environment',
+        { 'from': 'EditorCtrl',
+          'private': environment.private
+        }
+      );
       $rootScope.currentEnvironment = environment;
     };
 
@@ -206,7 +227,10 @@ angular.module('app').controller('EditorCtrl', [
       $scope.endpoint.requestHeaders.splice(position, 1);
     };
 
-    $scope.performRequest = function(){
+    $scope.performRequest = function(from){
+      // Number of requests made
+      Analytics.eventTrack('Make Request', {'from': from});
+
       $scope.loading = true;
       if( _.isEmpty($scope.endpoint.requestUrl) ) return;
       resetResponse();
@@ -402,7 +426,7 @@ angular.module('app').controller('EditorCtrl', [
             Editor.resetRequestChangedFlag();
             $scope.requestChangedFlag = false;
           }
-          return loadRequest(item, loadOnly)
+          return loadRequest(item, loadOnly, source)
             .then(function(){
               if(done) done();
             });
@@ -419,7 +443,6 @@ angular.module('app').controller('EditorCtrl', [
 
       item.method = _.find( $scope.requestMethods, function(data){ return data === item.method; });
       $scope.endpoint = Editor.loadAndGetEndpoint(item);
-
       resetResponse();
 
       if(_.isEqual($scope.endpoint.uuid,"") || _.isUndefined($scope.endpoint.uuid)){
@@ -434,6 +457,8 @@ angular.module('app').controller('EditorCtrl', [
      * Saves the request from scope to DB.
      */
     $scope.saveCurrentRequest = function(){
+      // times "save" is used
+      Analytics.eventTrack('Save Request', {'from': 'EditorCtrl'});
       return Editor.saveOrUpdate().then(function(){
         // Rest Endpoint Flags and Editor Controller button to be disabled
         Editor.resetRequestChangedFlag();
@@ -442,6 +467,8 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     $scope.saveAsNewCurrentRequest = function(){
+      // times "save as" is used
+      Analytics.eventTrack('Save As New Request', {'from': 'EditorCtrl'});
       // Set current enpoint uuid to be undefined to create new save instance
       $scope.endpoint.uuid = undefined;
       return Editor.saveOrUpdate().then(function(){
@@ -449,6 +476,77 @@ angular.module('app').controller('EditorCtrl', [
         Editor.resetRequestChangedFlag();
         $scope.requestChangedFlag = false;
       });
+    };
+
+    $scope.showCommentForm = function(){
+      var delay = 0;
+      if( $scope.endpointNav.tab != 'Activity' )
+      {
+        $scope.endpointNav.tab = 'Activity';
+        delay = 200;
+      }
+
+      // Let the tab change sink in for a bit before sliding down.
+      $timeout(function(){
+        angular.element('.editor').scrollTopAnimated(1000000,2000,function(t){return t*t*t*t;});
+      }, delay);
+    };
+
+
+    $scope.addCommentFlag = function(){
+      $scope.endpoint.flagged = ! $scope.endpoint.flagged;
+      $scope.requestChangedFlag = true;
+      var data;
+      var delay = 0;
+      var itemData;
+      if($scope.endpoint.flagged){
+        data = {
+          'type' : 'flag'
+        };
+        itemData = {
+          'flagged' : true
+        };
+      }else{
+        data = {
+          'type' : 'resolve'
+        };
+        itemData = {
+          'flagged' : false
+        };
+      }
+      
+      // Update the item
+      return Items.update($scope.endpoint.uuid, itemData)
+        .then(function(item){
+          // Update current project item flagged value
+          // Create a flag post
+          return Activities.create($scope.endpoint.uuid, data)
+            .then(function(activityItem){
+            // Reload posts
+            //$rootScope.$broadcast('loadActivities');
+            $scope.updateActivities(activityItem);
+            // Update the flag for the buttons
+            $scope.updateItemFlag(item.flagged);
+            // Scroll to the form
+            $scope.showCommentForm();
+          });
+        });
+
+    };
+
+    $scope.updateActivities = function(activityItem, action){
+      $scope.activityItem = activityItem;
+      $scope.action = action;
+    };
+
+    $scope.updateItemFlag = function (status){
+      $scope.endpoint.flagged = status;
+      // Update current project item flagged value
+      $rootScope.currentProject.
+        collections[$scope.endpoint.collection_id].
+        items[$scope.endpoint.uuid].flagged = status ? "1" : "0";
+      $rootScope.$broadcast('updateSideBar');
+
     };
 
     init();

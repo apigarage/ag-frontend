@@ -283,6 +283,18 @@ angular.module('app')
           data: JSON.stringify(items.get('item1')),
           statusText : 'OK',
         }
+      },
+      "getItemWithDetails" : {
+        request : {
+          method : 'GET',
+          url : Config.url + 'api/items/' +
+            items.get('item1').uuid,
+        },
+        response : {
+          status : 200,
+          data: JSON.stringify(items.get('item1')),
+          statusText : 'OK',
+        }
       }
     };
     return items;

@@ -29,6 +29,9 @@ angular.module('app')
     var logout = function(){
       // Clear user currentProejctId;
       $rootScope.currentProjectId = NaN;
+      $rootScope.currentProject = undefined;
+      $window.localStorage.removeItem('currentUser');
+      $window.localStorage.removeItem('currentUserEmail');
       $window.localStorage.removeItem(accessTokenStorageKey);
       History.clearHistory();
     };

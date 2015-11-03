@@ -21,7 +21,7 @@ describe('Controller: EditController', function() {
     CollectionsFixtures = $injector.get('CollectionsFixtures');
     ProjectsFixtures = $injector.get('ProjectsFixtures');
     RequestStubs = $injector.get('RequestStubs');
-    RequestUtility = $injector.get('RequestUtility');
+    RequestUtility = $injector.get('RequestUtility');    
     UUID = $injector.get('UUID');
 
     $controller('EditorCtrl', {
