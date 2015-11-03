@@ -22,7 +22,7 @@ angular.module('app')
 
 
     function startSessionTimer(){
-      if (Config.name == "production"){
+      if (Config.name == "production" || Config.name == "staging"){
         if(sessionOver === undefined || sessionOver){
           startSessionTime = Date.now();
           sessionOver = false;
@@ -34,7 +34,7 @@ angular.module('app')
 
     function stopSessionTimer(){
       stopSessionTime = Date.now() - startSessionTime ;
-      if (Config.name == "production"){
+      if (Config.name == "production" || Config.name == "staging"){
         $analytics.eventTrack("Session", {'$duration': stopSessionTime});
       }else{
         ipc.send('stop-session-timer');
@@ -44,8 +44,7 @@ angular.module('app')
 
     // identify user
     var setUserID = function(userID){
-      if (Config.name == "production"){
-        console.log('analytics', 'production');
+      if (Config.name == "production" || Config.name == "staging"){
         $analytics.setUsername(userID);
         $analytics.setUserProperties({ '$id' : userID });
       }else{
@@ -55,7 +54,7 @@ angular.module('app')
 
     // @pagePath: string
     var pageTrack = function(pagePath){
-      if (Config.name == "production"){
+      if (Config.name == "production" || Config.name == "staging"){
         // log analytics
         $analytics.pageTrack(pagePath);
       }else{
@@ -67,7 +66,7 @@ angular.module('app')
     // @properties: object action properties
     var eventTrack = function(action, properties){
 
-      if (Config.name == "production"){
+      if (Config.name == "production" || Config.name == "staging"){
         // log analytics
         $analytics.eventTrack(action, properties);
       }else{
@@ -78,11 +77,11 @@ angular.module('app')
 
     var startSession = function(){
       startSessionTimer();
-    }
+    };
 
     var stopSession = function(){
       stopSessionTimer();
-    }
+    };
 
     return{
       setUserID : setUserID,
