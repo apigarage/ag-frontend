@@ -35,7 +35,8 @@
     "angular-file-upload": "2.1.4",
     "angular-scroll": "0.7.3",
     "angulartics-mixpanel": "0.1.1",
-    "angulartics" : "0.20.1"
+    "angulartics": "0.20.1",
+    "moment": "~2.10.6"
   },
   "resolutions": {
     "jquery": "2.1.4",

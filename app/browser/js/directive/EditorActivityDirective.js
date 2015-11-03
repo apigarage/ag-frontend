@@ -26,6 +26,10 @@ angular.module('AGEndpointActivity', [])
     },
     link: function ($scope, $elem, $attr, $ctrl, $transclude) {
 
+      if( $scope.agActivity && $scope.agActivity.created_at ){
+        $scope.agActivity.created_at = moment($scope.agActivity.created_at).fromNow();
+      }
+
       // Get current user
       var localStorage = $window.localStorage;
       $scope.user = JSON.parse(localStorage.getItem("currentUser"));
