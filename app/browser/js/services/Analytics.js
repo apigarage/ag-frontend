@@ -2,8 +2,8 @@
 /* Services */
 
 angular.module('app')
-  .factory('Analytics', [ '$injector', 'Config',
-    function($injector, Config){
+  .factory('Analytics', [ '$injector', 'Config', '$window',
+    function($injector, Config, $window){
 
     var $analytics = $injector.get('$analytics');
     var ipc = $injector.get('ipc');
@@ -20,6 +20,10 @@ angular.module('app')
       startSessionTimer();
     });
 
+    $window.addEventListener("beforeunload", function(e){
+      stopSessionTimer();
+      sessionOver = true;
+    });
 
     function startSessionTimer(){
       if (Config.name == "production" || Config.name == "staging"){
@@ -43,12 +47,12 @@ angular.module('app')
     }
 
     // identify user
-    var setUserID = function(userID){
+    var setUser = function(user){
       if (Config.name == "production" || Config.name == "staging"){
-        $analytics.setUsername(userID);
-        $analytics.setUserProperties({ '$id' : userID });
+        $analytics.setUsername(user.id);
+        $analytics.setUserProperties({ '$id' : user.id, '$email' : user.email, 'name': user.name });
       }else{
-        console.log('setUserName', userID);
+        console.log('setUserName', user.id);
       }
     };
 
@@ -84,7 +88,7 @@ angular.module('app')
     };
 
     return{
-      setUserID : setUserID,
+      setUser : setUser,
       pageTrack : pageTrack,
       eventTrack : eventTrack,
       startSession : startSession,

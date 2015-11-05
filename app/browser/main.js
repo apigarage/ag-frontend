@@ -180,12 +180,7 @@
         }
       });
 
-      mainWindow.on('close', function(){
-        clearTimeout(sessionTimer);
-        wm.sendToAllWindows('stop-session');
-      });
       // Analytics Session Management End
-
     });
 
     app.on('window-all-closed', function () {

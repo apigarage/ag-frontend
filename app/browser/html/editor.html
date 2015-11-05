@@ -88,14 +88,14 @@
         </h1>
       </div>
       <!-- http://stackoverflow.com/questions/23698316/how-to-prevent-an-angular-bootstrap-dropdown-from-closing-unbind-event-which-wa -->
-      <ul class="editor-nav nav nav-tabs">
-        <li role="presentation" ng-class="{'active': endpointNav.tab == 'Editor'}">
+      <ul class="editor-nav nav nav-tabs" >
+        <li role="presentation" ng-class="{'active': endpointNav.tab == 'Editor'}" ng-show="endpoint.uuid">
           <a href="" ng-click="endpointNav.tab = 'Editor'">
             <span class="fa fa-pencil"></span>
             Editor
           </a>
         </li>
-        <li role="presentation" ng-class="{'active': endpointNav.tab == 'Activity'}">
+        <li role="presentation" ng-class="{'active': endpointNav.tab == 'Activity'}" ng-show="endpoint.uuid">
           <a href="" ng-click="endpointNav.tab = 'Activity'">
             <span class="fa fa-comments"></span>
             Activity
