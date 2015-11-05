@@ -39,9 +39,9 @@
             <a class="sidebar-list-item-menu" bs-dropdown data-template="sidebar-list-child-item-menu" data-placement="auto bottom-right" data-container=".sidebar">
               <span class="fa fa-fw fa-chevron-down"></span>
             </a>
-
-            <a ng-click="selectItem(item, collection)">{{item.name}}</a>
             <span class="fa fa-fw fa-flag" ng-show="item.flagged == 1 ? true : false"></span>
+            <a ng-click="selectItem(item, collection)">{{item.name}}</a>
+
           </li>
         </ul>
       </li>
