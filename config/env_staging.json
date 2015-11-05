@@ -1,7 +1,7 @@
 {
   "name": "staging",
   "description": "Add here any environment specific stuff you like.",
-  "url": "http://staging.apigarage.com/",
+  "url": "https://staging.apigarage.com/",
   "api": "api/",
   "client_id": "id_z7y3e0902uNtMxO07Z6q",
   "client_secret": "secret_44207Z6q1Lq5e6me0902",
