@@ -22,8 +22,8 @@ angular.module('app')
 
       function trimHistory(){
         if (_.size(_historyTimeStamps) >= 50){ // TODO: configurable trim length
-          localStorage.removeItem(_.first(_historyTimeStamps));
-          _historyTimeStamps = _.drop(_historyTimeStamps);
+          localStorage.removeItem(_.last(_historyTimeStamps));
+          _historyTimeStamps = _.dropRight(_historyTimeStamps);
         }
       }
 
