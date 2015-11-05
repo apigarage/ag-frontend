@@ -75,7 +75,7 @@ angular.module('app').controller('AuthenticationCtrl', [
 
           // Analytics identify USER
           Users.getCurrentUserInformation().then(function(user){
-            Analytics.setUserID(user.id);
+            Analytics.setUser(user);
           });
 
           $state.go('projectcreateoropen');
@@ -110,7 +110,7 @@ angular.module('app').controller('AuthenticationCtrl', [
               if(loggedIn){
                 // Analytics identify USER
                 Users.getCurrentUserInformation().then(function(user){
-                  Analytics.setUserID(user.id);
+                  Analytics.setUser(user);
                 });
                 $state.go('projectcreateoropen');
               } else {
