@@ -45,7 +45,15 @@ angular.module('app')
         angular.copy(temporaryCopy, $scope.searchResultsCollection);
         return;
       }
+
       $scope.searchResultsCollection = {};
+
+      if(search === ":flagged"){
+        searchFlagged(temporaryCopy);
+        $scope.expandGroup = true;
+        return;
+      }
+
       _.forEach(temporaryCopy, function(collection) {
         var foundCollection = isFound(collection.name,search);
         var foundItemUUID = [];
@@ -57,21 +65,38 @@ angular.module('app')
             }
           });
         }
+
         // rebuild collection with found items
         if(foundCollection){
-          $scope.searchResultsCollection[collection.id] = collection;
-          $scope.searchResultsCollection[collection.id].items = {};
-          if(!_.isEmpty(foundItemUUID)){
-            _.forEach(foundItemUUID, function(uuid) {
-              $scope.searchResultsCollection[collection.id].items[uuid] =
-              copyOfCollection[collection.id].items[uuid];
-            });
-          }
+          buildCollection(collection, foundItemUUID);
         }
+
       });
       $scope.expandGroup = true;
     };
 
+    function searchFlagged(temporaryCopy){
+
+      _.forEach(temporaryCopy, function(collection) {
+        var foundCollection;
+        var foundItemUUID = [];
+        if(!_.isUndefined(collection.items)){
+          _.forEach(collection.items, function(item, key) {
+            if(isFlagged(item)){
+              foundItemUUID.push(item.uuid);
+              foundCollection = true;
+            }
+          });
+        }
+
+        // rebuild collection with found items
+        if(foundCollection){
+          buildCollection(collection, foundItemUUID);
+        }
+
+      });
+    }
+    
     function isFound(name, search){
       var result = -1;
       try {
@@ -80,6 +105,21 @@ angular.module('app')
         result = 0;
       }
       return (result > -1);
+    }
+
+    function isFlagged(item){
+      return item.flagged === "1" ? true : false;
+    }
+
+    function buildCollection(collection, foundItemUUID){
+      $scope.searchResultsCollection[collection.id] = collection;
+      $scope.searchResultsCollection[collection.id].items = {};
+      if(!_.isEmpty(foundItemUUID)){
+        _.forEach(foundItemUUID, function(uuid) {
+          $scope.searchResultsCollection[collection.id].items[uuid] =
+          copyOfCollection[collection.id].items[uuid];
+        });
+      }
     }
 
     $scope.newRequest = function(){
@@ -334,7 +374,7 @@ angular.module('app')
 
           // time a request is deleted
           Analytics.eventTrack('Delete Request', {'from': 'SidebarCtrl'});
-          
+
           if($rootScope.currentItem && $rootScope.currentItem.uuid == currentItem.uuid){
             $rootScope.$broadcast('loadPerformRequest', {}, true, "SidebarCtrl");
           }
