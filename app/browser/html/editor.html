@@ -55,8 +55,10 @@
             <span class="hidden-xs hidden-sm">Comment</span>
           </button>
           <button class="btn btn-default"
-                  ng-disabled="!currentItem.uuid"
-                  ng-click="addCommentFlag()">
+                  ng-disabled="commentFlagButtonStatus"
+                  ng-click="addCommentFlag()"
+                  ladda="loadingAddCommentButton"
+                  >
             <span class="fa" ng-class="endpoint.flagged ? 'fa-check' : 'fa-flag-o'"></span>
             <span class="hidden-xs hidden-sm">{{ endpoint.flagged ? 'Resolve' : 'Flag' }}</span>
           </button>
