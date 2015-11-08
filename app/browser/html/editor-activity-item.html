@@ -57,12 +57,19 @@
             <button name="CommentFlag"
                     type="submit" class="btn btn-default"
                     ng-click="submitFlaggedComment(commentForm)"
+                    ng-disabled="commentFlagButton"
+                    ladda="loadingFlagButton"
                     ng-show="!commentForm.edit">
 
               <span class="fa fa-fw" ng-class="agEndpoint.flagged ? 'fa-check' : 'fa-flag-o'"></span>
               {{ agEndpoint.flagged ? 'Resolve' : 'Flag' }} {{ commentForm.description ? 'with comment' : '' }}
             </button>
-            <button type="submit" class="btn btn-primary" ng-click="submitComment(commentForm, agActivity)">
+            <button type="submit"
+              class="btn btn-primary"
+              ng-click="submitComment(commentForm, agActivity)"
+              ng-disabled="commentButton"
+              ladda="loadingCommentButton"
+              >
               {{ commentForm.edit ? 'Update' : 'Comment' }}
             </button>
           </p>

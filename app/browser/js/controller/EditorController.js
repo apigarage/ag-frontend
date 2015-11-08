@@ -514,7 +514,10 @@ angular.module('app').controller('EditorCtrl', [
           'flagged' : false
         };
       }
-      
+
+      $scope.loadingAddCommentButton = true;
+      commentFlagButtonStatus(true);
+
       // Update the item
       return Items.update($scope.endpoint.uuid, itemData)
         .then(function(item){
@@ -529,6 +532,9 @@ angular.module('app').controller('EditorCtrl', [
             $scope.updateItemFlag(item.flagged);
             // Scroll to the form
             $scope.showCommentForm();
+
+            $scope.loadingAddCommentButton = false;
+            commentFlagButtonStatus(false);
           });
         });
 
@@ -548,6 +554,24 @@ angular.module('app').controller('EditorCtrl', [
       $rootScope.$broadcast('updateSideBar');
 
     };
+
+    function commentFlagButtonStatus(state){
+      $scope.commentFlagButtonStatus = state;
+    }
+
+    $scope.$watch('endpoint',function(){
+      isCommentFlagButton();
+    });
+
+    function isCommentFlagButton(){
+      if ($rootScope.currentItem === undefined ||
+        $rootScope.currentItem.uuid === undefined)
+      {
+        commentFlagButtonStatus(true);
+      }else{
+        commentFlagButtonStatus(false);
+      }
+    }
 
     init();
 

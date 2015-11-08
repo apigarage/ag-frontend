@@ -114,6 +114,8 @@ angular.module('AGEndpointActivity', [])
 
       // Submit flagged comment
       $scope.submitFlaggedComment = function(commentForm){
+        $scope.loadingFlagButton = true;
+        $scope.commentButton = true;
         // Toggle Flagged Endpoint
         var flagged = !$scope.agEndpoint.flagged;
 
@@ -135,10 +137,15 @@ angular.module('AGEndpointActivity', [])
                 clearForm(commentForm);
               });
 
+            $scope.loadingFlagButton = false;
+            $scope.commentButton = false;
           });
       };
 
       $scope.submitComment = function(commentForm, currentActivity){
+        // Set button to loading and disable commentButton
+        $scope.commentFlagButton = true;
+        $scope.loadingCommentButton = true;
         var comment = {
           'description' : commentForm.description
         };
@@ -156,11 +163,18 @@ angular.module('AGEndpointActivity', [])
             });
 
         }else{
+          // Set button to loading and disable commentButton
+          $scope.commentFlagButton = true;
+          $scope.loadingCommentButton = true;
+
           // Create Comment
           comment.type = 'comment';
           return submitComment(comment)
           .then(function(data){
             clearForm(commentForm);
+
+            $scope.commentFlagButton = false;
+            $scope.loadingCommentButton = false;
           });
         }
       };
