@@ -1,0 +1,39 @@
+
+
+<div class="modal" ng-controller="EnvironmentsCtrl">
+  <div class="modal-wrapper col-md-6">
+    <div class="modal-dialog">
+      <div class="modal-content ">
+        <div class="modal-header">
+
+          <button type="button" class="close" ng-click="close()"><span>&times;</span></button>
+
+          <h1>{{title}}</h1>
+        </div>
+        <div class="modal-body">
+          <!-- modal directive  -->
+          <mocking-server-settings-drtv></mocking-server-settings-drtv>
+          <!-- <input type="text"
+                 placeholder="port number" pu-elastic-input
+                 ng-model="mock.port"
+                 />
+          <button class="btn"
+                  ng-click="startMockServer(mock.port)"
+                  data-title="<span class='visible-xs-inline visible-sm-inline'>Mock Start(</span>
+                  <span class='visible-xs-inline visible-sm-inline'>)</span>">
+            <span class="hidden-xs hidden-sm">Mock Start</span>
+          </button>
+          <button class="btn"
+                  ng-click="stopMockServer()"
+                  data-title="<span class='visible-xs-inline visible-sm-inline'>Mock Stop(</span>
+                  <span class='visible-xs-inline visible-sm-inline'>)</span>">
+            <span class="hidden-xs hidden-sm">Mock Stop</span>
+          </button> -->
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-default" ng-click="close()" type="submit">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
