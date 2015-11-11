@@ -9,9 +9,10 @@
       New Endpoint
     </button> -->
     <button type="button" class="btn btn-default btn-block sidebar-new"
-            ng-click="newRequest()">
-      <span class="glyphicon glyphicon-plus"></span>
-      New Endpoint
+        ng-class="serverStatus ? 'btn-success' : 'btn-default'"
+        ng-click="mockingServerSwitch()">
+      <span class="fa fa-fw fa-server"></span>
+      {{serverStatus ? 'Stop' : 'Start'}} Mocking Server
     </button>
 
     <!-- SEARCH BOX -->

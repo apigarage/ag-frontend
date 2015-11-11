@@ -195,6 +195,20 @@ angular.module('app').controller('LayoutCtrl', [
     });
   }
 
+  $scope.openMockingServerSettingsModal = function(){
+    console.log("openMocking");
+    var mockingServerSettingsModal = $modal({
+      show: false,
+      template: 'html/mocking-settings-modal.html',
+      title: 'Mocking Server Settings',
+      animation: false,
+      backdrop: true
+    });
+    mockingServerSettingsModal.$scope.projectMocking  = $scope.projectMocking;
+    mockingServerSettingsModal.$promise.then( mockingServerSettingsModal.show );
+    return mockingServerSettingsModal;
+  };
+
   init();
 
 }]);

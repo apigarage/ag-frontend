@@ -18,7 +18,6 @@ angular.module('app').controller('EditorCtrl', [
   'Activities',
   'Analytics',
   'Items',
-  'ipc',
   function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q,
     $focus, $timeout, RequestUtility, History, Collections, Projects, Editor,
     Activities, Analytics, Items, ipc){
@@ -107,7 +106,6 @@ angular.module('app').controller('EditorCtrl', [
     // ========================================================================
     // Public Functions
     // ========================================================================
-
 
 
     $scope.startMockServer = function(port){

@@ -11,7 +11,8 @@ angular.module('app')
   'lodash',
   'Projects',
   'Analytics',
-  function ($scope, $rootScope, $window, $modal, $q, _, Projects, Analytics){
+  'ipc',
+  function ($scope, $rootScope, $window, $modal, $q, _, Projects, Analytics, ipc){
 
     var copyOfCollection = {};
     $scope.searchResultsCollection = null;
@@ -96,7 +97,7 @@ angular.module('app')
 
       });
     }
-    
+
     function isFound(name, search){
       var result = -1;
       try {
@@ -124,6 +125,24 @@ angular.module('app')
 
     $scope.newRequest = function(){
       $rootScope.$broadcast('loadPerformRequest', {}, true, "SidebarCtrl");
+    };
+
+    // get this value from localStorage?
+    $scope.serverStatus = undefined;
+
+    $scope.mockingServerSwitch = function(){
+      console.log('mockingServerSwitch');
+      if ($scope.serverStatus === undefined) $scope.serverStatus = false;
+      // get default port
+      // if server is on turn it off
+      if($scope.serverStatus){
+        ipc.sendSync('stop-server');
+        $scope.serverStatus = false;
+      }else{
+        ipc.sendSync('start-server');
+        $scope.serverStatus = true;
+      }
+      // if server is off turn it on
     };
 
     $scope.openRenameCollectionModal = function(currentCollection){

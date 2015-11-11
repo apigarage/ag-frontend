@@ -17,11 +17,13 @@
       console.log("START",arg);
       event.returnValue = 'start';
       serverManager.createServer(9090);
+      wm.sendToAllWindows('start-server', { 'port': 9090 });
     });
     ipc.on('stop-server', function(event, arg) {
       console.log("STOP",arg);
       event.returnValue = 'stop';
       serverManager.stopServer();
+      wm.sendToAllWindows('stop-server', { 'port': 9090 });
     });
 
     app.on('ready', function () {
@@ -143,6 +145,7 @@
         }
 
       }
+
 
       template.push({
         label: 'About',

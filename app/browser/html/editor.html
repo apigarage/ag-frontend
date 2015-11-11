@@ -11,23 +11,6 @@
           <span class="fa fa-fw fa-floppy-o"></span>
           <span class="hidden-xs hidden-sm">Save changes</span>
         </button> -->
-        <input type="text"
-               placeholder="port number" pu-elastic-input
-               ng-model="mock.port"
-               />
-        <button class="btn"
-                ng-click="startMockServer(mock.port)"
-                data-title="<span class='visible-xs-inline visible-sm-inline'>Mock Start(</span>
-                <span class='visible-xs-inline visible-sm-inline'>)</span>">
-          <span class="hidden-xs hidden-sm">Mock Start</span>
-        </button>
-        <button class="btn"
-                ng-click="stopMockServer()"
-                data-title="<span class='visible-xs-inline visible-sm-inline'>Mock Stop(</span>
-                <span class='visible-xs-inline visible-sm-inline'>)</span>">
-          <span class="hidden-xs hidden-sm">Mock Stop</span>
-        </button>
-
         <div class="btn-group">
           <button class="btn btn-default"
                   ng-click="saveCurrentRequest()"
@@ -58,26 +41,6 @@
             </li>
           </ul>
         </script>
-
-        <button class="btn"
-                ng-click="saveCurrentRequest()"
-                ng-disabled="!requestChangedFlag"
-                ng-class="{'btn-primary': requestChangedFlag, 'btn-default': !requestChangedFlag}"
-                data-title="<span class='visible-xs-inline visible-sm-inline'>Save Changes (</span>
-                <span class='visible-xs-inline visible-sm-inline'>)</span>">
-          <span class="fa fa-fw fa-floppy-o"></span>
-          <span class="hidden-xs hidden-sm">Save changes</span>
-        </button>
-        <button class="btn"
-                ng-click="saveAsNewCurrentRequest()"
-                ng-disabled="!requestChangedFlag"
-                ng-class="{'btn-primary': requestChangedFlag, 'btn-default': !requestChangedFlag}"
-                data-title="<span class='visible-xs-inline visible-sm-inline'>Save As... (</span>
-                <span class='visible-xs-inline visible-sm-inline'>)</span>">
-          <span class="fa fa-fw fa-floppy-o"></span>
-          <span class="hidden-xs hidden-sm">Save As...</span>
-        </button>
-
         <!-- <button class="btn btn-default"
           ng-click="copyCurrentRequest()"
           ng-show="currentItem.uuid">
