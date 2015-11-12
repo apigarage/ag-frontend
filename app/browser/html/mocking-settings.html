@@ -1,14 +1,20 @@
-<label for="portNumber">Port</label>
+<form name="MockingSettingsForm">
+<label for="portNumber">Port 9090-65535</label>
 <input
   name="portNumber"
-  type="text"
+  type="number"
+  min="9090"
+  max="65535"
   placeholder="port number"
   ng-model="port"
   />
 
  <button type="button" class="btn btn-default"
      ng-class="serverStatus ? 'btn-success' : 'btn-default'"
-     ng-click="mockingServerSwitch()">
+     ng-click="mockingServerSwitch()"
+     ng-disabled="MockingSettingsForm.portNumber.$invalid"
+     >
    <span class="fa fa-fw fa-server"></span>
    {{serverStatus ? 'Stop' : 'Start'}} Mocking Server
  </button>
+</form>

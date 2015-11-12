@@ -10,16 +10,17 @@ angular.module('app')
     var localStorage = $window.localStorage;
 
     Mocking.serverStatus = undefined;
-    Mocking.port = 9090;
+    Mocking.port = 41443;
 
     if(localStorage.getItem('defaultPort') === undefined ||
-    localStorage.getItem('defaultPort') === "null"){
-       Mocking.port = 9090; // default port save to localStorage
+    localStorage.getItem('defaultPort') === "null" ||
+    localStorage.getItem('defaultPort') === null ){
+       Mocking.port = 41443; // default port save to localStorage
      }else{
        Mocking.port =  localStorage.getItem('defaultPort');
      }
 
-    Mocking.startServer = function (port){      
+    Mocking.startServer = function (port){
       ipc.sendSync('start-server', { 'port': port});
       Mocking.serverStatus = true;
       $rootScope.$broadcast('updateServerStatus', Mocking.serverStatus);
