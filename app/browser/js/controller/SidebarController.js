@@ -11,8 +11,8 @@ angular.module('app')
   'lodash',
   'Projects',
   'Analytics',
-  'ipc',
-  function ($scope, $rootScope, $window, $modal, $q, _, Projects, Analytics, ipc){
+  'Mocking',
+  function ($scope, $rootScope, $window, $modal, $q, _, Projects, Analytics, Mocking){
 
     var copyOfCollection = {};
     $scope.searchResultsCollection = null;
@@ -136,13 +136,13 @@ angular.module('app')
       // get default port
       // if server is on turn it off
       if($scope.serverStatus){
-        ipc.sendSync('stop-server');
+        Mocking.stopServer();
         $scope.serverStatus = false;
-      }else{
-        ipc.sendSync('start-server');
+      }else{ // if server is off turn it on
+        Mocking.startServer(9090);
         $scope.serverStatus = true;
       }
-      // if server is off turn it on
+
     };
 
     $scope.openRenameCollectionModal = function(currentCollection){
