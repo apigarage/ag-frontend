@@ -13,11 +13,12 @@
   var serverManager = require('../common/helpers/serverManager.js');
 
   module.exports.init = function(){
-    ipc.on('start-server', function(event, arg) {
-      console.log("START",arg);
+    ipc.on('start-server', function(event, server) {
+      console.log("START",server);
       event.returnValue = 'start';
-      serverManager.createServer(9090);
-      wm.sendToAllWindows('start-server', { 'port': 9090 });
+
+      serverManager.createServer(server.port);
+      wm.sendToAllWindows('start-server', { 'port': server.port });
     });
     ipc.on('stop-server', function(event, arg) {
       console.log("STOP",arg);

@@ -33,8 +33,8 @@
         windowsManager.sendToAllWindows('server-request', req);
         windowsManager.sendToAllWindows('server-response', res);
       }, 1000);
-    }).listen(9090, function (err) {
-      console.log('listening http://localhost:9090/');
+    }).listen(port, function (err) {
+      console.log('listening http://localhost:'+port+'/');
       console.log('pid is ' + process.pid);
     });
 
