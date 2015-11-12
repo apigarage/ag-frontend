@@ -15,6 +15,7 @@ describe('Controller: SideBar', function() {
     $rootScope = $injector.get('$rootScope');
     $controller = $injector.get('$controller');
     Projects = $injector.get('Projects');
+    Mocking = $injector.get('Mocking');
     HttpBackendBuilder = $injector.get('HttpBackendBuilder');
     $httpBackend = $injector.get('$httpBackend');
     $scope = $rootScope.$new();
@@ -33,6 +34,33 @@ describe('Controller: SideBar', function() {
     // are only testing controllers (and not html).
     $httpBackend.when('GET',/.*html.*/).respond(200, '');
   }));
+
+  describe('When using Mocking Server', function(){
+    beforeEach(function(){
+      var p = ProjectsFixtures.get('searchProject');
+      var pStub = ProjectsFixtures.getStub('retrieveProjectForSearch');
+      HttpBackendBuilder.build(pStub.request, pStub.response);
+      $rootScope.currentProject = {};
+      $rootScope.currentProject.collections = {};
+      $scope.search = "Grape";
+      Projects.loadProjectToRootScope(p.id);
+      $httpBackend.flush();
+      $scope.$apply();
+    });
+
+    it('will be able to start', function(){
+      $scope.mockingServerSwitch(); // switch on
+      expect($scope.serverStatus).toBe(true);
+      $scope.mockingServerSwitch(); // switch off
+    });
+
+    it('will be able to stop', function(){
+      $scope.mockingServerSwitch(); // switch on
+      $scope.mockingServerSwitch(); // switch off
+      expect($scope.serverStatus).toBe(false);
+    });
+
+  });
 
   describe('When searching', function(){
     beforeEach(function(){

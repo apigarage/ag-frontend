@@ -19,7 +19,7 @@ angular.module('app')
        Mocking.port =  localStorage.getItem('defaultPort');
      }
 
-    Mocking.startServer = function (port){
+    Mocking.startServer = function (port){      
       ipc.sendSync('start-server', { 'port': port});
       Mocking.serverStatus = true;
       $rootScope.$broadcast('updateServerStatus', Mocking.serverStatus);
