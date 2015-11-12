@@ -127,19 +127,21 @@ angular.module('app')
       $rootScope.$broadcast('loadPerformRequest', {}, true, "SidebarCtrl");
     };
 
-    // get this value from localStorage?
-    $scope.serverStatus = undefined;
+    $scope.serverStatus = Mocking.serverStatus;
+    $scope.$on('updateServerStatus', function(event, serverStatus) {
+      $scope.serverStatus = serverStatus;
+      // TODO: Update endpoint list to only show Mocked endpoints
+    });
 
     $scope.mockingServerSwitch = function(){
-      console.log('mockingServerSwitch');
-      if ($scope.serverStatus === undefined) $scope.serverStatus = false;
-      // get default port
-      // if server is on turn it off
-      if($scope.serverStatus){
+
+      if (Mocking.serverStatus === undefined) $scope.serverStatus = false;
+
+      if(Mocking.serverStatus){
         Mocking.stopServer();
         $scope.serverStatus = false;
-      }else{ // if server is off turn it on
-        Mocking.startServer(9090);
+      }else{
+        Mocking.startServer(Mocking.port);
         $scope.serverStatus = true;
       }
 

@@ -1,16 +1,14 @@
-<input type="text"
-       placeholder="port number"
-       ng-model="port"
-       />
-<button class="btn"
-        ng-click="startMockServer(mock.port)"
-        data-title="<span class='visible-xs-inline visible-sm-inline'>Mock Start(</span>
-        <span class='visible-xs-inline visible-sm-inline'>)</span>">
-  <span class="hidden-xs hidden-sm">Mock Start</span>
-</button>
-<button class="btn"
-        ng-click="stopMockServer()"
-        data-title="<span class='visible-xs-inline visible-sm-inline'>Mock Stop(</span>
-        <span class='visible-xs-inline visible-sm-inline'>)</span>">
-  <span class="hidden-xs hidden-sm">Mock Stop</span>
-</button>
+<label for="portNumber">Port</label>
+<input
+  name="portNumber"
+  type="text"
+  placeholder="port number"
+  ng-model="port"
+  />
+
+ <button type="button" class="btn btn-default"
+     ng-class="serverStatus ? 'btn-success' : 'btn-default'"
+     ng-click="mockingServerSwitch()">
+   <span class="fa fa-fw fa-server"></span>
+   {{serverStatus ? 'Stop' : 'Start'}} Mocking Server
+ </button>

@@ -3,23 +3,38 @@
 /* Services */
 
 angular.module('app')
-  .factory('Mocking', ['Config', 'ipc', function(Config, ipc){
+  .factory('Mocking', [ '$window', '$rootScope', 'Config', 'ipc',
+  function($window, $rootScope, Config, ipc){
 
     var Mocking = {};
+    var localStorage = $window.localStorage;
+
+    Mocking.serverStatus = undefined;
+    Mocking.port = 9090;
+
+    if(localStorage.getItem('defaultPort') === undefined ||
+    localStorage.getItem('defaultPort') === "null"){
+       Mocking.port = 9090; // default port save to localStorage
+     }else{
+       Mocking.port =  localStorage.getItem('defaultPort');
+     }
 
     Mocking.startServer = function (port){
       ipc.sendSync('start-server', { 'port': port});
+      Mocking.serverStatus = true;
+      $rootScope.$broadcast('updateServerStatus', Mocking.serverStatus);
     };
 
     Mocking.stopServer = function (){
       ipc.sendSync('stop-server', 'node');
+      Mocking.serverStatus = false;
+      $rootScope.$broadcast('updateServerStatus', Mocking.serverStatus);
     };
 
 
     ipc.on('server-request', function(request) {
       console.log('Request', request);
       // TODO: prints out request in a SERVER LOG
-      //
     });
 
     ipc.on('server-Response', function(response) {

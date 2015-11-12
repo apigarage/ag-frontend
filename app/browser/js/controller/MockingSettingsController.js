@@ -9,31 +9,33 @@ angular.module('app').controller('MockingSettingsCtrl', [
   'ipc',
   'Mocking',
   function ($scope, $rootScope, $q, $window, _, ProjectsUser, Analytics, ipc, Mocking){
-    var localStorage = $window.localStorage;
 
-    if(localStorage.getItem('defaultPort') === undefined ||
-    localStorage.getItem('defaultPort') === "null"){
-       $scope.port = 9090; // default port save to localStorage
-     }else{
-       $scope.port =  localStorage.getItem('defaultPort');
-     }
+    $scope.port = Mocking.port;
+    if (Mocking.serverStatus === undefined){
+      $scope.serverStatus = false;
+    }else{
+      $scope.serverStatus = Mocking.serverStatus;
+    }
+
+    $scope.mockingServerSwitch = function(){
+      // if server is on turn it off
+      if(Mocking.serverStatus){
+        Mocking.stopServer();
+        $scope.serverStatus = false;
+      }else{ // if server is off turn it on
+        Mocking.startServer($scope.port);
+        $scope.serverStatus = true;
+      }
+
+    };
+
     $scope.startMockServer = function(port){
-
-      //Lets require/import the HTTP module
-
-      console.log("port", $scope.port);
-
       Mocking.startServer($scope.port);
       localStorage.setItem("defaultPort", $scope.port);
     };
 
     $scope.stopMockServer = function(){
-
-      //Lets require/import the HTTP module
-
-      //console.log();
       Mocking.stopServer();
-
     };
 
   }]);
