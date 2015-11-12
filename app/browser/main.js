@@ -15,16 +15,15 @@
   module.exports.init = function(){
     ipc.on('start-server', function(event, server) {
       console.log("START",server);
-      event.returnValue = 'start';
-
-      serverManager.createServer(server.port);
+      serverManager.createServer(server);
       wm.sendToAllWindows('start-server', { 'port': server.port });
+      event.returnValue = 'start';
     });
     ipc.on('stop-server', function(event, arg) {
       console.log("STOP",arg);
-      event.returnValue = 'stop';
       serverManager.stopServer();
       wm.sendToAllWindows('stop-server', { 'port': 9090 });
+      event.returnValue = 'stop';
     });
 
     app.on('ready', function () {
