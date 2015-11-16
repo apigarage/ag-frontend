@@ -421,6 +421,17 @@ describe('Controller: EditController', function() {
         expect($scope.endpoint.requestBody).toBeDefined();
         expect($scope.requestChangedFlag).toBe(false);
       });
+
+      it('loads a non empty item that can be edited', function(){
+        $scope.loadPerformRequest(null, item);
+        $rootScope.$apply();
+        expect($scope.endpoint.requestUrl).toBe(item.url);
+        expect($scope.endpoint.name).toBe(item.name);
+        expect($scope.endpoint.requestHeaders).toBeDefined();
+        expect($scope.endpoint.requestBody).toBeDefined();
+        $scope.requestChanged();
+        expect($scope.requestChangedFlag).toBe(true);
+      });
     });
 
     describe('When empty item is loaded', function(){

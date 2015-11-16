@@ -161,6 +161,13 @@ angular.module('app').controller('EditorCtrl', [
     //   }
     // };
 
+    $scope.requestChanged = function(){
+      Editor.setEndpoint( $scope.endpoint );
+      if(!$scope.requestChangedFlag){
+        $scope.requestChangedFlag = true;
+      }
+    };
+
     $scope.openDeleteItemModal = function(){
       var newModal = $modal({
         show: false,
