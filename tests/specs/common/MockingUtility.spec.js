@@ -1,13 +1,14 @@
 // 'use strict';
+// THIS WILL BE TESTING MOCKING setPath and match in serverManager.js
 
-describe('Common : MockingUtility', function() {
+
+xkdescribe('Common : MockingUtility', function() {
 
   describe('When tests are loaded', function(){
 
     beforeEach(function(){
-      mockingUtility = window.mockingUtility;
       mockingFixtures = window.mockingFixtures;
-      // crossroads = require('crossroads');
+      mockingUtility = require('../../../app/common/helpers/serverManager.js');
     });
 
     describe('When a list of endpoints are provided 2', function(){
@@ -55,7 +56,21 @@ describe('Common : MockingUtility', function() {
         });
       });
 
-      describe('When a request with MATCHING path with a variable is passed', function(){
+      describe('When a request with MATCHING path with ONE variable is passed', function(){
+
+        beforeEach(function(){
+          request = mockingFixtures.matchingWithOneVariable;
+        });
+
+        it('matches the request', function(){
+          var result = mockingUtility.match(endpoints, request);
+          expect(result).not.toBe(null);
+          // TODO - verify, if it matches the correct request
+          // TODO - verify, if variables are matched correctly
+        });
+      });
+
+      describe('When a request with MATCHING path with TWO variable is passed', function(){
 
         beforeEach(function(){
           request = mockingFixtures.matchingWithOneVariable;
