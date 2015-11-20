@@ -1,0 +1,73 @@
+<div class="panel-group" ng-model="panels.activePanelCreate" role="tablist" aria-multiselectable="true" bs-collapse>
+  <p class="text-muted ng-scope" ng-hide="hideMockingHint">
+      When mocking mode is turned on,
+      API Garage will respond to this request
+      with the mock response you provide below.
+      Variables can be used in the mock response -
+      we will interpolate values for them based on
+      environment variables found in the request.
+      <!--
+      <a ng-click="hideMockingHint = true">Okay, got it!</a>
+      -->
+    </p>
+  <div class="panel panel-default" >
+    <div class="panel-heading" role="tab">
+      <h4 class="panel-title">
+        <a bs-collapse-toggle>
+          Create New Status Code
+        </a>
+      </h4>
+    </div>
+    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+      <editor-mocking-response
+      ag-mocking-responses="panels"
+      ag-mocking-parent-endpoint="agParentEndpoint"
+      >
+      </editor-mocking-response>
+    </div>
+  </div>
+</div>
+
+<hr />
+<div class="sidebar-search-placeholder">
+<div class="col-xs-4 pull-left">
+  <h3>Mocked Enpoints</h3>
+</div>
+<div class="col-xs-2 pull-right">
+  <div class="sidebar-search-wrap" bs-affix data-offset-top="-50">
+    <input type="text" class="form-control sidebar-search"
+    placeholder="Search..." ng-model="search" ng-change="searchFilter(search)" />
+  </div>
+</div>
+</div>
+<!-- ngModel is optional -->
+<div class="panel-group" ng-model="panels.activePanel" role="tablist" aria-multiselectable="true" bs-collapse>
+  <div class="panel panel-default" ng-repeat="panel in panels"
+    ng-click="discardStatusResponseChanges()">
+    <!-- Editor Mocking Status Response Directive-->
+
+      <div class="panel-heading" role="tab">
+        <h3 class="panel-title">
+          <a bs-collapse-toggle>
+            {{ panel.status }}
+          </a>
+        </h3>
+        <button class="btn btn-default"
+                ng-show="deleteMockFormButton"
+                ng-click="deleteMockForm()">
+          <span class="fa fa-trash-o"></span>
+          <span class="hidden-xs hidden-sm">Delete</span>
+        </button>
+
+      </div>
+      <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+          <editor-mocking-response
+            ag-mocking-response="panel"
+            ag-mocking-responses="panels"
+            ag-mocking-parent-endpoint="agParentEndpoint"
+            >
+          </editor-mocking-response>
+      </div>
+    </div>
+  </div>
+</div>
