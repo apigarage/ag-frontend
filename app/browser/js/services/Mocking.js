@@ -55,6 +55,28 @@ angular.module('app')
       console.log('server-stopped', port);
     });
 
+    //======== Mocking Calls ===========///
+    var endpoint = 'mocking';
+
+    Mocking.update = function(data){
+      console.log('Mocking update', data);
+      var options = {
+        'method': 'PATCH',
+        'url': Config.url + Config.api + endpoint + '/' + data.id,
+        'data': data
+      };
+      //return ApiRequest.send(options);
+    };
+
+    Mocking.create = function(data){
+      console.log('Mocking create', data);
+      var options = {
+        'method': 'POST',
+        'url': Config.url + Config.api + endpoint + '/',
+        'data': data
+      };
+      //return ApiRequest.send(options);
+    };
     return Mocking;
 
   }]);

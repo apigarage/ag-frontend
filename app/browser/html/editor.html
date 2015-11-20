@@ -104,6 +104,13 @@
             <!-- <span class="badge">36</span> -->
           </a>
         </li>
+        <li role="presentation" ng-class="{'active': endpointNav.tab == 'Mocking'}" ng-show="endpoint.uuid">
+          <a href="" ng-click="endpointNav.tab = 'Mocking'">
+            <span class="fa fa-hand-lizard-o"></span>
+            Mocking
+            <!-- <span class="badge">36</span> -->
+          </a>
+        </li>
       </ul>
     </div>
     <!--
@@ -123,6 +130,12 @@
       ag-parent-update-activities="updateActivities(actionItem)"
       ag-parent-endpoint="endpoint"
       ag-parent-activity-item="activityItem"
-      ng-show="endpoint.uuid && endpointNav.tab == 'Activity'" />
+      ng-show="endpoint.uuid && endpointNav.tab == 'Activity'">
+    </editor-activities>
+
+    <editor-mocking
+      ag-parent-endpoint="endpoint"
+      ng-show="endpoint.uuid && endpointNav.tab == 'Mocking'">
+    </editor-mocking>
 
   </div>
