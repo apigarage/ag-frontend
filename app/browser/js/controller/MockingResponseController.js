@@ -25,49 +25,38 @@ angular.module('app').controller('MockingResponseCtrl', [
     console.log('scope', $scope);
   }
 
-  $scope.$watch('agMockingResponses.activePanel',function(){
-    if($scope.agMockingResponses === undefined) return;
-    console.log('agMockingResponses', $scope.agMockingResponses.activePanel);
-    $scope.agMockingResponse.body = $scope.currentResponseBody;
-  });
-
   $scope.saveMockForm = function(update){
+
     if($scope.agMockingResponse.uuid){
       console.log('update');
       $scope.currentResponseBody = $scope.agMockingResponse.body;
-      return Mocking.update($scope.agMockingResponse)
+      return Mocking.update($scope.agMockingResponse);
       //  .then(function(mock){
       //    $scope.currentResponseBody = mock.body;
       //  });
     }else{
       console.log('parentEndpoint', $scope.agMockingParentEndpoint);
+      Mocking.create(newItem);
       var newItem =
       {
         "uuid": "uuid-4",
         "status": $scope.agMockingResponse.statusCode,
         "body": $scope.agMockingResponse.body
       };
-      Mocking.create(newItem);
       $scope.agMockingResponses.push(newItem);
     }
-    // if update
-    //
-
-    // else
-    // return Mocking.create(item-uuid,data).then(function(mock){
-    //  $scope.agMockingResponseCreate(mock)
-    // });
   };
 
-  $scope.cancelMockForm = function(){
+  $scope.cancelMockForm = function(mockingForm){
     console.log('cancel', $scope.currentResponse);
     $scope.agMockingResponse.body = $scope.currentResponseBody;
   };
 
   $scope.deleteMockForm = function(){
     console.log('delete');
+    Mocking.remove($scope.agMockingResponse);
     $scope.agMockingResponses.splice($scope.agMockingResponses.activePanel, 1);
-    // return Mocking.removeStatusReponse(uuid);
+    return ;
   };
 
   $scope.responseMockEditorOptions = {
@@ -94,21 +83,5 @@ angular.module('app').controller('MockingResponseCtrl', [
   };
 
   init();
-
-  // $scope.panels = [
-  //   {
-  //     "title": "Collapsible Group Item #1",
-  //     "body": "Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch."
-  //   },
-  //   {
-  //     "title": "Collapsible Group Item #2",
-  //     "body": "Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee."
-  //   },
-  //   {
-  //     "title": "Collapsible Group Item #3",
-  //     "body": "Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade."
-  //   }
-  // ];
-  // $scope.panels.activePanel = 1;
 
 }]);

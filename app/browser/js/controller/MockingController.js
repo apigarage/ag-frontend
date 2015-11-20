@@ -5,39 +5,13 @@ angular.module('app').controller('MockingCtrl', [
   'Analytics',
   function (_, $scope, $rootScope, Analytics){
 
-
-  function init(){
+  // Watches the change of the item and gets the Mocked Responses
+  $scope.$watch('agParentEndpoint.uuid', function(){
     $scope.getListStatusResponses();
-    console.log('panels', $scope.panels);
-  }
-
-  // watch the panels change and reset the items within if not saved
-
-  
-  // create a function to track the panel state
-  // watch that state in the controller below
-  $scope.$watch('panels', function(data){
-    console.log('data', data);
   });
-
-  $scope.updateResponses = function(panel){
-      console.log('panel', panel);
-  };
-
-  $scope.updateResponse = function(data){
-    if(data===false){
-      $scope.state = false;
-      return;
-    }
-    console.log('updateResponse');
-    $scope.state = true;
-  };
 
   $scope.searchFilter = function(search){
     console.log('search', search);
-    // for loop through panels length
-    // find the title
-    // recreate a new panel list
     var panels = [];
 
     for (var i = 0; i < $scope.panelsCopy.length; i++)
@@ -46,9 +20,7 @@ angular.module('app').controller('MockingCtrl', [
         panels.push($scope.panelsCopy[i]);
       }
     }
-
     $scope.panels = panels;
-
   };
 
   function isFound(name, search){
@@ -60,8 +32,6 @@ angular.module('app').controller('MockingCtrl', [
     }
     return (result > -1);
   }
-
-
 
 
   $scope.getListStatusResponses = function(){
@@ -89,7 +59,5 @@ angular.module('app').controller('MockingCtrl', [
 
     $scope.panelsCopy = $scope.panels;
   };
-
-  init();
 
 }]);

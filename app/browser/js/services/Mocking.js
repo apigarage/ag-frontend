@@ -77,6 +77,16 @@ angular.module('app')
       };
       //return ApiRequest.send(options);
     };
+
+    Mocking.remove = function(data){
+      console.log('Mocking delete', data);
+      var options = {
+        'method': 'DELETE',
+        'url': Config.url + Config.api + endpoint + '/',
+        'data': data
+      };
+      //return ApiRequest.send(options);
+    };
     return Mocking;
 
   }]);
