@@ -11,7 +11,10 @@
           max="599"
           ng-show="statusCodeInput"
           data-ng-model="agMockingResponse.statusCode"
+          ng-change="searchforStatusCode(MockingForm)"
+          ng-required="statusCodeInput"
           >
+        <div class="control-label" ng-show="statusCodeExists">Code Exists {{agMockingResponse.statusCode}}</div>
         <div class="control-label" ng-show="statusCode">{{agMockingResponse.status}}</div>
       </div>
     </div>

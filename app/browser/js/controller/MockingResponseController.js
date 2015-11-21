@@ -59,6 +59,36 @@ angular.module('app').controller('MockingResponseCtrl', [
     return ;
   };
 
+  // If form code already exists
+  $scope.searchforStatusCode = function(mockingForm){
+    $scope.statusCodeExists = false;
+    if(mockingForm.inputStatusCode.$valid){
+      if(mockingForm.inputStatusCode.$viewValue === "") return;
+      for (var i = 0; i < $scope.agMockingResponses.length; i++)
+      {
+        if(isFound($scope.agMockingResponses[i].status, mockingForm.inputStatusCode.$viewValue)){
+          // Half-baked idea: Where it would auto focus if the item exists.
+          // This has list management issues
+          // $scope.agMockingResponsesSearch({'search': mockingForm.inputStatusCode.$viewValue});
+
+          $scope.statusCodeExists = true;
+          mockingForm.inputStatusCode.$valid = false;
+          mockingForm.inputStatusCode.$pristine = true;
+        }
+      }
+    }
+  };
+
+  function isFound(name, search){
+    var result = -1;
+    try {
+      result = name.toLowerCase().search(search.toLowerCase());
+    } catch (e) {
+      result = 0;
+    }
+    return (result > -1);
+  }
+
   $scope.responseMockEditorOptions = {
     showGutter: true,
     theme: 'kuroir',

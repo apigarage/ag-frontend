@@ -7,7 +7,8 @@ directive("editorMockingResponse", [function() {
     scope: {
       agMockingResponse  : "=",
       agMockingResponses : "=",
-      agMockingParentEndpoint : "="
+      agMockingParentEndpoint : "=",
+      agMockingResponsesSearch : "&"
     }
   };
 }]);

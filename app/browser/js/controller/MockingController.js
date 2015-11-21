@@ -5,6 +5,7 @@ angular.module('app').controller('MockingCtrl', [
   'Analytics',
   function (_, $scope, $rootScope, Analytics){
 
+  $scope.panelsCopy = [];
   // Watches the change of the item and gets the Mocked Responses
   $scope.$watch('agParentEndpoint.uuid', function(){
     $scope.getListStatusResponses();
@@ -22,6 +23,7 @@ angular.module('app').controller('MockingCtrl', [
     }
     $scope.panels = panels;
   };
+
 
   function isFound(name, search){
     var result = -1;
