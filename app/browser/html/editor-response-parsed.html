@@ -25,4 +25,7 @@
     </a>
   </h4>
   <div ui-ace="responseBodyEditorOptionsParsed" ng-model="responsePreviewTypeContent" ng-if="response.data" ng-show="responseBodyExpanded"></div>
+  <div ng-if="!response.data" ng-show="responseBodyExpanded">
+    <i>There is no data to show.</i>
+  </div>
 </div>
