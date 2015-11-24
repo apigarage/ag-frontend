@@ -14,7 +14,7 @@ angular.module('app')
         "description": "Description String",
         "headers":
         {
-        	"key1": "v1"
+          "key1": "v1"
         },
         "id": "4",
         "item_id": "424",
@@ -39,7 +39,7 @@ angular.module('app')
           // Config.url + Config.api + endpoint + '/'  + endpointUuid + '/' + mockedResponses ,
           url : Config.url + Config.api + 'items/uuid-1/responses',
           headers : {
-            
+
           }
         },
         response : {
