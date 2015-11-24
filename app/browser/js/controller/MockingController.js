@@ -41,7 +41,6 @@ angular.module('app').controller('MockingCtrl', [
 
     $scope.getListStatusResponses = function(endpoint){
       return Mocking.getAll(endpoint.uuid).then(function(result){
-        console.log('responses', result);
         $scope.panels = result;
         $scope.panelsCopy = $scope.panels;
       });

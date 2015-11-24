@@ -58,8 +58,10 @@ angular.module('app').controller('MockingResponseCtrl', [
   };
 
   $scope.deleteMockForm = function(){
+    $scope.loadingDeleteButton = true;
     return Mocking.remove($scope.agMockingParentEndpoint, $scope.agMockingResponse)
       .then(function(){
+        $scope.loadingDeleteButton = false;
         $scope.agMockingResponses.splice($scope.agMockingResponses.activePanel, 1);
       });
   };
