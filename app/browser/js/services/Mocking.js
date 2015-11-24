@@ -3,8 +3,8 @@
 /* Services */
 
 angular.module('app')
-  .factory('Mocking', [ '$window', '$rootScope', 'Config', 'ipc',
-  function($window, $rootScope, Config, ipc){
+  .factory('Mocking', [ '$window', '$rootScope', 'Config', 'ipc', 'ApiRequest',
+  function($window, $rootScope, Config, ipc, ApiRequest){
 
     var Mocking = {};
     var localStorage = $window.localStorage;
@@ -56,36 +56,46 @@ angular.module('app')
     });
 
     //======== Mocking Calls ===========///
-    var endpoint = 'mocking';
+    var endpoint = 'items';
+    var mockedResponses = 'responses';
 
-    Mocking.update = function(data){
-      console.log('Mocking update', data);
+    Mocking.getAll = function(endpointUuid){
       var options = {
-        'method': 'PATCH',
-        'url': Config.url + Config.api + endpoint + '/' + data.id,
-        'data': data
+        'method': 'GET',
+        'url': Config.url + Config.api + endpoint + '/'  + endpointUuid + '/' + mockedResponses ,
+        'data': endpointUuid
       };
-      //return ApiRequest.send(options);
+      return ApiRequest.send(options);
     };
 
-    Mocking.create = function(data){
-      console.log('Mocking create', data);
+    Mocking.update = function(item, data){
+      var options = {
+        'method': 'PUT',
+        'url': Config.url + Config.api + endpoint + '/' + item.uuid + '/' + mockedResponses + '/' + data.uuid,
+        'data': data
+      };
+      return ApiRequest.send(options);
+    };
+
+    Mocking.create = function(item, response){
+      response.headers = {};
+      response.description = "";
+
       var options = {
         'method': 'POST',
-        'url': Config.url + Config.api + endpoint + '/',
-        'data': data
+        'url': Config.url + Config.api + endpoint + '/' + item.uuid + '/' + mockedResponses,
+        'data': response
       };
-      //return ApiRequest.send(options);
+      return ApiRequest.send(options);
     };
 
-    Mocking.remove = function(data){
-      console.log('Mocking delete', data);
+    Mocking.remove = function(item, data){
       var options = {
         'method': 'DELETE',
-        'url': Config.url + Config.api + endpoint + '/',
+        'url': Config.url + Config.api + endpoint + '/' + item.uuid + '/' + mockedResponses + '/' + data.uuid,
         'data': data
       };
-      //return ApiRequest.send(options);
+      return ApiRequest.send(options);
     };
     return Mocking;
 

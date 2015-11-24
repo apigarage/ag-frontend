@@ -6,13 +6,13 @@ angular.module('app').controller('MockingResponseCtrl', [
   'Mocking',
   function (_, $scope, $rootScope, Analytics, Mocking){
 
-  $scope.currentResponseBody;
+  $scope.currentResponseBody = "";
 
   function init(){
 
     if($scope.agMockingResponse === undefined){
       $scope.agMockingResponse = {};
-      $scope.agMockingResponse.body = '';
+      $scope.agMockingResponse.data = '';
       $scope.deleteMockFormButton = false;
       $scope.statusCodeInput = true;
       $scope.statusCode = false;
@@ -20,43 +20,48 @@ angular.module('app').controller('MockingResponseCtrl', [
       $scope.deleteMockFormButton = true;
       $scope.statusCodeInput = false;
       $scope.statusCode = true;
-      $scope.currentResponseBody = $scope.agMockingResponse.body;
+      $scope.currentResponseBody = $scope.agMockingResponse.data;
+      $scope.currentResponse = $scope.agMockingResponse;
+      $scope.agMockingResponse.status = parseInt($scope.agMockingResponse.status);
     }
-    console.log('scope', $scope);
   }
 
-  $scope.saveMockForm = function(update){
+  // This reverts changes when the user switches to a different panel
+  $scope.$watch('agMockingResponses.activePanel',function(){
+    if($scope.agMockingResponses === undefined) return;
+    $scope.agMockingResponse.data = $scope.currentResponseBody;
+  });
 
+  $scope.saveMockForm = function(mockingForm){
+    $scope.loadingSaveButton = true;
     if($scope.agMockingResponse.uuid){
-      console.log('update');
-      $scope.currentResponseBody = $scope.agMockingResponse.body;
-      return Mocking.update($scope.agMockingResponse);
-      //  .then(function(mock){
-      //    $scope.currentResponseBody = mock.body;
-      //  });
+      return Mocking.update($scope.agMockingParentEndpoint, $scope.agMockingResponse)
+       .then(function(mockResponse){
+         $scope.currentResponseBody = $scope.agMockingResponse.data;
+         mockingForm.inputStatusCodeResponse.$pristine = true;
+         mockingForm.inputStatusCodeResponse.$dirty = false;
+         $scope.loadingSaveButton = false;
+       });
     }else{
-      console.log('parentEndpoint', $scope.agMockingParentEndpoint);
-      Mocking.create(newItem);
-      var newItem =
-      {
-        "uuid": "uuid-4",
-        "status": $scope.agMockingResponse.statusCode,
-        "body": $scope.agMockingResponse.body
-      };
-      $scope.agMockingResponses.push(newItem);
+      return Mocking.create($scope.agMockingParentEndpoint, $scope.agMockingResponse)
+        .then(function(response){
+          $scope.agMockingResponses.push(response);
+          $scope.agMockingResponse = {};
+          $scope.loadingSaveButton = false;
+        });
     }
+
   };
 
   $scope.cancelMockForm = function(mockingForm){
-    console.log('cancel', $scope.currentResponse);
-    $scope.agMockingResponse.body = $scope.currentResponseBody;
+    $scope.agMockingResponse.data = $scope.currentResponseBody;
   };
 
   $scope.deleteMockForm = function(){
-    console.log('delete');
-    Mocking.remove($scope.agMockingResponse);
-    $scope.agMockingResponses.splice($scope.agMockingResponses.activePanel, 1);
-    return ;
+    return Mocking.remove($scope.agMockingParentEndpoint, $scope.agMockingResponse)
+      .then(function(){
+        $scope.agMockingResponses.splice($scope.agMockingResponses.activePanel, 1);
+      });
   };
 
   // If form code already exists
@@ -66,7 +71,9 @@ angular.module('app').controller('MockingResponseCtrl', [
       if(mockingForm.inputStatusCode.$viewValue === "") return;
       for (var i = 0; i < $scope.agMockingResponses.length; i++)
       {
-        if(isFound($scope.agMockingResponses[i].status, mockingForm.inputStatusCode.$viewValue)){
+        if($scope.agMockingResponses[i].status !== undefined &&
+           isFound($scope.agMockingResponses[i].status.toString(), mockingForm.inputStatusCode.$viewValue)){
+
           // Half-baked idea: Where it would auto focus if the item exists.
           // This has list management issues
           // $scope.agMockingResponsesSearch({'search': mockingForm.inputStatusCode.$viewValue});
