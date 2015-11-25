@@ -18,7 +18,6 @@
     'duScroll',                   // Smooth scrolling to targets
     'angulartics',                // Angular Analytics
     'angulartics.mixpanel'        // Angular Analytics Mixpanel plugin
-
   ]);
 
   app.config(['$stateProvider',

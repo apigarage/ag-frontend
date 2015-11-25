@@ -15,6 +15,11 @@
       {{serverStatus ? 'Stop' : 'Start'}} Mocking Server
     </button>
 
+    <label for='serverURL' class="sidebar-list-parent" ng-if="serverURL">
+       <input type="text" id='serverURL' ng-model="serverURL"
+       data-trigger="focus" bs-tooltip="mockingServerTooltip"/>
+    </label>
+
     <!-- SEARCH BOX -->
     <div class="sidebar-search-placeholder">
       <div class="sidebar-search-wrap" bs-affix data-offset-top="-50">

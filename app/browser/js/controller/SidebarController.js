@@ -147,6 +147,17 @@ angular.module('app')
 
     };
 
+    $scope.$on('start-mocking-server', function(evt, data){
+      $scope.serverURL = "http://localhost:" + data.port;
+      $scope.mockingServerTooltip = {
+        "title": "Copy this URL to your projects for access to mocking server!",
+      };
+    });
+
+    $scope.$on('stop-mocking-server', function(evt, data){
+      $scope.serverURL = "";
+    });
+
     $scope.openRenameCollectionModal = function(currentCollection){
       var newModal = $modal({
         show: false,

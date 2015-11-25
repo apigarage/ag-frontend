@@ -37,24 +37,6 @@ angular.module('app')
     };
 
 
-    ipc.on('server-request', function(request) {
-      console.log('Request', request);
-      // TODO: prints out request in a SERVER LOG
-    });
-
-    ipc.on('server-Response', function(response) {
-      console.log('response', response);
-      // TODO: prints out responses in a SERVER LOG
-    });
-
-    ipc.on('start-server', function(port) {
-      console.log('server-started', port);
-    });
-
-    ipc.on('stopped-server', function(port) {
-      console.log('server-stopped', port);
-    });
-
     //======== Mocking Calls ===========///
     var endpoint = 'items';
     var mockedResponses = 'responses';
@@ -98,5 +80,57 @@ angular.module('app')
       return ApiRequest.send(options);
     };
     return Mocking;
+
+  }]).run(['$rootScope', 'ipc',
+  function($rootScope, ipc) {
+    console.log('ipc messaging');
+
+    ipc.on('start-server', function(port) {
+      console.log('port', port);
+      try {
+        $rootScope.$broadcast('start-mocking-server', port);
+      } catch (e) {
+          console.log(e);
+      } finally {
+
+      }
+
+    });
+
+    ipc.on('stop-server', function(port) {
+      console.log('stop-server', port);
+      try {
+        $rootScope.$broadcast('stop-mocking-server', port);
+      } catch (e) {
+          console.log(e);
+      } finally {
+
+      }
+    });
+
+    ipc.on('server-request', function(request) {
+      console.log('Request', request);
+      // TODO: prints out request in a SERVER LOG
+      try {
+        $rootScope.$broadcast('mocking-server-request', request);
+      } catch (e) {
+          console.log(e);
+      } finally {
+
+      }
+    });
+
+    ipc.on('server-Response', function(response) {
+      console.log('response', response);
+      // TODO: prints out responses in a SERVER LOG
+      try {
+        $rootScope.$broadcast('mocking-server-response', response);
+      } catch (e) {
+          console.log(e);
+      } finally {
+
+      }
+    });
+
 
   }]);

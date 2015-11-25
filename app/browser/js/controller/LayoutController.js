@@ -8,7 +8,8 @@ angular.module('app').controller('LayoutCtrl', [
   'Projects',
   'ProjectsUser',
   'Analytics',
-  function ($scope, $rootScope, $modal, $q, $state, _, Projects, ProjectsUser, Analytics){
+  'Mocking',
+  function ($scope, $rootScope, $modal, $q, $state, _, Projects, ProjectsUser, Analytics, Mocking){
 
   function init(){
     $scope.layout = {
@@ -26,6 +27,7 @@ angular.module('app').controller('LayoutCtrl', [
   $scope.switchProject = function(){
     // Reset Current Project to undefined when switching between projects
     Analytics.eventTrack('Switch Project', {'from': 'LayoutCtrl'});
+    if(Mocking.serverStatus) Mocking.stopServer();
     $rootScope.$broadcast('loadPerformRequest', {}, true, "LayoutCtrl", function(){
       $rootScope.currentProjectId = undefined;
       $rootScope.currentProject = undefined;

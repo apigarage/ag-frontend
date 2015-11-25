@@ -20,9 +20,9 @@
       event.returnValue = 'start';
     });
     ipc.on('stop-server', function(event, arg) {
-      console.log("STOP",arg);
+      console.log("STOP", arg);
       serverManager.stopServer();
-      wm.sendToAllWindows('stop-server', { 'port': 9090 });
+      wm.sendToAllWindows('stop-server', {});
       event.returnValue = 'stop';
     });
 
