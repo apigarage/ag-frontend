@@ -13,17 +13,30 @@
   var serverManager = require('../common/helpers/serverManager.js');
 
   module.exports.init = function(){
-    ipc.on('start-server', function(event, server) {
-      console.log("START",server);
-      serverManager.createServer(server);
-      wm.sendToAllWindows('start-server', { 'port': server.port });
-      event.returnValue = 'start';
-    });
-    ipc.on('stop-server', function(event, arg) {
-      console.log("STOP", arg);
-      serverManager.stopServer();
-      wm.sendToAllWindows('stop-server', {});
-      event.returnValue = 'stop';
+
+    // API GARAGE message handler
+    ipc.on("ag-message", function(event, data){
+      //console.log('event', event);
+      var message = {};
+      if(data.eventName == "start-mocking-server"){
+        serverManager.createServer(data);
+        message = {
+          "eventName" : data.eventName,
+          "port": data.port
+        };
+      }else if(data.eventName == "stop-mocking-server"){
+        serverManager.stopServer();
+        message = {
+          "eventName" : data.eventName
+        };
+      }else{
+        message = {
+          "eventName" : "ag-message",
+          "message" : "unknown source"
+        };
+      }
+      wm.sendToAllWindows('ag-message', message);
+      event.returnValue = data;
     });
 
     app.on('ready', function () {

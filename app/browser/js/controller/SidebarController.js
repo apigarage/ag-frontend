@@ -127,12 +127,6 @@ angular.module('app')
       $rootScope.$broadcast('loadPerformRequest', {}, true, "SidebarCtrl");
     };
 
-    $scope.serverStatus = Mocking.serverStatus;
-    $scope.$on('updateServerStatus', function(event, serverStatus) {
-      $scope.serverStatus = serverStatus;
-      // TODO: Update endpoint list to only show Mocked endpoints
-    });
-
     $scope.mockingServerSwitch = function(){
 
       if (Mocking.serverStatus === undefined) $scope.serverStatus = false;
@@ -148,14 +142,19 @@ angular.module('app')
     };
 
     $scope.$on('start-mocking-server', function(evt, data){
+      // TODO: handle start event
+      $scope.serverStatus = Mocking.serverStatus;
       $scope.serverURL = "http://localhost:" + data.port;
       $scope.mockingServerTooltip = {
         "title": "Copy this URL to your projects for access to mocking server!",
       };
+
     });
 
     $scope.$on('stop-mocking-server', function(evt, data){
-      $scope.serverURL = "";
+      // TODO: handle stop event
+      $scope.serverStatus = Mocking.serverStatus;
+      $scope.serverURL = undefined;
     });
 
     $scope.openRenameCollectionModal = function(currentCollection){

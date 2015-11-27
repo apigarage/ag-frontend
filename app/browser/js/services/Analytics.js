@@ -6,6 +6,7 @@ angular.module('app')
     function($injector, Config, $window){
 
     var $analytics = $injector.get('$analytics');
+    // TODO: replace this with Messaging Service
     var ipc = $injector.get('ipc');
     var startSessionTime;
     var stopSessionTime;

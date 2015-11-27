@@ -3,8 +3,8 @@
 /* Services */
 
 angular.module('app')
-  .factory('Mocking', [ '$window', '$rootScope', 'Config', 'ipc', 'ApiRequest',
-  function($window, $rootScope, Config, ipc, ApiRequest){
+  .factory('Mocking', [ '$window', '$rootScope', 'Config', 'ApiRequest', 'Messaging', 'ipc',
+  function($window, $rootScope, Config, ApiRequest, Messaging, ipc){
 
     var Mocking = {};
     var localStorage = $window.localStorage;
@@ -18,22 +18,27 @@ angular.module('app')
     localStorage.getItem('defaultPort') === null ){
        Mocking.port = 41443; // default port save to localStorage
      }else{
-       Mocking.port =  localStorage.getItem('defaultPort');
+       Mocking.port =  parseInt(localStorage.getItem('defaultPort'));
      }
 
     Mocking.startServer = function (port){
-      ipc.sendSync('start-server', {
-        'port': port,
-        'endpoints': $rootScope.currentProject.collections
-      });
+      var message = {
+        "eventName" : 'start-mocking-server',
+        "port" : port,
+        "endpoints": $rootScope.currentProject.collections
+      };
+      localStorage.setItem("defaultPort", port);
+      Mocking.port = port;
       Mocking.serverStatus = true;
-      $rootScope.$broadcast('updateServerStatus', Mocking.serverStatus);
+      Messaging.sendSync(message);
     };
 
     Mocking.stopServer = function (){
-      ipc.sendSync('stop-server', 'node');
+      var message = {
+        "eventName" : 'stop-mocking-server',
+      };
       Mocking.serverStatus = false;
-      $rootScope.$broadcast('updateServerStatus', Mocking.serverStatus);
+      Messaging.sendSync(message);
     };
 
 
@@ -80,57 +85,5 @@ angular.module('app')
       return ApiRequest.send(options);
     };
     return Mocking;
-
-  }]).run(['$rootScope', 'ipc',
-  function($rootScope, ipc) {
-    console.log('ipc messaging');
-
-    ipc.on('start-server', function(port) {
-      console.log('port', port);
-      try {
-        $rootScope.$broadcast('start-mocking-server', port);
-      } catch (e) {
-          console.log(e);
-      } finally {
-
-      }
-
-    });
-
-    ipc.on('stop-server', function(port) {
-      console.log('stop-server', port);
-      try {
-        $rootScope.$broadcast('stop-mocking-server', port);
-      } catch (e) {
-          console.log(e);
-      } finally {
-
-      }
-    });
-
-    ipc.on('server-request', function(request) {
-      console.log('Request', request);
-      // TODO: prints out request in a SERVER LOG
-      try {
-        $rootScope.$broadcast('mocking-server-request', request);
-      } catch (e) {
-          console.log(e);
-      } finally {
-
-      }
-    });
-
-    ipc.on('server-Response', function(response) {
-      console.log('response', response);
-      // TODO: prints out responses in a SERVER LOG
-      try {
-        $rootScope.$broadcast('mocking-server-response', response);
-      } catch (e) {
-          console.log(e);
-      } finally {
-
-      }
-    });
-
 
   }]);

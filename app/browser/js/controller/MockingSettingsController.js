@@ -6,9 +6,8 @@ angular.module('app').controller('MockingSettingsCtrl', [
   'lodash',
   'ProjectsUser',
   'Analytics',
-  'ipc',
   'Mocking',
-  function ($scope, $rootScope, $q, $window, _, ProjectsUser, Analytics, ipc, Mocking){
+  function ($scope, $rootScope, $q, $window, _, ProjectsUser, Analytics, Mocking){
 
     $scope.port = Mocking.port;
     if (Mocking.serverStatus === undefined){
@@ -27,15 +26,6 @@ angular.module('app').controller('MockingSettingsCtrl', [
         $scope.serverStatus = true;
       }
 
-    };
-
-    $scope.startMockServer = function(port){
-      Mocking.startServer($scope.port);
-      localStorage.setItem("defaultPort", $scope.port);
-    };
-
-    $scope.stopMockServer = function(){
-      Mocking.stopServer();
     };
 
   }]);
