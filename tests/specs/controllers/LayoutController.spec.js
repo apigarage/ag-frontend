@@ -118,13 +118,13 @@ describe('Controller: LayoutController', function() {
       describe('When history is toggled', function(){
         it('and when the historyMaximized value is true, it will be false',function(){
           $scope.layout.historyMaximized = false;
-          $scope.toggleHistory();
+          $scope.toggleBottomBar('history');
           expect($scope.layout.historyMaximized).toEqual(true);
         });
 
         it('and when the historyMaximized value is false, it will be true',function(){
           $scope.layout.historyMaximized = true;
-          $scope.toggleHistory();
+          $scope.toggleBottomBar('history');
           expect($scope.layout.historyMaximized).toEqual(false);
         });
       });
