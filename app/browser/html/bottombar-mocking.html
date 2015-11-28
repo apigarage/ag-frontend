@@ -1,0 +1,47 @@
+  <!-- Mocking START -->
+  <div class="list" ng-model="panels.activePanel" role="tablist" aria-multiselectable="true" bs-collapse
+  style="height: 250px; overflow-y: scroll;"
+  ng-show="agLayoutMocking">
+    <div ng-repeat="logs in mockingLogs | orderBy:'-time'">
+
+      <div class="row" role="tab">
+        <div class="list-group-item small"
+          style="
+          border: 0px;
+          padding-bottom: 1px;
+          padding-left: 10px;
+          padding-right: 10px;
+          padding-top: 1px;
+          margin-top: 1px;
+          ">
+          <span class="col-md-2">
+
+          <a bs-collapse-toggle >
+            {{logs.time | date:'yyyy-MM-dd h:mm:ssa'}}
+          </a>
+        </span>
+
+          <span class="request-type col-md-3" style="width: 90px;">
+            <a >
+              {{logs.method ? logs.method : "Response"}}
+            </a>
+
+          </span>
+          <span style="padding-left: 6px;padding-right: 50px;width: 250px;" class="col-md-2">
+            {{logs.endpointName ? logs.endpointName : "API Garage - Endpoint Not found"}}
+          </span>
+          <a class="request-url-value" class="col-md-2">{{logs.url}}</a>
+          <!-- <span class="col-md-3">
+            <span class="request-status"></span> -
+            <span class="request-status-text"></span>
+          </span> -->
+        </div>
+      </div>
+      <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+        <div class="panel-body">
+          <div ui-ace="responseBodyMockingLogs" ng-model="logs.mockingLogsMessage" ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Mocking END -->

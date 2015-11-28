@@ -2,9 +2,10 @@ angular.module('app').controller('HistoryCtrl', [
   'lodash',
   '$scope',
   '$rootScope',
+  '$filter',
   'History',
   'Analytics',
-  function (_, $scope, $rootScope, History, Analytics){
+  function (_, $scope, $rootScope, $filter, History, Analytics){
   $scope.recentRequest = {};
   $scope.historyTimeStamps = [];
   $scope.lastRequest = {};
@@ -14,6 +15,12 @@ angular.module('app').controller('HistoryCtrl', [
   function init(){
     $scope.recentRequests = History.getHistory();
     $scope.historyTimeStamps = History.getHistoryTimeStamps();
+    $scope.historyRequests = [];
+    for (var i = 0; i < $scope.historyTimeStamps.length; i++) {
+      $scope.historyRequests[$scope.historyTimeStamps[i]] = "";
+      $scope.historyRequests[$scope.historyTimeStamps[i]] =
+      $filter('json')($scope.recentRequests[$scope.historyTimeStamps[i]]);
+    }
     getLastRequest();
   }
 
@@ -32,7 +39,7 @@ angular.module('app').controller('HistoryCtrl', [
         'performRequest' : !loadOnly
       }
     );
-    
+
     $rootScope.$broadcast('loadPerformRequest',historyItem, loadOnly, "HistoryCtrl");
   };
 
@@ -41,5 +48,27 @@ angular.module('app').controller('HistoryCtrl', [
     $scope.historyTimeStamps = History.getHistoryTimeStamps();
     getLastRequest();
   });
+
+  $scope.parseModel = function(model){
+    return $filter('json')( JSON.parse(model) );
+  };
+
+  $scope.responseBodyEditorOptionsParsed = {
+    useWrapMode : true,
+    showGutter: true,
+    theme: 'kuroir',
+    mode: 'json',
+    document: 'json',
+    fontFamily: 'monospace',
+    codeFolding: 'markbegin',
+    onLoad: function(editor){
+      editor.setShowPrintMargin(false);
+      editor.setHighlightActiveLine(false);
+      editor.setDisplayIndentGuides(false);
+      editor.setOptions({maxLines: 14});  // Auto adjust height!
+      editor.$blockScrolling = Infinity; // Disable warning
+      editor.setReadOnly(true);
+    }
+  };
 
 }]);

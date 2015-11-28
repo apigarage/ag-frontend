@@ -89,8 +89,28 @@ angular.module('app').controller('LayoutCtrl', [
     return $q.promise;
   }
 
-  $scope.toggleHistory = function(){
-    $scope.layout.historyMaximized = !$scope.layout.historyMaximized;
+  $scope.toggleBottomBar = function(tab){
+    if(tab=="mocking"){
+      if($scope.layout.historyMaximized){
+        $scope.layout.historyMaximized = !$scope.layout.historyMaximized;
+        $scope.layout.mockingMaximized = !$scope.layout.mockingMaximized;
+      }else{
+        $scope.layout.mockingMaximized = !$scope.layout.mockingMaximized;
+        $scope.layout.bottomBarMaximized = !$scope.layout.bottomBarMaximized;
+      }
+    }
+    else if (tab=="history"){
+      if($scope.layout.mockingMaximized){
+        $scope.layout.mockingMaximized = !$scope.layout.mockingMaximized;
+        $scope.layout.historyMaximized = !$scope.layout.historyMaximized;
+      }else{
+        $scope.layout.historyMaximized = !$scope.layout.historyMaximized;
+        $scope.layout.bottomBarMaximized = !$scope.layout.bottomBarMaximized;
+      }
+    }
+    else{
+      $scope.layout.bottomBarMaximized = !$scope.layout.bottomBarMaximized;
+    }
   };
 
   $scope.toggleSidebar = function(){

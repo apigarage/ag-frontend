@@ -15,9 +15,13 @@
       {{serverStatus ? 'Stop' : 'Start'}} Mocking Server
     </button>
 
-    <label for='serverURL' class="sidebar-list-parent" ng-if="serverURL">
+    <label for='serverURL' class="sidebar-list-parent" ng-show="serverStatus">
        <input type="text" id='serverURL' ng-model="serverURL"
-       data-trigger="focus" bs-tooltip="mockingServerTooltip"/>
+
+       disabled
+       style="margin-top: 5px;"/>
+       <span class="fa fa-fw fa-question-circle" data-trigger="hover" bs-tooltip="mockingServerTooltip"></span>
+
     </label>
 
     <!-- SEARCH BOX -->

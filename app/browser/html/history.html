@@ -1,40 +1,92 @@
-  <div class="history noselect" ng-class="{expanded: layout.sidebarExpanded, maximized: layout.historyMaximized}"
+  <div class="history noselect" ng-class="{expanded: layout.sidebarExpanded, maximized: layout.bottomBarMaximized}"
        ng-controller="HistoryCtrl">
 
     <!-- <h1 ng-click="toggleHistory()" bs-tooltip data-title="{{'OSX' ? '&#8984;H' : 'Ctrl+H'}}"> -->
-    <h1 ng-click="toggleHistory()">
-      <span class="fa" ng-class="layout.historyMaximized ? 'fa-minus-square-o' : 'fa-plus-square-o'"></span>
+
+    <div>
+      <span ng-click="toggleBottomBar('history')"
+       ng-class="layout.historyMaximized ? 'sidebar-list-child-item-selected' : ''">
+      <span class="fa " ng-class="layout.historyMaximized ? 'fa-minus-square-o sidebar-list-child-item-selected' : 'fa-plus-square-o'"></span>
       REQUEST HISTORY
-    </h1>
-    <div class="history-latest-request" ng-hide="layout.historyMaximized">
+      </span>
+        |
+      <span ng-click="toggleBottomBar('mocking')"
+      ng-class="layout.mockingMaximized ? 'sidebar-list-child-item-selected' : ''">
+      <span class="fa" ng-class="layout.mockingMaximized ? 'fa-minus-square-o' : 'fa-plus-square-o'"></span>
+      MOCKING SERVER
+      </span>
+    </div>
+
+    <!-- <div class="history-latest-request" ng-hide="layout.historyMaximized">
       Last request:
       <span class="request-time hidden-xs">{{lastRequest.time | date:'yyyy-MM-dd h:mm:ssa'}}</span>
       <a>
         <span class="request-type" ng-click="loadPerformRequest(lastRequest.time, false)">{{lastRequest.method}}</span>
       </a>
       <a ng-click="loadPerformRequest(lastRequest.time, true)">{{lastRequest.url}}</a>
-    </div>
+    </div> -->
 
     <!-- <a class="history-expand-icon" ng-click="toggleHistory()" bs-tooltip data-title="{{'OSX' ? '&#8984;H' : 'Ctrl+H'}}"> -->
-    <a class="history-expand-icon" ng-click="toggleHistory()">
-      {{ layout.historyMaximized ? 'Collapse' : 'Expand' }}
-      <span class="fa" ng-class="layout.historyMaximized ? 'fa-times-circle' : 'fa-external-link'"></span>
-    </a>
+    <!-- <a class="history-expand-icon" ng-click="toggleBottomBar()">
+      {{ layout.bottomBarMaximized ? 'Collapse' : 'Expand' }}
+      <span class="fa" ng-class="layout.bottomBarMaximized ? 'fa-times-circle' : 'fa-external-link'"></span>
+    </a> -->
 
-    <ul class="list-unstyled">
-      <li class="request-url" ng-repeat="time in historyTimeStamps">
-        <span class="request-time">{{time | date:'yyyy-MM-dd h:mm:ssa'}}</span>
-        <span class="request-type" ng-click="loadPerformRequest(time, false)">
-        <a>
-          {{recentRequests[time].method}}
-        </a>
-        </span>
-        <a class="request-url-value" ng-click="loadPerformRequest(time, true)">{{recentRequests[time].url}}</a>
-        <span>
-          <span class="request-status">{{recentRequests[time].status}}</span>
-          <span class="request-status-text">{{recentRequests[time].statusText}}</span>
-        </span>
-      </li>
-    </ul>
+<!-- History START -->
+  <div class="list" ng-model="panels.activePanel" role="tablist" aria-multiselectable="true" bs-collapse
+  style="height: 250px; overflow-y: scroll;"
+  ng-show="layout.historyMaximized">
+    <div ng-repeat="time in historyTimeStamps">
 
+      <div class="row" role="tab">
+        <div class="list-group-item small"
+          style="
+          border: 0px;
+          padding-bottom: 1px;
+          padding-left: 10px;
+          padding-right: 10px;
+          padding-top: 1px;
+          margin-top: 1px;"
+          >
+          <span class="col-md-2">
+          <a bs-collapse-toggle >
+            {{time | date:'yyyy-MM-dd h:mm:ssa'}}
+          </a>
+        </span>
+
+          <span class="request-type col-md-1" ng-click="loadPerformRequest(time, false)">
+            <a >
+              {{recentRequests[time].method}}
+            </a>
+          </span>
+
+          <span style="padding-left: 6px;padding-right: 50px;" class="col-md-2">
+            {{recentRequests[time].name}}
+          </span>
+
+          <a class="request-url-value" ng-click="loadPerformRequest(time, true)" class="col-md-2">{{recentRequests[time].url | limitTo:35 }}</a>
+
+          <span class="col-md-4">
+            <span class="request-status">{{recentRequests[time].status}}</span> -
+            <span class="request-status-text" style="width: 80px;">{{recentRequests[time].statusText}}</span>
+          </span>
+
+        </div>
+      </div>
+
+      <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+        <div class="panel-body">
+          <div ui-ace="responseBodyEditorOptionsParsed" ng-model="historyRequests[time]" ></div>
+        </div>
+      </div>
+
+    </div>
   </div>
+  <!-- History END -->
+
+  <mocking-server-logs-drtv
+  ag-layout-mocking="layout.mockingMaximized"
+  ag-bottom-bar-maximized="layout.bottomBarMaximized">
+  </mocking-server-logs-drtv>
+
+</div>

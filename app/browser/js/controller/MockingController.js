@@ -2,16 +2,16 @@ angular.module('app').controller('MockingCtrl', [
   'lodash',
   '$scope',
   '$rootScope',
+  '$filter',
   'Analytics',
   'Mocking',
-  function (_, $scope, $rootScope, Analytics, Mocking){
+  function (_, $scope, $rootScope, $filter, Analytics, Mocking){
 
     $scope.panelsCopy = [];
 
-
     // Watches the change of the item and gets the Mocked Responses
     $scope.$watch('agParentEndpoint.uuid', function(){
-      if($scope.agParentEndpoint.uuid === undefined) return;
+      if($scope.agParentEndpoint === undefined || $scope.agParentEndpoint.uuid === undefined) return;
       $scope.getListStatusResponses($scope.agParentEndpoint);
     });
 
@@ -45,5 +45,45 @@ angular.module('app').controller('MockingCtrl', [
         $scope.panelsCopy = $scope.panels;
       });
     };
+
+    // mocking logs
+    $scope.mockingLogs = [];
+
+    $scope.$on('stop-mocking-server', function(evt, data){
+      $scope.mockingLogs = [];
+      $scope.agBottomBarMaximized = false;
+      $scope.agLayoutMocking = false;
+    });
+
+    $scope.$on('updateMockingLogs', function(event,data){
+      // show logs if they aren't already open
+      if(!$scope.agBottomBarMaximized) {
+        $scope.agBottomBarMaximized = true;
+        $scope.agLayoutMocking = true;
+      }
+
+      data.mockingLogsMessage = $filter('json')( data );
+      data.time = Date.now();
+      $scope.mockingLogs.push(data);
+    });
+
+    $scope.responseBodyMockingLogs = {
+      useWrapMode : true,
+      showGutter: true,
+      theme: 'kuroir',
+      mode: 'json',
+      document: 'json',
+      fontFamily: 'monospace',
+      codeFolding: 'markbegin',
+      onLoad: function(editor){
+        editor.setShowPrintMargin(false);
+        editor.setHighlightActiveLine(false);
+        editor.setDisplayIndentGuides(false);
+        editor.setOptions({maxLines: 10});  // Auto adjust height!
+        editor.$blockScrolling = Infinity; // Disable warning
+        editor.setReadOnly(true);
+      }
+    };
+
   }
 ]);

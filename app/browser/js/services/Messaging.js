@@ -34,29 +34,28 @@ angular.module('app')
         }
       });
 
-      // ipc.on('server-request', function(request) {
-      //   console.log('Request', request);
-      //   // TODO: prints out request in a SERVER LOG
-      //   try {
-      //     $rootScope.$broadcast('mocking-server-request', request);
-      //   } catch (e) {
-      //       console.log(e);
-      //   } finally {
-      //
-      //   }
-      // });
-      //
-      // ipc.on('server-Response', function(response) {
-      //   console.log('response', response);
-      //   // TODO: prints out responses in a SERVER LOG
-      //   try {
-      //     $rootScope.$broadcast('mocking-server-response', response);
-      //   } catch (e) {
-      //       console.log(e);
-      //   } finally {
-      //
-      //   }
-      // });
+      // TODO: single pipe messaging
+      ipc.on('server-request', function(request) {
+        // console.log('request', request);
+        try {
+          $rootScope.$broadcast('updateMockingLogs', request);
+        } catch (e) {
+            console.log(e);
+        } finally {
+          $rootScope.$apply();
+        }
+      });
+
+      ipc.on('server-response', function(response) {
+        // console.log('response', response);
+        try {
+          $rootScope.$broadcast('updateMockingLogs', response);
+        } catch (e) {
+            console.log(e);
+        } finally {
+          $rootScope.$apply();
+        }
+      });
 
 
     }
