@@ -18,6 +18,7 @@
     "semver": "^5.0.3",
     "unirest": "^0.4.2",
     "yargs": "^3.13.0",
-    "http-server": "^0.8.5"
+    "http-server": "^0.8.5",
+    "urijs": "^1.17.0"
   }
 }

@@ -61,7 +61,6 @@ angular.module('app').controller('MockingCtrl', [
         $scope.agBottomBarMaximized = true;
         $scope.agLayoutMocking = true;
       }
-
       data.mockingLogsMessage = $filter('json')( data );
       data.time = Date.now();
       $scope.mockingLogs.push(data);

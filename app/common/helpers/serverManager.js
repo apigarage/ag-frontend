@@ -2,7 +2,7 @@
   var serverList = [];
   var _ = require('lodash');
   var http = require('http');
-  var serverIPC = require('ipc');
+  var URI = require('urijs');
   var windowsManager  = require('./windowsManager.js');
 
   // Maintain a hash of all connected sockets
@@ -34,8 +34,11 @@
         // TODO - Ask user to enter the mocking information.
         // TODO - Request Mocking Information (Flag an endpoint with Activity.)
       }
-      windowsManager.sendToAllWindows('server-request', req);
-      windowsManager.sendToAllWindows('server-response', res);
+
+      req.eventName = 'updateMockingLogs';
+      res.eventName = 'updateMockingLogs';
+      windowsManager.sendToAllWindows('ag-message', req);
+      windowsManager.sendToAllWindows('ag-message', res);
 
     }).listen(options.port, function (err) {
       console.log('listening http://localhost:'+ options.port +'/');

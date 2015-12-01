@@ -8,39 +8,12 @@
 
   var env = require('../vendor/electron_boilerplate/env_config');
   var wm = require('../common/helpers/windowsManager.js');
+  var messageManager = require('../common/helpers/messageManager.js');
   var utils = require('../vendor/app_utils.js');
-  var ipc = require('ipc');
-  var serverManager = require('../common/helpers/serverManager.js');
 
   module.exports.init = function(){
-
-    // API GARAGE message handler
-    ipc.on("ag-message", function(event, data){
-      //console.log('event', event);
-      var message = {};
-      if(data.eventName == "start-mocking-server"){
-        serverManager.createServer(data);
-        message = {
-          "eventName" : data.eventName,
-          "port": data.port
-        };
-      }else if(data.eventName == "stop-mocking-server"){
-        serverManager.stopServer();
-        message = {
-          "eventName" : data.eventName
-        };
-      }else{
-        message = {
-          "eventName" : "ag-message",
-          "message" : "unknown source"
-        };
-      }
-      wm.sendToAllWindows('ag-message', message);
-      event.returnValue = data;
-    });
-
     app.on('ready', function () {
-
+      messageManager.messageHandler();
       var mainWindow = wm.createWindow({
         'width': 1000,
         'height': 800,

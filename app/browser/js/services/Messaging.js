@@ -31,32 +31,13 @@ angular.module('app')
         } catch (e) {
             console.log(e);
         } finally {
+          // This needs to be here to resolve the server request response
+          // before the update.
+          if(data.eventName == "updateMockingLogs"){
+            $rootScope.$apply();
+          }
         }
       });
-
-      // TODO: single pipe messaging
-      ipc.on('server-request', function(request) {
-        // console.log('request', request);
-        try {
-          $rootScope.$broadcast('updateMockingLogs', request);
-        } catch (e) {
-            console.log(e);
-        } finally {
-          $rootScope.$apply();
-        }
-      });
-
-      ipc.on('server-response', function(response) {
-        // console.log('response', response);
-        try {
-          $rootScope.$broadcast('updateMockingLogs', response);
-        } catch (e) {
-            console.log(e);
-        } finally {
-          $rootScope.$apply();
-        }
-      });
-
 
     }
   ]);

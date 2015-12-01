@@ -2,12 +2,13 @@
 // THIS WILL BE TESTING MOCKING setPath and match in serverManager.js
 
 
-xkdescribe('Common : MockingUtility', function() {
+xdescribe('Common : MockingUtility', function() {
 
   describe('When tests are loaded', function(){
 
     beforeEach(function(){
       mockingFixtures = window.mockingFixtures;
+      // This require doesn't work
       mockingUtility = require('../../../app/common/helpers/serverManager.js');
     });
 
