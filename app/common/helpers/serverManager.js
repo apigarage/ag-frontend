@@ -3,12 +3,16 @@
   var _ = require('lodash');
   var http = require('http');
   var URI = require('urijs');
+  var request = require('./request.js');
   var windowsManager  = require('./windowsManager.js');
+  var config = require('../../vendor/electron_boilerplate/env_config.js');
+  var Q = require('q');
 
   // Maintain a hash of all connected sockets
   var sockets = {}, nextSocketId = 0;
   var server = {};
 
+  var responses = [];
   module.exports.createServer = function(options){
     console.log("start", options.port);
     server = http.createServer(function (req, res) {
@@ -45,8 +49,6 @@
       console.log('pid is ' + process.pid);
     });
 
-    setPaths(options.endpoints);
-
     server.on('connection', function (socket) {
       // Add a newly connected socket
       var socketId = nextSocketId++;
@@ -59,6 +61,14 @@
         delete sockets[socketId];
       });
     });
+
+    return setResponses(options)
+      .then(function(){
+
+        // Why are we returning option paths back to the renderer?
+        return setPaths(options.endpoints, options);
+      });
+
   };
 
   function match(request){
@@ -70,18 +80,31 @@
 
       if(found) return;
       console.log('Endpoint', path.regexp, '---', path.endpoint.method);
+      console.log('1');
 
       // Match Method (GET/POST/PUT/DELETE/PATCH)
       if(path.endpoint.method != request.method) return;
+      console.log('2');
 
       // Match the path
       path.regexp.lastIndex = 0; // resetting the last regex.
+      console.log('PATH', path);
+      console.log('request.url', request.url);
       found = path.regexp.exec(request.url);
 
+      console.log('3');
+      console.log('found', found);
       // If path and method both matches, return the path.
       if(found) {
         console.log('Matched');
         // If the request survives until this point, it is the match.
+
+        // NOTES FOR TOMORROW
+        // TODO 1 : Greab the header X-AG-EXPECTED-STATUS
+        // TODO 2 : Grab response[endpoint-uuid][X-AG-EXPECTED-STATUS]
+        // TODO 3 : Send the response back with Found
+        // TODO 4 : Replace variables in the response with the given variables
+
         found.endpoint = path.endpoint;
         found.variables = {};
         var i = 0;
@@ -95,33 +118,53 @@
     return found;
   }
 
-  function setPaths(endpoints){
+  /*
+   * access_token
+   */
+  function setResponses(options){
+    var requestOptions = {
+      'method': 'GET',
+      'url': config.url + '/api/projects/' + options.projectId + '/responses',
+      'headers':{
+        "Content-Type": "application/json",
+        'Authorization': options.accessToken
+      }
+    };
+
+    return request.send(requestOptions)
+      .then(function(response){
+        _.forEach(response.body, function(response){
+          var code = [];
+          code[response.status] = response;
+          responses[response['item.uuid']] = code;
+        });
+      });
+  }
+
+  function setPaths(endpoints, options){
     var paths = [];
     _.forEach(endpoints, function(collection){
       // console.log('Collection', collection);
       _.forEach(collection.items, function(endpoint){
+        endpoint.parsedUrl = URI.parse(endpoint.url);
 
-        // Matching patch
-        // TODO - ☒ Setting up Regular Expression to Start Server
-        // TODO - ☒ Add optional '/' in the beginning and at the end.
-        // TODO - ☒ Use case : variable is at the end of the URL
-        // TODO - ☒ Use case : URL includes email (either as a URL or a query param)
+        // If hostname is not defined, nothing to mock here.
+        if( ! endpoint.parsedUrl.hostname ) return;
 
-        // TODO - Check, if the endpoint is mock ready.
-        // Is it migrated from environments to host?
+        endpoint.pathWithQuery = endpoint.parsedUrl.query
+          ? endpoint.parsedUrl.path + '\\?' + endpoint.parsedUrl.query // <-- double escape is required.
+          : endpoint.parsedUrl.path;
 
-        // Extracting Variables Keys
-        // TODO - endpoint URL will be replaced by endpoint path after environments to host migration.
-        var variables = endpoint.url.match(/{{.*}}/gi);
+        // Extracting Variables Keys out of Path for later usage
+        var variables = endpoint.pathWithQuery.match(/{{.*}}/gi);
         variables = _.map(variables, function(variable){
           return variable.substring(2, variable.length-2); // removeing '{{' & '}}'
         });
 
-        // Matching and Extracting Variables Values
-        // TODO - endpoint URL will be replaced by endpoint path after environments to host migration.
-        endpoint.path = endpoint.url.replace(/{{.*}}/, '([a-zA-Z0-9\-]*)');
-        endpoint.path = '^\/*' + endpoint.path + '\/*$'; // slashes in the beggining and at the end.
-        var regexp = new RegExp(endpoint.path, 'gi');
+        // Replacing {{ }} with regex for later matches
+        endpoint.pathWithQuery = endpoint.pathWithQuery.replace(/{{.*}}/, '([a-zA-Z0-9\-]*)'); // Regex is to match with ( any alphanumeric keywords + dash )
+        endpoint.pathWithQuery = '^\/*' + endpoint.pathWithQuery + '\/*$'; // Optional Slashes in the beggining and at the end.
+        var regexp = new RegExp(endpoint.pathWithQuery, 'gi');
 
         paths.push({
           variables: variables,
@@ -134,6 +177,9 @@
     // console.log('GOING TO SET PATHS FROM THESE ENDPOINTS', endpoints);
     server.paths = paths;
     console.log('All Paths', paths);
+
+    // Make sure return relevant render side data
+    return { "eventName": options.eventName, "port": options.port };
   }
 
   module.exports.stopServer = function(){

@@ -3,8 +3,8 @@
 /* Services */
 
 angular.module('app')
-  .factory('Mocking', [ '$window', '$rootScope', 'Config', 'ApiRequest', 'Messaging', 'ipc',
-  function($window, $rootScope, Config, ApiRequest, Messaging, ipc){
+  .factory('Mocking', [ '$window', '$rootScope', 'Config', 'ApiRequest', 'Auth', 'Messaging', 'ipc',
+  function($window, $rootScope, Config, ApiRequest, Auth, Messaging, ipc){
 
     var Mocking = {};
     var localStorage = $window.localStorage;
@@ -25,7 +25,9 @@ angular.module('app')
       var message = {
         "eventName" : 'start-mocking-server',
         "port" : port,
-        "endpoints": $rootScope.currentProject.collections
+        "endpoints": $rootScope.currentProject.collections,
+        "projectId": $rootScope.currentProject.id,
+        "accessToken": Auth.get()
       };
       localStorage.setItem("defaultPort", port);
       Mocking.port = port;

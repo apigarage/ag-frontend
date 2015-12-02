@@ -14,8 +14,12 @@
   };
 
   eventEmitter.on('start-mocking-server', function(data){
-    serverManager.createServer(data);
-    windowsManager.sendToAllWindows('ag-message', data);
+   serverManager.createServer(data)
+     .then(function(data){
+
+       windowsManager.sendToAllWindows('ag-message', data);
+
+     });
   });
 
   eventEmitter.on('stop-mocking-server', function(data){
