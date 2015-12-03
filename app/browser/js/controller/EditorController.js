@@ -259,7 +259,6 @@ angular.module('app').controller('EditorCtrl', [
         // Workaround: newType Error that appears when parsing headers root casue unknown
         $scope.response.headers = JSON.parse(JSON.stringify($scope.response.headers()));
         $scope.setResponsePreviewType($scope.currentResponsePreviewTab);
-        showRequestHideCancelButtons();
 
         // build the History object
         options.status = $scope.response.status;
@@ -271,13 +270,15 @@ angular.module('app').controller('EditorCtrl', [
 
         History.setHistoryItem(options);
         $rootScope.$broadcast('updateHistory');
-        $scope.loading = false;
+
+        // hide the cancel button and stop the make request loading
+        showRequestHideCancelButtons();
+        if($scope.loading) $scope.loading = false;
       });
 
       $scope.requestPromise = requestPromise;
       $scope.requestPromise.abort = function() {
         deferedAbort.resolve();
-        showRequestHideCancelButtons();
       };
 
       requestPromise.finally(function(){
@@ -286,6 +287,12 @@ angular.module('app').controller('EditorCtrl', [
       });
 
       return requestPromise;
+    };
+
+    $scope.cancelRequest = function(){
+      showRequestHideCancelButtons();
+      if($scope.loading) $scope.loading = false;
+      if($scope.requestPromise) $scope.requestPromise.abort();
     };
 
     $scope.getResponseCodeClass = function(responseCode){

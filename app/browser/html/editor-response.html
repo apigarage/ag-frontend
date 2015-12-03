@@ -13,7 +13,7 @@
           <div ng-switch-default>
             <div ng-hide="response.status">
               <strong>
-                <span class="fa" ng-class="getResponseCodeClass(response.status)"></span>
+                <span class="fa" ng-class="getResponseCodeClass(response.status)" ng-show="loading"></span>
                 URL Unreachable
               </strong>
             </div>
