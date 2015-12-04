@@ -1,4 +1,4 @@
-<span class="fa fa-spinner fa-pulse response-loading" ng-hide="response.data"></span>
+<span class="fa fa-spinner fa-pulse response-loading" ng-show="loading"></span>
 
 <div class="response-headers" ng-if="response.headers">
   <h4 class="response-headers-title editor-panel-subsection" ng-click="responseHeadersExpanded = !responseHeadersExpanded">
@@ -16,7 +16,7 @@
     </div>
   </table>
 </div>
-<div class="response-body-raw" ng-if="response.data" ng-init="responseBodyExpanded = true">
+<div class="response-body-raw" ng-if="response.data" ng-show="loading" ng-init="responseBodyExpanded = true">
   <h4 class="response-y-title editor-panel-subsection" ng-click="responseBodyExpanded = !responseBodyExpanded">
     <a>
       <span class="fa fa-lg" ng-class="responseBodyExpanded ? 'fa-caret-down' : 'fa-caret-right'"></span>
