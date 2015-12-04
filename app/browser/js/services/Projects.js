@@ -75,10 +75,10 @@ angular.module('app')
       * @id: project id
       * @data: object fields and values
       */
-      Project.remove = function(id){
+      Project.remove = function(data){
         var options = {
           'method': 'DELETE',
-          'url': Config.url + Config.api + endpoint + '/' + id
+          'url': Config.url + Config.api + endpoint + '/' + data.id
         };
         return ApiRequest.send(options);
       };

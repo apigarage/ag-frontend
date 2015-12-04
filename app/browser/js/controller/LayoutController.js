@@ -6,8 +6,9 @@ angular.module('app').controller('LayoutCtrl', [
   '$state',
   'lodash',
   'Projects',
+  'ProjectsUser',
   'Analytics',
-  function ($scope, $rootScope, $modal, $q, $state, _, Projects, Analytics){
+  function ($scope, $rootScope, $modal, $q, $state, _, Projects, ProjectsUser, Analytics){
 
   function init(){
     $scope.layout = {
@@ -110,6 +111,89 @@ angular.module('app').controller('LayoutCtrl', [
     projectShareModal.$promise.then( projectShareModal.show );
     return projectShareModal;
   };
+
+  $scope.openDeleteProjectModal = function(){
+    $scope.currentUserEmail = localStorage.getItem("currentUserEmail");
+    getProjectUsers().then(function(){
+      var message = $scope.isDisabled() ? "You don't have permission to delete: " : "";
+      var newModal = $modal({
+        show: false,
+        template: "html/prompt.html",
+        animation: false,
+        backdrop: true,
+        title: "Delete Project",
+        content: JSON.stringify({
+          // modal window properties
+          'disableCloseButton': false,
+          'promptMessage': true,
+          'promptMessageText': message + $rootScope.currentProject.name,
+          'promptIsError': true,
+          'hideModalOnSubmit': true,
+
+          // submit button properties
+          'showSubmitButton' : !$scope.isDisabled(),
+          'disbledSubmitButton' : false,
+          'submitButtonText' : 'Confirm',
+
+          // discard button properties
+          'showDiscardButton' : true,
+          'disbleDiscardButton' : false,
+          'discardButtonText' : 'Cancel',
+
+          // input prompt properties
+          'showInputPrompt' : false,
+          'requiredInputPrompt' : false,
+
+          // input email prompt properties
+          'showInputEmailPrompt' : false,
+          'requiredInputEmailPrompt': false,
+        })
+
+      });
+      newModal.$scope.success = function(){
+        return $scope.deleteProject($rootScope.currentProject)
+        .then(function(response){
+          // TODO: Error handling
+          return response;
+        });
+      };
+      newModal.$scope.cancel = function(error){ return $q.resolve(); };
+      newModal.$promise.then( newModal.show );
+      return newModal;
+    });
+
+  };
+
+  $scope.deleteProject = function(currentProject){
+    return Projects.remove(currentProject)
+      .then(function(response){
+        // TODO: Error handling
+        // check to see if  currentCollction is selected collection
+
+        // time a collection is deleted
+        Analytics.eventTrack('Delete Project', {'from': 'LayoutCtrl'});
+
+        $scope.switchProject();
+        return response;
+      });
+  };
+
+  $scope.isDisabled = function(){
+    return $scope.currentUserPrivilege == "0";
+  };
+
+  function getProjectUsers(){
+    $scope.projectShare = {};
+    return ProjectsUser.getProjectUsers($rootScope.currentProject.id).then(function(response){
+      $scope.projectShare.users = response.data;
+      angular.forEach($scope.projectShare.users, function(value, key){
+        if(value.email==$scope.currentUserEmail){
+          $scope.currentUserPrivilege = value.permission_id;
+          return;
+        }
+      });
+    });
+  }
 
   init();
 
