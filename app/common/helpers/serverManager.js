@@ -16,28 +16,42 @@
   module.exports.createServer = function(options){
     console.log("start", options.port);
     server = http.createServer(function (req, res) {
-      // unclear why it is sending twice
-      // request headers always has response
-      // we query the response and return it as is.
-      // we would need a localStorage for all the response
-      // need to define what makes a unique request
-      // figure out where in the file system it is creating the server
 
+      var response = {
+        statusCode : req.headers['x-ag-expected-status']
+      };
       var found = match(req);
       if(found){
-        res.writeHead(200, {'Content-Type': 'text/plain'});
-        res.end(JSON.stringify(found) + '\n');
-        // TODO - Find the response code.
-        // TODO - Fetch response
-        // TODO - Response back
-        // TODO - Log the response
+
+        // Read Status Code
+        if( ! response.statusCode ) response.statusCode = 200; // defautls to 200.
+
+        // Check if any response for this endpoint exist
+        if(found.endpoint && responses[found.endpoint.uuid]){
+          // Check if response for this endpoint and status code exist
+          if( responses[found.endpoint.uuid][response.statusCode] ){
+            // TODO : Replace variables in the response with the given variables
+            response.body = responses[found.endpoint.uuid][response.statusCode].data;
+          } else {
+            // Please write a better copy.
+            response.body = 'Yes, endpoint is correct, we could not find the '+
+              'response code you are looking for. Please set one up, and try again.';
+            response.statusCode = 217;
+          }
+        } else {
+          // Please write a better copy.
+          response.body = 'Oops, there are no responses set for this endpoint.'+
+            ' Please set one up, and try again.';
+          response.statusCode = 217;
+        }
       }
       else {
-        res.writeHead(404, {'Content-Type': 'text/plain'});
-        res.end('URL not found\n');
-        // TODO - Ask user to enter the mocking information.
-        // TODO - Request Mocking Information (Flag an endpoint with Activity.)
+        response.statusCode = 404;
+        response.body = 'URL definition not found.';
       }
+
+      res.writeHead(response.statusCode, {});
+      res.end(response.body + '\n');
 
       req.eventName = 'updateMockingLogs';
       res.eventName = 'updateMockingLogs';
@@ -71,6 +85,13 @@
 
   };
 
+  function replaceVariables(responseBody, variables){
+    variables.forEach(function(variable){
+      console.log('replacing variable', variable);
+      // responseBody.replace('{{'+ variable.key +'}}', variable.value);
+    });
+  }
+
   function match(request){
     var found = null;
 
@@ -79,38 +100,27 @@
     server.paths.forEach(function(path, index, array){
 
       if(found) return;
-      console.log('Endpoint', path.regexp, '---', path.endpoint.method);
-      console.log('1');
 
       // Match Method (GET/POST/PUT/DELETE/PATCH)
       if(path.endpoint.method != request.method) return;
-      console.log('2');
 
       // Match the path
       path.regexp.lastIndex = 0; // resetting the last regex.
-      console.log('PATH', path);
-      console.log('request.url', request.url);
       found = path.regexp.exec(request.url);
 
-      console.log('3');
-      console.log('found', found);
       // If path and method both matches, return the path.
       if(found) {
         console.log('Matched');
         // If the request survives until this point, it is the match.
-
-        // NOTES FOR TOMORROW
-        // TODO 1 : Greab the header X-AG-EXPECTED-STATUS
-        // TODO 2 : Grab response[endpoint-uuid][X-AG-EXPECTED-STATUS]
-        // TODO 3 : Send the response back with Found
-        // TODO 4 : Replace variables in the response with the given variables
-
         found.endpoint = path.endpoint;
+
+        // Get the matched variable values from the URL.
         found.variables = {};
         var i = 0;
         path.variables.forEach(function(variable){
           found.variables[variable] = found[++i]; // ++i because the first element if the full regex match.
         });
+        found.variables = path.variables;
       }
 
     });
@@ -134,9 +144,8 @@
     return request.send(requestOptions)
       .then(function(response){
         _.forEach(response.body, function(response){
-          var code = [];
-          code[response.status] = response;
-          responses[response['item.uuid']] = code;
+          if(! responses[response['item.uuid']] ) responses[response['item.uuid']] = [];
+          responses[response['item.uuid']][response.status] = response;
         });
       });
   }
@@ -176,7 +185,7 @@
 
     // console.log('GOING TO SET PATHS FROM THESE ENDPOINTS', endpoints);
     server.paths = paths;
-    console.log('All Paths', paths);
+    // console.log('All Paths', paths);
 
     // Make sure return relevant render side data
     return { "eventName": options.eventName, "port": options.port };

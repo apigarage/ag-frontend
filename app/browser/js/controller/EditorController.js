@@ -126,19 +126,6 @@ angular.module('app').controller('EditorCtrl', [
 
     };
 
-
-    ipc.on('server-request', function(request) {
-      console.log('request', request);
-    });
-
-    ipc.on('server-response', function(response) {
-      console.log('response', response);
-    });
-
-    ipc.on('server-started', function(port) {
-      console.log('server-started', port);
-    });
-
     $scope.requestChanged = function(){
       Editor.setEndpoint( $scope.endpoint );
       if(!$scope.requestChangedFlag){
