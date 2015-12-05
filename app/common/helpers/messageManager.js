@@ -5,7 +5,7 @@
 
   var windowsManager  = require('./windowsManager.js');
   var serverManager  = require('./serverManager.js');
-  
+
   module.exports.messageHandler = function(){
     ipc.on("ag-message", function(event, data){
       eventEmitter.emit(data.eventName, data);
@@ -16,9 +16,7 @@
   eventEmitter.on('start-mocking-server', function(data){
    serverManager.createServer(data)
      .then(function(data){
-
        windowsManager.sendToAllWindows('ag-message', data);
-
      });
   });
 

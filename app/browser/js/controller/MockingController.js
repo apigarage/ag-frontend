@@ -55,16 +55,28 @@ angular.module('app').controller('MockingCtrl', [
       $scope.agLayoutMocking = false;
     });
 
-    $scope.$on('updateMockingLogs', function(event,data){
+    $scope.$on('update-mocking-logs', function(event,data){
       // show logs if they aren't already open
       if(!$scope.agBottomBarMaximized) {
         $scope.agBottomBarMaximized = true;
         $scope.agLayoutMocking = true;
       }
-      data.mockingLogsMessage = $filter('json')( data );
       data.time = Date.now();
+      console.log('data',data);
       $scope.mockingLogs.push(data);
     });
+
+    $scope.loadPerformRequest = function (endpoint, loadOnly){
+
+      // times history is re/loaded
+      Analytics.eventTrack('Mocking Load',
+        { 'from' : 'MockingCtrl',
+          'performRequest' : !loadOnly
+        }
+      );
+
+      $rootScope.$broadcast('loadPerformRequest',endpoint, loadOnly, "MockingCtrl");
+    };
 
     $scope.responseBodyMockingLogs = {
       useWrapMode : true,

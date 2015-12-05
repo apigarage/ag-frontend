@@ -14,50 +14,60 @@
 
   var responses = [];
   module.exports.createServer = function(options){
-    console.log("start", options.port);
-    server = http.createServer(function (req, res) {
+    //console.log("start", options.port);
+    server = http.createServer(function (serverRequest, serverResponse) {
 
-      var response = {
-        statusCode : req.headers['x-ag-expected-status']
+      var mockedResponse = {
+        statusCode : serverRequest.headers['x-ag-expected-status']
       };
-      var found = match(req);
-      if(found){
 
+
+      var foundResponse = match(serverRequest);
+      if(foundResponse){
+        console.log('foundResponse', foundResponse);
         // Read Status Code
-        if( ! response.statusCode ) response.statusCode = 200; // defautls to 200.
+        if( ! mockedResponse.statusCode ) mockedResponse.statusCode = 200; // defautls to 200.
 
         // Check if any response for this endpoint exist
-        if(found.endpoint && responses[found.endpoint.uuid]){
+        if(foundResponse.endpoint && responses[foundResponse.endpoint.uuid]){
           // Check if response for this endpoint and status code exist
-          if( responses[found.endpoint.uuid][response.statusCode] ){
+          if( responses[foundResponse.endpoint.uuid][mockedResponse.statusCode] ){
             // TODO : Replace variables in the response with the given variables
-            response.body = responses[found.endpoint.uuid][response.statusCode].data;
+            mockedResponse.body = responses[foundResponse.endpoint.uuid][mockedResponse.statusCode].data;
           } else {
             // Please write a better copy.
-            response.body = 'Yes, endpoint is correct, we could not find the '+
+            mockedResponse.body = 'Yes, endpoint is correct, we could not find the '+
               'response code you are looking for. Please set one up, and try again.';
-            response.statusCode = 217;
+            mockedResponse.statusCode = 217;
           }
+
         } else {
           // Please write a better copy.
-          response.body = 'Oops, there are no responses set for this endpoint.'+
+          mockedResponse.body = 'Oops, there are no responses set for this endpoint.'+
             ' Please set one up, and try again.';
-          response.statusCode = 217;
+          mockedResponse.statusCode = 217;
         }
       }
       else {
-        response.statusCode = 404;
-        response.body = 'URL definition not found.';
+        mockedResponse.statusCode = 404;
+        mockedResponse.body = 'URL definition not found.';
       }
 
-      res.writeHead(response.statusCode, {});
-      res.end(response.body + '\n');
+      var mockingLog = {};
 
-      req.eventName = 'updateMockingLogs';
-      res.eventName = 'updateMockingLogs';
-      windowsManager.sendToAllWindows('ag-message', req);
-      windowsManager.sendToAllWindows('ag-message', res);
-
+      // Need to figure out which request methods require data
+      if(serverRequest.method=="POST"){
+        serverRequest.on('data', function(serverRequestData) {
+          console.log("Received body data:", serverRequestData);
+          mockingLog = buildMockingLog(serverRequest, serverResponse, foundResponse,
+            mockedResponse, serverRequestData);
+            windowsManager.sendToAllWindows('ag-message', mockingLog);
+        });
+      }else{
+        mockingLog = buildMockingLog(serverRequest, serverResponse, foundResponse,
+          mockedResponse);
+        windowsManager.sendToAllWindows('ag-message', mockingLog);
+      }
     }).listen(options.port, function (err) {
       console.log('listening http://localhost:'+ options.port +'/');
       console.log('pid is ' + process.pid);
@@ -78,12 +88,37 @@
 
     return setResponses(options)
       .then(function(){
-
         // Why are we returning option paths back to the renderer?
         return setPaths(options.endpoints, options);
       });
 
   };
+
+  function buildMockingLog(serverRequest, serverResponse, foundResponse,
+    mockedResponse, serverRequestData){
+
+    // Possible issue with dealing with non-string data
+    var mockingLog = {
+      eventName : 'update-mocking-logs',
+      request: {
+        'url': serverRequest.url,
+        'headers': serverRequest.headers,
+        'method': serverRequest.method,
+        'data': serverRequestData ? serverRequestData.toString() : ""
+      },
+      response: {
+        // 'headers': {},
+        'data': mockedResponse.body,
+        'status': mockedResponse.statusCode
+      },
+      endpoint: foundResponse ? foundResponse.endpoint : {}
+    };
+
+    serverResponse.writeHead(mockedResponse.statusCode, {});
+    serverResponse.end(mockedResponse.body + '\n');
+
+    return mockingLog;
+  }
 
   function replaceVariables(responseBody, variables){
     variables.forEach(function(variable){
