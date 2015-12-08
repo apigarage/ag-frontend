@@ -50,9 +50,12 @@ angular.module('app').controller('MockingCtrl', [
     $scope.mockingLogs = [];
 
     $scope.$on('stop-mocking-server', function(evt, data){
-      $scope.mockingLogs = [];
       $scope.agBottomBarMaximized = false;
       $scope.agLayoutMocking = false;
+    });
+
+    $scope.$on('start-mocking-server', function(evt, data){
+      $scope.mockingLogs = [];
     });
 
     $scope.$on('update-mocking-logs', function(event,data){
@@ -62,7 +65,6 @@ angular.module('app').controller('MockingCtrl', [
         $scope.agLayoutMocking = true;
       }
       data.time = Date.now();
-      console.log('data',data);
       $scope.mockingLogs.push(data);
     });
 

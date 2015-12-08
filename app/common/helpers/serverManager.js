@@ -22,18 +22,18 @@
       };
 
 
-      var foundResponse = match(serverRequest);
-      if(foundResponse){
-        console.log('foundResponse', foundResponse);
+      var pathMatched = match(serverRequest);
+
+      if(pathMatched){
         // Read Status Code
         if( ! mockedResponse.statusCode ) mockedResponse.statusCode = 200; // defautls to 200.
 
         // Check if any response for this endpoint exist
-        if(foundResponse.endpoint && responses[foundResponse.endpoint.uuid]){
+        if(pathMatched.endpoint && responses[pathMatched.endpoint.uuid]){
           // Check if response for this endpoint and status code exist
-          if( responses[foundResponse.endpoint.uuid][mockedResponse.statusCode] ){
+          if( responses[pathMatched.endpoint.uuid][mockedResponse.statusCode] ){
             // TODO : Replace variables in the response with the given variables
-            mockedResponse.body = responses[foundResponse.endpoint.uuid][mockedResponse.statusCode].data;
+            mockedResponse.body = responses[pathMatched.endpoint.uuid][mockedResponse.statusCode].data;
           } else {
             // Please write a better copy.
             mockedResponse.body = 'Yes, endpoint is correct, we could not find the '+
@@ -55,33 +55,62 @@
 
       var mockingLog = {};
 
+      // if method is a GET just make the log with no data
+      // else
+      // serverRequest.on('end')
+
+      // This doesn't work
+      // serverResponse.writeHead(mockedResponse.statusCode, {});
+      // serverResponse.end(mockedResponse.body + '\n');
       // Need to figure out which request methods require data
-      if(serverRequest.method=="POST"){
+      // serverRequest.on('end', function(serverRequestData) {
+      //   console.log("Received body data:", serverRequestData);
+      //   mockingLog = buildMockingLog(serverRequest, serverResponse, foundResponse,
+      //     mockedResponse, serverRequestData);
+      //     windowsManager.sendToAllWindows('ag-message', mockingLog);
+      // });
+
+      // This doesn't work
+      // if(serverRequest.method=="GET"){
+      //   mockingLog = buildMockingLog(serverRequest, serverResponse, foundResponse,
+      //     mockedResponse);
+      //   windowsManager.sendToAllWindows('ag-message', mockingLog);
+      // }else{
+      //   serverRequest.on('end', function(serverRequestData) {
+      //     console.log("Received body data:", serverRequestData);
+      //     mockingLog = buildMockingLog(serverRequest, serverResponse, foundResponse,
+      //       mockedResponse, serverRequestData);
+      //       windowsManager.sendToAllWindows('ag-message', mockingLog);
+      //   });
+      // }
+
+      // This works
+      if(serverRequest.method=="GET"){
+        mockingLog = buildMockingLog(serverRequest, serverResponse, pathMatched,
+          mockedResponse);
+        windowsManager.sendToAllWindows('ag-message', mockingLog);
+      }else{
         serverRequest.on('data', function(serverRequestData) {
-          console.log("Received body data:", serverRequestData);
-          mockingLog = buildMockingLog(serverRequest, serverResponse, foundResponse,
+          mockingLog = buildMockingLog(serverRequest, serverResponse, pathMatched,
             mockedResponse, serverRequestData);
             windowsManager.sendToAllWindows('ag-message', mockingLog);
         });
-      }else{
-        mockingLog = buildMockingLog(serverRequest, serverResponse, foundResponse,
-          mockedResponse);
-        windowsManager.sendToAllWindows('ag-message', mockingLog);
       }
+
     }).listen(options.port, function (err) {
-      console.log('listening http://localhost:'+ options.port +'/');
-      console.log('pid is ' + process.pid);
+      // console.log('listening http://localhost:'+ options.port +'/');
+      // console.log('pid is ' + process.pid);
     });
 
     server.on('connection', function (socket) {
       // Add a newly connected socket
       var socketId = nextSocketId++;
       sockets[socketId] = socket;
-      console.log('socket', socketId, 'opened');
+      // console.log('socket', socketId, 'opened');
 
       // Remove the socket when it closes
       socket.on('close', function () {
-        console.log('socket', socketId, 'closed');
+        // console.log('socket', socketId, 'closed');
         delete sockets[socketId];
       });
     });
@@ -94,7 +123,7 @@
 
   };
 
-  function buildMockingLog(serverRequest, serverResponse, foundResponse,
+  function buildMockingLog(serverRequest, serverResponse, pathMatched,
     mockedResponse, serverRequestData){
 
     // Possible issue with dealing with non-string data
@@ -111,7 +140,7 @@
         'data': mockedResponse.body,
         'status': mockedResponse.statusCode
       },
-      endpoint: foundResponse ? foundResponse.endpoint : {}
+      endpoint: pathMatched ? pathMatched.endpoint : {}
     };
 
     serverResponse.writeHead(mockedResponse.statusCode, {});
@@ -122,7 +151,7 @@
 
   function replaceVariables(responseBody, variables){
     variables.forEach(function(variable){
-      console.log('replacing variable', variable);
+      // console.log('replacing variable', variable);
       // responseBody.replace('{{'+ variable.key +'}}', variable.value);
     });
   }
@@ -130,7 +159,7 @@
   function match(request){
     var found = null;
 
-    console.log('Request ', request.url , '---', request.method);
+    // console.log('Request ', request.url , '---', request.method);
 
     server.paths.forEach(function(path, index, array){
 
@@ -145,7 +174,7 @@
 
       // If path and method both matches, return the path.
       if(found) {
-        console.log('Matched');
+        // console.log('Matched');
         // If the request survives until this point, it is the match.
         found.endpoint = path.endpoint;
 
@@ -227,7 +256,7 @@
   }
 
   module.exports.stopServer = function(){
-    console.log("stop");
+    // console.log("stop");
     for (var socketId in sockets) {
       console.log('socket', socketId, 'destroyed');
       console.log('socket', sockets[socketId]);
