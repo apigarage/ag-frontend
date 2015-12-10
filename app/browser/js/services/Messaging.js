@@ -31,9 +31,9 @@ angular.module('app')
         } catch (e) {
             console.log(e);
         } finally {
-          // This needs to be here to resolve the server request response
-          // before the update.
-          if(data.eventName == "updateMockingLogs"){
+          // if wer are dealing with a promise data rootScope apply
+          if(data.eventName == "start-mocking-server" ||
+            data.eventName == "update-mocking-logs"){
             $rootScope.$apply();
           }
         }
