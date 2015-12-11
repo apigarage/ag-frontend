@@ -32,8 +32,16 @@
         if(pathMatched.endpoint && responses[pathMatched.endpoint.uuid]){
           // Check if response for this endpoint and status code exist
           if( responses[pathMatched.endpoint.uuid][mockedResponse.statusCode] ){
-            // TODO : Replace variables in the response with the given variables
             mockedResponse.body = responses[pathMatched.endpoint.uuid][mockedResponse.statusCode].data;
+            // Find and replace url string variables with body variables.
+            Object.keys(pathMatched.variables).forEach(function(key){
+              // TODO: Accomodate for environment variables with spaces in the endpoint
+              // matches one or more spaces before and after the key
+              // var matchedKey = new RegExp("{{ *" + key + " *}}");
+
+              // matches key inbetween curly braces
+              mockedResponse.body = mockedResponse.body.replace('{{' + key + '}}', pathMatched.variables[key]);
+            });
           } else {
             // Please write a better copy.
             mockedResponse.body = 'Yes, endpoint is correct, we could not find the '+
@@ -171,20 +179,17 @@
       // Match the path
       path.regexp.lastIndex = 0; // resetting the last regex.
       found = path.regexp.exec(request.url);
-
       // If path and method both matches, return the path.
       if(found) {
         // console.log('Matched');
         // If the request survives until this point, it is the match.
         found.endpoint = path.endpoint;
-
         // Get the matched variable values from the URL.
         found.variables = {};
         var i = 0;
         path.variables.forEach(function(variable){
           found.variables[variable] = found[++i]; // ++i because the first element if the full regex match.
         });
-        found.variables = path.variables;
       }
 
     });
