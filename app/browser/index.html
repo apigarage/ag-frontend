@@ -21,10 +21,11 @@
   <script>
     window.$ = window.jQuery = require('./bower_components/jquery/dist/jquery.js');
   </script>
-  <script src="../vendor/electron_boilerplate/env_config.js"></script>
-
-  <script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
   <script src="bower_components/angular/angular.js"></script>
+  <script src="../vendor/electron_boilerplate/env_config.js"></script>
+  <script src="../vendor/angular-wrapped/angular-uri.js"></script>
+  <script src="bower_components/uri.js/src/URI.js"></script>
+  <script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
   <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
   <script src="bower_components/angular-animate/angular-animate.js"></script>
   <script src="bower_components/angular-ui-ace/ui-ace.js"></script>
@@ -83,6 +84,7 @@
   <script src="js/services/Ipc.js"></script>
   <script src="js/services/Messaging.js"></script>
   <script src="js/services/Mocking.js"></script>
+  <script src="js/services/EndpointHealth.js"></script>
   <script src="js/directive/ContentEditable.js"></script>
   <script src="js/directive/UpdateModelOnEnter.js"></script>
   <script src="js/directive/ProjectShareDirective.js"></script>

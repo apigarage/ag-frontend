@@ -13,8 +13,9 @@ angular.module('app')
     'Collections',
     'Projects',
     'RequestUtility',
+    'EndpointHealth',
     function($rootScope, $q, $window, $modal, _, ApiRequest, Collections,
-      Projects, RequestUtility){
+      Projects, RequestUtility, EndpointHealth){
 
       /*
        * Endpoint management
@@ -236,14 +237,13 @@ angular.module('app')
         item.uuid = endpoint.uuid;
         item.headers = RequestUtility.getHeaders(endpoint.requestHeaders, 'object');
         item.flagged = endpoint.flagged;
+        item.mocked = EndpointHealth.isMocked(endpoint.requestUrl);
 
         return item;
       }
 
-
       function buildRequestForScope(item){
         var newEndpoint = {};
-
         newEndpoint.requestUrl = item.url;
         newEndpoint.name = item.name;
 
@@ -251,6 +251,8 @@ angular.module('app')
         newEndpoint.requestMethod  = item.method ? item.method : 'GET';
         // Flagged or resolved
         newEndpoint.flagged = ( item.flagged == 1 ? true : false );
+        // Able to be mocked or not
+        newEndpoint.mocked = item.mocked;
         if( newEndpoint.requestMethod !== 'GET' && _.isObject(item.data)){
           newEndpoint.requestBody = JSON.stringify(item.data);
         } else if(newEndpoint.requestMethod !== 'GET' && item.data){
@@ -264,7 +266,6 @@ angular.module('app')
         newEndpoint.requestHeaders = RequestUtility.getHeaders(item.headers, 'array');
 
         newEndpoint.requestChanged = false;
-
         return newEndpoint;
       }
 

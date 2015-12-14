@@ -12,7 +12,8 @@ angular.module('app')
   'Projects',
   'Analytics',
   'Mocking',
-  function ($scope, $rootScope, $window, $modal, $q, _, Projects, Analytics, Mocking){
+  'EndpointHealth',
+  function ($scope, $rootScope, $window, $modal, $q, _, Projects, Analytics, Mocking, EndpointHealth){
 
     var copyOfCollection = {};
     $scope.searchResultsCollection = null;
@@ -40,6 +41,12 @@ angular.module('app')
 
     $scope.searchFilter = function (search){
       var temporaryCopy ={};
+
+      // mocked default values
+      $scope.showNotMocked = false;
+      $scope.showMocked = false;
+      $rootScope.$broadcast('showMockedActivity', false);
+
       // if we use collectionOfCopy in the forEach it does some wonky things.
       angular.copy(copyOfCollection, temporaryCopy);
       if(_.isEmpty(search)){
@@ -52,6 +59,22 @@ angular.module('app')
       if(search === ":flagged"){
         searchFlagged(temporaryCopy);
         $scope.expandGroup = true;
+        return;
+      }
+
+      if(search === ":notMocked"){
+        searchMocked(temporaryCopy, 0);
+        $scope.expandGroup = true;
+        $scope.showNotMocked = true;
+        $rootScope.$broadcast('showMockedActivity', true);
+        return;
+      }
+
+      if(search === ":mocked"){
+        searchMocked(temporaryCopy, 1);
+        $scope.expandGroup = true;
+        $scope.showMocked = true;
+        $rootScope.$broadcast('showMockedActivity', true);
         return;
       }
 
@@ -86,6 +109,31 @@ angular.module('app')
             if(isFlagged(item)){
               foundItemUUID.push(item.uuid);
               foundCollection = true;
+            }
+          });
+        }
+
+        // rebuild collection with found items
+        if(foundCollection){
+          buildCollection(collection, foundItemUUID);
+        }
+
+      });
+    }
+
+    function searchMocked(temporaryCopy, isMocked){
+
+      _.forEach(temporaryCopy, function(collection) {
+        var foundCollection;
+        var foundItemUUID = [];
+        if(!_.isUndefined(collection.items)){
+          _.forEach(collection.items, function(item, key) {
+            if(item.mocked){
+              // is not mocked
+              if(item.mocked == isMocked){
+                foundItemUUID.push(item.uuid);
+                foundCollection = true;
+              }
             }
           });
         }

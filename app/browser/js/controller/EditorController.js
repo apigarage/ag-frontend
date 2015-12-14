@@ -10,6 +10,7 @@ angular.module('app').controller('EditorCtrl', [
   '$q',
   '$focus',
   '$timeout',
+  'URI',
   'RequestUtility',
   'History',
   'Collections',
@@ -19,8 +20,8 @@ angular.module('app').controller('EditorCtrl', [
   'Analytics',
   'Items',
   function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q,
-    $focus, $timeout, RequestUtility, History, Collections, Projects, Editor,
-    Activities, Analytics, Items, ipc){
+    $focus, $timeout, URI, RequestUtility, History, Collections, Projects,
+    Editor, Activities, Analytics, Items, ipc){
     // Private Functions
     // ========================================================================
 
@@ -101,6 +102,16 @@ angular.module('app').controller('EditorCtrl', [
       resetResponse();
       showRequestHideCancelButtons();
       setDefaultEndpoint();
+
+      // Endpoint Health default settings
+      $scope.endpointHealth = {
+        isActive : false,
+        urlStatus : '',
+        urlMessage : {
+          title: "Use Valid URI Scheme",
+          content: "scheme:[//[user:password@]host[:port]][/]path[?query][#fragment]"
+        }
+      };
     }
 
     // ========================================================================
@@ -118,12 +129,8 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     $scope.stopMockServer = function(){
-
       //Lets require/import the HTTP module
-
       console.log(ipc.sendSync('stop-server', 'node'));
-
-
     };
 
     $scope.requestChanged = function(){
@@ -154,6 +161,33 @@ angular.module('app').controller('EditorCtrl', [
         $scope.requestChangedFlag = true;
       }
     };
+
+    // Endpoint Health Checks Start
+    $scope.showEndpointHealthReport = function(){
+      $scope.endpointHealth.isActive = !$scope.endpointHealth.isActive;
+    }
+    
+    $scope.$on('showMockedActivity', function(event, data){
+      $scope.endpointHealth.isActive = data;
+    });
+
+    $scope.verifyURL = function(){
+      if($scope.endpoint.requestUrl === undefined) return;
+      var parsedURL = URI.parse($scope.endpoint.requestUrl);
+      if(parsedURL.hostname){
+        $scope.endpointHealth.urlStatus = 'fa fa-heartbeat';
+      }else{
+        if($scope.endpointHealth.isActive){
+          $scope.endpointHealth.urlStatus = 'fa fa-exclamation-circle';
+        }
+      }
+    }
+
+    $scope.getEndpointHealth = function(){
+      $scope.verifyURL();
+      return $scope.endpointHealth.urlStatus ? $scope.endpointHealth.urlStatus : '';
+    }
+    // Endpoint Health Checks END
 
     $scope.openDeleteItemModal = function(){
       var newModal = $modal({
@@ -472,6 +506,9 @@ angular.module('app').controller('EditorCtrl', [
     $scope.loadRequestToScope = function(item){
       // TODO - Check for any previous changes. if any changes are made to the
       // previous request, ask if the user wants to save it.
+
+      // Endpoint Health by default is set to false on load
+      // $scope.endpointHealth.isActive = false;
 
       item.method = _.find( $scope.requestMethods, function(data){ return data === item.method; });
       $scope.endpoint = Editor.loadAndGetEndpoint(item);

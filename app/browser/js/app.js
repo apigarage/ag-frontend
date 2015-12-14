@@ -17,7 +17,8 @@
     'angularFileUpload',          // Angular file uploader
     'duScroll',                   // Smooth scrolling to targets
     'angulartics',                // Angular Analytics
-    'angulartics.mixpanel'        // Angular Analytics Mixpanel plugin
+    'angulartics.mixpanel',       // Angular Analytics Mixpanel plugin
+    'angular-uri'                 // Angular URI module
   ]);
 
   app.config(['$stateProvider',

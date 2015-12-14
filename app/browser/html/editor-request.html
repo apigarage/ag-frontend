@@ -19,10 +19,23 @@
                 </li>
               </ul>
             </script>
+            <a
+              class="btn btn-custom-url-health"
+              data-trigger="click"
+              auto-close="true"
+              placement="bottom"
+              ng-show="endpointHealth.isActive"
+              bs-popover="{{endpointHealth.urlMessage}}">
+              <span
+                ng-class="endpointHealth.isActive ? getEndpointHealth() : ''">
+              </span>
+            </a>
           </div><!-- /btn-group -->
-          <input type="text" class="form-control"
+
+          <input type="text" class="form-control input-custom-url-health"
             ng-model="endpoint.requestUrl" placeholder="Add a URL..."
             ng-change="requestChanged()"
+            ng-blur="endpointHealth.isActive ? verifyURL() : ''"
             ng-required="true"
             >
           <div class="input-group-btn">

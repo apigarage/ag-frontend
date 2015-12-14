@@ -21,7 +21,7 @@ describe('Controller: EditController', function() {
     CollectionsFixtures = $injector.get('CollectionsFixtures');
     ProjectsFixtures = $injector.get('ProjectsFixtures');
     RequestStubs = $injector.get('RequestStubs');
-    RequestUtility = $injector.get('RequestUtility');    
+    RequestUtility = $injector.get('RequestUtility');
     UUID = $injector.get('UUID');
 
     $controller('EditorCtrl', {
@@ -761,7 +761,7 @@ describe('Controller: EditController', function() {
           $scope.endpoint.requestHeaders =
            RequestUtility.getHeaders(stub.request.headers, 'Array');
           $scope.performRequest();
-          $scope.requestPromise.abort();
+          $scope.cancelRequest();
           expect($scope.performRequestButton).toBe(true);
           expect($scope.cancelRequestButton).toBe(false);
         });
@@ -775,7 +775,7 @@ describe('Controller: EditController', function() {
           $scope.endpoint.requestHeaders =
             RequestUtility.getHeaders(stub.request.headers, 'Array');
           $scope.performRequest();
-          $scope.requestPromise.abort();
+          $scope.cancelRequest();
           expect($scope.performRequestButton).toBe(true);
           expect($scope.cancelRequestButton).toBe(false);
         });
