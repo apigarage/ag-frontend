@@ -12,7 +12,8 @@ angular.module('app')
   'Projects',
   'Analytics',
   'Mocking',
-  function ($scope, $rootScope, $window, $modal, $q, _, Projects, Analytics, Mocking){
+  'EndpointHealth',
+  function ($scope, $rootScope, $window, $modal, $q, _, Projects, Analytics, Mocking, EndpointHealth){
 
     var copyOfCollection = {};
     $scope.searchResultsCollection = null;
@@ -40,6 +41,11 @@ angular.module('app')
 
     $scope.searchFilter = function (search){
       var temporaryCopy ={};
+
+      // mocked default values
+      $scope.showNotMocked = false;
+      $rootScope.$broadcast('showMockedActivity', false);
+
       // if we use collectionOfCopy in the forEach it does some wonky things.
       angular.copy(copyOfCollection, temporaryCopy);
       if(_.isEmpty(search)){
@@ -52,6 +58,14 @@ angular.module('app')
       if(search === ":flagged"){
         searchFlagged(temporaryCopy);
         $scope.expandGroup = true;
+        return;
+      }
+
+      if(search === ":notMocked"){
+        searchNotMocked(temporaryCopy);
+        $scope.expandGroup = true;
+        $scope.showNotMocked = true;
+        $rootScope.$broadcast('showMockedActivity', true);
         return;
       }
 
@@ -86,6 +100,31 @@ angular.module('app')
             if(isFlagged(item)){
               foundItemUUID.push(item.uuid);
               foundCollection = true;
+            }
+          });
+        }
+
+        // rebuild collection with found items
+        if(foundCollection){
+          buildCollection(collection, foundItemUUID);
+        }
+
+      });
+    }
+
+    function searchNotMocked(temporaryCopy){
+
+      _.forEach(temporaryCopy, function(collection) {
+        var foundCollection;
+        var foundItemUUID = [];
+        if(!_.isUndefined(collection.items)){
+          _.forEach(collection.items, function(item, key) {
+            if(item.mocked){
+              // is not mocked
+              if(EndpointHealth.isMocked(item.url) == 0){
+                foundItemUUID.push(item.uuid);
+                foundCollection = true;
+              }
             }
           });
         }

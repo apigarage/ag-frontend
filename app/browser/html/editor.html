@@ -14,6 +14,7 @@
         <div class="btn-group">
 
           <button class="btn btn-default"
+            ng-class="endpointHealth.isActive ? 'btn-custom-health-active' : ''"
             ng-disabled="!currentItem.uuid"
             ng-click="showEndpointHealthReport()">
           <span class="hidden-xs hidden-sm"><span class="fa fa-heartbeat"></span></span>

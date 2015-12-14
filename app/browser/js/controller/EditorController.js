@@ -129,12 +129,8 @@ angular.module('app').controller('EditorCtrl', [
     };
 
     $scope.stopMockServer = function(){
-
       //Lets require/import the HTTP module
-
       console.log(ipc.sendSync('stop-server', 'node'));
-
-
     };
 
     $scope.requestChanged = function(){
@@ -170,14 +166,17 @@ angular.module('app').controller('EditorCtrl', [
     $scope.showEndpointHealthReport = function(){
       $scope.endpointHealth.isActive = !$scope.endpointHealth.isActive;
     }
+    
+    $scope.$on('showMockedActivity', function(event, data){
+      $scope.endpointHealth.isActive = data;
+    });
 
     $scope.verifyURL = function(){
       if($scope.endpoint.requestUrl === undefined) return;
       var parsedURL = URI.parse($scope.endpoint.requestUrl);
       if(parsedURL.hostname){
         $scope.endpointHealth.urlStatus = 'fa fa-heartbeat';
-        }else{
-        //$scope.endpointHealth.isActive = true;
+      }else{
         if($scope.endpointHealth.isActive){
           $scope.endpointHealth.urlStatus = 'fa fa-exclamation-circle';
         }
@@ -508,8 +507,8 @@ angular.module('app').controller('EditorCtrl', [
       // TODO - Check for any previous changes. if any changes are made to the
       // previous request, ask if the user wants to save it.
 
-      // Endpoint Health by default is set to false on load 
-      $scope.endpointHealth.isActive = false;
+      // Endpoint Health by default is set to false on load
+      // $scope.endpointHealth.isActive = false;
 
       item.method = _.find( $scope.requestMethods, function(data){ return data === item.method; });
       $scope.endpoint = Editor.loadAndGetEndpoint(item);
