@@ -51,6 +51,7 @@
             </a>
             <span class="fa fa-fw fa-flag" ng-show="item.flagged == 1 ? true : false"></span>
             <span class="fa fa-fw fa-exclamation-circle" ng-show="showNotMocked ? true : false"></span>
+            <span class="fa fa-fw fa-heartbeat" ng-show="showMocked ? true : false"></span>
             <a ng-click="selectItem(item, collection)">{{item.name}}</a>
 
           </li>

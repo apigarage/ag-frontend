@@ -44,6 +44,7 @@ angular.module('app')
 
       // mocked default values
       $scope.showNotMocked = false;
+      $scope.showMocked = false;
       $rootScope.$broadcast('showMockedActivity', false);
 
       // if we use collectionOfCopy in the forEach it does some wonky things.
@@ -62,9 +63,17 @@ angular.module('app')
       }
 
       if(search === ":notMocked"){
-        searchNotMocked(temporaryCopy);
+        searchMocked(temporaryCopy, 0);
         $scope.expandGroup = true;
         $scope.showNotMocked = true;
+        $rootScope.$broadcast('showMockedActivity', true);
+        return;
+      }
+
+      if(search === ":mocked"){
+        searchMocked(temporaryCopy, 1);
+        $scope.expandGroup = true;
+        $scope.showMocked = true;
         $rootScope.$broadcast('showMockedActivity', true);
         return;
       }
@@ -112,7 +121,7 @@ angular.module('app')
       });
     }
 
-    function searchNotMocked(temporaryCopy){
+    function searchMocked(temporaryCopy, isMocked){
 
       _.forEach(temporaryCopy, function(collection) {
         var foundCollection;
@@ -121,7 +130,7 @@ angular.module('app')
           _.forEach(collection.items, function(item, key) {
             if(item.mocked){
               // is not mocked
-              if(EndpointHealth.isMocked(item.url) == 0){
+              if(item.mocked == isMocked){
                 foundItemUUID.push(item.uuid);
                 foundCollection = true;
               }

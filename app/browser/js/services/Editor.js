@@ -244,7 +244,6 @@ angular.module('app')
 
       function buildRequestForScope(item){
         var newEndpoint = {};
-
         newEndpoint.requestUrl = item.url;
         newEndpoint.name = item.name;
 
@@ -253,7 +252,7 @@ angular.module('app')
         // Flagged or resolved
         newEndpoint.flagged = ( item.flagged == 1 ? true : false );
         // Able to be mocked or not
-        newEndpoint.mocked = EndpointHealth.isMocked(item.url);
+        newEndpoint.mocked = item.mocked;
         if( newEndpoint.requestMethod !== 'GET' && _.isObject(item.data)){
           newEndpoint.requestBody = JSON.stringify(item.data);
         } else if(newEndpoint.requestMethod !== 'GET' && item.data){
