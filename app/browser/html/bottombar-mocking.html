@@ -6,6 +6,7 @@
 
       <div class="row" role="tab">
         <div class="list-group-item small"
+          ng-class="($index%2 == 0) ? 'mocking-status-primary' : 'mocking-status-secondary'" class="mocking-status-panel-heading"
           style="
           border: 0px;
           padding-bottom: 1px;
@@ -44,14 +45,14 @@
       </div>
       <div class="panel-collapse" role="tabpanel" bs-collapse-target>
         <div class="panel-body">
-          <span class="request-type" style="width: 90px;">
-            Response - {{mockingLog.response.status}}
-          </span>
-          <div ui-ace="responseBodyMockingLogs" ng-model="mockingLog.response.data" ></div>
           <span class="request-type" style="width: 100px;">
             Request - {{mockingLog.request.method}}
           </span>
           <div ui-ace="responseBodyMockingLogs" ng-model="mockingLog.request.data" ></div>
+          <span class="request-type" style="width: 90px;">
+            Response - {{mockingLog.response.status}}
+          </span>
+          <div ui-ace="responseBodyMockingLogs" ng-model="mockingLog.response.data" ></div>
         </div>
       </div>
     </div>

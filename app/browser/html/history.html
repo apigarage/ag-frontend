@@ -37,9 +37,9 @@
   style="height: 250px; overflow-y: scroll;"
   ng-show="layout.historyMaximized">
     <div ng-repeat="time in historyTimeStamps">
-
-      <div class="row" role="tab">
+      <div class="row"   role="tab">
         <div class="list-group-item small"
+           ng-class="($index%2 == 0) ? 'mocking-status-primary' : 'mocking-status-secondary'" class="mocking-status-panel-heading"
           style="
           border: 0px;
           padding-bottom: 1px;
