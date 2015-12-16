@@ -51,7 +51,7 @@ angular.module('app')
     var setUser = function(user){
       if (Config.name == "production" || Config.name == "staging"){
         $analytics.setUsername(user.id);
-        $analytics.setUserProperties({ '$id' : user.id, '$email' : user.email, 'name': user.name });
+        $analytics.setUserProperties({ '$id' : user.id, '$email' : user.email, 'name': user.name , '$created': user.created_at});
       }else{
         console.log('setUserName', user.id);
       }
