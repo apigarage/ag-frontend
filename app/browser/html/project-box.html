@@ -14,6 +14,18 @@
         </a>
       </li>
       <li>
+        <a ng-click="openMockingServerSettingsModal()">
+          <span class="fa fa-fw fa-hand-lizard-o"></span>
+          Start Mocking Server
+        </a>
+      </li>
+      <li>
+        <a ng-click="openProjectSharedModal()">
+          <span class="fa fa-fw fa-share-alt"></span>
+          Project Shared
+        </a>
+      </li>
+      <li>
         <a ng-click="refreshProject()">
           <span class="fa fa-fw fa-refresh"></span>
           Reload
@@ -26,19 +38,9 @@
         </a>
       </li>
       <li>
-        <a ng-click="openProjectSharedModal()">
-          <span class="fa fa-fw fa-share-alt"></span>
-          Project Shared
-        </a>
-      </li>
-      <li>
         <a ng-click="openDeleteProjectModal()">
           <span class="fa fa-fw fa-trash"></span>
           Delete Project
-        </a>
-        <a ng-click="openMockingServerSettingsModal()">
-          <span class="fa fa-fw fa-hand-lizard-o"></span>
-          Start Mocking Server
         </a>
       </li>
     </ul>
