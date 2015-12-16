@@ -3,27 +3,34 @@
   <form name="MockingForm" class="form-horizontal" role="form">
 
     <div class="form-group">
-      <label class="control-label col-sm-2" for="inputStatusCode">Status-Code (100-599)</label>
+      <label class="control-label col-sm-2" for="inputStatusCode">Status Code</label>
       <div class="col-sm-2">
-        <input name="inputStatusCode" class="form-control"
-          id="inputStatusCode" type="number"
-          min="100"
-          max="599"
-          ng-show="statusCodeInput"
-          data-ng-model="agMockingResponse.status"
-          ng-change="searchforStatusCode(MockingForm)"
-          ng-required="statusCodeInput"
-          >
-        <div class="control-label" ng-show="statusCodeExists">Code Exists {{agMockingResponse.status}}</div>
-        <div class="control-label" ng-show="statusCode">{{agMockingResponse.status}}</div>
+        <span>
+          <input name="inputStatusCode" class="form-control"
+            id="inputStatusCode" type="number"
+            min="100"
+            max="599"
+            ng-show="statusCodeInput"
+            data-ng-model="agMockingResponse.status"
+            ng-change="searchforStatusCode(MockingForm)"
+            ng-required="statusCodeInput"
+            >
+
+        </span>
+        <div class="mocking-status-code-panel-body" ng-show="statusCode">{{agMockingResponse.status}}</div>
+      </div>
+      <div class="col-sm-4">
+          <p class="mocking-status-error" ng-show="statusCodeExists">Code Exists {{agMockingResponse.status}}</p>
+          <p class="mocking-status-warning" ng-show="MockingForm.inputStatusCode.$invalid">Status Code range: 100-599</p>
       </div>
     </div>
 
     <div class="form-group">
       <label class="control-label col-sm-2" for="inputStatusCodeResponse">Status Response</label>
       <div class="col-sm-10 " style="padding-top: 10px;">
-          <div class="ace-editor-form-control" >
+          <div class="ace-mocking-form-control" >
             <div ui-ace="responseMockEditorOptions" name="inputStatusCodeResponse"
+
               data-ng-model="agMockingResponse.data">
             </div>
           </div>
@@ -56,7 +63,7 @@
 
         <div class="btn-group">
           <button class="btn btn-default"
-                  ladda="loadingDeleteButton" 
+                  ladda="loadingDeleteButton"
                   ng-show="deleteMockFormButton"
                   ng-click="deleteMockForm()">
             <span class="fa fa-trash-o"></span>

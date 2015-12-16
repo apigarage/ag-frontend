@@ -1,24 +1,48 @@
-<div class="panel-group" ng-model="panels.activePanelCreate" role="tablist" aria-multiselectable="true" bs-collapse>
-  <p class="text-muted ng-scope" ng-hide="hideMockingHint">
-      When mocking mode is turned on,
-      API Garage will respond to this request
-      with the mock response you provide below.
-      Variables can be used in the mock response -
-      we will interpolate values for them based on
-      environment variables found in the request.
-      <!--
-      <a ng-click="hideMockingHint = true">Okay, got it!</a>
-      -->
-    </p>
-  <div class="panel panel-default" >
-    <div class="panel-heading" role="tab">
-      <h4 class="panel-title">
-        <a bs-collapse-toggle>
+<div class="panel-group editor-panel" ng-model="panels.activePanelCreate" role="tablist" aria-multiselectable="true" bs-collapse>
+    <div class="panel panel-default">
+      <div class="panel-heading mocking-panel-heading" ng-click="expandMockingCreate()">
+        <h3 class="mocking-panel-heading-title">
+          <span class="fa  fa-plus-square-o" ng-class="mockingCreate.isExpanded ? 'fa-minus-square-o' : 'fa-plus-square-o'"></span>
+          Create New Mocked Response</h3>
+          <div class="enable-select active">
+            <div class="col-xs-2 pull-right">
+
+            </div>
+          </div>
+      </div>
+      <div ng-class="mockingCreate.isExpanded ? 'panel-body mocking-create-panel-body' : 'mocking-create-hidden-panel-body'"
+        ng-show="mockingCreate.isExpanded">
+        <p class="text-muted panel-active mocking-instruction-panel-body" ng-hide="hideMockingHint">
+            This provides you with mocked status responses your projects.
+            <code>Create a Mocked Response</code> below.
+            Add request header eg. <code>x-ag-expected-status: 200</code> in your project.
+            Point the project requests to the API Garage Mocking Server <code>http://localhost:{{mockingPort}}/path/to/endpoint</code>
+            Start Mocking Server <code>{Project Name} > Start Mocking Server</code>.
+
+            <!--
+            <a ng-click="hideMockingHint = true">Okay, got it!</a>
+            -->
+          </p>
+        <div class="panel-active" role="tabpanel" bs-active-target>
+          <editor-mocking-response
+          ag-mocking-responses="panels"
+          ag-mocking-parent-endpoint="agParentEndpoint"
+          ag-mocking-responses-search="searchFilter(search)"
+          >
+          </editor-mocking-response>
+        </div>
+      </div>
+  </div>
+
+  <!-- <div class="panel panel-default editor-panel" >
+    <div class="mocking-status-panel-heading" role="tab">
+      <h4 class="panel-title"  bs-collapse-toggle>
+        <a>
           Create New Status Code
         </a>
       </h4>
     </div>
-    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+    <div class="panel-active" role="tabpanel" bs-active-target>
       <editor-mocking-response
       ag-mocking-responses="panels"
       ag-mocking-parent-endpoint="agParentEndpoint"
@@ -26,49 +50,54 @@
       >
       </editor-mocking-response>
     </div>
-  </div>
+  </div> -->
+
 </div>
 
 <hr />
-<div class="sidebar-search-placeholder">
-<div class="col-xs-4 pull-left">
-  <h3>Mocked Enpoints</h3>
-</div>
-<div class="col-xs-2 pull-right">
-  <div class="sidebar-search-wrap" bs-affix data-offset-top="-50">
-    <input type="text" class="form-control sidebar-search"
-    placeholder="Search..." ng-model="search" ng-change="searchFilter(search)" />
+<div class="panel panel-default mocking-panel">
+  <div class="panel-heading mocking-panel-heading">
+
+    <h3 class="mocking-panel-heading-title">Mocked Responses</h3>
+      <div class="enable-select active">
+        <div class="col-xs-3 pull-right">
+          <div class="search-wrap" bs-affix >
+            <input type="text" class="form-control sidebar-search"
+            placeholder="Search..." ng-model="search" ng-change="searchFilter(search)" />
+          </div>
+        </div>
+      </div>
   </div>
-</div>
-</div>
-<!-- ngModel is optional -->
-<div class="panel-group" ng-model="panels.activePanel" role="tablist" aria-multiselectable="true" bs-collapse>
-  <div class="panel panel-default" ng-repeat="panel in panels"
-    ng-click="discardStatusResponseChanges()">
-    <!-- Editor Mocking Status Response Directive-->
+  <div class="panel-body mocking-panel-body">
+    <!-- ngModel is optional -->
+    <div class="panel-group" ng-model="panels.activePanel" role="tablist" aria-multiselectable="true" bs-collapse>
+      <div class="panel-default" ng-repeat="panel in panels"
+        ng-click="discardStatusResponseChanges()">
+        <!-- Editor Mocking Status Response Directive-->
 
-      <div class="panel-heading" role="tab">
-        <h3 class="panel-title">
-          <a bs-collapse-toggle>
-            {{ panel.status }}
-          </a>
-        </h3>
-        <button class="btn btn-default"
-                ng-show="deleteMockFormButton"
-                ng-click="deleteMockForm()">
-          <span class="fa fa-trash-o"></span>
-          <span class="hidden-xs hidden-sm">Delete</span>
-        </button>
+          <div ng-class="($index%2 == 0) ? 'mocking-status-primary' : 'mocking-status-secondary'" class="mocking-status-panel-heading" role="tab" >
+            <h3 class="panel-title" bs-collapse-toggle>
+              <a >
+                {{ panel.status }}
+              </a>
+            </h3>
+            <button class="btn btn-default"
+                    ng-show="deleteMockFormButton"
+                    ng-click="deleteMockForm()">
+              <span class="fa fa-trash-o"></span>
+              <span class="hidden-xs hidden-sm">Delete</span>
+            </button>
 
+          </div>
+          <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+              <editor-mocking-response
+                ag-mocking-response="panel"
+                ag-mocking-responses="panels"
+                ag-mocking-parent-endpoint="agParentEndpoint"
+                >
+              </editor-mocking-response>
+          </div>
+        </div>
       </div>
-      <div class="panel-collapse" role="tabpanel" bs-collapse-target>
-          <editor-mocking-response
-            ag-mocking-response="panel"
-            ag-mocking-responses="panels"
-            ag-mocking-parent-endpoint="agParentEndpoint"
-            >
-          </editor-mocking-response>
-      </div>
-    </div>
   </div>
 </div>

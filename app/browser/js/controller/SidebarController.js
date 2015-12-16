@@ -189,6 +189,11 @@ angular.module('app')
 
     };
 
+    $scope.mockingServerInstructions =  { message : {
+      title: "Mocking Server URL",
+      content: "Copy the url into your project"
+    }};
+
     $scope.$on('start-mocking-server', function(evt, data){
       // TODO: handle start event
       $scope.serverStatus = Mocking.serverStatus;

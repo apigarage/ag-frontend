@@ -80,6 +80,13 @@ angular.module('app').controller('MockingCtrl', [
       $rootScope.$broadcast('loadPerformRequest',endpoint, loadOnly, "MockingCtrl");
     };
 
+    $scope.mockingPort = Mocking.port;
+    $scope.mockingCreate={isExpanded : false};
+    $scope.expandMockingCreate = function(){
+      console.log('expandMockingCreate');
+      $scope.mockingCreate.isExpanded = !$scope.mockingCreate.isExpanded;
+    }
+
     $scope.responseBodyMockingLogs = {
       useWrapMode : true,
       showGutter: true,

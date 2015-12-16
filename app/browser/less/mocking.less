@@ -1,0 +1,96 @@
+.mocking-panel {
+  margin: 25px;
+  background: rgba(255,255,255,0.64);
+
+}
+.mocking-panel-body {
+  position: relative;
+  height: 600px;
+  overflow-y: scroll;
+}
+
+.mocking-instruction-panel-body{
+  padding-left: 25px;
+  padding-right: 25px;
+  //width: 600px;
+}
+
+.ace-mocking-form-control{
+}
+
+.mocking-status-error{
+  font-weight: bold;
+  color: red;
+}
+
+.mocking-status-warning{
+  font-weight: bold;
+  color: #FBCA04;
+}
+
+.mocking-status-code-panel-body{
+  padding-top: 7px;
+  font-weight: bold;
+}
+
+.mocking-create-panel-body {
+  position: relative;
+  height: 300px;
+  overflow-y: scroll;
+  -webkit-transition: all 300ms ease-in-out;
+}
+
+.mocking-create-hidden-panel-body {
+  position: relative;
+  height: 0px;
+  overflow: hidden;
+  -webkit-transition: all 300ms ease-in-out;
+}
+
+// @brand-primary:         #774400;  // Construction Brown  #774400
+// @brand-secondary:       #FFCC33;  // Construction Yellow #FFCC33
+@mocking-status-primary:         #FFB34D;
+@mocking-status-secondary:       #FFE599;
+@mocking-status-tertiary:        #FFF3CC;
+.mocking-status-primary{
+    background-color: @mocking-status-primary;
+}
+.mocking-status-secondary{
+    background-color: @mocking-status-secondary;
+}
+
+.mocking-status-panel-heading{
+  &:focus,
+  &:hover{
+    background-color: @mocking-status-tertiary;
+  }
+}
+
+.mocking-status-panel-heading{
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 5px;
+}
+
+@mocking-panel-heading-gutter-width: 350px;
+.mocking-panel-heading {
+  position: relative;
+  padding-left: @mocking-panel-heading-gutter-width;
+  height: 50px;
+
+  &:only-child {
+    border-bottom: none;
+    border-radius: @border-radius-base;
+  }
+}
+
+.mocking-panel-heading-title {
+  margin: 0;
+  position: absolute;
+  top: 17px;
+  left: 15px;
+  width: @mocking-panel-heading-gutter-width - 25px;
+  font-size: 18px;
+  color: #888;
+}
