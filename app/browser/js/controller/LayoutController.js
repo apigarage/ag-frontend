@@ -222,7 +222,7 @@ angular.module('app').controller('LayoutCtrl', [
     var mockingServerSettingsModal = $modal({
       show: false,
       template: 'html/mocking-settings-modal.html',
-      title: 'Mocking Server Settings',
+      title: 'Mocking Server',
       animation: false,
       backdrop: true
     });

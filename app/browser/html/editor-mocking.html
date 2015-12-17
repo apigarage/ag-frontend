@@ -68,10 +68,11 @@
         </div>
       </div>
   </div>
-  <div class="panel-body mocking-panel-body">
+  <div class="mocking-panel-body">
     <!-- ngModel is optional -->
-    <div class="panel-group" ng-model="panels.activePanel" role="tablist" aria-multiselectable="true" bs-collapse>
-      <div class="mocking-responses-panel" ng-repeat="panel in panels"
+
+    <div class="mocking-panel-group" ng-model="panels.activePanel" role="tablist" aria-multiselectable="true" bs-collapse>
+      <div class="mocking-form-panel-body" ng-repeat="panel in panels"
         ng-click="discardStatusResponseChanges()">
         <!-- Editor Mocking Status Response Directive-->
 

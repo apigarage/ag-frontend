@@ -112,7 +112,7 @@
 // (2/2) This one is for regular inputs, whose borders fade away when not in focus to appear as text.
 .content-editable {
   border: none;
-  
+
   &:focus {
     .form-control;
   }
@@ -143,5 +143,11 @@
   }
   .ace_hidden-cursors { // Hide the cursor when not focused (too distracting)
     display: none;
+  }
+}
+
+.ace-mocking-customization {
+  .ace_editor {
+    min-height: 50px;
   }
 }
