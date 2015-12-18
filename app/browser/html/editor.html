@@ -84,6 +84,7 @@
           </button>
         </div>
       </div>
+
       <div class="editor-titles">
         <h2>
           <button ng-show="currentCollection.name">
@@ -100,6 +101,14 @@
           </span>
         </h1>
       </div>
+
+      <editor-description
+        ng-show="currentItem.uuid"
+        ag-parent-endpoint="endpoint"
+        ag-request-change-flag ="requestChangedFlag"
+      >
+      </editor-description>
+
       <!-- http://stackoverflow.com/questions/23698316/how-to-prevent-an-angular-bootstrap-dropdown-from-closing-unbind-event-which-wa -->
       <ul class="editor-nav nav nav-tabs" >
         <li role="presentation" ng-class="{'active': endpointNav.tab == 'Editor'}" ng-show="endpoint.uuid">

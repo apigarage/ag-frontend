@@ -42,14 +42,16 @@
 
 .mocking-create-panel-body {
   position: relative;
-  -webkit-transition: all 300ms ease-in-out;
+  min-height: 300px;
+  -webkit-transition:  margin 0.25s, padding 0.25s, top 0.25s;
 }
 
 .mocking-create-hidden-panel-body {
   position: relative;
   height: 0px;
   overflow: hidden;
-  -webkit-transition: all 300ms ease-in-out;
+  opacity: 0;
+  -webkit-transition:  margin 0.25s, padding 0.25s, top 0.25s;
 }
 
 // @brand-primary:         #774400;  // Construction Brown  #774400

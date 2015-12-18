@@ -58,7 +58,7 @@ angular.module('app')
         var deferred = $q.defer();
 
         var endpointForDB = buildRequestOutOfScope();
-
+        console.log('endpointForDB', endpointForDB);
         if( _.isEmpty(endpointForDB.uuid) ){
           // CREATE REQUEST
 
@@ -88,6 +88,7 @@ angular.module('app')
             }
 
             return $q.all(promises).then(function(){
+              console.log('endpointForDB', endpointForDB);
               return Projects.addItemToCollection(collection.id, endpointForDB)
                 .then(function(data){
                   // We do not have the current item loaded to controller.
@@ -229,7 +230,7 @@ angular.module('app')
 
       function buildRequestOutOfScope(){
         var item = {};
-
+        console.log('endpoint', endpoint);
         item.url = endpoint.requestUrl;
         item.name = endpoint.name;
         item.method = endpoint.requestMethod ;
@@ -238,6 +239,7 @@ angular.module('app')
         item.headers = RequestUtility.getHeaders(endpoint.requestHeaders, 'object');
         item.flagged = endpoint.flagged;
         item.mocked = EndpointHealth.isMocked(endpoint.requestUrl);
+        item.description = endpoint.description;
 
         return item;
       }
@@ -264,7 +266,7 @@ angular.module('app')
         newEndpoint.collection_id = item.collection_id;
         newEndpoint.uuid = _.isEmpty(item.uuid) ? undefined : item.uuid;
         newEndpoint.requestHeaders = RequestUtility.getHeaders(item.headers, 'array');
-
+        newEndpoint.description = item.description;
         newEndpoint.requestChanged = false;
         return newEndpoint;
       }

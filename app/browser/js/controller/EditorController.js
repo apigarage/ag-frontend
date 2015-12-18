@@ -11,6 +11,7 @@ angular.module('app').controller('EditorCtrl', [
   '$focus',
   '$timeout',
   'URI',
+  'marked',
   'RequestUtility',
   'History',
   'Collections',
@@ -20,8 +21,8 @@ angular.module('app').controller('EditorCtrl', [
   'Analytics',
   'Items',
   function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q,
-    $focus, $timeout, URI, RequestUtility, History, Collections, Projects,
-    Editor, Activities, Analytics, Items, ipc){
+    $focus, $timeout, URI, marked, RequestUtility, History, Collections, Projects,
+    Editor, Activities, Analytics, Items){
     // Private Functions
     // ========================================================================
 
@@ -118,21 +119,6 @@ angular.module('app').controller('EditorCtrl', [
     // Public Functions
     // ========================================================================
 
-
-    $scope.startMockServer = function(port){
-
-      //Lets require/import the HTTP module
-      // send port number
-      console.log("port", port);
-      console.log(ipc.sendSync('start-server', 'node'));
-
-    };
-
-    $scope.stopMockServer = function(){
-      //Lets require/import the HTTP module
-      console.log(ipc.sendSync('stop-server', 'node'));
-    };
-
     $scope.requestChanged = function(){
       Editor.setEndpoint( $scope.endpoint );
       if(!$scope.requestChangedFlag){
@@ -166,7 +152,7 @@ angular.module('app').controller('EditorCtrl', [
     $scope.showEndpointHealthReport = function(){
       $scope.endpointHealth.isActive = !$scope.endpointHealth.isActive;
     }
-    
+
     $scope.$on('showMockedActivity', function(event, data){
       $scope.endpointHealth.isActive = data;
     });
@@ -510,6 +496,8 @@ angular.module('app').controller('EditorCtrl', [
       // Endpoint Health by default is set to false on load
       // $scope.endpointHealth.isActive = false;
 
+      $scope.endpointDescription = { isExpanded : false, isEditing : false, content: '' }
+
       item.method = _.find( $scope.requestMethods, function(data){ return data === item.method; });
       $scope.endpoint = Editor.loadAndGetEndpoint(item);
       resetResponse();
@@ -641,6 +629,48 @@ angular.module('app').controller('EditorCtrl', [
         commentFlagButtonStatus(false);
       }
     }
+
+    // Endpoint Description Start
+    $scope.endpointDescription = { isExpanded : false, isEditing : false, content: '' }
+    $scope.expandEndpointDescription = function(){
+      $scope.endpointDescription.isExpanded = !$scope.endpointDescription.isExpanded;
+    }
+
+    $scope.editEndointDescription = function(){
+      $scope.endpointDescription.isEditing = !$scope.endpointDescription.isEditing;
+      if($scope.endpointDescription.isEditing){
+        $scope.endpointDescription.content = $scope.agParentEndpoint.description;
+      }else{
+        $scope.agParentEndpoint.description = $scope.endpointDescription.content;
+      }
+    }
+
+    $scope.requestDescriptionChanged = function(){
+      $scope.agParentEndpoint.description = $scope.endpointDescription.content;
+      Editor.setEndpoint( $scope.agParentEndpoint );
+      if(!$scope.agRequestChangeFlag){
+        $scope.agRequestChangeFlag = true;
+      }
+    };
+
+    // Open in browser window
+    // markedProvider.setRenderer({
+    //   link: function(href, title, text) {
+    //     var anchor = "<a ng-click=openExternal(" + href + ")" + (title ? " title='" + title + "'" : '') + " target='_blank'>" + text + "</a>";
+    //     console.log('anchor', anchor);
+    //     return anchor;
+    //   }
+    // });
+    //
+    // $scope.openExternal = function(link){
+    //   require('shell').openExternal(link);
+    // };
+
+
+    // $scope.$watch('endpointDescription.content',function(){
+    //   $scope.agRequestChangeFlag = true;
+    //   $scope.agParentEndpoint.description = $scope.endpointDescription.content;
+    // });
 
     init();
 
