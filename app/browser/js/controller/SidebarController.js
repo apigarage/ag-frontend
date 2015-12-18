@@ -39,6 +39,11 @@ angular.module('app')
       }
     };
 
+    $scope.sidebarSearchInstructions = { message : {
+      title: "Search Options",
+      content: ":flag :!flag :mock :!mock :resolve :!resolve"
+    }};
+
     $scope.searchFilter = function (search){
       var temporaryCopy ={};
 
@@ -56,13 +61,31 @@ angular.module('app')
 
       $scope.searchResultsCollection = {};
 
-      if(search === ":flagged"){
-        searchFlagged(temporaryCopy);
+      if(search === ":flag"){
+        searchFlagged(temporaryCopy, true);
         $scope.expandGroup = true;
         return;
       }
 
-      if(search === ":notMocked"){
+      if(search === ":!flag"){
+        searchFlagged(temporaryCopy, false);
+        $scope.expandGroup = true;
+        return;
+      }
+
+      if(search === ":resolve"){
+        searchFlagged(temporaryCopy, false);
+        $scope.expandGroup = true;
+        return;
+      }
+
+      if(search === ":!resolve"){
+        searchFlagged(temporaryCopy, true);
+        $scope.expandGroup = true;
+        return;
+      }
+
+      if(search === ":!mock"){
         searchMocked(temporaryCopy, 0);
         $scope.expandGroup = true;
         $scope.showNotMocked = true;
@@ -70,7 +93,7 @@ angular.module('app')
         return;
       }
 
-      if(search === ":mocked"){
+      if(search === ":mock"){
         searchMocked(temporaryCopy, 1);
         $scope.expandGroup = true;
         $scope.showMocked = true;
@@ -99,14 +122,14 @@ angular.module('app')
       $scope.expandGroup = true;
     };
 
-    function searchFlagged(temporaryCopy){
+    function searchFlagged(temporaryCopy, filter){
 
       _.forEach(temporaryCopy, function(collection) {
         var foundCollection;
         var foundItemUUID = [];
         if(!_.isUndefined(collection.items)){
           _.forEach(collection.items, function(item, key) {
-            if(isFlagged(item)){
+            if(isFlagged(item) == filter){
               foundItemUUID.push(item.uuid);
               foundCollection = true;
             }

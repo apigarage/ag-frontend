@@ -26,10 +26,14 @@
     </label>
 
     <!-- SEARCH BOX -->
-    <div class="sidebar-search-placeholder">
-      <div class="sidebar-search-wrap" bs-affix data-offset-top="-50">
-        <input type="text" class="form-control sidebar-search" placeholder="Search..." ng-model="search" ng-change="searchFilter(search)" />
-      </div>
+    <div class="sidebar-search-placeholder ">
+      <input type="text" class="col-md-5 form-control sidebar-search"
+        placeholder="Search..." ng-model="search" ng-change="searchFilter(search)"
+        style="width: 195px;"/>
+      <p class="fa fa-fw fa-info-circle fa-lg"  data-trigger="hover"
+      placement="bottom" bs-popover="sidebarSearchInstructions.message" delay="sidebarSearchInstructions.message.delay"
+      style="margin-bottom: 0px; margin-top: 10px;">
+      </p>
     </div>
 
     <!-- EXISTING ENDPOINTS -->
