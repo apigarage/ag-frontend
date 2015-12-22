@@ -18,7 +18,8 @@
     'duScroll',                   // Smooth scrolling to targets
     'angulartics',                // Angular Analytics
     'angulartics.mixpanel',       // Angular Analytics Mixpanel plugin
-    'angular-uri'                 // Angular URI module
+    'angular-uri',                // Angular URI module
+    'hc.marked'                   // Angular Markdown directive
   ]);
 
   app.config(['$stateProvider',
@@ -30,6 +31,7 @@
     '$tooltipProvider',
     '$dropdownProvider',
     '$analyticsProvider',
+    'markedProvider',
   function ($stateProvider,
     $urlRouterProvider,
     $controllerProvider,
@@ -38,7 +40,19 @@
     $provide,
     $tooltipProvider,
     $dropdownProvider,
-    $analyticsProvider) {
+    $analyticsProvider,
+    markedProvider) {
+
+    // Open in browser window
+    markedProvider.setRenderer({
+      link: function(href, title, text) {
+        var anchor = "<a ng-click=openExternal(" + href + ")" + (title ? " title='" + title + "'" : '') + " target='_blank'>" + text + "</a>";
+        console.log('anchor', anchor);
+        return anchor;
+      }
+    });
+
+
 
     // Analytics prevent virtual page tracking
     $analyticsProvider.virtualPageviews(false);

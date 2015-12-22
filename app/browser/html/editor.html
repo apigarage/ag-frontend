@@ -11,6 +11,7 @@
           <span class="fa fa-fw fa-floppy-o"></span>
           <span class="hidden-xs hidden-sm">Save changes</span>
         </button> -->
+        
         <div class="btn-group">
 
           <button class="btn btn-default"
@@ -84,6 +85,7 @@
           </button>
         </div>
       </div>
+
       <div class="editor-titles">
         <h2>
           <button ng-show="currentCollection.name">
@@ -100,12 +102,22 @@
           </span>
         </h1>
       </div>
+
+      <editor-description
+        ng-show="currentItem.uuid"
+        ag-parent-endpoint="endpoint"
+        ag-request-change-flag ="requestChangedFlag"
+      >
+      </editor-description>
+
+      <div ng-include="'html/editor-request.html'" ></div>
+
       <!-- http://stackoverflow.com/questions/23698316/how-to-prevent-an-angular-bootstrap-dropdown-from-closing-unbind-event-which-wa -->
       <ul class="editor-nav nav nav-tabs" >
         <li role="presentation" ng-class="{'active': endpointNav.tab == 'Editor'}" ng-show="endpoint.uuid">
           <a href="" ng-click="endpointNav.tab = 'Editor'">
-            <span class="fa fa-pencil"></span>
-            Editor
+            <span class="fa fa-reply"></span>
+            Response
           </a>
         </li>
         <li role="presentation" ng-class="{'active': endpointNav.tab == 'Activity'}" ng-show="endpoint.uuid">
@@ -131,7 +143,6 @@
 
     </div>
     -->
-    <div ng-include="'html/editor-request.html'"  ng-show="endpointNav.tab == 'Editor'"></div>
     <div ng-include="'html/editor-response.html'" ng-show="endpointNav.tab == 'Editor'"></div>
     <!-- <div ng-include="'html/editor-activity.html'" ng-show="endpointNav.tab == 'Activity'"></div> -->
 

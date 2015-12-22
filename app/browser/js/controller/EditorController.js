@@ -11,6 +11,7 @@ angular.module('app').controller('EditorCtrl', [
   '$focus',
   '$timeout',
   'URI',
+  'marked',
   'RequestUtility',
   'History',
   'Collections',
@@ -20,8 +21,8 @@ angular.module('app').controller('EditorCtrl', [
   'Analytics',
   'Items',
   function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q,
-    $focus, $timeout, URI, RequestUtility, History, Collections, Projects,
-    Editor, Activities, Analytics, Items, ipc){
+    $focus, $timeout, URI, marked, RequestUtility, History, Collections, Projects,
+    Editor, Activities, Analytics, Items){
     // Private Functions
     // ========================================================================
 
@@ -118,21 +119,6 @@ angular.module('app').controller('EditorCtrl', [
     // Public Functions
     // ========================================================================
 
-
-    $scope.startMockServer = function(port){
-
-      //Lets require/import the HTTP module
-      // send port number
-      console.log("port", port);
-      console.log(ipc.sendSync('start-server', 'node'));
-
-    };
-
-    $scope.stopMockServer = function(){
-      //Lets require/import the HTTP module
-      console.log(ipc.sendSync('stop-server', 'node'));
-    };
-
     $scope.requestChanged = function(){
       Editor.setEndpoint( $scope.endpoint );
       if(!$scope.requestChangedFlag){
@@ -166,7 +152,7 @@ angular.module('app').controller('EditorCtrl', [
     $scope.showEndpointHealthReport = function(){
       $scope.endpointHealth.isActive = !$scope.endpointHealth.isActive;
     }
-    
+
     $scope.$on('showMockedActivity', function(event, data){
       $scope.endpointHealth.isActive = data;
     });
@@ -290,6 +276,7 @@ angular.module('app').controller('EditorCtrl', [
       // Number of requests made
       Analytics.eventTrack('Make Request', {'from': from});
 
+      $scope.showResponseTab();
       $scope.loading = true;
       if( _.isEmpty($scope.endpoint.requestUrl) ) return;
       resetResponse();
@@ -561,6 +548,14 @@ angular.module('app').controller('EditorCtrl', [
       }, delay);
     };
 
+    $scope.showResponseTab = function(){
+      var delay = 0;
+      if( $scope.endpointNav.tab != 'Editor' )
+      {
+        $scope.endpointNav.tab = 'Editor';
+        delay = 200;
+      }
+    }
 
     $scope.addCommentFlag = function(){
       $scope.endpoint.flagged = ! $scope.endpoint.flagged;
