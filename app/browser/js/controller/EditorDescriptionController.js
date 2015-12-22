@@ -34,6 +34,8 @@ angular.module('app').controller('EditorDescriptionCtrl', [
 
       $scope.requestDescriptionChanged = function(){
         $scope.agParentEndpoint.description = $scope.endpointDescription.content;
+        // TODO: extend this directive for collection description or project description
+        // , this line will break
         Editor.setEndpoint( $scope.agParentEndpoint );
         if(!$scope.agRequestChangeFlag){
           $scope.agRequestChangeFlag = true;

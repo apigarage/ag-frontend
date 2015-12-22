@@ -1,17 +1,3 @@
-<!-- <div class="panel-group editor-panel" ng-model="panels.activePanelCreate" role="tablist" aria-multiselectable="true" bs-collapse>
-    <div class="panel panel-default">
-      <div class="panel-heading mocking-panel-heading" >
-        <h4 class="mocking-panel-heading-title">
-          <span class="fa  fa-plus-square-o" ng-class="endpointDescription.isExpanded ? 'fa-minus-square-o' : 'fa-plus-square-o'"></span>
-          Description</h4>
-          <div class="enable-select active">
-            <div class="col-xs-2 pull-right">
-
-            </div>
-          </div>
-      </div>
-
-  </div> -->
 <div class="editor-description-panel">
   <div class="editor-description-hidden-panel-body text-muted"
     ng-hide="endpointDescription.isValidContent
@@ -35,25 +21,22 @@
     ng-model="endpointDescription.content"
     ng-show="endpointDescription.isEditing" ng-blur=editEndointDescription()>
   </textarea>
-  <!-- <div ng-hide="endpointDescription.isValidContent || endpointDescription.isEditing ? false : true">
-    <span ng-click="expandEndpointDescription()" ng-hide="endpointDescription.isEditing"
-    class="fa  fa-plus-square-o"
 
-    ng-class="endpointDescription.isExpanded ? 'fa-minus-square-o' : 'fa-plus-square-o'">
-    Show {{endpointDescription.isExpanded ? 'Less' : 'More'}}
-    <span>
-  </div> -->
-
-  <div style="height: 2px; background-color: #CCCCCC; text-align: center; "
-  >
+  <div style="height: 2px; background-color: #CCCCCC; text-align: center; ">
     <span style="background-color: #F4F4F4; position: relative;
       top: -0.5em; padding-left: 5px;padding-right: 5px;"
-    ng-click="expandEndpointDescription()"
-    ng-hide="endpointDescription.isValidContent && !endpointDescription.isEditing ? false : true"
-    ng-class="endpointDescription.isExpanded ? 'fa fa-caret-up' : 'fa fa-caret-down'">
-      <a style="font-family: Roboto">Show {{endpointDescription.isExpanded ? 'Less' : 'More'}}</a>
-    </span>
+      ng-click="expandEndpointDescription()"
+      ng-hide="endpointDescription.isValidContent && !endpointDescription.isEditing ? false : true"
+      ng-class="endpointDescription.isExpanded ? 'fa fa-caret-up' : 'fa fa-caret-down'">
 
+    <a style="font-family: Roboto">Show {{endpointDescription.isExpanded ? 'Less' : 'More'}}</a>
+
+    <span style="background-color: #F4F4F4; position: relative;
+      top: -0.5em; padding-left: 5px;padding-right: 5px;"
+      ng-click="expandEndpointDescription()"
+      ng-hide="endpointDescription.isValidContent && !endpointDescription.isEditing ? false : true"
+      ng-class="endpointDescription.isExpanded ? 'fa fa-caret-up' : 'fa fa-caret-down'">
+    </span>
   </div>
 
   <!-- <button class="btn btn-default"
