@@ -41,7 +41,7 @@ angular.module('app')
 
     $scope.sidebarSearchInstructions = { message : {
       title: "Search Options",
-      content: ":flag :!flag :mock :!mock :resolve :!resolve"
+      content: ":flagged :!flagged :mocked :!mocked :resolved :!resolved"
     }};
 
     $scope.searchFilter = function (search){
@@ -61,31 +61,31 @@ angular.module('app')
 
       $scope.searchResultsCollection = {};
 
-      if(search === ":flag"){
+      if(search === ":flagged"){
         searchFlagged(temporaryCopy, true);
         $scope.expandGroup = true;
         return;
       }
 
-      if(search === ":!flag"){
+      if(search === ":!flagged"){
         searchFlagged(temporaryCopy, false);
         $scope.expandGroup = true;
         return;
       }
 
-      if(search === ":resolve"){
+      if(search === ":resolved"){
         searchFlagged(temporaryCopy, false);
         $scope.expandGroup = true;
         return;
       }
 
-      if(search === ":!resolve"){
+      if(search === ":!resolved"){
         searchFlagged(temporaryCopy, true);
         $scope.expandGroup = true;
         return;
       }
 
-      if(search === ":!mock"){
+      if(search === ":!mocked"){
         searchMocked(temporaryCopy, 0);
         $scope.expandGroup = true;
         $scope.showNotMocked = true;
@@ -93,7 +93,7 @@ angular.module('app')
         return;
       }
 
-      if(search === ":mock"){
+      if(search === ":mocked"){
         searchMocked(temporaryCopy, 1);
         $scope.expandGroup = true;
         $scope.showMocked = true;
