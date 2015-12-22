@@ -3,7 +3,7 @@ directive("editorDescription", [function() {
   return {
     restrict: 'E',
     templateUrl: 'html/editor-description.html',
-    controller: 'EditorCtrl',
+    controller: 'EditorDescriptionCtrl',
     scope: {
       agParentEndpoint  : "=",
       agRequestChangeFlag : "="

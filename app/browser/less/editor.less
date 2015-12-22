@@ -369,22 +369,27 @@
 .editor-description-textarea{
   word-wrap: normal;
   width: 100%;
-  height: 300px;
+  min-height: 300px;
   overflow: auto;
 }
 
 .editor-description-panel-body {
   position: relative;
-  min-height: 300px;
+  min-height: 30px;
+  background-color: #FFFFFC;
 }
 
 .editor-description-hidden-panel-body {
   position: relative;
-  height: 0px;
+  height: 40px;
   overflow: hidden;
-  opacity: 0;
-
+  background-color: #FFFFFC;
 }
+
+.editor-description-panel {
+    margin: 20px;
+}
+
 // ============================================================================
 // Response Body - Ace Editor
 // ============================================================================

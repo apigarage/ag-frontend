@@ -1,6 +1,6 @@
-<div class="panel-group editor-panel" ng-model="panels.activePanelCreate" role="tablist" aria-multiselectable="true" bs-collapse>
+<!-- <div class="panel-group editor-panel" ng-model="panels.activePanelCreate" role="tablist" aria-multiselectable="true" bs-collapse>
     <div class="panel panel-default">
-      <div class="panel-heading mocking-panel-heading" ng-click="expandEndpointDescription()">
+      <div class="panel-heading mocking-panel-heading" >
         <h4 class="mocking-panel-heading-title">
           <span class="fa  fa-plus-square-o" ng-class="endpointDescription.isExpanded ? 'fa-minus-square-o' : 'fa-plus-square-o'"></span>
           Description</h4>
@@ -10,19 +10,33 @@
             </div>
           </div>
       </div>
-      <div ng-class="endpointDescription.isExpanded ?
-      'panel-body editor-description-panel-body' : 'editor-description-hidden-panel-body'"
-        ng-show="endpointDescription.isExpanded">
-        <code>{{agParentEndpoint.description}}</code> 
-        <div marked="agParentEndpoint.description" ng-click=editEndointDescription()
-          class="text-muted editor-description-textarea"
-          ng-hide="endpointDescription.isEditing">
-        </div>
-        <textarea
-          class="editor-description-textarea"
-          ng-change="requestDescriptionChanged()"
-          ng-model="endpointDescription.content"
-          ng-show="endpointDescription.isEditing" ng-blur=editEndointDescription()>
-        </textarea>
-      </div>
+
+  </div> -->
+<div class="editor-description-panel">
+  <h4>Description {{!endpointDescription.isValidContent ? ' - Click text area to add description' : ''}}</h4>
+  {{endpointDescription.description}}
+  <div marked="agParentEndpoint.description" ng-click=editEndointDescription()
+    class="text-muted"
+    ng-hide="endpointDescription.isEditing"
+    ng-class="endpointDescription.isExpanded ?
+      'editor-description-panel-body' : 'editor-description-hidden-panel-body'">
   </div>
+  <textarea
+    class="editor-description-textarea"
+    ng-change="requestDescriptionChanged()"
+    ng-model="endpointDescription.content"
+    ng-show="endpointDescription.isEditing" ng-blur=editEndointDescription()>
+  </textarea>
+  <div>
+    <span ng-click="expandEndpointDescription()" ng-hide="endpointDescription.isEditing"
+    class="fa  fa-plus-square-o"
+    ng-class="endpointDescription.isExpanded ? 'fa-minus-square-o' : 'fa-plus-square-o'">
+    Show {{endpointDescription.isExpanded ? 'Less' : 'More'}}
+    <span>
+  </div>
+  <!-- <button class="btn btn-default"
+    ng-click="doneEditingDescription()"
+    ng-show="endpointDescription.isEditing" >
+    <span>Done</span>
+  </button> -->
+</div>

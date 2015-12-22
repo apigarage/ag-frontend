@@ -496,8 +496,6 @@ angular.module('app').controller('EditorCtrl', [
       // Endpoint Health by default is set to false on load
       // $scope.endpointHealth.isActive = false;
 
-      $scope.endpointDescription = { isExpanded : false, isEditing : false, content: '' }
-
       item.method = _.find( $scope.requestMethods, function(data){ return data === item.method; });
       $scope.endpoint = Editor.loadAndGetEndpoint(item);
       resetResponse();
@@ -629,48 +627,6 @@ angular.module('app').controller('EditorCtrl', [
         commentFlagButtonStatus(false);
       }
     }
-
-    // Endpoint Description Start
-    $scope.endpointDescription = { isExpanded : false, isEditing : false, content: '' }
-    $scope.expandEndpointDescription = function(){
-      $scope.endpointDescription.isExpanded = !$scope.endpointDescription.isExpanded;
-    }
-
-    $scope.editEndointDescription = function(){
-      $scope.endpointDescription.isEditing = !$scope.endpointDescription.isEditing;
-      if($scope.endpointDescription.isEditing){
-        $scope.endpointDescription.content = $scope.agParentEndpoint.description;
-      }else{
-        $scope.agParentEndpoint.description = $scope.endpointDescription.content;
-      }
-    }
-
-    $scope.requestDescriptionChanged = function(){
-      $scope.agParentEndpoint.description = $scope.endpointDescription.content;
-      Editor.setEndpoint( $scope.agParentEndpoint );
-      if(!$scope.agRequestChangeFlag){
-        $scope.agRequestChangeFlag = true;
-      }
-    };
-
-    // Open in browser window
-    // markedProvider.setRenderer({
-    //   link: function(href, title, text) {
-    //     var anchor = "<a ng-click=openExternal(" + href + ")" + (title ? " title='" + title + "'" : '') + " target='_blank'>" + text + "</a>";
-    //     console.log('anchor', anchor);
-    //     return anchor;
-    //   }
-    // });
-    //
-    // $scope.openExternal = function(link){
-    //   require('shell').openExternal(link);
-    // };
-
-
-    // $scope.$watch('endpointDescription.content',function(){
-    //   $scope.agRequestChangeFlag = true;
-    //   $scope.agParentEndpoint.description = $scope.endpointDescription.content;
-    // });
 
     init();
 
