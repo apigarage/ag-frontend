@@ -31,11 +31,10 @@
 
     <a style="font-family: Roboto">Show {{endpointDescription.isExpanded ? 'Less' : 'More'}}</a>
 
-    <span style="background-color: #F4F4F4; position: relative;
-      top: -0.5em; padding-left: 5px;padding-right: 5px;"
-      ng-click="expandEndpointDescription()"
+    <span style="background-color: #F4F4F4; position: relative;"
       ng-hide="endpointDescription.isValidContent && !endpointDescription.isEditing ? false : true"
       ng-class="endpointDescription.isExpanded ? 'fa fa-caret-up' : 'fa fa-caret-down'">
+    </span>
     </span>
   </div>
 
