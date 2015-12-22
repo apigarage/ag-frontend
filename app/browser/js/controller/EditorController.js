@@ -276,6 +276,7 @@ angular.module('app').controller('EditorCtrl', [
       // Number of requests made
       Analytics.eventTrack('Make Request', {'from': from});
 
+      $scope.showResponseTab();
       $scope.loading = true;
       if( _.isEmpty($scope.endpoint.requestUrl) ) return;
       resetResponse();
@@ -547,6 +548,14 @@ angular.module('app').controller('EditorCtrl', [
       }, delay);
     };
 
+    $scope.showResponseTab = function(){
+      var delay = 0;
+      if( $scope.endpointNav.tab != 'Editor' )
+      {
+        $scope.endpointNav.tab = 'Editor';
+        delay = 200;
+      }
+    }
 
     $scope.addCommentFlag = function(){
       $scope.endpoint.flagged = ! $scope.endpoint.flagged;

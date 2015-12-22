@@ -13,27 +13,49 @@
 
   </div> -->
 <div class="editor-description-panel">
-  <h4>Description {{!endpointDescription.isValidContent ? ' - Click text area to add description' : ''}}</h4>
-  {{endpointDescription.description}}
-  <div marked="agParentEndpoint.description" ng-click=editEndointDescription()
+  <div class="editor-description-hidden-panel-body text-muted"
+    ng-hide="endpointDescription.isValidContent
+    || endpointDescription.isEditing
+    ? true : false"
+    ng-click=editEndointDescription('editor-description')>
+    {{endpointDescription.isValidContent ? '' : 'Add Description...'}}</div>
+  <div marked="agParentEndpoint.description" ng-click=editEndointDescription('editor-description')
     class="text-muted"
-    ng-hide="endpointDescription.isEditing"
+    placeholder="Add Descripiton..."
+    ng-hide="endpointDescription.isEditing
+    || !endpointDescription.isValidContent
+    ? true : false"
     ng-class="endpointDescription.isExpanded ?
       'editor-description-panel-body' : 'editor-description-hidden-panel-body'">
   </div>
   <textarea
+    id="editor-description"
     class="editor-description-textarea"
     ng-change="requestDescriptionChanged()"
     ng-model="endpointDescription.content"
     ng-show="endpointDescription.isEditing" ng-blur=editEndointDescription()>
   </textarea>
-  <div>
+  <!-- <div ng-hide="endpointDescription.isValidContent || endpointDescription.isEditing ? false : true">
     <span ng-click="expandEndpointDescription()" ng-hide="endpointDescription.isEditing"
     class="fa  fa-plus-square-o"
+
     ng-class="endpointDescription.isExpanded ? 'fa-minus-square-o' : 'fa-plus-square-o'">
     Show {{endpointDescription.isExpanded ? 'Less' : 'More'}}
     <span>
+  </div> -->
+
+  <div style="height: 2px; background-color: #CCCCCC; text-align: center; "
+  >
+    <span style="background-color: #F4F4F4; position: relative;
+      top: -0.5em; padding-left: 5px;padding-right: 5px;"
+    ng-click="expandEndpointDescription()"
+    ng-hide="endpointDescription.isValidContent && !endpointDescription.isEditing ? false : true"
+    ng-class="endpointDescription.isExpanded ? 'fa fa-caret-up' : 'fa fa-caret-down'">
+      <a style="font-family: Roboto">Show {{endpointDescription.isExpanded ? 'Less' : 'More'}}</a>
+    </span>
+
   </div>
+
   <!-- <button class="btn btn-default"
     ng-click="doneEditingDescription()"
     ng-show="endpointDescription.isEditing" >

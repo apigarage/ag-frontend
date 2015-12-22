@@ -1,10 +1,12 @@
 angular.module('app').controller('EditorDescriptionCtrl', [
   '$scope',
+  '$focus',
   'Editor',
   'Analytics',
   'Users',
   function (
     $scope,
+    $focus,
     Editor,
     Analytics,
     Users){
@@ -15,12 +17,18 @@ angular.module('app').controller('EditorDescriptionCtrl', [
         $scope.endpointDescription.isExpanded = !$scope.endpointDescription.isExpanded;
       }
 
-      $scope.editEndointDescription = function(){
+      $scope.editEndointDescription = function(sourceType){
         $scope.endpointDescription.isEditing = !$scope.endpointDescription.isEditing;
         if($scope.endpointDescription.isEditing){
+          $focus('editor-description');
           $scope.endpointDescription.content = $scope.agParentEndpoint.description;
         }else{
           $scope.agParentEndpoint.description = $scope.endpointDescription.content;
+        }
+        if($scope.endpointDescription.content){
+          $scope.endpointDescription.isValidContent = true;
+        }else{
+          $scope.endpointDescription.isValidContent = false;
         }
       }
 
@@ -44,16 +52,14 @@ angular.module('app').controller('EditorDescriptionCtrl', [
       }
 
       $scope.$watch('agParentEndpoint.uuid',function(){
-
         var description = $scope.agParentEndpoint.description;
+
         var validContent = true;
-        if(description  === null
-          || description  === undefined
-          || description  === ''){
-            validContent = false;
-            description = '';
-          }
-        console.log('description', description);
+        if(!description){
+          validContent = false;
+        }
+
+        //console.log('description', description);
         $scope.endpointDescription = { isExpanded : false,
           isEditing : false,
           content: description,

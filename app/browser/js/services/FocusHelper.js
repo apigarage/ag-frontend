@@ -18,7 +18,8 @@ angular.module('app')
       if(element)
       {
         if(element.select)
-          element.select(); // Was .focus() but .select() is even better!
+          // select() highlights the contents in the input
+          element.focus(); // Was .focus() but .select() is even better!
         else
           angular.element(element).find('input').select();
       }

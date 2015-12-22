@@ -58,7 +58,7 @@ angular.module('app')
         var deferred = $q.defer();
 
         var endpointForDB = buildRequestOutOfScope();
-        console.log('endpointForDB', endpointForDB);
+
         if( _.isEmpty(endpointForDB.uuid) ){
           // CREATE REQUEST
 
@@ -88,7 +88,6 @@ angular.module('app')
             }
 
             return $q.all(promises).then(function(){
-              console.log('endpointForDB', endpointForDB);
               return Projects.addItemToCollection(collection.id, endpointForDB)
                 .then(function(data){
                   // We do not have the current item loaded to controller.
@@ -230,7 +229,6 @@ angular.module('app')
 
       function buildRequestOutOfScope(){
         var item = {};
-        console.log('endpoint', endpoint);
         item.url = endpoint.requestUrl;
         item.name = endpoint.name;
         item.method = endpoint.requestMethod ;
