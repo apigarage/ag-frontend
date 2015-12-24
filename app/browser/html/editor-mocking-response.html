@@ -59,9 +59,24 @@
             <span class="fa fa-ban"></span>
             <span class="hidden-xs hidden-sm">Cancel</span>
           </button>
+          <button class="btn btn-default"
+                  ng-hide="deleteMockFormButton"
+                  ng-click="testMockingCall(MockingForm)"
+                  ng-disabled="statusCodeInput ?
+                  MockingForm.inputStatusCode.$invalid ||
+                  MockingForm.inputStatusCode.$pristine :
+                  MockingForm.inputStatusCodeResponse.$pristine">
+            <span class="fa fa-wrench "></span>
+            <span class="hidden-xs hidden-sm">Test</span>
+          </button>
         </div>
 
         <div class="btn-group">
+          <button class="btn btn-default"
+                  ng-show="deleteMockFormButton"
+                  ng-click="testMockingCall(MockingForm)">
+            <span class="fa fa-wrench "></span>
+            <span class="hidden-xs hidden-sm">Test</span>
           <button class="btn btn-default"
                   ladda="loadingDeleteButton"
                   ng-show="deleteMockFormButton"

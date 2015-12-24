@@ -3,11 +3,15 @@
 /* Services */
 
 angular.module('app')
-  .factory('Mocking', [ '$window', '$rootScope', 'Config', 'ApiRequest', 'Auth', 'Messaging', 'ipc',
-  function($window, $rootScope, Config, ApiRequest, Auth, Messaging, ipc){
+  .factory('Mocking', [ '$window', '$rootScope', 'URI', 'lodash', '$http',
+    'Config', 'ApiRequest', 'Auth', 'Messaging', 'ipc',
+    'RequestUtility',
+  function($window, $rootScope, URI, _, $http, Config, ApiRequest,
+    Auth, Messaging, ipc, RequestUtility){
 
     var Mocking = {};
     var localStorage = $window.localStorage;
+    var localhost = 'http://localhost'
 
     Mocking.serverStatus = undefined;
     // TODO - Add this to config file.
@@ -21,7 +25,14 @@ angular.module('app')
        Mocking.port =  parseInt(localStorage.getItem('defaultPort'));
      }
 
+    $rootScope.$on('start-mocking-server', function(evt, data){
+      Mocking.port = data.port;
+      Mocking.serverStatus = true;
+    });
+
     Mocking.startServer = function (port){
+      if(!port) port = parseInt(localStorage.getItem('defaultPort'));
+
       var message = {
         "eventName" : 'start-mocking-server',
         "port" : port,
@@ -30,19 +41,101 @@ angular.module('app')
         "accessToken": Auth.get()
       };
       localStorage.setItem("defaultPort", port);
-      Mocking.port = port;
-      Mocking.serverStatus = true;
-      Messaging.sendSync(message);
+
+      return Messaging.send(message);
+      // .then(function(data){
+      //
+      // });
     };
+
+    $rootScope.$on('stop-mocking-server', function(evt, data){
+      Mocking.serverStatus = false;
+    });
 
     Mocking.stopServer = function (){
       var message = {
-        "eventName" : 'stop-mocking-server',
+        "eventName" : 'stop-mocking-server'
       };
-      Mocking.serverStatus = false;
-      Messaging.sendSync(message);
+
+      Messaging.send(message);
     };
 
+    var mockingOptions;
+    $rootScope.$on('test-response-mocking-server', function(evt, data){
+      console.log('mockingOptions', mockingOptions);
+      $http(mockingOptions).then(function(data){
+        console.log('testdata', data);
+      })
+    });
+
+    Mocking.testMockingCall = function(endpoint, testMockingResponse){
+
+      // if the server is off
+      // turn it on
+      // if(!){
+      //   Mocking.startServer();
+      // }
+
+      // send endpoint data with responses
+      var headerKeyIsFound = false;
+      _.forEach(endpoint.requestHeaders, function(header, value){
+        console.log('key', header.key);
+        console.log('value', value);
+        if(header.key == 'x-ag-expected-status'){
+          endpoint.requestHeaders[value].value = testMockingResponse.status;
+          headerKeyIsFound = true;
+        }
+      })
+
+      if(!headerKeyIsFound){
+        endpoint.requestHeaders.push({
+          key : 'x-ag-expected-status',
+          value: testMockingResponse.status
+        });
+      }
+
+      var port;
+
+      if(!port) port = parseInt(localStorage.getItem('defaultPort'));
+
+      var serverMessage = {
+        "eventName" : 'start-mocking-server',
+        "port" : port,
+        "endpoints": $rootScope.currentProject.collections,
+        "projectId": $rootScope.currentProject.id,
+        "accessToken": Auth.get()
+      };
+
+      var mockingMessage
+//      [] = testMockingResponse.status;
+      var serverStatus = Mocking.serverStatus ? false : true;
+      console.log('requestHeaders', endpoint.requestHeaders);
+      var mockingMessage = {
+        "eventName" : 'test-response-mocking-server',
+        "testMockingResponse" : testMockingResponse,
+        "endpoint": endpoint,
+        "serverMessage": serverMessage,
+        "serverStatus": serverStatus
+      };
+
+      console.log('message', mockingMessage);
+      Messaging.send(mockingMessage, function(){
+        // build the call options
+        // make the call
+        mockingOptions = {
+          method: endpoint.requestMethod,
+          url: endpoint.requestUrl,
+          headers: endpoint.requestHeaders,
+          data: endpoint.requestBody,
+        };
+        mockingOptions = RequestUtility.buildRequest(mockingOptions, $rootScope.currentEnvironment);
+        console.log('test');
+
+      });
+
+
+
+    }
 
     //======== Mocking Calls ===========///
     var endpoint = 'items';

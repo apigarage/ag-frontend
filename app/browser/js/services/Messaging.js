@@ -4,8 +4,10 @@ angular.module('app')
   .factory('Messaging', [ 'ipc', function(ipc){
     var Messaging = {};
 
-    Messaging.send = function(message){
-      // TODO: ipc.send(message.eventName, message);
+    Messaging.send = function(message, callback){
+      message.messageEvent = "ag-message";
+      if(callback) callback();
+      return ipc.send(message.messageEvent, message);
     };
 
     Messaging.sendSync = function(message){
