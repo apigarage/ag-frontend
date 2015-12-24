@@ -96,6 +96,7 @@
         // }
 
         // This works
+        var isContent = false;
         if(serverRequest.method=="GET"){
 
           mockingLog = buildMockingLog(serverRequest, serverResponse, pathMatched,
@@ -104,12 +105,23 @@
           windowsManager.sendToAllWindows('ag-message', mockingLog);
         }else{
           console.log('THE REST log');
+
           serverRequest.on('data', function(serverRequestData) {
+            console.log('hasdata')
             mockingLog = buildMockingLog(serverRequest, serverResponse, pathMatched,
               mockedResponse, serverRequestData);
-              console.log('THE REST log', mockingLog);
-              windowsManager.sendToAllWindows('ag-message', mockingLog);
+            windowsManager.sendToAllWindows('ag-message', mockingLog);
+            isContent = true;
           });
+
+          serverRequest.on('end', function () {
+              if(!isContent){
+                console.log('nodata');
+                mockingLog = buildMockingLog(serverRequest, serverResponse, pathMatched,
+                  mockedResponse);
+                windowsManager.sendToAllWindows('ag-message', mockingLog);
+              }
+           });
         }
 
       //}
