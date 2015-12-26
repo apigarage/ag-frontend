@@ -15,7 +15,17 @@
   var responses = [];
   module.exports.createServer = function(options){
     //console.log("start", options.port);
+
+
     server = http.createServer(function (serverRequest, serverResponse) {
+
+      serverRequest.on('continue', function(){
+        console.log('continue');
+      })
+
+      serverResponse.on('continue', function(){
+        console.log('continue');
+      })
 
       var mockedResponse = {
         statusCode : serverRequest.headers['x-ag-expected-status']
@@ -96,36 +106,24 @@
         // }
 
         // This works
-        var isContent = false;
-        if(serverRequest.method=="GET"){
-
+        var isResquestData = false;
+        // if the server request has data process it
+        serverRequest.on('data', function(serverRequestData) {
           mockingLog = buildMockingLog(serverRequest, serverResponse, pathMatched,
-            mockedResponse);
-              console.log('GET log', mockingLog);
+            mockedResponse, serverRequestData);
           windowsManager.sendToAllWindows('ag-message', mockingLog);
-        }else{
-          console.log('THE REST log');
+          isResquestData = true;
+        });
 
-          serverRequest.on('data', function(serverRequestData) {
-            console.log('hasdata')
-            mockingLog = buildMockingLog(serverRequest, serverResponse, pathMatched,
-              mockedResponse, serverRequestData);
-            windowsManager.sendToAllWindows('ag-message', mockingLog);
-            isContent = true;
-          });
-
-          serverRequest.on('end', function () {
-              if(!isContent){
-                console.log('nodata');
-                mockingLog = buildMockingLog(serverRequest, serverResponse, pathMatched,
-                  mockedResponse);
-                windowsManager.sendToAllWindows('ag-message', mockingLog);
-              }
-           });
-        }
-
-      //}
-
+        // on request end event check if serverRequest data is present and create
+        // mocking log
+        serverRequest.on('end', function () {
+            if(!isResquestData){
+              mockingLog = buildMockingLog(serverRequest, serverResponse, pathMatched,
+                mockedResponse);
+              windowsManager.sendToAllWindows('ag-message', mockingLog);
+            }
+         });
 
     }).listen(options.port, function (err) {
       console.log('listening http://localhost:'+ options.port +'/');
@@ -173,7 +171,6 @@
       endpoint: pathMatched ? pathMatched.endpoint : {}
     };
 
-    console.log(mockedResponse);
     serverResponse.writeHead(mockedResponse.statusCode);
     serverResponse.end(mockedResponse.body + '\n');
 
@@ -246,15 +243,11 @@
   function setPaths(endpoints, options){
     var paths = [];
     _.forEach(endpoints, function(collection){
-      // console.log('Collection', collection);
       _.forEach(collection.items, function(endpoint){
         paths.push(setPath(endpoint));
       });
     }, []);
-
-    // console.log('GOING TO SET PATHS FROM THESE ENDPOINTS', endpoints);
     server.paths = paths;
-    // console.log('All Paths', paths);
 
     // Make sure return relevant render side data
     return { "eventName": options.eventName, "port": options.port };
@@ -265,7 +258,6 @@
 
     // If hostname is not defined, nothing to mock here.
     if( ! endpoint.parsedUrl.hostname ) return;
-
     endpoint.pathWithQuery = endpoint.parsedUrl.query
       ? endpoint.parsedUrl.path + '\\?' + endpoint.parsedUrl.query // <-- double escape is required.
       : endpoint.parsedUrl.path;
@@ -289,7 +281,6 @@
   }
 
   module.exports.stopServer = function(){
-    // console.log("stop");
     for (var socketId in sockets) {
       console.log('socket', socketId, 'destroyed');
       console.log('socket', sockets[socketId]);
@@ -299,23 +290,14 @@
     delete server.paths;
   };
 
+  // Add mocking call to current list of responses
   module.exports.testMockingCall = function(mockingResponse){
-    //console.log('mockingResponse', mockingResponse.testMockingResponse.data);
-
-    // unclear how to buils this array
-    //console.log('responses', responses);
     if(! responses[mockingResponse.endpoint['uuid']] ){
        responses[mockingResponse.endpoint['uuid']] = [];
     }
 
     responses[mockingResponse.endpoint['uuid']][mockingResponse.testMockingResponse.status]
       = mockingResponse.testMockingResponse;
-
-    //console.log('responses', responses[mockingResponse.endpoint['uuid']][mockingResponse.testMockingResponse.status]);
-
-    // responses[mockingResponse.endpoint['uuid']].push(mockingResponse.testMockingResponse.status)
-    // responses[mockingResponse.endpoint['uuid']][mockingResponse.testMockingResponse.status] =
-    //     ;
   };
 
 })();

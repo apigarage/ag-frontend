@@ -60,27 +60,22 @@ angular.module('app')
       Messaging.send(message);
     };
 
+    //======== Test Mocking Call START ===========///
+
     var mockingOptions;
+
+    // After the main process starts the server and adds the endpoint to be tested
+    // it makes the http call using the mocking options from the callback
     $rootScope.$on('test-response-mocking-server', function(evt, data){
-      console.log('mockingOptions', mockingOptions);
       $http(mockingOptions).then(function(data){
-        console.log('testdata', data);
       })
     });
 
     Mocking.testMockingCall = function(endpoint, testMockingResponse){
 
-      // if the server is off
-      // turn it on
-      // if(!){
-      //   Mocking.startServer();
-      // }
-
-      // send endpoint data with responses
+      // modify endpoint data with responses
       var headerKeyIsFound = false;
       _.forEach(endpoint.requestHeaders, function(header, value){
-        console.log('key', header.key);
-        console.log('value', value);
         if(header.key == 'x-ag-expected-status'){
           endpoint.requestHeaders[value].value = testMockingResponse.status;
           headerKeyIsFound = true;
@@ -94,10 +89,11 @@ angular.module('app')
         });
       }
 
+      // Set server port
       var port;
-
       if(!port) port = parseInt(localStorage.getItem('defaultPort'));
 
+      // Set test mocking response server properties
       var serverMessage = {
         "eventName" : 'start-mocking-server',
         "port" : port,
@@ -107,9 +103,7 @@ angular.module('app')
       };
 
       var mockingMessage
-//      [] = testMockingResponse.status;
       var serverStatus = Mocking.serverStatus ? false : true;
-      console.log('requestHeaders', endpoint.requestHeaders);
       var mockingMessage = {
         "eventName" : 'test-response-mocking-server',
         "testMockingResponse" : testMockingResponse,
@@ -118,24 +112,35 @@ angular.module('app')
         "serverStatus": serverStatus
       };
 
-      console.log('message', mockingMessage);
       Messaging.send(mockingMessage, function(){
+        // TODO: Verity Endpoint URL and environments Callback
+        // Below is the start of this we still need a way to notify users
+        // at what part of the testing they are at.
+
         // build the call options
         // make the call
+        // check to see if environment is used in the url
         mockingOptions = {
           method: endpoint.requestMethod,
-          url: endpoint.requestUrl,
+          url: requestURL,
           headers: endpoint.requestHeaders,
           data: endpoint.requestBody,
         };
         mockingOptions = RequestUtility.buildRequest(mockingOptions, $rootScope.currentEnvironment);
-        console.log('test');
+
+        var parsedURL = URI.parse(endpoint.requestUrl);
+        // parsedURL.toString();
+
+        var requestURL = endpoint.requestUrl.replace(parsedURL.port, Mocking.port);
+        requestURL = endpoint.requestUrl.replace(parsedURL.hostname, localhost);
 
       });
 
 
-
     }
+
+    //======== Test Mocking Call END ===========///
+
 
     //======== Mocking Calls ===========///
     var endpoint = 'items';
