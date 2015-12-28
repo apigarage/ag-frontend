@@ -25,6 +25,23 @@
     windowsManager.sendToAllWindows('ag-message', data);
   });
 
+  eventEmitter.on('test-response-mocking-server', function(data){
+    console.log('data', data);
+    if(data.serverStatus){
+      console.log('serverStatus', data);
+      serverManager.createServer(data.serverMessage)
+        .then(function(serverData){
+          console.log('serverData', serverData);
+          windowsManager.sendToAllWindows('ag-message', serverData);
+          serverManager.testMockingCall(data);
+          windowsManager.sendToAllWindows('ag-message', data);
+        });
+    }else{
+      serverManager.testMockingCall(data);
+      windowsManager.sendToAllWindows('ag-message', data);
+    }
+  });
+
 
 
 })();

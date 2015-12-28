@@ -8,7 +8,7 @@
         <span>
           <input name="inputStatusCode" class="form-control"
             id="inputStatusCode" type="number"
-            min="100"
+            min="200"
             max="599"
             ng-show="statusCodeInput"
             data-ng-model="agMockingResponse.status"
@@ -21,7 +21,7 @@
       </div>
       <div class="col-sm-4">
           <p class="mocking-status-error" ng-show="statusCodeExists">Code Exists {{agMockingResponse.status}}</p>
-          <p class="mocking-status-warning" ng-show="MockingForm.inputStatusCode.$invalid">Status Code range: 100-599</p>
+          <p class="mocking-status-warning" ng-show="MockingForm.inputStatusCode.$invalid">Status Code range: 200-599</p>
       </div>
     </div>
 
@@ -50,6 +50,21 @@
                   <span class="fa fa-floppy-o"></span>
                   <span class="hidden-xs hidden-sm">Save</span>
           </button>
+
+          <!-- Mocking Test Button
+          <button class="btn btn-default"
+                  ng-hide="deleteMockFormButton"
+                  ng-click="testMockingCall(MockingForm)"
+                  ng-disabled="statusCodeInput ?
+                  MockingForm.inputStatusCode.$invalid ||
+                  MockingForm.inputStatusCode.$pristine :
+                  MockingForm.inputStatusCodeResponse.$pristine">
+            <span class="fa fa-wrench "></span>
+            <span class="hidden-xs hidden-sm">Test</span>
+          </button> -->
+        </div>
+
+        <div class="btn-group">
           <button class="btn btn-default"
                   ng-click="cancelMockForm(MockingForm)"
                   ng-disabled="statusCodeInput ?
@@ -59,9 +74,15 @@
             <span class="fa fa-ban"></span>
             <span class="hidden-xs hidden-sm">Cancel</span>
           </button>
-        </div>
 
-        <div class="btn-group">
+          <!-- Test Mocking Server Button
+          <button class="btn btn-default"
+                  ng-show="deleteMockFormButton"
+                  ng-click="testMockingCall(MockingForm)">
+            <span class="fa fa-wrench "></span>
+            <span class="hidden-xs hidden-sm">Test</span>
+          </button> -->
+
           <button class="btn btn-default"
                   ladda="loadingDeleteButton"
                   ng-show="deleteMockFormButton"

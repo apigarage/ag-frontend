@@ -66,6 +66,14 @@ angular.module('app').controller('MockingResponseCtrl', [
       });
   };
 
+  $scope.testMockingCall = function(mockingForm){
+    var mockingTestCall = {
+      "status": mockingForm.inputStatusCode.$viewValue,
+      "data": mockingForm.inputStatusCodeResponse.$viewValue
+    };
+    Mocking.testMockingCall($scope.agMockingParentEndpoint, mockingTestCall);
+  }
+
   // If form code already exists
   $scope.searchforStatusCode = function(mockingForm){
     $scope.statusCodeExists = false;
