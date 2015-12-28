@@ -212,24 +212,34 @@ angular.module('app')
 
     };
 
-    $scope.mockingServerInstructions =  { message : {
-      title: "Mocking Server URL",
-      content: "Copy the url into your project"
-    }};
+    $scope.restartMockingServer = function(){
+      $scope.mockingRestartLoading = true;
+      Mocking.restartServer();
+    }
+
+    $scope.mockingServerInstructions =  {
+      message : {
+        title: "Mocking Server URL",
+        content: "Copy the url into your project"
+      },
+      refreshMessage : {
+       content: "Restart Server",
+     }
+    };
 
     $scope.$on('start-mocking-server', function(evt, data){
       // TODO: handle start event
-      $scope.serverStatus = Mocking.serverStatus;
+      $scope.mockingRestartLoading = false;
+      if(!$scope.mockingRestartLoading) $scope.serverStatus = Mocking.serverStatus;
       $scope.serverURL = "http://localhost:" + data.port;
       $scope.mockingServerTooltip = {
         "title": "Copy this URL to your projects for access to mocking server!",
       };
-
     });
 
     $scope.$on('stop-mocking-server', function(evt, data){
       // TODO: handle stop event
-      $scope.serverStatus = Mocking.serverStatus;
+      if(!$scope.mockingRestartLoading) $scope.serverStatus = Mocking.serverStatus;
       $scope.serverURL = undefined;
     });
 
