@@ -64,24 +64,36 @@ angular.module('app')
       if(search === ":flagged"){
         searchFlagged(temporaryCopy, true);
         $scope.expandGroup = true;
+        // When user searches flagged endpoint
+        Analytics.eventTrack('Search Filter',
+         {'from': 'SidebarCtrl', 'filterType': 'flagged'});
         return;
       }
 
       if(search === ":!flagged"){
         searchFlagged(temporaryCopy, false);
         $scope.expandGroup = true;
+        // When user searches !flagged endpoint
+        Analytics.eventTrack('Search Filter',
+         {'from': 'SidebarCtrl', 'filterType': 'notFlagged'});
         return;
       }
 
       if(search === ":resolved"){
         searchFlagged(temporaryCopy, false);
         $scope.expandGroup = true;
+        // When user searches resolved endpoint
+        Analytics.eventTrack('Search Filter',
+         {'from': 'SidebarCtrl', 'filterType': 'resolved'});
         return;
       }
 
       if(search === ":!resolved"){
         searchFlagged(temporaryCopy, true);
         $scope.expandGroup = true;
+        // When user searches !resolved endpoint
+        Analytics.eventTrack('Search Filter',
+         {'from': 'SidebarCtrl', 'filterType': 'notResolved'});
         return;
       }
 
@@ -90,6 +102,9 @@ angular.module('app')
         $scope.expandGroup = true;
         $scope.showNotMocked = true;
         $rootScope.$broadcast('showMockedActivity', true);
+        // When user searches !mocked endpoint
+        Analytics.eventTrack('Search Filter',
+         {'from': 'SidebarCtrl', 'filterType': 'notMocked'});
         return;
       }
 
@@ -98,6 +113,9 @@ angular.module('app')
         $scope.expandGroup = true;
         $scope.showMocked = true;
         $rootScope.$broadcast('showMockedActivity', true);
+        // When user searches mocked endpoint
+        Analytics.eventTrack('Search Filter',
+         {'from': 'SidebarCtrl', 'filterType': 'mocked'});
         return;
       }
 

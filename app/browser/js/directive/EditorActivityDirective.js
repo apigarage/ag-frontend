@@ -9,8 +9,8 @@ angular.module('AGEndpointActivity', [])
 // 5. liEditorActivity = "edit"     -> Edit Endpoint
 // 6. liEditorActivity = "collapse" -> Collapsed items
 // 7. liEditorActivity = "form"     -> Form for typing new Comments
-.directive('agEditorActivityItem', ['Activities', 'Items', '$rootScope', '$window',
-  function (activities, Items, $rootScope, $window) {
+.directive('agEditorActivityItem', ['Activities', 'Items', '$rootScope', '$window', 'Analytics',
+  function (activities, Items, $rootScope, $window, Analytics) {
   return {
     restrict: 'EA',
     templateUrl: 'html/editor-activity-item.html',
@@ -123,6 +123,11 @@ angular.module('AGEndpointActivity', [])
         // Create Flag/Resolve Comment add description
         comment.type = flagged ? 'flag' : 'resolve';
         comment.description = commentForm.description;
+
+        // When user submits flagged comment
+        Analytics.eventTrack('Submit Comment',
+         {'from': 'EditorActivityDirective', 'commentType': comment.type});
+
         return submitComment(comment)
           .then(function(data){
 
@@ -152,6 +157,9 @@ angular.module('AGEndpointActivity', [])
 
         if(commentForm.edit){
           // Edit Comment
+          // When user Edits comment
+          Analytics.eventTrack('Submit Comment',
+           {'from': 'EditorActivityDirective', 'commentType': 'update'});
           return activities.update($scope.agEndpoint.uuid, currentActivity.uuid, comment)
             .then(function(item){
               // TODO: handle errors if any
@@ -169,6 +177,9 @@ angular.module('AGEndpointActivity', [])
 
           // Create Comment
           comment.type = 'comment';
+          // When user submits comment
+          Analytics.eventTrack('Submit Comment',
+           {'from': 'EditorActivityDirective', 'commentType': comment.type});
           return submitComment(comment)
           .then(function(data){
             clearForm(commentForm);
@@ -188,9 +199,14 @@ angular.module('AGEndpointActivity', [])
       };
 
       $scope.deleteComment = function(){
+
         return activities.remove($scope.agEndpoint.uuid, $scope.agActivity.uuid)
           .then(function(item){
             // TODO: handle errors if any
+
+            // When user Deletes comment
+            Analytics.eventTrack('Delete Comment',
+             {'from': 'EditorActivityDirective'});
             $scope.updateActivities({ 'uuid':$scope.agActivity.uuid}, 'remove');
           });
       };
