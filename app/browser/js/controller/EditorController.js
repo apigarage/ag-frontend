@@ -599,6 +599,9 @@ angular.module('app').controller('EditorCtrl', [
 
             $scope.loadingAddCommentButton = false;
             commentFlagButtonStatus(false);
+
+            Analytics.eventTrack('Endpoint Status Update',
+             {'from': 'EditorCtrl', 'status': data.type });
           });
         });
 

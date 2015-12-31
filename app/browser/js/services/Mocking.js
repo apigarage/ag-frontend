@@ -60,6 +60,27 @@ angular.module('app')
       Messaging.send(message);
     };
 
+    Mocking.restartServer = function(){
+      if(Mocking.serverStatus) {
+        console.log('stopServer');
+        var message = {
+          "eventName" : 'stop-mocking-server'
+        };
+
+        Messaging.sendSync(message);
+      }
+
+      var message = {
+        "eventName" : 'start-mocking-server',
+        "port" : Mocking.port,
+        "endpoints": $rootScope.currentProject.collections,
+        "projectId": $rootScope.currentProject.id,
+        "accessToken": Auth.get()
+      };
+
+      return Messaging.sendSync(message);
+    }
+
     //======== Test Mocking Call START ===========///
 
     var mockingOptions;

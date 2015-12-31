@@ -49,11 +49,18 @@ angular.module('app')
 
     // identify user
     var setUser = function(user){
+      var remote = require('remote');
+      var app = remote.require('app');
+
       if (Config.name == "production" || Config.name == "staging"){
         $analytics.setUsername(user.id);
-        $analytics.setUserProperties({ '$id' : user.id, '$email' : user.email, 'name': user.name , '$created': user.created_at});
+        $analytics.setUserProperties({ '$id' : user.id,
+          '$email' : user.email, 'name': user.name ,
+          '$created': user.created_at, 'appVersion': app.getVersion()
+        });
       }else{
         console.log('setUserName', user.id);
+        console.log('appversion', app.getVersion());
       }
     };
 
