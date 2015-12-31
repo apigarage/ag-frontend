@@ -15,7 +15,7 @@
   var responses = [];
   module.exports.createServer = function(options){
     //console.log("start", options.port);
-
+    responses = [];
 
     server = http.createServer(function (serverRequest, serverResponse) {
 
@@ -33,11 +33,11 @@
 
       // if we just want to turn the server on and there are no server paths available
       //if(server.paths){
-        console.log('server.paths');
+        // console.log('server.paths');
         var pathMatched = match(serverRequest);
-        console.log('pathMatched');
+        // console.log('pathMatched');
         if(pathMatched){
-          console.log('read status code');
+          // console.log('read status code');
           // Read Status Code
           if( ! mockedResponse.statusCode ) mockedResponse.statusCode = 200; // defautls to 200.
 
