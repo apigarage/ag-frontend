@@ -187,8 +187,6 @@
   function match(request){
     var found = null;
 
-    // console.log('Request ', request.url , '---', request.method);
-
     server.paths.forEach(function(path, index, array){
 
       if(found) return;
@@ -244,7 +242,8 @@
     var paths = [];
     _.forEach(endpoints, function(collection){
       _.forEach(collection.items, function(endpoint){
-        paths.push(setPath(endpoint));
+        var path = setPath(endpoint); // path will be undefined for invalid URLs
+        if(path) paths.push(path);
       });
     }, []);
     server.paths = paths;
@@ -257,7 +256,7 @@
     endpoint.parsedUrl = URI.parse(endpoint.url);
 
     // If hostname is not defined, nothing to mock here.
-    if( ! endpoint.parsedUrl.hostname ) return;
+    if( ! endpoint.parsedUrl.hostname ) return false;
     endpoint.pathWithQuery = endpoint.parsedUrl.query
       ? endpoint.parsedUrl.path + '\\?' + endpoint.parsedUrl.query // <-- double escape is required.
       : endpoint.parsedUrl.path;
