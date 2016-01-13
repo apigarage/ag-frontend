@@ -20,11 +20,11 @@
     server = http.createServer(function (serverRequest, serverResponse) {
 
       serverRequest.on('continue', function(){
-        console.log('continue');
+        // console.log('continue');
       })
 
       serverResponse.on('continue', function(){
-        console.log('continue');
+        // console.log('continue');
       })
 
       var mockedResponse = {
@@ -126,19 +126,19 @@
          });
 
     }).listen(options.port, function (err) {
-      console.log('listening http://localhost:'+ options.port +'/');
-      console.log('pid is ' + process.pid);
+      // console.log('listening http://localhost:'+ options.port +'/');
+      // console.log('pid is ' + process.pid);
     });
 
     server.on('connection', function (socket) {
       // Add a newly connected socket
       var socketId = nextSocketId++;
       sockets[socketId] = socket;
-      console.log('socket', socketId, 'opened');
+      // console.log('socket', socketId, 'opened');
 
       // Remove the socket when it closes
       socket.on('close', function () {
-        console.log('socket', socketId, 'closed');
+        // console.log('socket', socketId, 'closed');
         delete sockets[socketId];
       });
     });
@@ -281,8 +281,8 @@
 
   module.exports.stopServer = function(){
     for (var socketId in sockets) {
-      console.log('socket', socketId, 'destroyed');
-      console.log('socket', sockets[socketId]);
+      // console.log('socket', socketId, 'destroyed');
+      // console.log('socket', sockets[socketId]);
       sockets[socketId].destroy();
     }
     server.close();

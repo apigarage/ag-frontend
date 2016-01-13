@@ -26,7 +26,8 @@
     "semver": "^5.0.3",
     "vinyl-map": "^1.0.1",
     "yargs": "^3.13.0",
-    "lodash": "^3.10.0"
+    "lodash": "^3.10.0",
+    "unirest": "^0.4.2"
   },
   "optionalDependencies": {
     "appdmg": "^0.3.2",
