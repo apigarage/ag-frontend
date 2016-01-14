@@ -7,6 +7,7 @@ directive("mockingServerLogsDrtv", function() {
     controllerAs: 'MockingCtrl',
     scope: {
       'agLayoutMocking' : "=",
+      'agLayoutHistory' : "=",
       'agBottomBarMaximized' : "="
     }
   };
