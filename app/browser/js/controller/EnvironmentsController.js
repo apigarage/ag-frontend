@@ -19,6 +19,10 @@ angular.module('app').controller('EnvironmentsCtrl', [
   };
 
   $scope.isEmptyEnvironment = function(publicOrPrivate){
+    // this line is in the event that the angular digest cycle goes wonky
+    // and runs this method again and again.
+    if(!$rootScope.currentProject) return false;
+
     if( _.isEmpty( $rootScope.currentProject.environments) ) return true;
     if( _.isEmpty( $rootScope.currentProject.environments[publicOrPrivate]) ) return true;
     return false;
