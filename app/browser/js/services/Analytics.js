@@ -49,6 +49,7 @@ angular.module('app')
 
     // identify user
     var setUser = function(user){
+      if(!user.email) return; // Making sure that the user exists before adding to analytics
       var remote = require('remote');
       var app = remote.require('app');
 
