@@ -15,9 +15,9 @@
       {{serverStatus ? 'Stop' : 'Start'}} Mocking Server
     </button> -->
 
-
+  <div class="sidebarForm" style="width:204px;">
     <form name="makeRequestForm" >
-      <div  style="display: inline-flex; position: relative; padding-bottom: 10px;"
+      <div  style="width: 170px; display: inline-flex; position: relative; padding-bottom: 10px;"
         ng-show="serverStatus">
         <div class="input-group-btn">
           <button class="btn btn-default" type="button"
@@ -30,12 +30,13 @@
         </div><!-- /btn-group -->
         <input type="text" id='serverURL' ng-model="serverURL"
         disabled
-        style="margin-left: 34px; padding-left: 5px;"/>
+        style="width: 165px; margin-left: 34px; padding-left: 5px;"/>
         <span class="fa fa-fw fa-question-circle" data-trigger="hover"
         placement="bottom" bs-popover="mockingServerInstructions.message"
         style="padding-left: 5px; padding-top: 10px;"></span>
       </div>
     </form>
+  </div>
 
     <!-- <label for='serverURL' class="sidebar-list-parent" ng-show="serverStatus">
        <input type="text" id='serverURL' ng-model="serverURL"
@@ -48,14 +49,33 @@
 
     <!-- SEARCH BOX -->
     <div class="sidebar-search-placeholder ">
-      <input type="text" class="col-md-5 form-control sidebar-search"
+
+      <div class="form-group">
+        <div class="">
+          <span>
+            <input type="text" class="col-md-5 form-control sidebar-search"
+              placeholder="Search..." ng-model="search" ng-change="searchFilter(search)"
+              style="width: 175px;"/>
+          </span>
+          <div class="mocking-status-code-panel-body"></div>
+        </div>
+        <div class="col-sm-19">
+          <p class="fa fa-fw fa-info-circle fa-lg pull-right"  data-trigger="hover"
+          placement="bottom" bs-popover="sidebarSearchInstructions.message" delay="sidebarSearchInstructions.message.delay"
+          style="margin-bottom: 10px; margin-top: -22px;">
+          </p>
+        </div>
+      </div>
+
+      <!-- <input type="text" class="col-md-5 form-control sidebar-search"
         placeholder="Search..." ng-model="search" ng-change="searchFilter(search)"
         style="width: 195px;"/>
       <p class="fa fa-fw fa-info-circle fa-lg pull-right"  data-trigger="hover"
       placement="bottom" bs-popover="sidebarSearchInstructions.message" delay="sidebarSearchInstructions.message.delay"
       style="margin-bottom: 0px; margin-top: -22px;">
-      </p>
+      </p> -->
     </div>
+
 
     <!-- EXISTING ENDPOINTS -->
     <ul class="sidebar-list-parent">
