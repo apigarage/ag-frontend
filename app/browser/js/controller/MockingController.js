@@ -52,6 +52,7 @@ angular.module('app').controller('MockingCtrl', [
     $scope.$on('stop-mocking-server', function(evt, data){
       $scope.agBottomBarMaximized = false;
       $scope.agLayoutMocking = false;
+      $scope.agLayoutHistory = false;
     });
 
     $scope.$on('start-mocking-server', function(evt, data){
