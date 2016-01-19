@@ -236,7 +236,7 @@ angular.module('app')
         item.uuid = endpoint.uuid;
         item.headers = RequestUtility.getHeaders(endpoint.requestHeaders, 'object');
         item.flagged = endpoint.flagged;
-        item.mocked = EndpointHealth.isMocked(endpoint.requestUrl);
+        item.mocked = EndpointHealth.isMockable(endpoint.requestUrl);
         item.description = endpoint.description;
 
         return item;

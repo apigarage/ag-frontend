@@ -20,9 +20,10 @@ angular.module('app').controller('EditorCtrl', [
   'Activities',
   'Analytics',
   'Items',
+  'EndpointHealth',
   function (_, $scope, $rootScope, $window, $filter, $http, $sce, $modal, $q,
     $focus, $timeout, URI, marked, RequestUtility, History, Collections, Projects,
-    Editor, Activities, Analytics, Items){
+    Editor, Activities, Analytics, Items, EndpointHealth){
     // Private Functions
     // ========================================================================
 
@@ -158,9 +159,7 @@ angular.module('app').controller('EditorCtrl', [
     });
 
     $scope.verifyURL = function(){
-      if($scope.endpoint.requestUrl === undefined) return;
-      var parsedURL = URI.parse($scope.endpoint.requestUrl);
-      if(parsedURL.hostname){
+      if(EndpointHealth.isMockable($scope.endpoint.requestUrl)){
         $scope.endpointHealth.urlStatus = 'fa fa-heartbeat';
       }else{
         if($scope.endpointHealth.isActive){
