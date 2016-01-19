@@ -13,7 +13,7 @@ angular.module('app')
       // Verify if mocked or not
       // 1 = true
       // 0 = false
-      EndpointHealth.isMocked = function(url){
+      EndpointHealth.isMockable = function(url){
         if(!url) return 0;
 
         // Trimming the protocol because mocking does not use it. Also, it allows environment variables on the protocol field. Example: `{{protocol}}://{{host}}:{{port}}/path-to-endpoint`
@@ -23,7 +23,5 @@ angular.module('app')
         return !!parsedURL.hostname;
       };
 
-
       return EndpointHealth;
-
   }]);
