@@ -253,6 +253,8 @@
   }
 
   function setPath(endpoint){
+    // Trimming the protocol because mocking does not use it. Also, it allows environment variables on the protocol field. Example: `{{protocol}}://{{host}}:{{port}}/path-to-endpoint`
+    endpoint.url = endpoint.url.substr(endpoint.url.indexOf("://"));
     endpoint.parsedUrl = URI.parse(endpoint.url);
 
     // If hostname is not defined, nothing to mock here.
