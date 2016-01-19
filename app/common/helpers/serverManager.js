@@ -242,7 +242,9 @@
     var paths = [];
     _.forEach(endpoints, function(collection){
       _.forEach(collection.items, function(endpoint){
+        console.log('about to path endpoint', endpoint.uuid);
         var path = setPath(endpoint); // path will be undefined for invalid URLs
+        console.log('path ', path);
         if(path) paths.push(path);
       });
     }, []);
@@ -253,6 +255,8 @@
   }
 
   function setPath(endpoint){
+    // Trimming the protocol because mocking does not use it. Also, it allows environment variables on the protocol field. Example: `{{protocol}}://{{host}}:{{port}}/path-to-endpoint`
+    endpoint.url = endpoint.url.substr(endpoint.url.indexOf("://"));
     endpoint.parsedUrl = URI.parse(endpoint.url);
 
     // If hostname is not defined, nothing to mock here.
