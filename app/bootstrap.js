@@ -5,11 +5,12 @@
   /*global require: false */
   var app = require('app');
   var args = require('yargs').argv;
-  
+
   var updater = require('./common/helpers/updater.js');
   updater.init();
 
   app.commandLine.appendSwitch ('ignore-certificate-errors', 'true');
+  app.commandLine.appendSwitch ('disable-http-cache', 'true');
 
   if(args._.length > 0){
     var cli = require('./cli/main.js');
