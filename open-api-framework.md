@@ -1,5 +1,7 @@
 == Public Environments ==
+==========================
 Filename: environments.json
+
 This file represents public (or shared) environments. It's available to anyone with the repository access.
 
 ```
@@ -44,9 +46,12 @@ This file represents public (or shared) environments. It's available to anyone w
 ```
 
 == Private Environments ==
+==========================
 Filename: environments.private.json
+
 Note: Don't forget to .gitignore environments.private.json inside the private file.
-This file represents private environments, only available to that user..
+
+This file represents private environments, only available to the file owner.
 
 ```
 {
