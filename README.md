@@ -1,6 +1,10 @@
 API Garage
 ============
 
+Description
+===========
+API Garage is a desktop application created in Electron. It's purpose is to generate live documentation for teams to collaborate on during the development process. 
+
 Setup environment
 =================
 Inside the config folder create a config file based on the <environment> that will be building against filename has to be called env_<environment>.json. 
