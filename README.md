@@ -31,6 +31,10 @@ Create a env_development.json. with the contents below to get started with devel
 Proposed Deployment Flow
 ========================
 
+Building a release
+------------------
+There is an automated release flow that was created however, this flow is not streamlined. It is suggested that one use Deploying Full App Flow in order to create an executable for distribution and hard code the --version. ie. gulp release --env=staging --version=0.2.1
+
 Deploying the Update Flow:
 --------------------------
 Run `gulp release_update --env=[env] --bump=[bump]` where possible `env` is `development|staging|production` and possible `bump` is `major|minor|patch`
