@@ -1,7 +1,30 @@
-
 API Garage
 ============
-We will be the best platform for APIs.
+
+Setup environment
+=================
+Inside the config folder create a config file based on the <environment> that will be building against filename has to be called env_<environment>.json ie. env_development.json. The contents of the file will look like something below.
+
+```
+#!json
+
+{
+  "name": "development",
+  "description": "Add here any environment specific stuff you like.",
+  "url": "https://staging.apigarage.com/",
+  "api": "api/",
+  "client_id": "id_",
+  "client_secret": "secret_44207Z6q1Lq5e6me0902",
+  "database_name": "staging-apigarage",
+  "access_token_key": "accessToken_staging",
+  "manifest_file_url": "",
+  "mixpanel_key": "",
+  "update_check_interval": 60000,
+  "syncTime": 10000
+}
+
+```
+
 
 Proposed Deployment Flow
 ========================
@@ -35,9 +58,11 @@ Some Guidelines (and Rules)
 General CRUD
 ------------
 It's generally a three step process.
+
 1. Create a fixture
 2. Create a stub
 3. Create a test utilizing fixtures and stubs
+
 For example checkout AuthenticationCtrl.spec.js and projects.fixtures.js
 
 Controller On Load Assignments
