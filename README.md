@@ -33,7 +33,7 @@ Proposed Deployment Flow
 
 Building a release
 ------------------
-There is an automated release flow that was created however, this flow is not streamlined. It is suggested that one use Deploying Full App Flow in order to create an executable for distribution and hard code the --version. ie. gulp release --env=staging --version=0.2.1
+There is an automated release flow that was created however, this flow is not streamlined. It is suggested that one use Deploying Full App Flow in order to create an executable for distribution and hard code the --version. ie. `gulp release --env=staging --version=0.2.1`
 
 Deploying the Update Flow:
 --------------------------
