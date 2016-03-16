@@ -3,7 +3,9 @@ API Garage
 
 Setup environment
 =================
-Inside the config folder create a config file based on the <environment> that will be building against filename has to be called env_<environment>.json ie. env_development.json. The contents of the file will look like something below.
+Inside the config folder create a config file based on the <environment> that will be building against filename has to be called env_<environment>.json. 
+
+Create a env_development.json. with the contents below to get started with development. URL is required to be setup before one can 'npm start'
 
 ```
 #!json
