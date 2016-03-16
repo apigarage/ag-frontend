@@ -52,6 +52,22 @@ Run `gulp release --env=[env] --bump=[bump] --version=[major.minor.patch]` where
 
 Testing Strategies
 ==================
+
+Running Tests
+-------------
+They are written in Jasmine and requires a env_test.json that looks like the item below. to run the test npm test
+
+
+```
+#!json
+
+{
+  "name": "test",
+  "description": "Add here any environment specific stuff you like."
+}
+
+```
+
 Some Guidelines (and Rules)
 ---------------------------
 * Editor Controller MUST be fully tested. It's the core piece of the company, and cannot be broken.
