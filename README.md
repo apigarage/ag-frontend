@@ -30,6 +30,13 @@ Create a env_development.json. with the contents below to get started with devel
 }
 
 ```
+Install dependency libraries
+============================
+Required: Node
+npm install
+bower install
+cd app 
+bower install
 
 
 Proposed Deployment Flow
@@ -38,17 +45,6 @@ Proposed Deployment Flow
 Building a release
 ------------------
 There is an automated release flow that was created however, this flow is not streamlined. It is suggested that one use Deploying Full App Flow in order to create an executable for distribution and hard code the --version. ie. `gulp release --env=staging --version=0.2.1`
-
-Deploying the Update Flow:
---------------------------
-Run `gulp release_update --env=[env] --bump=[bump]` where possible `env` is `development|staging|production` and possible `bump` is `major|minor|patch`
-
-* Copies everything to `build` folder
-* Downloads the latest manifest file as mentioned in package.json
-* Bumps up the version number based on the `bump`
-* Creates app-[major.minor.patch].asar and uploads file on Rackspace->CloudFiles->containers->builds->`env`->updates
-* If `env==production`, update the version number on Rackspace->CloudFiles->containers->builds->manifest.json
-
 
 Deploying the Full App Flow:
 ----------------------------
